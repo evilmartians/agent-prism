@@ -1,9 +1,12 @@
-import type { OpenTelemetryDocument } from "@evilmartians/agent-prism-types";
+import type { LangfuseDocument, OpenTelemetryDocument } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
+import { convertLangfuseDocumentToSpanCards, convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
 import { TraceViewer } from "@evilmartians/agent-prism-ui";
 
+import langfuseData1 from "../data/langfuse-1.json";
+import langfuseData2 from "../data/langfuse-2.json";
+import langfuseData3 from "../data/langfuse-3.json";
 import testData1 from "../data/test_data_1.json";
 import testData2 from "../data/test_data_2.json";
 import testData3 from "../data/test_data_3.json";
@@ -24,6 +27,17 @@ const agentData2 = convertOTelDocumentToSpanCards(
 const agentData3 = convertOTelDocumentToSpanCards(
   testData3 as OpenTelemetryDocument[],
 );
+
+const langfuse1 = convertLangfuseDocumentToSpanCards(
+  langfuseData1 as LangfuseDocument,
+);
+const langfuse2 = convertLangfuseDocumentToSpanCards(
+  langfuseData2 as LangfuseDocument,
+);
+const langfuse3 = convertLangfuseDocumentToSpanCards(
+  langfuseData3 as LangfuseDocument,
+);
+
 
 const data = [
   {
@@ -55,6 +69,36 @@ const data = [
       agentDescription: "customer-support-ai",
     },
     spans: agentData3,
+  },
+  {
+    traceRecord: {
+      id: "langfuse-1",
+      name: "langfuse-1",
+      spansCount: 13,
+      durationMs: 2500,
+      agentDescription: "langfuse-1",
+    },
+    spans: langfuse1,
+  },
+  {
+    traceRecord: {
+      id: "langfuse-2",
+      name: "langfuse-2",
+      spansCount: 13,
+      durationMs: 2500,
+      agentDescription: "langfuse-2",
+    },
+    spans: langfuse2,
+  },
+  {
+    traceRecord: {
+      id: "langfuse-3",
+      name: "langfuse-3",
+      spansCount: 13,
+      durationMs: 2500,
+      agentDescription: "langfuse-3",
+    },
+    spans: langfuse3,
   },
 ];
 
