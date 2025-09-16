@@ -85,14 +85,16 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         "categorizeOpenTelemetryGenAI",
       ).mockReturnValue("tool_execution");
 
-      const categorizeOpenTelemetryGenAIMock = vi.spyOn(
+      vi.spyOn(openTelemetrySpanAdapter, "categorizeOpenTelemetryGenAI");
+
+      const categorizeOpenInferenceMock = vi.spyOn(
         openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
+        "categorizeOpenInference",
       );
 
       openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenTelemetryGenAIMock).not.toHaveBeenCalled();
+      expect(categorizeOpenInferenceMock).not.toHaveBeenCalled();
     });
   });
 
