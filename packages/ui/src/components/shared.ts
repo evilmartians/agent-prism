@@ -9,6 +9,7 @@ import {
   BarChart2,
   Plus,
   HelpCircle,
+  MoveHorizontal,
   type LucideIcon,
 } from "lucide-react";
 
@@ -155,6 +156,11 @@ export const SPAN_CATEGORY_CONFIG: Record<
     label: "CREATE AGENT",
     theme: "sky",
     icon: Plus,
+  },
+  span: {
+    label: "SPAN",
+    theme: "gray",
+    icon: MoveHorizontal,
   },
   unknown: {
     label: "UNKNOWN",

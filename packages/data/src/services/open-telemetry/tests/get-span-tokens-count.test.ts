@@ -1,12 +1,12 @@
 import { OPENTELEMETRY_GENAI_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, it, expect } from "vitest";
 
-import { createMockSpan } from "../utils/tests/create-mock-span";
-import { extractTokenCount } from "./extract-token-count";
+import { openTelemetrySpanAdapter } from "../adapter";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
 
-describe("extractTokenCount", () => {
+describe("openTelemetrySpanAdapter.getSpanTokensCount", () => {
   it("should return total tokens when available as number", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: 150,
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 100,
@@ -14,34 +14,34 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(150);
   });
 
   it("should sum input and output tokens when total is not available", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 80,
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_TOKENS]: 40,
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(120);
   });
 
   it("should return 0 when no token attributes are available", () => {
-    const span = createMockSpan({});
+    const span = createMockOpenTelemetrySpan({});
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(0);
   });
 
   it("should handle mixed token types correctly", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: "not-a-number", // string value
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 60,
@@ -49,13 +49,13 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(60); // 60 + 0 (undefined becomes 0)
   });
 
   it("should handle partial token information", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: null,
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 90,
@@ -63,26 +63,26 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(90); // 90 + 0
   });
 
   it("should handle zero token values correctly", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 0,
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_TOKENS]: 0,
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(0);
   });
 
   it("should prioritize total tokens over individual counts", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: 200,
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 999, // Should be ignored
@@ -90,13 +90,13 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     expect(result).toBe(200);
   });
 
   it("should handle string numbers correctly by treating them as non-numbers", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: "150", // string number
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 80,
@@ -104,14 +104,14 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     // Since '150' is not typeof 'number', it should fall back to input + output
     expect(result).toBe(150); // 80 + 70
   });
 
   it("should handle boolean values correctly", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: true, // boolean
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: false, // boolean
@@ -119,7 +119,7 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     // Booleans are not numbers, so should fall back to input + output
     // false is not a number, so it becomes 0
@@ -127,7 +127,7 @@ describe("extractTokenCount", () => {
   });
 
   it("should handle array values correctly", () => {
-    const span = createMockSpan({
+    const span = createMockOpenTelemetrySpan({
       attributes: {
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS]: ["150", "200"], // array
         [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS]: 30,
@@ -135,7 +135,7 @@ describe("extractTokenCount", () => {
       },
     });
 
-    const result = extractTokenCount(span);
+    const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
     // Arrays are not numbers, so should fall back to input + output
     expect(result).toBe(50); // 30 + 20
@@ -143,7 +143,7 @@ describe("extractTokenCount", () => {
 
   describe("real-world scenarios", () => {
     it("should handle GPT-4 response attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-4",
           "gen_ai.usage.input_tokens": 150,
@@ -153,13 +153,13 @@ describe("extractTokenCount", () => {
         },
       });
 
-      const result = extractTokenCount(span);
+      const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
       expect(result).toBe(225);
     });
 
     it("should handle Claude response attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "claude-3-sonnet",
           "gen_ai.usage.input_tokens": 1250,
@@ -169,13 +169,13 @@ describe("extractTokenCount", () => {
         },
       });
 
-      const result = extractTokenCount(span);
+      const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
       expect(result).toBe(1630); // 1250 + 380
     });
 
     it("should handle incomplete LLM response", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-3.5-turbo",
           "gen_ai.usage.input_tokens": 120,
@@ -184,7 +184,7 @@ describe("extractTokenCount", () => {
         },
       });
 
-      const result = extractTokenCount(span);
+      const result = openTelemetrySpanAdapter.getSpanTokensCount(span);
 
       expect(result).toBe(120); // 120 + 0
     });

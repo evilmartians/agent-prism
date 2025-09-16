@@ -1,57 +1,57 @@
 import { OPENTELEMETRY_GENAI_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, it, expect } from "vitest";
 
-import { createMockSpan } from "../utils/tests/create-mock-span";
-import { extractCost } from "./extract-cost";
+import { openTelemetrySpanAdapter } from "../adapter";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
 
-describe("extractCost", () => {
+describe("openTelemetrySpanAdapter.getSpanCost", () => {
   describe("valid number costs", () => {
     it("should return cost when available as positive number", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: 0.0045 },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.0045);
     });
 
     it("should return zero cost when cost is 0", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: 0 },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should handle small decimal costs", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: 0.000123 },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.000123);
     });
 
     it("should handle large costs", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: 15.75 },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(15.75);
     });
 
     it("should handle negative costs", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: -5.0 }, // Credits or refunds?
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(-5.0);
     });
@@ -59,59 +59,59 @@ describe("extractCost", () => {
 
   describe("invalid cost types", () => {
     it("should return 0 when cost is undefined", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         // No cost attribute
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should return 0 when cost is null", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: null },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should return 0 when cost is a string", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: "0.0045" },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should return 0 when cost is a boolean", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: true },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should return 0 when cost is an array", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: [0.0045, 0.0023],
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should return 0 when cost is an object", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: {
             amount: 0.0045,
@@ -120,7 +120,7 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
@@ -128,55 +128,55 @@ describe("extractCost", () => {
 
   describe("edge cases with numbers", () => {
     it("should handle NaN", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: NaN },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBeNaN(); // NaN is typeof 'number'
     });
 
     it("should handle Infinity", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: Infinity },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(Infinity);
     });
 
     it("should handle -Infinity", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: -Infinity },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(-Infinity);
     });
 
     it("should handle very small numbers", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: Number.MIN_VALUE,
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(Number.MIN_VALUE);
     });
 
     it("should handle very large numbers", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST]: Number.MAX_VALUE,
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(Number.MAX_VALUE);
     });
@@ -184,7 +184,7 @@ describe("extractCost", () => {
 
   describe("real-world scenarios", () => {
     it("should extract cost from GPT-4 API call", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-4",
           "gen_ai.usage.input_tokens": 150,
@@ -194,13 +194,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.0045);
     });
 
     it("should extract cost from Claude API call", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "claude-3-sonnet",
           "gen_ai.usage.input_tokens": 1250,
@@ -210,13 +210,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.0245);
     });
 
     it("should handle span without cost information", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-3.5-turbo",
           "gen_ai.usage.input_tokens": 120,
@@ -225,13 +225,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should handle local model with no cost", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "llama-2-7b",
           "gen_ai.usage.input_tokens": 200,
@@ -240,13 +240,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should handle failed API call with partial data", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-4",
           "error.type": "rate_limit_exceeded",
@@ -255,13 +255,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0);
     });
 
     it("should handle streaming response with incremental costs", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-4",
           "gen_ai.streaming": true,
@@ -271,7 +271,7 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.007);
     });
@@ -279,7 +279,7 @@ describe("extractCost", () => {
 
   describe("cost calculation scenarios", () => {
     it("should handle high-cost operations", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-4",
           "gen_ai.usage.input_tokens": 8000, // Near max context
@@ -288,13 +288,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.36);
     });
 
     it("should handle micro-costs", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-3.5-turbo",
           "gen_ai.usage.input_tokens": 10,
@@ -303,13 +303,13 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.000015);
     });
 
     it("should handle batch processing costs", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-3.5-turbo",
           "gen_ai.batch_size": 10,
@@ -318,7 +318,7 @@ describe("extractCost", () => {
         },
       });
 
-      const result = extractCost(span);
+      const result = openTelemetrySpanAdapter.getSpanCost(span);
 
       expect(result).toBe(0.025);
     });

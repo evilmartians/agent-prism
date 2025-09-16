@@ -1,7 +1,7 @@
 import type {
-  Span,
-  SpanKind,
-  StatusCode,
+  OpenTelemetrySpan,
+  OpenTelemetrySpanKind,
+  OpenTelemetryStatusCode,
 } from "@evilmartians/agent-prism-types";
 
 interface MockSpanOptions {
@@ -9,14 +9,16 @@ interface MockSpanOptions {
   duration?: [number, number];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   attributes?: Record<string, any>;
-  status?: { code: StatusCode; message?: string };
-  kind?: SpanKind;
+  status?: { code: OpenTelemetryStatusCode; message?: string };
+  kind?: OpenTelemetrySpanKind;
 }
 
 /**
- * Creates a mock Span for testing.
+ * Creates a mock Open TelemetrySpan for testing.
  */
-export const createMockSpan = (options: MockSpanOptions = {}): Span => {
+export const createMockOpenTelemetrySpan = (
+  options: MockSpanOptions = {},
+): OpenTelemetrySpan => {
   const {
     name = "test-span",
     duration = [2, 0],

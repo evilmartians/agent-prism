@@ -1,7 +1,13 @@
-import type { LangfuseDocument, OpenTelemetryDocument } from "@evilmartians/agent-prism-types";
+import type {
+  LangfuseDocument,
+  OpenTelemetryDocument,
+} from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { convertLangfuseDocumentToSpanCards, convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
+import {
+  convertLangfuseDocumentToSpanCards,
+  openTelemetrySpanAdapter,
+} from "@evilmartians/agent-prism-data";
 import { TraceViewer } from "@evilmartians/agent-prism-ui";
 
 import langfuseData1 from "../data/langfuse-1.json";
@@ -17,14 +23,14 @@ const meta: Meta<typeof TraceViewer> = {
   parameters: {},
 };
 
-const agentData1 = convertOTelDocumentToSpanCards(
+const agentData1 = openTelemetrySpanAdapter.convertDocumentsToSpans(
   testData1 as OpenTelemetryDocument[],
 );
-const agentData2 = convertOTelDocumentToSpanCards(
+const agentData2 = openTelemetrySpanAdapter.convertDocumentsToSpans(
   testData2 as OpenTelemetryDocument[],
 );
 
-const agentData3 = convertOTelDocumentToSpanCards(
+const agentData3 = openTelemetrySpanAdapter.convertDocumentsToSpans(
   testData3 as OpenTelemetryDocument[],
 );
 
@@ -37,7 +43,6 @@ const langfuse2 = convertLangfuseDocumentToSpanCards(
 const langfuse3 = convertLangfuseDocumentToSpanCards(
   langfuseData3 as LangfuseDocument,
 );
-
 
 const data = [
   {

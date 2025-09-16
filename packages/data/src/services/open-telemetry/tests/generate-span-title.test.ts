@@ -4,13 +4,13 @@ import {
 } from "@evilmartians/agent-prism-types";
 import { describe, it, expect } from "vitest";
 
-import { createMockSpan } from "../utils/tests/create-mock-span";
-import { generateTitle } from "./generate-title";
+import { openTelemetrySpanAdapter } from "../adapter";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
 
-describe("generateTitle", () => {
+describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
   describe("LLM operations", () => {
     it("should use model name for LLM operations", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "chat.completions.create",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
@@ -18,13 +18,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("gpt-4 - chat.completions.create");
     });
 
     it("should handle different LLM models", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "messages.create",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "claude-3-sonnet",
@@ -32,36 +32,38 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("claude-3-sonnet - messages.create");
     });
 
     it("should handle model as different data types", () => {
-      const spanWithStringModel = createMockSpan({
+      const spanWithStringModel = createMockOpenTelemetrySpan({
         name: "completion",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-3.5-turbo",
         },
       });
 
-      const spanWithNumberModel = createMockSpan({
+      const spanWithNumberModel = createMockOpenTelemetrySpan({
         name: "completion",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: 123, // Invalid but should still work
         },
       });
 
-      expect(generateTitle(spanWithStringModel)).toBe(
-        "gpt-3.5-turbo - completion",
-      );
-      expect(generateTitle(spanWithNumberModel)).toBe("123 - completion");
+      expect(
+        openTelemetrySpanAdapter.generateSpanTitle(spanWithStringModel),
+      ).toBe("gpt-3.5-turbo - completion");
+      expect(
+        openTelemetrySpanAdapter.generateSpanTitle(spanWithNumberModel),
+      ).toBe("123 - completion");
     });
   });
 
   describe("Vector DB operations", () => {
     it("should use collection and operation for vector DB operations", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "vector_search",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION]: "embeddings",
@@ -69,13 +71,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("embeddings - query");
     });
 
     it("should handle different vector DB operations", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "pinecone_upsert",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION]: "documents",
@@ -83,13 +85,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("documents - upsert");
     });
 
     it("should fall back to span name when collection is missing", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "vector_search",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION]: "query",
@@ -97,13 +99,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("vector_search");
     });
 
     it("should fall back to span name when operation is missing", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "vector_search",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION]: "embeddings",
@@ -111,18 +113,18 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("vector_search");
     });
 
     it("should fall back to span name when both collection and operation are missing", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "vector_search",
         attributes: {},
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("vector_search");
     });
@@ -130,7 +132,7 @@ describe("generateTitle", () => {
 
   describe("HTTP operations", () => {
     it("should use method and URL for HTTP operations", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "http_request",
         attributes: {
           "http.method": "POST",
@@ -138,13 +140,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("POST https://api.example.com/users");
     });
 
     it("should handle different HTTP methods", () => {
-      const getSpan = createMockSpan({
+      const getSpan = createMockOpenTelemetrySpan({
         name: "fetch",
         attributes: {
           "http.method": "GET",
@@ -152,7 +154,7 @@ describe("generateTitle", () => {
         },
       });
 
-      const putSpan = createMockSpan({
+      const putSpan = createMockOpenTelemetrySpan({
         name: "update_user",
         attributes: {
           "http.method": "PUT",
@@ -160,16 +162,16 @@ describe("generateTitle", () => {
         },
       });
 
-      expect(generateTitle(getSpan)).toBe(
+      expect(openTelemetrySpanAdapter.generateSpanTitle(getSpan)).toBe(
         "GET https://api.weather.com/v1/current",
       );
-      expect(generateTitle(putSpan)).toBe(
+      expect(openTelemetrySpanAdapter.generateSpanTitle(putSpan)).toBe(
         "PUT https://api.example.com/users/123",
       );
     });
 
     it("should fall back to span name when method is missing", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "http_request",
         attributes: {
           "http.url": "https://api.example.com/users",
@@ -177,13 +179,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("http_request");
     });
 
     it("should fall back to span name when URL is missing", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "http_request",
         attributes: {
           "http.method": "POST",
@@ -191,7 +193,7 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("http_request");
     });
@@ -199,7 +201,7 @@ describe("generateTitle", () => {
 
   describe("priority order", () => {
     it("should prioritize LLM model over vector DB attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "mixed_operation",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
@@ -208,13 +210,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("gpt-4 - mixed_operation");
     });
 
     it("should prioritize LLM model over HTTP attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "mixed_operation",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "claude-3-sonnet",
@@ -223,13 +225,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("claude-3-sonnet - mixed_operation");
     });
 
     it("should prioritize vector DB over HTTP attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "mixed_operation",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION]: "documents",
@@ -239,7 +241,7 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("documents - search");
     });
@@ -247,7 +249,7 @@ describe("generateTitle", () => {
 
   describe("fallback behavior", () => {
     it("should return span name when no special attributes are present", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "generic_operation",
         attributes: {
           "some.other.attribute": "value",
@@ -255,18 +257,18 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("generic_operation");
     });
 
     it("should handle empty span name", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "",
         attributes: {},
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("");
     });
@@ -274,7 +276,7 @@ describe("generateTitle", () => {
 
   describe("real-world scenarios", () => {
     it("should handle OpenAI API call", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "openai.chat.completions.create",
         attributes: {
           "gen_ai.request.model": "gpt-4",
@@ -284,13 +286,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("gpt-4 - openai.chat.completions.create");
     });
 
     it("should handle Anthropic API call", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "anthropic.messages.create",
         attributes: {
           "gen_ai.request.model": "claude-3-sonnet",
@@ -299,13 +301,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("claude-3-sonnet - anthropic.messages.create");
     });
 
     it("should handle Pinecone vector search", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "pinecone.query",
         attributes: {
           "db.operation.name": "similarity_search",
@@ -314,13 +316,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("research_papers - similarity_search");
     });
 
     it("should handle Chroma vector operations", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "chroma.collection.query",
         attributes: {
           "db.operation.name": "query",
@@ -329,13 +331,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("document_embeddings - query");
     });
 
     it("should handle REST API calls", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "fetch_weather_data",
         attributes: {
           "http.method": "GET",
@@ -344,7 +346,7 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe(
         "GET https://api.openweathermap.org/data/2.5/weather",
@@ -352,7 +354,7 @@ describe("generateTitle", () => {
     });
 
     it("should handle tool function calls without special attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "calculate_tip",
         attributes: {
           "function.name": "calculate_tip",
@@ -360,13 +362,13 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("calculate_tip");
     });
 
     it("should handle LangChain operations without special title attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "langchain.chain.invoke",
         attributes: {
           "langchain.chain": "RetrievalQA",
@@ -374,7 +376,7 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("langchain.chain.invoke");
     });
@@ -382,20 +384,20 @@ describe("generateTitle", () => {
 
   describe("edge cases with attribute types", () => {
     it("should handle boolean values", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "test",
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: true, // boolean
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("true - test");
     });
 
     it("should handle numeric values for string fields", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "http_request",
         attributes: {
           "http.method": 404, // number instead of string
@@ -403,7 +405,7 @@ describe("generateTitle", () => {
         },
       });
 
-      const result = generateTitle(span);
+      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
 
       expect(result).toBe("404 https://api.example.com/not-found");
     });

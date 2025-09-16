@@ -4,111 +4,123 @@ import {
 } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { createMockSpan } from "../utils/tests/create-mock-span";
-import { detectStandard } from "./detect-standard";
+import { openTelemetrySpanAdapter } from "../adapter";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
 
-describe("detectStandard", () => {
+describe("openTelemetrySpanAdapter.getSpanStandard", () => {
   describe("OpenTelemetry GenAI detection", () => {
     it("should detect OpenTelemetry GenAI by operation name", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should detect OpenTelemetry GenAI by system attribute", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should detect OpenTelemetry GenAI with both operation name and system", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "execute_tool",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "anthropic",
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
-    // Note: detectStandard only checks OPERATION_NAME and SYSTEM for GenAI detection
+    // Note: getSpanStandard only checks OPERATION_NAME and SYSTEM for GenAI detection
     // These attributes alone don't trigger GenAI detection
     it("should not detect OpenTelemetry GenAI with only model attribute", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenTelemetry GenAI with only agent name", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "customer-support-agent",
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenTelemetry GenAI with only tool name", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.TOOL_NAME]: "calculator",
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
   });
 
   describe("OpenInference detection", () => {
     it("should detect OpenInference by span kind", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should detect OpenInference by LLM model", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should detect OpenInference with both span kind and model", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CHAIN",
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "claude-3-sonnet",
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
-    // Note: detectStandard only checks SPAN_KIND and LLM_MODEL for OpenInference detection
+    // Note: getSpanStandard only checks SPAN_KIND and LLM_MODEL for OpenInference detection
     // These attributes alone don't trigger OpenInference detection
     it("should not detect OpenInference with only input messages", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.INPUT_MESSAGES]: JSON.stringify([
             { role: "user", content: "Hello" },
@@ -116,11 +128,11 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenInference with only retrieval documents", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.RETRIEVAL_DOCUMENTS]: JSON.stringify([
             { content: "Document content" },
@@ -128,45 +140,49 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenInference with only embedding model", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.EMBEDDING_MODEL]: "text-embedding-ada-002",
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
   });
 
   describe("priority order", () => {
     it("should prioritize OpenTelemetry GenAI over OpenInference when both are present", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should prioritize OpenTelemetry GenAI system over OpenInference model", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should prioritize OpenTelemetry GenAI even with multiple OpenInference attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "AGENT",
@@ -177,13 +193,15 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
   });
 
   describe("standard OpenTelemetry fallback", () => {
     it("should default to standard when no special attributes are present", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "http request",
         attributes: {
           "http.method": "GET",
@@ -191,19 +209,19 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should default to standard with empty attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {},
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should default to standard with unrelated attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "custom.attribute": "value",
           "db.system": "mysql",
@@ -211,35 +229,35 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
   });
 
   describe("edge cases", () => {
     it("should handle null attribute values", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: null,
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: null,
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should handle undefined attribute values", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: undefined,
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: undefined,
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should handle empty string attribute values correctly", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "",
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "",
@@ -247,22 +265,24 @@ describe("detectStandard", () => {
       });
 
       // Empty strings are falsy in this context, so should default to standard
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should handle whitespace-only string values", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "   ",
         },
       });
 
       // Whitespace strings are truthy
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should handle boolean attribute values", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: false,
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: true,
@@ -270,24 +290,28 @@ describe("detectStandard", () => {
       });
 
       // true is truthy, false is falsy
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should handle numeric attribute values", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: 0, // falsy
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: 1, // truthy
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
   });
 
   describe("real-world scenarios", () => {
     it("should detect OpenAI chat completion spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "openai.chat.completions.create",
         attributes: {
           "gen_ai.operation.name": "chat",
@@ -297,11 +321,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should detect Anthropic message creation spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "anthropic.messages.create",
         attributes: {
           "gen_ai.operation.name": "generate_content",
@@ -310,11 +336,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should detect tool execution spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "execute_tool calculator",
         attributes: {
           "gen_ai.operation.name": "execute_tool",
@@ -323,11 +351,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should detect agent invocation spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "invoke_agent customer_support",
         attributes: {
           "gen_ai.operation.name": "invoke_agent",
@@ -336,11 +366,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should detect OpenInference LLM spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "llm.completion",
         attributes: {
           "openinference.span.kind": "LLM",
@@ -352,11 +384,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should detect OpenInference retrieval spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "retrieval.query",
         attributes: {
           "openinference.span.kind": "RETRIEVER",
@@ -366,11 +400,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should detect OpenInference embedding spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "embedding.create",
         attributes: {
           "openinference.span.kind": "EMBEDDING",
@@ -378,11 +414,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should detect standard HTTP API spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "GET /api/users",
         attributes: {
           "http.method": "GET",
@@ -391,11 +429,11 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should detect standard database spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "SELECT users",
         attributes: {
           "db.system": "postgresql",
@@ -404,11 +442,11 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
 
     it("should detect standard function call spans", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "calculator.add",
         attributes: {
           "function.name": "calculator.add",
@@ -416,13 +454,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("standard");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
     });
   });
 
   describe("mixed standard scenarios", () => {
     it("should prioritize GenAI when mixed with standard attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.operation.name": "chat",
           "http.method": "POST",
@@ -430,11 +468,13 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
 
     it("should prioritize OpenInference when mixed with standard attributes", () => {
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         attributes: {
           "openinference.span.kind": "TOOL",
           "http.method": "POST",
@@ -442,13 +482,15 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("openinference");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "openinference",
+      );
     });
 
     it("should detect spans from actual trace examples (limited by actual detection logic)", () => {
       // Based on the real trace data you showed earlier
       // Only spans with operation_name or system will be detected as GenAI
-      const span = createMockSpan({
+      const span = createMockOpenTelemetrySpan({
         name: "call_llm gpt-4.1-mini",
         attributes: {
           "gen_ai.operation.name": "chat", // This will trigger GenAI detection
@@ -457,7 +499,9 @@ describe("detectStandard", () => {
         },
       });
 
-      expect(detectStandard(span)).toBe("opentelemetry_genai");
+      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
+        "opentelemetry_genai",
+      );
     });
   });
 });
