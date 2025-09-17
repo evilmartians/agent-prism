@@ -81,7 +81,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   ): TraceSpan {
     const duration = this.getSpanDuration(span);
     const status = this.getSpanStatus(span);
-    const spanType = this.getSpanCategory(span);
+    const type = this.getSpanCategory(span);
     const tokensCount = this.getSpanTokensCount(span);
     const cost = this.getSpanCost(span);
     const ioData = this.getSpanInputOutput(span);
@@ -90,7 +90,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     return {
       id: span.spanId,
       title,
-      type: spanType,
+      type,
       status,
       attributes: span.attributes,
       duration,

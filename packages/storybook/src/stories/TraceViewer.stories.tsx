@@ -5,7 +5,7 @@ import type {
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
-  convertLangfuseDocumentToSpanCards,
+  langfuseSpanAdapter,
   openTelemetrySpanAdapter,
 } from "@evilmartians/agent-prism-data";
 import {
@@ -37,13 +37,13 @@ const agentData3 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
   testData3 as OpenTelemetryDocument[],
 );
 
-const langfuse1 = convertLangfuseDocumentToSpanCards(
+const langfuse1 = langfuseSpanAdapter.convertRawDocumentsToSpans(
   langfuseData1 as LangfuseDocument,
 );
-const langfuse2 = convertLangfuseDocumentToSpanCards(
+const langfuse2 = langfuseSpanAdapter.convertRawDocumentsToSpans(
   langfuseData2 as LangfuseDocument,
 );
-const langfuse3 = convertLangfuseDocumentToSpanCards(
+const langfuse3 = langfuseSpanAdapter.convertRawDocumentsToSpans(
   langfuseData3 as LangfuseDocument,
 );
 
@@ -51,9 +51,9 @@ const data: TraceViewerProps["data"] = [
   {
     traceRecord: {
       id: "test-data-1",
-      name: "7a8b9c1d",
-      spansCount: 24,
-      durationMs: 3200,
+      name: "test-data-1",
+      spansCount: 29,
+      durationMs: 37_000,
       agentDescription: "research-agent",
       startTime: Date.now(),
     },
@@ -80,9 +80,9 @@ const data: TraceViewerProps["data"] = [
   {
     traceRecord: {
       id: "test-data-2",
-      name: "f2e3d4c5",
-      spansCount: 156,
-      durationMs: 45670,
+      name: "test-data-2",
+      spansCount: 8,
+      durationMs: 94_000,
       agentDescription: "data-analysis-bot",
       startTime: Date.now(),
     },
@@ -109,9 +109,9 @@ const data: TraceViewerProps["data"] = [
   {
     traceRecord: {
       id: "test-data-3",
-      name: "9b8a7c6d",
-      spansCount: 13,
-      durationMs: 2500,
+      name: "test-data-3",
+      spansCount: 18,
+      durationMs: 51_000,
       agentDescription: "customer-support-ai",
       startTime: Date.now(),
     },
@@ -135,31 +135,61 @@ const data: TraceViewerProps["data"] = [
     traceRecord: {
       id: "langfuse-1",
       name: "langfuse-1",
-      spansCount: 13,
-      durationMs: 2500,
+      spansCount: 11,
+      durationMs: 54_000,
       agentDescription: "langfuse-1",
     },
     spans: langfuse1,
+    badges: [
+      {
+        label: "app: demo-qa",
+        theme: "sky",
+      },
+      {
+        label: "env: production",
+        theme: "gray",
+      },
+    ],
   },
   {
     traceRecord: {
       id: "langfuse-2",
       name: "langfuse-2",
-      spansCount: 13,
-      durationMs: 2500,
+      spansCount: 11,
+      durationMs: 30_000,
       agentDescription: "langfuse-2",
     },
     spans: langfuse2,
+    badges: [
+      {
+        label: "app: demo-qa",
+        theme: "sky",
+      },
+      {
+        label: "env: production",
+        theme: "gray",
+      },
+    ],
   },
   {
     traceRecord: {
       id: "langfuse-3",
       name: "langfuse-3",
-      spansCount: 13,
-      durationMs: 2500,
+      spansCount: 5,
+      durationMs: 5000,
       agentDescription: "langfuse-3",
     },
     spans: langfuse3,
+    badges: [
+      {
+        label: "app: demo-qa",
+        theme: "sky",
+      },
+      {
+        label: "env: production",
+        theme: "gray",
+      },
+    ],
   },
 ];
 

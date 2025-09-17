@@ -26,35 +26,49 @@ export type LangfuseTrace = {
   observations?: LangfuseObservation[];
 };
 
+export type LangfuseScoreSource = "ANNOTATION" | "API" | "EVAL" | "USER";
+
+export type LangfuseScoreDataType = "CATEGORICAL" | "NUMERIC" | "BOOLEAN";
+
 export type LangfuseScore = {
   id: string;
-  timestamp: string; // ISO date string
+  timestamp: string;
   projectId: string;
-  environment: string;
   name: string;
-  source: string;
+  value: number | null;
+  source: LangfuseScoreSource;
   authorUserId: string | null;
-  comment?: string | null;
-  metadata?: string | Record<string, unknown> | null;
-  configId: string | null;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  queueId: string | null;
+  comment: string | null;
   traceId: string;
   observationId: string | null;
-  sessionId: string | null;
-  datasetRunId: string | null;
-  value?: number | null;
-  stringValue?: string | null;
-  dataType?: "NUMERIC" | "STRING" | string;
+  configId: string | null;
+  stringValue: string | null;
+  queueId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  dataType: LangfuseScoreDataType;
 };
 
-export type LangfuseObservation =
-  | LangfuseGenerationObservation
-  | LangfuseSpanObservation
-  | LangfuseToolObservation;
+export type LangfuseObservationType =
+  | "EVENT"
+  | "SPAN"
+  | "GENERATION"
+  | "AGENT"
+  | "TOOL"
+  | "CHAIN"
+  | "RETRIEVER"
+  | "EVALUATOR"
+  | "EMBEDDING"
+  | "GUARDRAIL"
+  | "UNKNOWN";
 
-export type LangfuseObservationCommon = {
+export type LangfuseObservationLevel =
+  | "DEBUG"
+  | "DEFAULT"
+  | "WARNING"
+  | "ERROR";
+
+export type LangfuseObservation = {
   id: string;
   traceId: string;
   projectId: string;
@@ -64,7 +78,10 @@ export type LangfuseObservationCommon = {
   endTime: string; // ISO date string
   name: string;
   metadata?: string | Record<string, unknown> | null;
-  level?: string; // e.g. "DEFAULT"
+  type?: LangfuseObservationType;
+  level?: LangfuseObservationLevel;
+  input?: string | null;
+  output?: string | null;
   statusMessage?: string | null;
   version?: string | null;
   promptId?: string | null;
@@ -79,26 +96,6 @@ export type LangfuseObservationCommon = {
   usageDetails?: LangfuseUsageDetails;
   costDetails?: LangfuseCostDetails;
   providedCostDetails?: Record<string, unknown>;
-};
-
-export type LangfuseGenerationObservation = LangfuseObservationCommon & {
-  type: "GENERATION";
-  modelParameters?: Record<string, unknown> | null;
-  completionStartTime?: string | null; // ISO date string
-  inputCost?: number | null;
-  outputCost?: number | null;
-  totalCost?: number | null;
-  inputUsage?: number | null;
-  outputUsage?: number | null;
-  totalUsage?: number | null;
-};
-
-export type LangfuseSpanObservation = LangfuseObservationCommon & {
-  type: "SPAN";
-};
-
-export type LangfuseToolObservation = LangfuseObservationCommon & {
-  type: "TOOL";
 };
 
 export type LangfuseUsageDetails = {
@@ -116,5 +113,3 @@ export type LangfuseCostDetails = {
   input_cached_tokens?: number;
   output_reasoning_tokens?: number;
 };
-
-

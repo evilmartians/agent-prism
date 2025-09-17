@@ -37,6 +37,8 @@ export type TraceSpanCategory =
   | "embedding"
   | "create_agent"
   | "span"
+  | "event"
+  | "guardrail"
   | "unknown";
 
 export type InputOutputData = {
