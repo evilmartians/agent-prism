@@ -1,7 +1,7 @@
 import { OPENTELEMETRY_GENAI_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter";
+import { openTelemetrySpanAdapter } from "../adapter.ts";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.ts";
 
 describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
