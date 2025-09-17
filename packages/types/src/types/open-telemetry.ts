@@ -1,3 +1,5 @@
+import type { TraceSpanAttribute } from ".";
+
 export type OpenTelemetryDocument = {
   resourceSpans: OpenTelemetryResourceSpan[];
 };
@@ -9,18 +11,7 @@ export type OpenTelemetryResourceSpan = {
 };
 
 export type OpenTelemetryResource = {
-  attributes: OpenTelemetryResourceAttribute[];
-};
-
-export type OpenTelemetryResourceAttribute = {
-  key: string;
-  value: OpenTelemetryAttributeValue;
-};
-
-export type OpenTelemetryAttributeValue = {
-  stringValue?: string;
-  intValue?: string;
-  boolValue?: boolean;
+  attributes: TraceSpanAttribute[];
 };
 
 export type OpenTelemetryScopeSpan = {
@@ -42,7 +33,7 @@ export type OpenTelemetrySpan = {
   kind: OpenTelemetrySpanKind;
   startTimeUnixNano: string;
   endTimeUnixNano: string;
-  attributes: OpenTelemetrySpanAttribute[];
+  attributes: TraceSpanAttribute[];
   status: OpenTelemetryStatus;
   flags: number;
   events?: OpenTelemetryEvent[];
@@ -54,15 +45,10 @@ export type OpenTelemetrySpan = {
   links?: OpenTelemetryLink[];
 };
 
-export type OpenTelemetrySpanAttribute = {
-  key: string;
-  value: OpenTelemetryAttributeValue;
-};
-
 export type OpenTelemetryEvent = {
   timeUnixNano: string;
   name: string;
-  attributes?: OpenTelemetrySpanAttribute[];
+  attributes?: TraceSpanAttribute[];
   droppedAttributesCount?: number;
 };
 
@@ -70,7 +56,7 @@ export type OpenTelemetryLink = {
   traceId: string;
   spanId: string;
   traceState?: string;
-  attributes?: OpenTelemetrySpanAttribute[];
+  attributes?: TraceSpanAttribute[];
   droppedAttributesCount?: number;
 };
 

@@ -1,5 +1,3 @@
-import type { OpenTelemetrySpanAttribute } from "./open-telemetry";
-
 export type TraceRecord = {
   id: string;
   name: string;
@@ -21,7 +19,7 @@ export type TraceSpan = {
   duration: number;
   type: TraceSpanCategory;
   raw: string;
-  attributes?: OpenTelemetrySpanAttribute[];
+  attributes?: TraceSpanAttribute[];
   children?: TraceSpan[];
   status: TraceSpanStatus;
   cost?: number;
@@ -44,4 +42,15 @@ export type TraceSpanCategory =
 export type InputOutputData = {
   input?: string;
   output?: string;
+};
+
+export type TraceSpanAttribute = {
+  key: string;
+  value: TraceSpanAttributeValue;
+};
+
+export type TraceSpanAttributeValue = {
+  stringValue?: string;
+  intValue?: string;
+  boolValue?: boolean;
 };
