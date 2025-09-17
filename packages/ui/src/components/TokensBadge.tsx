@@ -20,8 +20,7 @@ export const TokensBadge = ({
       theme="gray"
       size={size}
       {...rest}
-    >
-      {tokensCount}
-    </Badge>
+      label={tokensCount}
+    />
   );
 };

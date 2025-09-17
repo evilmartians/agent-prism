@@ -9,6 +9,7 @@ import {
   getSpanCategoryLabel,
   getSpanCategoryTheme,
 } from "../shared.ts";
+import { TimestampBadge } from "../TimestampBadge.tsx";
 
 interface DetailsViewMetricsProps {
   data: TraceSpan;
@@ -24,21 +25,25 @@ export const DetailsViewMetrics = ({ data }: DetailsViewMetricsProps) => {
         iconStart={<Icon className="size-2.5" />}
         theme={getSpanCategoryTheme(data.type)}
         size="xs"
-      >
-        {getSpanCategoryLabel(data.type)}
-      </Badge>
+        label={getSpanCategoryLabel(data.type)}
+      />
 
-      <Badge iconStart={<Coins className="size-2.5" />} theme="gray" size="xs">
-        {data.tokensCount}
-      </Badge>
+      <Badge
+        iconStart={<Coins className="size-2.5" />}
+        theme="gray"
+        size="xs"
+        label={data.tokensCount}
+      />
 
-      <Badge theme="gray" size="xs">
-        $ {data.cost}
-      </Badge>
+      <Badge theme="gray" size="xs" label={`$ ${data.cost}`} />
 
       <span className="text-xs text-gray-500 dark:text-gray-600">
         LATENCY: {formatDuration(durationMs)}
       </span>
+
+      {typeof data.startTime === "number" && (
+        <TimestampBadge timestamp={data.startTime} />
+      )}
     </div>
   );
 };

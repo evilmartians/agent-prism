@@ -8,7 +8,10 @@ import {
   convertLangfuseDocumentToSpanCards,
   openTelemetrySpanAdapter,
 } from "@evilmartians/agent-prism-data";
-import { TraceViewer } from "@evilmartians/agent-prism-ui";
+import {
+  TraceViewer,
+  type TraceViewerProps,
+} from "@evilmartians/agent-prism-ui";
 
 import langfuseData1 from "../data/langfuse-1.json";
 import langfuseData2 from "../data/langfuse-2.json";
@@ -44,7 +47,7 @@ const langfuse3 = convertLangfuseDocumentToSpanCards(
   langfuseData3 as LangfuseDocument,
 );
 
-const data = [
+const data: TraceViewerProps["data"] = [
   {
     traceRecord: {
       id: "test-data-1",
@@ -52,8 +55,27 @@ const data = [
       spansCount: 24,
       durationMs: 3200,
       agentDescription: "research-agent",
+      startTime: Date.now(),
     },
     spans: agentData1,
+    badges: [
+      {
+        label: "app: dev-chatbot",
+        theme: "sky",
+      },
+      {
+        label: "env: dev",
+        theme: "gray",
+      },
+      {
+        label: "gpt-4",
+        theme: "purple",
+      },
+      {
+        label: "5 tools",
+        theme: "orange",
+      },
+    ],
   },
   {
     traceRecord: {
@@ -62,8 +84,27 @@ const data = [
       spansCount: 156,
       durationMs: 45670,
       agentDescription: "data-analysis-bot",
+      startTime: Date.now(),
     },
     spans: agentData2,
+    badges: [
+      {
+        label: "app: staging-assistant",
+        theme: "sky",
+      },
+      {
+        label: "env: staging",
+        theme: "gray",
+      },
+      {
+        label: "claude-3-sonnet",
+        theme: "purple",
+      },
+      {
+        label: "10 tools",
+        theme: "orange",
+      },
+    ],
   },
   {
     traceRecord: {
@@ -72,8 +113,23 @@ const data = [
       spansCount: 13,
       durationMs: 2500,
       agentDescription: "customer-support-ai",
+      startTime: Date.now(),
     },
     spans: agentData3,
+    badges: [
+      {
+        label: "app: prod-analyzer",
+        theme: "sky",
+      },
+      {
+        label: "env: production",
+        theme: "gray",
+      },
+      {
+        label: "gpt-4-turbo",
+        theme: "purple",
+      },
+    ],
   },
   {
     traceRecord: {

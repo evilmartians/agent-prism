@@ -6,6 +6,7 @@ import { useCallback, type KeyboardEvent } from "react";
 import { type AvatarProps } from "../Avatar.tsx";
 import { Badge, type BadgeProps } from "../Badge.tsx";
 import { PriceBadge } from "../PriceBadge.tsx";
+import { TimestampBadge } from "../TimestampBadge.tsx";
 import { TokensBadge } from "../TokensBadge.tsx";
 import { TraceListItemHeader } from "./TraceListItemHeader.tsx";
 
@@ -34,7 +35,7 @@ export const TraceListItem = ({
     [onClick],
   );
 
-  const { name, agentDescription, totalCost, totalTokens } = trace;
+  const { name, agentDescription, totalCost, totalTokens, startTime } = trace;
 
   return (
     <div
@@ -64,10 +65,17 @@ export const TraceListItem = ({
         )}
 
         {badges?.map((badge, index) => (
-          <Badge key={index} theme={badge.theme} size="xs">
-            {badge.children}
-          </Badge>
+          <Badge
+            key={index}
+            theme={badge.theme}
+            size="xs"
+            label={badge.label}
+          />
         ))}
+
+        {typeof startTime === "number" && (
+          <TimestampBadge timestamp={startTime} />
+        )}
       </div>
     </div>
   );
