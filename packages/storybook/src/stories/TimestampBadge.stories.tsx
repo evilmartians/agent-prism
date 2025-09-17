@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { TimestampBadge, TimestampBadgeSource } from "@evilmartians/agent-prism-ui";
+import {
+  TimestampBadge,
+  TimestampBadgeSource,
+} from "@evilmartians/agent-prism-ui";
 import {
   Description,
   Primary,

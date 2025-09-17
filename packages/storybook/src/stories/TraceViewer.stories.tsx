@@ -2,7 +2,10 @@ import type { OpenTelemetryDocument } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
-import { TraceViewer, type TraceViewerProps } from "@evilmartians/agent-prism-ui";
+import {
+  TraceViewer,
+  type TraceViewerProps,
+} from "@evilmartians/agent-prism-ui";
 
 import testData1 from "../data/test_data_1.json";
 import testData2 from "../data/test_data_2.json";
@@ -33,7 +36,7 @@ const data: TraceViewerProps["data"] = [
       spansCount: 24,
       durationMs: 3200,
       agentDescription: "research-agent",
-      startTime: Date.now(),      
+      startTime: Date.now(),
     },
     spans: agentData1,
     badges: [

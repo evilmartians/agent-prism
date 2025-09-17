@@ -25,9 +25,21 @@ export const TraceListItemHeader = ({
       </div>
 
       <div className="flex items-center gap-2">
-        <Badge size="sm" theme="gray" variant="outline" label={trace.spansCount === 1 ? "1 span" : `${trace.spansCount} spans`} />
+        <Badge
+          size="sm"
+          theme="gray"
+          variant="outline"
+          label={
+            trace.spansCount === 1 ? "1 span" : `${trace.spansCount} spans`
+          }
+        />
 
-        <Badge size="sm" theme="gray" variant="outline" label={formatDuration(trace.durationMs)} />
+        <Badge
+          size="sm"
+          theme="gray"
+          variant="outline"
+          label={formatDuration(trace.durationMs)}
+        />
       </div>
     </header>
   );

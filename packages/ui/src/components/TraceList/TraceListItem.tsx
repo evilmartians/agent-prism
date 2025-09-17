@@ -65,10 +65,17 @@ export const TraceListItem = ({
         )}
 
         {badges?.map((badge, index) => (
-          <Badge key={index} theme={badge.theme} size="xs" label={badge.label} />
+          <Badge
+            key={index}
+            theme={badge.theme}
+            size="xs"
+            label={badge.label}
+          />
         ))}
 
-        {typeof startTime === "number" && <TimestampBadge timestamp={startTime} />}
+        {typeof startTime === "number" && (
+          <TimestampBadge timestamp={startTime} />
+        )}
       </div>
     </div>
   );

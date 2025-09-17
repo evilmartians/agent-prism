@@ -28,7 +28,12 @@ export const DetailsViewMetrics = ({ data }: DetailsViewMetricsProps) => {
         label={getSpanCategoryLabel(data.type)}
       />
 
-      <Badge iconStart={<Coins className="size-2.5" />} theme="gray" size="xs" label={data.tokensCount} />
+      <Badge
+        iconStart={<Coins className="size-2.5" />}
+        theme="gray"
+        size="xs"
+        label={data.tokensCount}
+      />
 
       <Badge theme="gray" size="xs" label={`$ ${data.cost}`} />
 
@@ -36,7 +41,9 @@ export const DetailsViewMetrics = ({ data }: DetailsViewMetricsProps) => {
         LATENCY: {formatDuration(durationMs)}
       </span>
 
-      {typeof data.startTime === "number" && <TimestampBadge timestamp={data.startTime} />}
+      {typeof data.startTime === "number" && (
+        <TimestampBadge timestamp={data.startTime} />
+      )}
     </div>
   );
 };
