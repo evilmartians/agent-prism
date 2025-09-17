@@ -11,7 +11,12 @@ export type TraceRecord = {
 
 export type TraceSpanStatus = "success" | "error" | "pending" | "warning";
 
-export type TraceSpan = {
+export type InputOutputData = {
+  input?: string;
+  output?: string;
+};
+
+export type TraceSpan = InputOutputData & {
   id: string;
   title: string;
   startTime: Date;
@@ -23,9 +28,6 @@ export type TraceSpan = {
   children?: TraceSpan[];
   status: TraceSpanStatus;
   cost?: number;
-  tokensCount?: number;
-  input?: string;
-  output?: string;
 };
 
 export type TraceSpanCategory =
@@ -40,11 +42,6 @@ export type TraceSpanCategory =
   | "event"
   | "guardrail"
   | "unknown";
-
-export type InputOutputData = {
-  input?: string;
-  output?: string;
-};
 
 export type TraceSpanAttribute = {
   key: string;
