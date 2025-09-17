@@ -1,12 +1,34 @@
+import { describe, expect, it, vi, beforeEach } from "vitest";
+
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+
+vi.mock("../utils/categorize-open-inference", () => ({
+  categorizeOpenInference: vi.fn(),
+}));
+
+vi.mock("../utils/categorize-open-telemetry-gen-ai", () => ({
+  categorizeOpenTelemetryGenAI: vi.fn(),
+}));
+
+vi.mock("../utils/get-open-telemetry-span-standard", () => ({
+  getOpenTelemetrySpanStandard: vi.fn(),
+}));
+
+vi.mock("../utils/categorize-standard-open-telemetry", () => ({
+  categorizeStandardOpenTelemetry: vi.fn(),
+}));
+
 import {
   OPENINFERENCE_ATTRIBUTES,
   OPENTELEMETRY_GENAI_ATTRIBUTES,
   STANDARD_OPENTELEMETRY_ATTRIBUTES,
 } from "@evilmartians/agent-prism-types";
-import { describe, expect, it, vi, beforeEach } from "vitest";
 
 import { openTelemetrySpanAdapter } from "../adapter";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { categorizeOpenInference } from "../utils/categorize-open-inference";
+import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai";
+import { categorizeStandardOpenTelemetry } from "../utils/categorize-standard-open-telemetry";
+import { getOpenTelemetrySpanStandard } from "../utils/get-open-telemetry-span-standard";
 
 describe("openTelemetrySpanAdapter.getSpanCategory", () => {
   beforeEach(() => {
@@ -21,25 +43,16 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      const getSpanStandardMock = vi
-        .spyOn(openTelemetrySpanAdapter, "getSpanStandard")
-        .mockReturnValue("opentelemetry_genai");
-
-      const categorizeOpenTelemetryGenAIMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenTelemetryGenAI")
-        .mockReturnValue("llm_call");
-
-      const categorizeOpenInferenceMock = vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenInference",
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
+        "opentelemetry_genai",
       );
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("llm_call");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(getSpanStandardMock).toHaveBeenCalledWith(span);
-      expect(categorizeOpenTelemetryGenAIMock).toHaveBeenCalledWith(span);
-      expect(categorizeOpenInferenceMock).not.toHaveBeenCalled();
-
+      expect(getOpenTelemetrySpanStandard).toHaveBeenCalledWith(span);
+      expect(categorizeOpenTelemetryGenAI).toHaveBeenCalledWith(span);
+      expect(categorizeOpenInference).not.toHaveBeenCalled();
       expect(result).toBe("llm_call");
     });
 
@@ -50,22 +63,18 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-
-      const categorizeOpenTelemetryGenAIMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenTelemetryGenAI")
-        .mockReturnValue("unknown");
-
-      const categorizeStandardOpenTelemetryMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeStandardOpenTelemetry")
-        .mockReturnValue("tool_execution");
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("unknown");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue(
+        "tool_execution",
+      );
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenTelemetryGenAIMock).toHaveBeenCalledWith(span);
-      expect(categorizeStandardOpenTelemetryMock).toHaveBeenCalledWith(span);
+      expect(categorizeOpenTelemetryGenAI).toHaveBeenCalledWith(span);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
       expect(result).toBe("tool_execution");
     });
 
@@ -76,25 +85,14 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      ).mockReturnValue("tool_execution");
-
-      vi.spyOn(openTelemetrySpanAdapter, "categorizeOpenTelemetryGenAI");
-
-      const categorizeOpenInferenceMock = vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenInference",
-      );
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("tool_execution");
 
       openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenInferenceMock).not.toHaveBeenCalled();
+      expect(categorizeOpenInference).not.toHaveBeenCalled();
     });
   });
 
@@ -106,24 +104,14 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      const getSpanStandardMock = vi
-        .spyOn(openTelemetrySpanAdapter, "getSpanStandard")
-        .mockReturnValue("openinference");
-
-      const categorizeOpenTelemetryGenAIMock = vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      );
-
-      const categorizeOpenInferenceMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenInference")
-        .mockReturnValue("llm_call");
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("openinference");
+      vi.mocked(categorizeOpenInference).mockReturnValue("llm_call");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(getSpanStandardMock).toHaveBeenCalledWith(span);
-      expect(categorizeOpenInferenceMock).toHaveBeenCalledWith(span);
-      expect(categorizeOpenTelemetryGenAIMock).not.toHaveBeenCalled();
+      expect(getOpenTelemetrySpanStandard).toHaveBeenCalledWith(span);
+      expect(categorizeOpenInference).toHaveBeenCalledWith(span);
+      expect(categorizeOpenTelemetryGenAI).not.toHaveBeenCalled();
       expect(result).toBe("llm_call");
     });
 
@@ -134,22 +122,16 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
-        "openinference",
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("openinference");
+      vi.mocked(categorizeOpenInference).mockReturnValue("unknown");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue(
+        "chain_operation",
       );
-
-      const categorizeStandardOpenTelemetryMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeStandardOpenTelemetry")
-        .mockReturnValue("chain_operation");
-
-      const categorizeOpenInferenceMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenInference")
-        .mockReturnValue("unknown");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenInferenceMock).toHaveBeenCalledWith(span);
-      expect(categorizeStandardOpenTelemetryMock).toHaveBeenCalledWith(span);
+      expect(categorizeOpenInference).toHaveBeenCalledWith(span);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
       expect(result).toBe("chain_operation");
     });
   });
@@ -163,29 +145,17 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      const getSpanStandardMock = vi
-        .spyOn(openTelemetrySpanAdapter, "getSpanStandard")
-        .mockReturnValue("standard");
-
-      const categorizeOpenTelemetryGenAIMock = vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("standard");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue(
+        "tool_execution",
       );
-
-      const categorizeStandardOpenTelemetryMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeStandardOpenTelemetry")
-        .mockReturnValue("tool_execution");
-
-      const categorizeOpenInferenceMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenInference")
-        .mockReturnValue("unknown");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(getSpanStandardMock).toHaveBeenCalledWith(span);
-      expect(categorizeStandardOpenTelemetryMock).toHaveBeenCalledWith(span);
-      expect(categorizeOpenTelemetryGenAIMock).not.toHaveBeenCalled();
-      expect(categorizeOpenInferenceMock).not.toHaveBeenCalled();
+      expect(getOpenTelemetrySpanStandard).toHaveBeenCalledWith(span);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
+      expect(categorizeOpenTelemetryGenAI).not.toHaveBeenCalled();
+      expect(categorizeOpenInference).not.toHaveBeenCalled();
       expect(result).toBe("tool_execution");
     });
 
@@ -194,17 +164,15 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         name: "unknown operation",
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard")
-        // @ts-expect-error - unexpected value to test default case
-        .mockReturnValue("unexpected");
-
-      const categorizeStandardOpenTelemetryMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeStandardOpenTelemetry")
-        .mockReturnValue("unknown");
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
+        // @ts-expect-error - Return an unexpected value to test default case
+        "unexpected",
+      );
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeStandardOpenTelemetryMock).toHaveBeenCalledWith(span);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
       expect(result).toBe("unknown");
     });
   });
@@ -220,23 +188,15 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      ).mockReturnValue("llm_call");
-
-      const categorizeOpenInferenceMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenInference")
-        .mockReturnValue("unknown");
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("llm_call");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
       expect(result).toBe("llm_call");
-      expect(categorizeOpenInferenceMock).not.toHaveBeenCalled();
+      expect(categorizeOpenInference).not.toHaveBeenCalled();
     });
 
     it("should properly cascade through standards when primary returns unknown", () => {
@@ -247,22 +207,18 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-
-      const categorizeOpenTelemetryGenAIMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenTelemetryGenAI")
-        .mockReturnValue("unknown");
-
-      const categorizeStandardOpenTelemetryMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeStandardOpenTelemetry")
-        .mockReturnValue("tool_execution");
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("unknown");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue(
+        "tool_execution",
+      );
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenTelemetryGenAIMock).toHaveBeenCalledWith(span);
-      expect(categorizeStandardOpenTelemetryMock).toHaveBeenCalledWith(span);
+      expect(categorizeOpenTelemetryGenAI).toHaveBeenCalledWith(span);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
       expect(result).toBe("tool_execution");
     });
   });
@@ -278,13 +234,10 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      ).mockReturnValue("llm_call");
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("llm_call");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
@@ -300,13 +253,8 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
-        "openinference",
-      );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenInference",
-      ).mockReturnValue("llm_call");
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("openinference");
+      vi.mocked(categorizeOpenInference).mockReturnValue("llm_call");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
@@ -322,13 +270,10 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
-        "standard",
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("standard");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue(
+        "tool_execution",
       );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeStandardOpenTelemetry",
-      ).mockReturnValue("tool_execution");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
@@ -343,13 +288,10 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      ).mockReturnValue("tool_execution");
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("tool_execution");
 
       expect(openTelemetrySpanAdapter.getSpanCategory(genaiSpan)).toBe(
         "tool_execution",
@@ -362,13 +304,8 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
-        "openinference",
-      );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenInference",
-      ).mockReturnValue("tool_execution");
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("openinference");
+      vi.mocked(categorizeOpenInference).mockReturnValue("tool_execution");
 
       expect(openTelemetrySpanAdapter.getSpanCategory(openinfSpan)).toBe(
         "tool_execution",
@@ -377,23 +314,16 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
   });
 
   describe("error handling and edge cases", () => {
-    it("should handle when getSpanStandard returns unexpected values", () => {
+    it("should handle when getOpenTelemetrySpanStandard returns unexpected values", () => {
       const span = createMockOpenTelemetrySpan({ name: "test" });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
-        // @ts-expect-error - unexpected value to test default case
-        null,
-      );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeStandardOpenTelemetry",
-      ).mockReturnValue("unknown");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(null as any);
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry,
-      ).toHaveBeenCalledWith(span);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
       expect(result).toBe("unknown");
     });
 
@@ -404,19 +334,13 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      ).mockImplementation(() => {
+      vi.mocked(categorizeOpenTelemetryGenAI).mockImplementation(() => {
         throw new Error("Categorization error");
       });
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeStandardOpenTelemetry",
-      ).mockReturnValue("unknown");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
 
       // Should not throw, but fallback gracefully
       expect(() => openTelemetrySpanAdapter.getSpanCategory(span)).toThrow(
@@ -427,17 +351,11 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
     it("should handle all categorization functions returning unknown", () => {
       const span = createMockOpenTelemetrySpan({ name: "mysterious span" });
 
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenTelemetryGenAI",
-      ).mockReturnValue("unknown");
-      vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeStandardOpenTelemetry",
-      ).mockReturnValue("unknown");
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("unknown");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
@@ -453,27 +371,16 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      const categorizeOpenTelemetryGenAIMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenTelemetryGenAI")
-        .mockReturnValue("llm_call");
-      const categorizeStandardOpenTelemetryMock = vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeStandardOpenTelemetry",
-      );
-      const categorizeOpenInferenceMock = vi.spyOn(
-        openTelemetrySpanAdapter,
-        "categorizeOpenInference",
-      );
-
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
         "opentelemetry_genai",
       );
+      vi.mocked(categorizeOpenTelemetryGenAI).mockReturnValue("llm_call");
 
       openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenTelemetryGenAIMock).toHaveBeenCalledTimes(1);
-      expect(categorizeStandardOpenTelemetryMock).not.toHaveBeenCalled();
-      expect(categorizeOpenInferenceMock).not.toHaveBeenCalled();
+      expect(categorizeOpenTelemetryGenAI).toHaveBeenCalledTimes(1);
+      expect(categorizeStandardOpenTelemetry).not.toHaveBeenCalled();
+      expect(categorizeOpenInference).not.toHaveBeenCalled();
     });
 
     it("should call fallback only when needed", () => {
@@ -483,21 +390,16 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         },
       });
 
-      const categorizeOpenInferenceMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeOpenInference")
-        .mockReturnValue("unknown");
-      const categorizeStandardOpenTelemetryMock = vi
-        .spyOn(openTelemetrySpanAdapter, "categorizeStandardOpenTelemetry")
-        .mockReturnValue("tool_execution");
-
-      vi.spyOn(openTelemetrySpanAdapter, "getSpanStandard").mockReturnValue(
-        "openinference",
+      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("openinference");
+      vi.mocked(categorizeOpenInference).mockReturnValue("unknown");
+      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue(
+        "tool_execution",
       );
 
       const result = openTelemetrySpanAdapter.getSpanCategory(span);
 
-      expect(categorizeOpenInferenceMock).toHaveBeenCalledTimes(1);
-      expect(categorizeStandardOpenTelemetryMock).toHaveBeenCalledTimes(1);
+      expect(categorizeOpenInference).toHaveBeenCalledTimes(1);
+      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledTimes(1);
       expect(result).toBe("tool_execution");
     });
   });

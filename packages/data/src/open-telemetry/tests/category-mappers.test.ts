@@ -1,10 +1,10 @@
 import { STANDARD_OPENTELEMETRY_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { openTelemetryCategoryMappers } from "../utils/open-telemetry-category-mappers";
 
-describe("openTelemetrySpanAdapter.categoryMappers", () => {
+describe("openTelemetryCategoryMappers", () => {
   describe("isHttpCall", () => {
     it("should detect HTTP calls by method attribute", () => {
       const span = createMockOpenTelemetrySpan({
@@ -13,9 +13,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
     });
 
     it("should detect different HTTP methods", () => {
@@ -35,9 +33,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
             [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: method,
           },
         });
-        expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-          true,
-        );
+        expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
       });
     });
 
@@ -50,9 +46,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        false,
-      );
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(false);
     });
 
     it("should not detect HTTP calls with null method", () => {
@@ -62,9 +56,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        false,
-      );
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(false);
     });
 
     it("should not detect HTTP calls with undefined method", () => {
@@ -74,9 +66,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        false,
-      );
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(false);
     });
 
     it("should detect HTTP calls with empty string method", () => {
@@ -86,9 +76,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
     });
   });
 
@@ -100,9 +88,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true);
     });
 
     it("should detect different database systems", () => {
@@ -122,9 +108,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
             [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: system,
           },
         });
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true);
       });
     });
 
@@ -137,9 +121,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(false);
     });
 
     it("should not detect database calls with null system", () => {
@@ -149,9 +131,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(false);
     });
 
     it("should detect database calls with empty string system", () => {
@@ -161,9 +141,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true);
     });
   });
 
@@ -173,9 +151,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "tool execution",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
     });
 
     it("should detect function calls by name containing 'function'", () => {
@@ -183,9 +159,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "function call",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
     });
 
     it("should detect function calls by function.name attribute", () => {
@@ -196,9 +170,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
     });
 
     it("should be case insensitive for name matching", () => {
@@ -210,9 +182,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
       });
     });
 
@@ -224,9 +194,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
     });
 
     it("should not detect function calls without keywords or attributes", () => {
@@ -235,9 +203,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         attributes: {},
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);
     });
 
     it("should detect function calls with substring matches", () => {
@@ -249,9 +215,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
       });
     });
   });
@@ -262,9 +226,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "openai completion",
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
     });
 
     it("should detect LLM calls by name containing 'anthropic'", () => {
@@ -272,9 +234,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "anthropic claude call",
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
     });
 
     it("should detect LLM calls by name containing 'gpt'", () => {
@@ -282,9 +242,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "gpt-4 generation",
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
     });
 
     it("should detect LLM calls by name containing 'claude'", () => {
@@ -292,9 +250,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "claude-3 sonnet",
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
     });
 
     it("should be case insensitive for LLM detection", () => {
@@ -306,9 +262,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-          true,
-        );
+        expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
       });
     });
 
@@ -321,9 +275,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-          true,
-        );
+        expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
       });
     });
 
@@ -332,9 +284,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "generic llm call",
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        false,
-      );
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
     });
   });
 
@@ -344,9 +294,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "chain execution",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(true);
     });
 
     it("should detect chain operations by name containing 'workflow'", () => {
@@ -354,9 +302,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "workflow runner",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(true);
     });
 
     it("should detect chain operations by name containing 'langchain'", () => {
@@ -364,9 +310,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "langchain qa",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(true);
     });
 
     it("should be case insensitive for chain detection", () => {
@@ -377,9 +321,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(true);
       });
     });
 
@@ -391,9 +333,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(true);
       });
     });
 
@@ -402,9 +342,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "generic operation",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(false);
     });
   });
 
@@ -414,9 +352,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "agent execution",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(true);
     });
 
     it("should be case insensitive for agent detection", () => {
@@ -427,9 +363,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(true);
       });
     });
 
@@ -441,9 +375,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(true);
       });
     });
 
@@ -452,9 +384,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "generic operation",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(false);
     });
   });
 
@@ -464,9 +394,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "pinecone query",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        true,
+      );
     });
 
     it("should detect retrieval operations by name containing 'chroma'", () => {
@@ -474,9 +404,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "chroma search",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        true,
+      );
     });
 
     it("should detect retrieval operations by name containing 'retrieval'", () => {
@@ -484,9 +414,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "retrieval operation",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        true,
+      );
     });
 
     it("should detect retrieval operations by name containing 'vector'", () => {
@@ -494,9 +424,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "vector database",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        true,
+      );
     });
 
     it("should detect retrieval operations by name containing 'search'", () => {
@@ -504,9 +434,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "search documents",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        true,
+      );
     });
 
     it("should be case insensitive for retrieval detection", () => {
@@ -519,9 +449,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+          true,
+        );
       });
     });
 
@@ -535,9 +465,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-        ).toBe(true);
+        expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+          true,
+        );
       });
     });
 
@@ -546,9 +476,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "generic operation",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        false,
+      );
     });
   });
 
@@ -562,21 +492,11 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        true,
-      );
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true);
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        true,
-      );
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(false);
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
+      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(false);
     });
 
     it("should handle spans that match no detection methods", () => {
@@ -587,27 +507,15 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
         false,
       );
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(false);
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        false,
-      );
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(false);
     });
   });
 
@@ -622,9 +530,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
     });
 
     it("should detect database query spans", () => {
@@ -636,9 +542,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true);
     });
 
     it("should detect LangChain application spans", () => {
@@ -646,9 +550,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "langchain.chain.RetrievalQA.invoke",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(true);
     });
 
     it("should detect vector database operations", () => {
@@ -656,9 +558,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "pinecone.index.query",
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
+        true,
+      );
     });
 
     it("should detect custom tool functions", () => {
@@ -669,9 +571,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
     });
 
     it("should detect OpenAI API calls as LLM operations", () => {
@@ -679,9 +579,7 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         name: "openai.chat.completions.create",
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
-        true,
-      );
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
     });
   });
 
@@ -692,21 +590,13 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         attributes: {},
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
         false,
       );
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(false);
     });
 
     it("should handle spans with only whitespace in names", () => {
@@ -715,21 +605,13 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         attributes: {},
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isLLMCall(span)).toBe(
+      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(false);
+      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
         false,
       );
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isChainOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isAgentOperation(span),
-      ).toBe(false);
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isRetrievalOperation(span),
-      ).toBe(false);
     });
 
     it("should handle attribute values of different types", () => {
@@ -741,15 +623,9 @@ describe("openTelemetrySpanAdapter.categoryMappers", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.categoryMappers.isHttpCall(span)).toBe(
-        true,
-      ); // 200 is truthy
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isDatabaseCall(span),
-      ).toBe(true); // true is truthy
-      expect(
-        openTelemetrySpanAdapter.categoryMappers.isFunctionCall(span),
-      ).toBe(true); // [] is truthy
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true); // 200 is truthy
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true); // true is truthy
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true); // [] is truthy
     });
   });
 });

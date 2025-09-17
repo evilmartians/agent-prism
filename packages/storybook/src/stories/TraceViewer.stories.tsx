@@ -26,14 +26,14 @@ const meta: Meta<typeof TraceViewer> = {
   parameters: {},
 };
 
-const agentData1 = openTelemetrySpanAdapter.convertDocumentsToSpans(
+const agentData1 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
   testData1 as OpenTelemetryDocument[],
 );
-const agentData2 = openTelemetrySpanAdapter.convertDocumentsToSpans(
+const agentData2 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
   testData2 as OpenTelemetryDocument[],
 );
 
-const agentData3 = openTelemetrySpanAdapter.convertDocumentsToSpans(
+const agentData3 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
   testData3 as OpenTelemetryDocument[],
 );
 

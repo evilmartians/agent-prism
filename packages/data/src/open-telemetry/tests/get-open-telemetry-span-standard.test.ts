@@ -4,10 +4,10 @@ import {
 } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { getOpenTelemetrySpanStandard } from "../utils/get-open-telemetry-span-standard";
 
-describe("openTelemetrySpanAdapter.getSpanStandard", () => {
+describe("getOpenTelemetrySpanStandard", () => {
   describe("OpenTelemetry GenAI detection", () => {
     it("should detect OpenTelemetry GenAI by operation name", () => {
       const span = createMockOpenTelemetrySpan({
@@ -16,9 +16,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should detect OpenTelemetry GenAI by system attribute", () => {
@@ -28,9 +26,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should detect OpenTelemetry GenAI with both operation name and system", () => {
@@ -41,9 +37,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     // Note: getSpanStandard only checks OPERATION_NAME and SYSTEM for GenAI detection
@@ -55,7 +49,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenTelemetry GenAI with only agent name", () => {
@@ -65,7 +59,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenTelemetry GenAI with only tool name", () => {
@@ -75,7 +69,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
   });
 
@@ -87,9 +81,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should detect OpenInference by LLM model", () => {
@@ -99,9 +91,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should detect OpenInference with both span kind and model", () => {
@@ -112,9 +102,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     // Note: getSpanStandard only checks SPAN_KIND and LLM_MODEL for OpenInference detection
@@ -128,7 +116,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenInference with only retrieval documents", () => {
@@ -140,7 +128,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should not detect OpenInference with only embedding model", () => {
@@ -150,7 +138,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
   });
 
@@ -163,9 +151,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should prioritize OpenTelemetry GenAI system over OpenInference model", () => {
@@ -176,9 +162,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should prioritize OpenTelemetry GenAI even with multiple OpenInference attributes", () => {
@@ -193,9 +177,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
   });
 
@@ -209,7 +191,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should default to standard with empty attributes", () => {
@@ -217,7 +199,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         attributes: {},
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should default to standard with unrelated attributes", () => {
@@ -229,7 +211,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
   });
 
@@ -242,7 +224,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should handle undefined attribute values", () => {
@@ -253,7 +235,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should handle empty string attribute values correctly", () => {
@@ -265,7 +247,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
       });
 
       // Empty strings are falsy in this context, so should default to standard
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should handle whitespace-only string values", () => {
@@ -276,9 +258,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
       });
 
       // Whitespace strings are truthy
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should handle boolean attribute values", () => {
@@ -290,9 +270,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
       });
 
       // true is truthy, false is falsy
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should handle numeric attribute values", () => {
@@ -303,9 +281,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
   });
 
@@ -321,9 +297,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should detect Anthropic message creation spans", () => {
@@ -336,9 +310,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should detect tool execution spans", () => {
@@ -351,9 +323,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should detect agent invocation spans", () => {
@@ -366,9 +336,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should detect OpenInference LLM spans", () => {
@@ -384,9 +352,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should detect OpenInference retrieval spans", () => {
@@ -400,9 +366,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should detect OpenInference embedding spans", () => {
@@ -414,9 +378,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should detect standard HTTP API spans", () => {
@@ -429,7 +391,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should detect standard database spans", () => {
@@ -442,7 +404,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
     it("should detect standard function call spans", () => {
@@ -454,7 +416,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe("standard");
+      expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
   });
 
@@ -468,9 +430,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
     it("should prioritize OpenInference when mixed with standard attributes", () => {
@@ -482,9 +442,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "openinference",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should detect spans from actual trace examples (limited by actual detection logic)", () => {
@@ -499,9 +457,7 @@ describe("openTelemetrySpanAdapter.getSpanStandard", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.getSpanStandard(span)).toBe(
-        "opentelemetry_genai",
-      );
+      expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
   });
 });

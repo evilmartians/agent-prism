@@ -4,10 +4,10 @@ import {
 } from "@evilmartians/agent-prism-types";
 import { describe, it, expect } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { generateOpenTelemetrySpanTitle } from "../utils/generate-open-telemetry-span-title";
 
-describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
+describe("generateOpenTelemetrySpanTitle", () => {
   describe("LLM operations", () => {
     it("should use model name for LLM operations", () => {
       const span = createMockOpenTelemetrySpan({
@@ -18,7 +18,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("gpt-4 - chat.completions.create");
     });
@@ -32,7 +32,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("claude-3-sonnet - messages.create");
     });
@@ -52,12 +52,12 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      expect(
-        openTelemetrySpanAdapter.generateSpanTitle(spanWithStringModel),
-      ).toBe("gpt-3.5-turbo - completion");
-      expect(
-        openTelemetrySpanAdapter.generateSpanTitle(spanWithNumberModel),
-      ).toBe("123 - completion");
+      expect(generateOpenTelemetrySpanTitle(spanWithStringModel)).toBe(
+        "gpt-3.5-turbo - completion",
+      );
+      expect(generateOpenTelemetrySpanTitle(spanWithNumberModel)).toBe(
+        "123 - completion",
+      );
     });
   });
 
@@ -71,7 +71,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("embeddings - query");
     });
@@ -85,7 +85,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("documents - upsert");
     });
@@ -99,7 +99,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("vector_search");
     });
@@ -113,7 +113,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("vector_search");
     });
@@ -124,7 +124,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         attributes: {},
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("vector_search");
     });
@@ -140,7 +140,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("POST https://api.example.com/users");
     });
@@ -162,10 +162,10 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      expect(openTelemetrySpanAdapter.generateSpanTitle(getSpan)).toBe(
+      expect(generateOpenTelemetrySpanTitle(getSpan)).toBe(
         "GET https://api.weather.com/v1/current",
       );
-      expect(openTelemetrySpanAdapter.generateSpanTitle(putSpan)).toBe(
+      expect(generateOpenTelemetrySpanTitle(putSpan)).toBe(
         "PUT https://api.example.com/users/123",
       );
     });
@@ -179,7 +179,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("http_request");
     });
@@ -193,7 +193,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("http_request");
     });
@@ -210,7 +210,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("gpt-4 - mixed_operation");
     });
@@ -225,7 +225,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("claude-3-sonnet - mixed_operation");
     });
@@ -241,7 +241,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("documents - search");
     });
@@ -257,7 +257,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("generic_operation");
     });
@@ -268,7 +268,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         attributes: {},
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("");
     });
@@ -286,7 +286,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("gpt-4 - openai.chat.completions.create");
     });
@@ -301,7 +301,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("claude-3-sonnet - anthropic.messages.create");
     });
@@ -316,7 +316,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("research_papers - similarity_search");
     });
@@ -331,7 +331,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("document_embeddings - query");
     });
@@ -346,7 +346,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe(
         "GET https://api.openweathermap.org/data/2.5/weather",
@@ -362,7 +362,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("calculate_tip");
     });
@@ -376,7 +376,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("langchain.chain.invoke");
     });
@@ -391,7 +391,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("true - test");
     });
@@ -405,7 +405,7 @@ describe("openTelemetrySpanAdapter.generateSpanTitle", () => {
         },
       });
 
-      const result = openTelemetrySpanAdapter.generateSpanTitle(span);
+      const result = generateOpenTelemetrySpanTitle(span);
 
       expect(result).toBe("404 https://api.example.com/not-found");
     });

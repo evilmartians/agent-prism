@@ -1,10 +1,10 @@
 import { STANDARD_OPENTELEMETRY_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter";
+import { categorizeStandardOpenTelemetry } from "../utils/categorize-standard-open-telemetry";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
 
-describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
+describe("categorizeStandardOpenTelemetry", () => {
   describe("priority order detection", () => {
     it("should prioritize LLM call detection over other types", () => {
       const span = createMockOpenTelemetrySpan({
@@ -14,9 +14,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         },
       });
       // Should return llm_call due to 'openai' in name, not tool_execution for function
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
     });
 
     it("should prioritize agent operation over chain operation", () => {
@@ -24,9 +22,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         name: "agent chain workflow", // Contains 'agent', 'chain', and 'workflow'
       });
       // Should return agent_invocation due to priority order
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("agent_invocation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("agent_invocation");
     });
 
     it("should prioritize chain operation over retrieval operation", () => {
@@ -34,9 +30,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         name: "langchain vector search", // Contains 'langchain' and 'search'
       });
       // Should return chain_operation due to priority order
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("chain_operation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
     });
 
     it("should prioritize retrieval over function calls", () => {
@@ -44,9 +38,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         name: "pinecone function call", // Contains 'pinecone' and 'function'
       });
       // Should return retrieval due to priority order
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
     it("should prioritize function calls over HTTP calls", () => {
@@ -58,9 +50,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         },
       });
       // Should return tool_execution due to function call priority
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
     it("should prioritize HTTP calls over database calls", () => {
@@ -71,41 +61,31 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         },
       });
       // Should return tool_execution due to HTTP priority
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
   });
 
   describe("LLM call detection", () => {
     it("should detect OpenAI spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "openai completion" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
     });
 
     it("should detect Anthropic spans", () => {
       const span = createMockOpenTelemetrySpan({
         name: "anthropic claude call",
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
     });
 
     it("should detect GPT spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "gpt-4 generation" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
     });
 
     it("should detect Claude spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "claude-3 sonnet" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
     });
 
     it("should be case insensitive for LLM detection", () => {
@@ -116,9 +96,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-        ).toBe("llm_call");
+        expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
       });
     });
   });
@@ -126,39 +104,29 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
   describe("agent operation detection", () => {
     it("should detect agent spans by name", () => {
       const span = createMockOpenTelemetrySpan({ name: "agent execution" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("agent_invocation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("agent_invocation");
     });
 
     it("should be case insensitive for agent detection", () => {
       const span = createMockOpenTelemetrySpan({ name: "Agent Runner" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("agent_invocation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("agent_invocation");
     });
   });
 
   describe("chain operation detection", () => {
     it("should detect chain spans by name", () => {
       const span = createMockOpenTelemetrySpan({ name: "chain execution" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("chain_operation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
     });
 
     it("should detect workflow spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "workflow runner" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("chain_operation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
     });
 
     it("should detect langchain spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "langchain qa" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("chain_operation");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
     });
 
     it("should be case insensitive for chain detection", () => {
@@ -169,9 +137,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-        ).toBe("chain_operation");
+        expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
       });
     });
   });
@@ -179,37 +145,27 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
   describe("retrieval operation detection", () => {
     it("should detect pinecone spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "pinecone query" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
     it("should detect chroma spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "chroma search" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
     it("should detect retrieval spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "retrieval operation" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
     it("should detect vector spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "vector database" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
     it("should detect search spans", () => {
       const span = createMockOpenTelemetrySpan({ name: "search documents" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
     it("should be case insensitive for retrieval detection", () => {
@@ -220,9 +176,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-        ).toBe("retrieval");
+        expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
       });
     });
   });
@@ -230,16 +184,12 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
   describe("function call detection", () => {
     it("should detect spans with tool in name", () => {
       const span = createMockOpenTelemetrySpan({ name: "tool execution" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
     it("should detect spans with function in name", () => {
       const span = createMockOpenTelemetrySpan({ name: "function call" });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
     it("should detect spans with function.name attribute", () => {
@@ -249,9 +199,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "my_function",
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
     it("should be case insensitive for function detection", () => {
@@ -261,9 +209,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
       ];
 
       spans.forEach((span) => {
-        expect(
-          openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-        ).toBe("tool_execution");
+        expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
       });
     });
   });
@@ -276,9 +222,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
     it("should detect different HTTP methods", () => {
@@ -290,9 +234,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
             [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: method,
           },
         });
-        expect(
-          openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-        ).toBe("tool_execution");
+        expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
       });
     });
   });
@@ -305,9 +247,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "mysql",
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
     it("should detect different database systems", () => {
@@ -319,9 +259,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
             [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: system,
           },
         });
-        expect(
-          openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-        ).toBe("tool_execution");
+        expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
       });
     });
   });
@@ -332,9 +270,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         name: "generic operation",
         attributes: {},
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("unknown");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for empty span name", () => {
@@ -342,9 +278,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         name: "",
         attributes: {},
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("unknown");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for spans with unrelated attributes", () => {
@@ -355,9 +289,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           "another.field": 123,
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(span),
-      ).toBe("unknown");
+      expect(categorizeStandardOpenTelemetry(span)).toBe("unknown");
     });
   });
 
@@ -370,9 +302,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           "http.url": "/api/users",
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(httpSpan),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(httpSpan)).toBe("tool_execution");
     });
 
     it("should categorize database query spans", () => {
@@ -383,27 +313,23 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION]: "SELECT",
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(dbSpan),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(dbSpan)).toBe("tool_execution");
     });
 
     it("should categorize LangChain application spans", () => {
       const langchainSpan = createMockOpenTelemetrySpan({
         name: "langchain.chain.RetrievalQA.invoke",
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(langchainSpan),
-      ).toBe("chain_operation");
+      expect(categorizeStandardOpenTelemetry(langchainSpan)).toBe(
+        "chain_operation",
+      );
     });
 
     it("should categorize vector database operations", () => {
       const vectorSpan = createMockOpenTelemetrySpan({
         name: "pinecone.index.query",
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(vectorSpan),
-      ).toBe("retrieval");
+      expect(categorizeStandardOpenTelemetry(vectorSpan)).toBe("retrieval");
     });
 
     it("should categorize custom tool functions", () => {
@@ -413,9 +339,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "calculator.add",
         },
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(toolSpan),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(toolSpan)).toBe("tool_execution");
     });
   });
 
@@ -426,9 +350,7 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         name: "openai agent tool function", // openai (llm) + agent + tool + function
       });
       // Should prioritize llm_call (highest priority)
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(mixedSpan),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(mixedSpan)).toBe("llm_call");
     });
 
     it("should handle spans with only lower priority keywords", () => {
@@ -440,18 +362,14 @@ describe("openTelemetrySpanAdapter.categorizeStandardOpenTelemetry", () => {
         },
       });
       // Should return tool_execution (function call has higher priority than http/db)
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(toolSpan),
-      ).toBe("tool_execution");
+      expect(categorizeStandardOpenTelemetry(toolSpan)).toBe("tool_execution");
     });
 
     it("should handle partial keyword matches", () => {
       const partialSpan = createMockOpenTelemetrySpan({
         name: "openai-like-service", // Contains 'openai' substring
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeStandardOpenTelemetry(partialSpan),
-      ).toBe("llm_call");
+      expect(categorizeStandardOpenTelemetry(partialSpan)).toBe("llm_call");
     });
   });
 });

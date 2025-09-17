@@ -1,19 +1,17 @@
 import { OPENTELEMETRY_GENAI_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter.ts";
+import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai.ts";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.ts";
 
-describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
+describe("categorizeOpenTelemetryGenAI", () => {
   describe("OpenTelemetry GenAI operation name mappings", () => {
     it("should return 'llm_call' for chat operation", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat" },
         name: "chat.completions.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should return 'llm_call' for generate_content operation", () => {
@@ -23,9 +21,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "generate.content",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should return 'llm_call' for text_completion operation", () => {
@@ -35,9 +31,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "text.completion",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should return 'tool_execution' for execute_tool operation", () => {
@@ -47,9 +41,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "execute.tool",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "tool_execution",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("tool_execution");
     });
 
     it("should return 'agent_invocation' for invoke_agent operation", () => {
@@ -59,9 +51,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "invoke.agent",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "agent_invocation",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("agent_invocation");
     });
 
     it("should return 'create_agent' for create_agent operation", () => {
@@ -71,9 +61,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "create.agent",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "create_agent",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("create_agent");
     });
 
     it("should return 'embedding' for embeddings operation", () => {
@@ -83,9 +71,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "embeddings.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "embedding",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("embedding");
     });
   });
 
@@ -95,9 +81,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: 123 },
         name: "numeric operation name",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
 
     it("should return 'unknown' when operation name is a boolean", () => {
@@ -105,9 +89,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: true },
         name: "boolean operation name",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
 
     it("should return 'unknown' when operation name attribute is missing", () => {
@@ -115,9 +97,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: {},
         name: "missing operation name",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for unrecognized operation name values", () => {
@@ -127,9 +107,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "custom operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for empty string operation name", () => {
@@ -137,9 +115,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "" },
         name: "empty operation name",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for null operation name", () => {
@@ -147,9 +123,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: null },
         name: "null operation name",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
   });
 
@@ -159,9 +133,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat" },
         name: "lowercase chat",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should not match uppercase operation names (case sensitive)", () => {
@@ -169,9 +141,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "CHAT" },
         name: "uppercase chat",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
 
     it("should not match mixed case operation names", () => {
@@ -179,9 +149,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "Chat" },
         name: "mixed case chat",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
     });
   });
 
@@ -195,9 +163,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "openai.chat.completions.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should categorize Anthropic text generation spans", () => {
@@ -209,9 +175,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "anthropic.messages.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should categorize tool execution spans", () => {
@@ -222,9 +186,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "tool.calculator.execute",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "tool_execution",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("tool_execution");
     });
 
     it("should categorize agent invocation spans", () => {
@@ -235,9 +197,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "agent.invoke",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "agent_invocation",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("agent_invocation");
     });
 
     it("should categorize agent creation spans", () => {
@@ -248,9 +208,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "agent.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "create_agent",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("create_agent");
     });
 
     it("should categorize embedding spans", () => {
@@ -262,9 +220,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "embeddings.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "embedding",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("embedding");
     });
 
     it("should categorize legacy text completion spans", () => {
@@ -276,9 +232,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "completions.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
   });
 
@@ -295,9 +249,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "complex span",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
     });
 
     it("should work with minimal attributes", () => {
@@ -307,9 +259,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "minimal tool span",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(span)).toBe(
-        "tool_execution",
-      );
+      expect(categorizeOpenTelemetryGenAI(span)).toBe("tool_execution");
     });
   });
 
@@ -325,9 +275,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "call_llm gpt-4.1-mini",
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(llmSpan),
-      ).toBe("llm_call");
+      expect(categorizeOpenTelemetryGenAI(llmSpan)).toBe("llm_call");
 
       const toolSpan = createMockOpenTelemetrySpan({
         attributes: {
@@ -336,9 +284,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI", () => {
         },
         name: "execute_tool get_current_time",
       });
-      expect(
-        openTelemetrySpanAdapter.categorizeOpenTelemetryGenAI(toolSpan),
-      ).toBe("tool_execution");
+      expect(categorizeOpenTelemetryGenAI(toolSpan)).toBe("tool_execution");
     });
   });
 });

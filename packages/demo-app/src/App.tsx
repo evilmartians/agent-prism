@@ -31,7 +31,7 @@ export const App = () => {
           durationMs: 3200,
           agentDescription: "research-agent",
         },
-        spans: openTelemetrySpanAdapter.convertDocumentsToSpans(
+        spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
           quoTavAgentDataRaw as unknown as OpenTelemetryDocument,
         ),
       },
@@ -43,7 +43,7 @@ export const App = () => {
           durationMs: 45670,
           agentDescription: "data-analysis-bot",
         },
-        spans: openTelemetrySpanAdapter.convertDocumentsToSpans(
+        spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
           ragEarningsAgentDataRaw as unknown as OpenTelemetryDocument,
         ),
       },
@@ -55,7 +55,7 @@ export const App = () => {
           durationMs: 2500,
           agentDescription: "customer-support-ai",
         },
-        spans: openTelemetrySpanAdapter.convertDocumentsToSpans(
+        spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
           smolDeepResearchAgentDataRaw as unknown as OpenTelemetryDocument,
         ),
       },

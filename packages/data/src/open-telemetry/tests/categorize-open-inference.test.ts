@@ -1,19 +1,17 @@
 import { OPENINFERENCE_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { openTelemetrySpanAdapter } from "../adapter";
+import { categorizeOpenInference } from "../utils/categorize-open-inference";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
 
-describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
+describe("categorizeOpenInference", () => {
   describe("OpenInference span kind mappings", () => {
     it("should return 'llm_call' for LLM span kind", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM" },
         name: "llm operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenInference(span)).toBe("llm_call");
     });
 
     it("should return 'tool_execution' for TOOL span kind", () => {
@@ -21,9 +19,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "TOOL" },
         name: "tool operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "tool_execution",
-      );
+      expect(categorizeOpenInference(span)).toBe("tool_execution");
     });
 
     it("should return 'chain_operation' for CHAIN span kind", () => {
@@ -31,9 +27,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CHAIN" },
         name: "chain operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "chain_operation",
-      );
+      expect(categorizeOpenInference(span)).toBe("chain_operation");
     });
 
     it("should return 'agent_invocation' for AGENT span kind", () => {
@@ -41,9 +35,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "AGENT" },
         name: "agent operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "agent_invocation",
-      );
+      expect(categorizeOpenInference(span)).toBe("agent_invocation");
     });
 
     it("should return 'retrieval' for RETRIEVER span kind", () => {
@@ -51,9 +43,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "RETRIEVER" },
         name: "retriever operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "retrieval",
-      );
+      expect(categorizeOpenInference(span)).toBe("retrieval");
     });
 
     it("should return 'embedding' for EMBEDDING span kind", () => {
@@ -61,9 +51,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "EMBEDDING" },
         name: "embedding operation",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "embedding",
-      );
+      expect(categorizeOpenInference(span)).toBe("embedding");
     });
   });
 
@@ -73,9 +61,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: 123 },
         name: "numeric span kind",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
 
     it("should return 'unknown' when span kind is a boolean", () => {
@@ -83,9 +69,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: true },
         name: "boolean span kind",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
 
     it("should return 'unknown' when span kind attribute is missing", () => {
@@ -93,9 +77,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: {},
         name: "missing span kind",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for unrecognized span kind values", () => {
@@ -103,9 +85,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CUSTOM_TYPE" },
         name: "custom span kind",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for empty string span kind", () => {
@@ -113,9 +93,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "" },
         name: "empty span kind",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for null span kind", () => {
@@ -123,9 +101,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: null },
         name: "null span kind",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
   });
 
@@ -135,9 +111,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM" },
         name: "uppercase llm",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenInference(span)).toBe("llm_call");
     });
 
     it("should not match lowercase span kinds (case sensitive)", () => {
@@ -145,9 +119,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "llm" },
         name: "lowercase llm",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
 
     it("should not match mixed case span kinds", () => {
@@ -155,9 +127,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "Llm" },
         name: "mixed case llm",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "unknown",
-      );
+      expect(categorizeOpenInference(span)).toBe("unknown");
     });
   });
 
@@ -173,9 +143,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "llm.completion",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenInference(span)).toBe("llm_call");
     });
 
     it("should categorize retrieval spans", () => {
@@ -188,9 +156,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "vector.search",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "retrieval",
-      );
+      expect(categorizeOpenInference(span)).toBe("retrieval");
     });
 
     it("should categorize embedding spans", () => {
@@ -201,9 +167,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "embedding.create",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "embedding",
-      );
+      expect(categorizeOpenInference(span)).toBe("embedding");
     });
 
     it("should categorize chain spans with complex workflows", () => {
@@ -213,9 +177,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "question_answering_chain",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "chain_operation",
-      );
+      expect(categorizeOpenInference(span)).toBe("chain_operation");
     });
 
     it("should categorize tool execution spans", () => {
@@ -225,9 +187,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "calculator.add",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "tool_execution",
-      );
+      expect(categorizeOpenInference(span)).toBe("tool_execution");
     });
 
     it("should categorize agent spans", () => {
@@ -237,9 +197,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "react_agent.run",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "agent_invocation",
-      );
+      expect(categorizeOpenInference(span)).toBe("agent_invocation");
     });
   });
 
@@ -254,9 +212,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "complex span",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "llm_call",
-      );
+      expect(categorizeOpenInference(span)).toBe("llm_call");
     });
 
     it("should work with minimal attributes", () => {
@@ -266,9 +222,7 @@ describe("openTelemetrySpanAdapter.categorizeOpenInference", () => {
         },
         name: "minimal tool span",
       });
-      expect(openTelemetrySpanAdapter.categorizeOpenInference(span)).toBe(
-        "tool_execution",
-      );
+      expect(categorizeOpenInference(span)).toBe("tool_execution");
     });
   });
 });
