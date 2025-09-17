@@ -28,6 +28,7 @@ export type TraceSpan = InputOutputData & {
   children?: TraceSpan[];
   status: TraceSpanStatus;
   cost?: number;
+  tokensCount?: number;
 };
 
 export type TraceSpanCategory =
