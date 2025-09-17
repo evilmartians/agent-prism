@@ -7,6 +7,11 @@ html {
   scrollbar-gutter: stable;
 }
 
+[data-mode="dark"] .sb-show-main,
+[data-mode="dark"] .docs-story {
+  background-color: black;
+}
+
 @media (prefers-color-scheme: dark) {
   .sb-show-main,
   .docs-story {

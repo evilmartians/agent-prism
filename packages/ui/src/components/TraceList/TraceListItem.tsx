@@ -42,8 +42,10 @@ export const TraceListItem = ({
       className={cn(
         "group w-full",
         "flex flex-col gap-2.5 p-4",
-        "cursor-pointer rounded",
-        isSelected && "bg-gray-100 dark:bg-gray-900",
+        "cursor-pointer",
+        isSelected
+          ? "bg-gray-100 dark:bg-gray-900"
+          : "bg-white dark:bg-gray-950",
       )}
       role="button"
       tabIndex={0}

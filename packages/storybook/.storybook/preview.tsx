@@ -1,8 +1,20 @@
 import type { Preview } from "@storybook/react-vite";
 
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import "@evilmartians/agent-prism-ui/styles.css";
 
 import "./styles.css";
+
+export const decorators = [
+  withThemeByDataAttribute({
+    themes: {
+      light: "light",
+      dark: "dark",
+    },
+    defaultTheme: "light",
+    attributeName: "data-mode",
+  }),
+];
 
 const preview: Preview = {
   parameters: {
