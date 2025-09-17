@@ -3,12 +3,16 @@ import type { TraceRecord } from "@evilmartians/agent-prism-types";
 import cn from "classnames";
 import { ArrowLeft } from "lucide-react";
 
-import { Badge } from "../Badge.tsx";
+import { Badge, type BadgeProps } from "../Badge.tsx";
 import { IconButton } from "../IconButton.tsx";
 import { TraceListItem } from "./TraceListItem.tsx";
 
+type TraceRecordWithBadges = TraceRecord & {
+  badges?: Array<BadgeProps>;
+};
+
 type TraceListProps = {
-  traces: TraceRecord[];
+  traces: TraceRecordWithBadges[];
   expanded: boolean;
   onExpandStateChange: (expanded: boolean) => void;
   className?: string;
@@ -24,6 +28,7 @@ export const TraceList = ({
   onTraceSelect,
   selectedTrace,
 }: TraceListProps) => {
+  console.log(traces);
   return (
     <div
       className={cn(
@@ -48,9 +53,8 @@ export const TraceList = ({
             size="sm"
             theme="gray"
             aria-label={`Total number of traces: ${traces.length}`}
-          >
-            {traces.length}
-          </Badge>
+            label={traces.length}
+          />
         </div>
 
         <IconButton
@@ -79,6 +83,7 @@ export const TraceList = ({
                 trace={trace}
                 onClick={() => onTraceSelect?.(trace)}
                 isSelected={selectedTrace?.id === trace.id}
+                badges={trace.badges}
               />
             </li>
           ))}

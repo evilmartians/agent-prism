@@ -22,9 +22,8 @@ export const SpanCardBadges = ({ data }: SpanCardBagdesProps) => {
         iconStart={<Icon className="size-2.5" />}
         theme={getSpanCategoryTheme(data.type)}
         size="xs"
-      >
-        {getSpanCategoryLabel(data.type)}
-      </Badge>
+        label={getSpanCategoryLabel(data.type)}
+      />
 
       {typeof data.tokensCount === "number" && (
         <TokensBadge tokensCount={data.tokensCount} />

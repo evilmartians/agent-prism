@@ -57,7 +57,7 @@ const meta = {
       description: "The size of the badge",
       defaultValue: "md",
     },
-    children: {
+    label: {
       control: "text",
       description: "The content of the badge",
     },
@@ -69,14 +69,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: "Badge",
+    label: "Badge",
     theme: "gray",
   },
 };
 
 export const Size: Story = {
   args: {
-    children: "Small",
+    label: "Small",
     theme: "indigo",
     size: "sm",
   },
@@ -84,7 +84,7 @@ export const Size: Story = {
 
 export const Variant: Story = {
   args: {
-    children: "Outline",
+    label: "Outline",
     theme: "indigo",
     variant: "outline",
   },
@@ -92,14 +92,14 @@ export const Variant: Story = {
 
 export const Theme: Story = {
   args: {
-    children: "Red",
+    label: "Red",
     theme: "red",
   },
 };
 
 export const IconStart: Story = {
   args: {
-    children: "Start",
+    label: "Start",
     theme: "emerald",
     iconStart: <span>✓</span>,
   },
@@ -107,7 +107,7 @@ export const IconStart: Story = {
 
 export const IconEnd: Story = {
   args: {
-    children: "End",
+    label: "End",
     theme: "orange",
     iconEnd: <span>→</span>,
   },

@@ -7,6 +7,8 @@ import cn from "classnames";
 import { ArrowLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import type { BadgeProps } from "./Badge";
+
 import { Button } from "./Button";
 import {
   CollapseAllButton,
@@ -18,9 +20,10 @@ import { TraceList } from "./TraceList/TraceList";
 import { TraceListItemHeader } from "./TraceList/TraceListItemHeader";
 import { TreeView } from "./TreeView";
 
-interface TraceViewerProps {
+export interface TraceViewerProps {
   data: Array<{
     traceRecord: TraceRecord;
+    badges?: Array<BadgeProps>;
     spans: TraceSpan[];
   }>;
 }
@@ -79,7 +82,10 @@ export const TraceViewer = ({ data }: TraceViewerProps) => {
   const [traceListExpanded, setTraceListExpanded] = useState(true);
 
   const traceRecords = useMemo(() => {
-    return data.map((item) => item.traceRecord);
+    return data.map((item) => ({
+      ...item.traceRecord,
+      badges: item.badges,
+    }));
   }, [data]);
 
   const filteredSpans = useMemo(() => {

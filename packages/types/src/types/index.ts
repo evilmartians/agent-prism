@@ -8,6 +8,7 @@ export type TraceRecord = {
   agentDescription: string;
   totalCost?: number;
   totalTokens?: number;
+  startTime?: number;
 };
 
 export type TraceSpanStatus = "success" | "error" | "pending" | "warning";

@@ -21,7 +21,7 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
   /**
    * The content of the badge
    */
-  children: ReactNode;
+  label: ReactNode;
 
   /**
    * The color theme of the badge
@@ -59,7 +59,7 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
 };
 
 export const Badge = ({
-  children,
+  label,
   theme = "gray",
   variant = "solid",
   size = "md",
@@ -93,7 +93,7 @@ export const Badge = ({
           "min-w-0 max-w-full flex-shrink-0 truncate tracking-normal",
         )}
       >
-        {children}
+        {label}
       </span>
 
       {iconEnd && <span className="shrink-0">{iconEnd}</span>}
