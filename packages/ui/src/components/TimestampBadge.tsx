@@ -14,6 +14,7 @@ export const TimestampBadge = ({
 }: TimestampBadgeProps) => {
   return (
     <Badge
+      variant="outline"
       theme="gray"
       size={size}
       {...rest}
