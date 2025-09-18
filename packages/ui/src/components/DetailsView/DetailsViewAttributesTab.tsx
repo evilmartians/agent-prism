@@ -9,7 +9,7 @@ interface AttributesTabProps {
 
 export const DetailsViewAttributesTab = ({ data }: AttributesTabProps) => (
   <div className="space-y-6">
-    {data.attributes.map((attribute, index) => {
+    {(data.attributes || []).map((attribute, index) => {
       const value =
         attribute.value.stringValue ||
         attribute.value.intValue ||

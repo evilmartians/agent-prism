@@ -9,7 +9,10 @@ import {
   BarChart2,
   Plus,
   HelpCircle,
+  MoveHorizontal,
   type LucideIcon,
+  CircleDot,
+  ShieldCheck,
 } from "lucide-react";
 
 // TYPES
@@ -155,6 +158,21 @@ export const SPAN_CATEGORY_CONFIG: Record<
     label: "CREATE AGENT",
     theme: "sky",
     icon: Plus,
+  },
+  span: {
+    label: "SPAN",
+    theme: "cyan",
+    icon: MoveHorizontal,
+  },
+  event: {
+    label: "EVENT",
+    theme: "emerald",
+    icon: CircleDot,
+  },
+  guardrail: {
+    label: "GUARDRAIL",
+    theme: "red",
+    icon: ShieldCheck,
   },
   unknown: {
     label: "UNKNOWN",

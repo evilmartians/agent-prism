@@ -4,7 +4,7 @@ import type {
   TraceSpan,
 } from "@evilmartians/agent-prism-types";
 
-import { convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
+import { openTelemetrySpanAdapter } from "@evilmartians/agent-prism-data";
 import { TraceViewer } from "@evilmartians/agent-prism-ui";
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,7 @@ export const App = () => {
           durationMs: 3200,
           agentDescription: "research-agent",
         },
-        spans: convertOTelDocumentToSpanCards(
+        spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
           quoTavAgentDataRaw as unknown as OpenTelemetryDocument,
         ),
       },
@@ -43,7 +43,7 @@ export const App = () => {
           durationMs: 45670,
           agentDescription: "data-analysis-bot",
         },
-        spans: convertOTelDocumentToSpanCards(
+        spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
           ragEarningsAgentDataRaw as unknown as OpenTelemetryDocument,
         ),
       },
@@ -55,7 +55,7 @@ export const App = () => {
           durationMs: 2500,
           agentDescription: "customer-support-ai",
         },
-        spans: convertOTelDocumentToSpanCards(
+        spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
           smolDeepResearchAgentDataRaw as unknown as OpenTelemetryDocument,
         ),
       },
