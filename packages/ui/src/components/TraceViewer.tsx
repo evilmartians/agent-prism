@@ -114,6 +114,10 @@ export const TraceViewer = ({ data }: TraceViewerProps) => {
     setExpandedSpansIds([]);
   }, []);
 
+  useEffect(() => {
+    setSelectedSpan(selectedTraceSpans[0]);
+  }, [selectedTraceSpans]);
+
   const handleTraceSelect = useCallback(
     (trace: TraceRecord) => {
       setSelectedTrace(trace);
