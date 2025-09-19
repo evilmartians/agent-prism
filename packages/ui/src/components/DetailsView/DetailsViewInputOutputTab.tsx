@@ -1,10 +1,12 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
+import { Check, Copy } from "lucide-react";
 import { useState, type ReactElement } from "react";
 import JSONPretty from "react-json-pretty";
 import colors from "tailwindcss/colors";
 
 import { CollapsibleSection } from "../CollapsibleSection";
+import { IconButton } from "../IconButton";
 import { Tabs, type TabItem } from "../Tabs";
 
 interface DetailsViewInputOutputTabProps {
@@ -12,6 +14,8 @@ interface DetailsViewInputOutputTabProps {
 }
 
 type IOTab = "json" | "plain";
+
+type IOSection = "Input" | "Output";
 
 export const DetailsViewInputOutputTab = ({
   data,
@@ -32,35 +36,22 @@ export const DetailsViewInputOutputTab = ({
   return (
     <div className="space-y-3">
       {typeof data.input === "string" && (
-        <IOSection
-          title="Input"
-          content={data.input}
-          sectionId={`${data.id}-input`}
-        />
+        <IOSection section="Input" content={data.input} />
       )}
 
       {typeof data.output === "string" && (
-        <IOSection
-          title="Output"
-          content={data.output}
-          sectionId={`${data.id}-output`}
-        />
+        <IOSection section="Output" content={data.output} />
       )}
     </div>
   );
 };
 
 interface IOSectionProps {
-  title: string;
+  section: IOSection;
   content: string;
-  sectionId: string;
 }
 
-const IOSection = ({
-  title,
-  content,
-  sectionId,
-}: IOSectionProps): ReactElement => {
+const IOSection = ({ section, content }: IOSectionProps): ReactElement => {
   const [tab, setTab] = useState<IOTab>("json");
   const [open, setOpen] = useState(true);
 
@@ -86,7 +77,7 @@ const IOSection = ({
 
   return (
     <CollapsibleSection
-      title={title}
+      title={section}
       defaultOpen
       onOpenChange={setOpen}
       rightContent={
@@ -104,9 +95,8 @@ const IOSection = ({
       triggerClassName="min-h-16"
     >
       <IOContent
-        title={title}
         content={content}
-        sectionId={sectionId}
+        section={section}
         tab={tab}
         parsedData={parsedData}
       />
@@ -115,8 +105,6 @@ const IOSection = ({
 };
 
 interface IOContentProps extends Omit<IOSectionProps, "title"> {
-  title: string;
-  sectionId: string;
   tab: IOTab;
   parsedData: string | null;
 }
@@ -124,7 +112,7 @@ interface IOContentProps extends Omit<IOSectionProps, "title"> {
 const IOContent = ({
   tab,
   content,
-  sectionId,
+  section,
   parsedData,
 }: IOContentProps): ReactElement => {
   if (!content) {
@@ -136,7 +124,9 @@ const IOContent = ({
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 p-3 dark:border-gray-800">
+    <div className="relative rounded-lg border border-gray-200 dark:border-gray-800">
+      <CopyButton section={section} content={content} />
+
       {tab === "json" && (
         <>
           {parsedData ? (
@@ -144,7 +134,7 @@ const IOContent = ({
               booleanStyle={`color: ${colors.blue[400]};`}
               className="overflow-x-auto rounded-xl p-4"
               data={parsedData}
-              id={`json-pretty-${sectionId}`}
+              id={`json-pretty-${section}`}
               keyStyle={`color: ${colors.blue[400]};`}
               mainStyle={`color: ${colors.gray[400]}; font-size: 12px;`}
               stringStyle={`color: ${colors.red[600]};`}
@@ -166,5 +156,32 @@ const IOContent = ({
         </div>
       )}
     </div>
+  );
+};
+
+type CopyButtonProps = {
+  section: IOSection;
+  content: string;
+};
+
+const CopyButton = ({ section, content }: CopyButtonProps) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const onClick = () => {
+    navigator.clipboard.writeText(content);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  return (
+    <IconButton
+      onClick={onClick}
+      aria-label={isCopied ? `${section} Data Copied` : `Copy ${section} Data`}
+      variant="ghost"
+      size="sm"
+      className="absolute right-1.5 top-1.5"
+    >
+      {isCopied ? <Check className="size-3" /> : <Copy className="size-3" />}
+    </IconButton>
   );
 };
