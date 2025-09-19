@@ -44,6 +44,7 @@ interface SpanCardProps {
   prevLevelConnectors?: SpanCardConnectorType[];
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  withStatus?: boolean;
 }
 
 interface SpanCardState {
@@ -208,6 +209,7 @@ const SpanCardChildren: FC<{
   prevLevelConnectors: SpanCardConnectorType[];
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  withStatus?: boolean;
 }> = ({
   data,
   level,
@@ -219,6 +221,7 @@ const SpanCardChildren: FC<{
   prevLevelConnectors,
   expandedSpansIds,
   onExpandSpansIdsChange,
+  withStatus = true,
 }) => {
   if (!data.children?.length) return null;
 
@@ -240,6 +243,7 @@ const SpanCardChildren: FC<{
               prevLevelConnectors={prevLevelConnectors}
               expandedSpansIds={expandedSpansIds}
               onExpandSpansIdsChange={onExpandSpansIdsChange}
+              withStatus={withStatus}
             />
           ))}
         </ul>
@@ -261,6 +265,7 @@ export const SpanCard: FC<SpanCardProps> = ({
   prevLevelConnectors = [],
   expandedSpansIds,
   onExpandSpansIdsChange,
+  withStatus = true,
 }) => {
   const isExpanded = expandedSpansIds.includes(data.id);
 
@@ -399,7 +404,7 @@ export const SpanCard: FC<SpanCardProps> = ({
             </div>
 
             <div className="shrink-1 flex grow flex-wrap items-center justify-end gap-1">
-              {expandButton === "outside" && (
+              {expandButton === "outside" && withStatus && (
                 <div>
                   <SpanStatus status={data.status} />
                 </div>
@@ -418,7 +423,7 @@ export const SpanCard: FC<SpanCardProps> = ({
                   {formatDuration(durationMs)}
                 </span>
 
-                {expandButton === "inside" && (
+                {expandButton === "inside" && withStatus && (
                   <div>
                     <SpanStatus status={data.status} />
                   </div>
@@ -450,6 +455,7 @@ export const SpanCard: FC<SpanCardProps> = ({
           prevLevelConnectors={connectors}
           expandedSpansIds={expandedSpansIds}
           onExpandSpansIdsChange={onExpandSpansIdsChange}
+          withStatus={withStatus}
         />
       </Collapsible.Root>
     </li>
