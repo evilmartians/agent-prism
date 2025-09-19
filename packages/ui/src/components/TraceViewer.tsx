@@ -20,12 +20,15 @@ import { TraceList } from "./TraceList/TraceList";
 import { TraceListItemHeader } from "./TraceList/TraceListItemHeader";
 import { TreeView } from "./TreeView";
 
+export interface TraceViewerData {
+  traceRecord: TraceRecord;
+  badges?: Array<BadgeProps>;
+  spans: TraceSpan[];
+}
+
 export interface TraceViewerProps {
-  data: Array<{
-    traceRecord: TraceRecord;
-    badges?: Array<BadgeProps>;
-    spans: TraceSpan[];
-  }>;
+  data: Array<TraceViewerData>;
+  withStatus?: boolean | ((data: TraceRecord) => boolean);
 }
 
 // Recursive filtering function that preserves nested structure
@@ -67,7 +70,7 @@ const filterSpansRecursively = (
     .filter((span): span is NonNullable<typeof span> => span !== null);
 };
 
-export const TraceViewer = ({ data }: TraceViewerProps) => {
+export const TraceViewer = ({ data, withStatus = true }: TraceViewerProps) => {
   const [selectedTrace, setSelectedTrace] = useState<TraceRecord | undefined>(
     data[0].traceRecord,
   );
@@ -80,6 +83,14 @@ export const TraceViewer = ({ data }: TraceViewerProps) => {
   const [searchValue, setSearchValue] = useState("");
 
   const [traceListExpanded, setTraceListExpanded] = useState(true);
+
+  const shouldShowStatus = useMemo(() => {
+    if (typeof withStatus === "function" && selectedTrace) {
+      return withStatus(selectedTrace);
+    }
+
+    return Boolean(withStatus);
+  }, [withStatus, selectedTrace]);
 
   const traceRecords = useMemo(() => {
     return data.map((item) => ({
@@ -146,6 +157,7 @@ export const TraceViewer = ({ data }: TraceViewerProps) => {
     handleExpandAll,
     handleCollapseAll,
     handleTraceSelect,
+    withStatus: shouldShowStatus,
   };
 
   return (
@@ -179,6 +191,7 @@ interface LayoutProps {
   handleExpandAll: () => void;
   handleCollapseAll: () => void;
   handleTraceSelect: (trace: TraceRecord) => void;
+  withStatus?: boolean;
 }
 
 const DesktopLayout = ({
@@ -196,6 +209,7 @@ const DesktopLayout = ({
   handleExpandAll,
   handleCollapseAll,
   handleTraceSelect,
+  withStatus = true,
 }: LayoutProps) => {
   return (
     <div
@@ -249,6 +263,7 @@ const DesktopLayout = ({
                 selectedSpan={selectedSpan}
                 expandedSpansIds={expandedSpansIds}
                 onExpandSpansIdsChange={setExpandedSpansIds}
+                withStatus={withStatus}
               />
             )}
           </div>
@@ -284,6 +299,7 @@ const MobileLayout = ({
   handleExpandAll,
   handleCollapseAll,
   handleTraceSelect,
+  withStatus = true,
 }: LayoutProps) => {
   if (!selectedTrace) {
     return (
@@ -345,6 +361,7 @@ const MobileLayout = ({
               selectedSpan={selectedSpan}
               expandedSpansIds={expandedSpansIds}
               onExpandSpansIdsChange={setExpandedSpansIds}
+              withStatus={withStatus}
             />
           )}
         </div>

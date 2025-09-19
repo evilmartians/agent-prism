@@ -10,7 +10,7 @@ import {
 } from "@evilmartians/agent-prism-data";
 import {
   TraceViewer,
-  type TraceViewerProps,
+  type TraceViewerData,
 } from "@evilmartians/agent-prism-ui";
 
 import langfuseData1 from "../data/langfuse-1.json";
@@ -47,7 +47,7 @@ const langfuse3 = langfuseSpanAdapter.convertRawDocumentsToSpans(
   langfuseData3 as LangfuseDocument,
 );
 
-const data: TraceViewerProps["data"] = [
+const data: TraceViewerData[] = [
   {
     traceRecord: {
       id: "test-data-1",
@@ -195,7 +195,12 @@ const data: TraceViewerProps["data"] = [
 
 export const TraceViewerStory: Story = {
   render: () => {
-    return <TraceViewer data={data} />;
+    return (
+      <TraceViewer
+        data={data}
+        withStatus={(data) => !data.id.includes("langfuse")}
+      />
+    );
   },
 };
 

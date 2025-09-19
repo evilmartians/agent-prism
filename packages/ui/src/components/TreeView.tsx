@@ -14,6 +14,7 @@ interface TreeViewProps {
   expandButton: "inside" | "outside";
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  withStatus?: boolean;
 }
 
 export const TreeView: FC<TreeViewProps> = ({
@@ -24,6 +25,7 @@ export const TreeView: FC<TreeViewProps> = ({
   expandButton,
   expandedSpansIds,
   onExpandSpansIdsChange,
+  withStatus = true,
 }) => {
   const allCards = flattenSpans(spans);
 
@@ -49,6 +51,7 @@ export const TreeView: FC<TreeViewProps> = ({
             isLastChild={idx === spans.length - 1}
             expandedSpansIds={expandedSpansIds}
             onExpandSpansIdsChange={onExpandSpansIdsChange}
+            withStatus={withStatus}
           />
         ))}
       </ul>
