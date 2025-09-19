@@ -1,6 +1,6 @@
 # @evilmartians/agent-prism-types
 
-TypeScript type definitions and constants for [AgentPrism](https://github.com/evilmartians/agent-prism) - AI agent trace visualization library.
+TypeScript type definitions and semantic convention constants for [AgentPrism](https://github.com/evilmartians/agent-prism) - AI agent trace visualization library.
 
 Part of the [AgentPrism](https://github.com/evilmartians/agent-prism) project for visualizing AI agent traces, LLM calls, and tool executions.
 
@@ -15,9 +15,8 @@ npm install @evilmartians/agent-prism-types
 ```typescript
 // Import types
 import type {
-  Span,
   TraceSpan,
-  SpanAttribute,
+  TraceSpanAttribute,
   TraceSpanCategory,
   OpenTelemetrySpan,
   OpenTelemetryDocument,
@@ -35,14 +34,14 @@ import {
 
 - **Core Types**: `TraceSpan`, `TraceSpanAttribute` - UI-ready span representations
 - **Categories**: `TraceSpanCategory` - span categorization (LLM, Tool, Agent, etc.)
-- **OpenTelemetry Types**: `OpenTelemetrySpan`, `OpenTelemetryDocument`
-- **Langfuse Types**: `LangfuseObservation`, `LangfuseDocument`
+- **OpenTelemetry Types**: `OpenTelemetrySpan`, `OpenTelemetryDocument` - raw OpenTelemetry data structures
+- **Langfuse Types**: `LangfuseObservation`, `LangfuseDocument` - raw Langfuse data structures
 - **Semantic Convention Mappings**: Constants for OpenInference, GenAI, and standard OpenTelemetry attributes
 
 ## Related Packages
 
 - [`@evilmartians/agent-prism-data`](https://www.npmjs.com/package/@evilmartians/agent-prism-data) - Data transformation utilities
-- [AgentPrism UI Components](https://github.com/evilmartians/agent-prism) - React components for visualization
+- [AgentPrism UI Components](https://github.com/evilmartians/agent-prism) - React components for trace visualization
 
 ## Documentation
 
