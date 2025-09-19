@@ -4,10 +4,9 @@ import * as RadixTabs from "@radix-ui/react-tabs";
 import cn from "classnames";
 import * as React from "react";
 
-export interface TabItem {
-  value: string;
+export interface TabItem<T extends string = string> {
+  value: T;
   label: string;
-  content: React.ReactNode;
   icon?: React.ReactNode;
   disabled?: boolean;
 }
@@ -19,8 +18,8 @@ const BASE_TRIGGER =
 
 const THEMES = {
   underline: {
-    list: "flex border-b border-gray-200 dark:border-gray-800",
-    trigger: `w-full justify-center px-4 py-2.5 ${BASE_TRIGGER} 
+    list: "h-9 flex border-b border-gray-200 dark:border-gray-800",
+    trigger: `w-full justify-center px-3 ${BASE_TRIGGER} 
       text-gray-600 hover:text-gray-900 data-[state=active]:text-gray-900
       dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:text-gray-200
       border-b-2 border-transparent data-[state=active]:border-gray-900 
@@ -28,8 +27,8 @@ const THEMES = {
       hover:border-gray-300 dark:hover:border-gray-600`,
   },
   pill: {
-    list: "inline-flex gap-1 p-1 bg-gray-100 dark:bg-gray-900 rounded-lg",
-    trigger: `px-4 py-2 ${BASE_TRIGGER} rounded-md
+    list: "h-9 inline-flex gap-1 p-1 bg-gray-100 dark:bg-gray-900 rounded-lg",
+    trigger: `px-3 ${BASE_TRIGGER} rounded-md
       text-gray-600 hover:text-gray-900 data-[state=active]:text-gray-900
       dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:text-gray-200
       hover:bg-gray-50 data-[state=active]:bg-white data-[state=active]:shadow-sm
@@ -37,26 +36,29 @@ const THEMES = {
   },
 } as const;
 
-export type TabsProps = Omit<ComponentPropsWithRef<"div">, "dir"> & {
+export type TabsProps<T extends string = string> = Omit<
+  ComponentPropsWithRef<"div">,
+  "dir"
+> & {
   /**
    * Array of tab items to display
    */
-  items: TabItem[];
+  items: TabItem<T>[];
 
   /**
    * The initially selected tab value (uncontrolled)
    */
-  defaultValue?: string;
+  defaultValue?: T;
 
   /**
    * The currently selected tab value (controlled)
    */
-  value?: string;
+  value?: T;
 
   /**
    * Callback fired when the selected tab changes
    */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: T) => void;
 
   /**
    * Visual theme variant for the tabs
@@ -80,17 +82,12 @@ export type TabsProps = Omit<ComponentPropsWithRef<"div">, "dir"> & {
   triggerClassName?: string;
 
   /**
-   * Optional className for the tab content area
-   */
-  contentClassName?: string;
-
-  /**
    * The direction of the content of the tabs
    */
   dir?: "ltr" | "rtl";
 };
 
-export const Tabs = ({
+export const Tabs = <T extends string = string>({
   items,
   defaultValue,
   value,
@@ -99,20 +96,19 @@ export const Tabs = ({
   className = "",
   tabsListClassName = "",
   triggerClassName = "",
-  contentClassName = "",
   dir,
   ...rest
-}: TabsProps) => {
+}: TabsProps<T>) => {
   const defaultTab = defaultValue || items[0]?.value;
 
   const currentTheme = THEMES[theme];
 
   return (
     <RadixTabs.Root
-      className={cn("w-full", className)}
+      className={className}
       defaultValue={!value ? defaultTab : undefined}
       value={value}
-      onValueChange={onValueChange}
+      onValueChange={onValueChange as (value: string) => void}
       dir={dir}
       {...rest}
     >
@@ -140,16 +136,6 @@ export const Tabs = ({
           </RadixTabs.Trigger>
         ))}
       </RadixTabs.List>
-
-      {items.map((item: TabItem) => (
-        <RadixTabs.Content
-          key={item.value}
-          value={item.value}
-          className={cn("mt-4", contentClassName)}
-        >
-          {item.content}
-        </RadixTabs.Content>
-      ))}
     </RadixTabs.Root>
   );
 };

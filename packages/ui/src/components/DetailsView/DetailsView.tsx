@@ -1,17 +1,19 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
-import type { ReactElement } from "react";
 
 import cn from "classnames";
 import { SquareTerminal, Tags, ArrowRightLeft } from "lucide-react";
+import { useState, type ReactElement } from "react";
 
 import type { AvatarProps } from "../Avatar";
 
-import { Tabs } from "../Tabs";
+import { Tabs, type TabItem } from "../Tabs";
 import { DetailsViewAttributesTab } from "./DetailsViewAttributesTab";
 import { DetailsViewHeader } from "./DetailsViewHeader";
 import { DetailsViewInputOutputTab } from "./DetailsViewInputOutputTab";
 import { DetailsViewMetrics } from "./DetailsViewMetrics";
 import { DetailsViewRawDataTab } from "./DetailsViewRawDataTab";
+
+type DetailsViewTab = "input-output" | "attributes" | "raw";
 
 interface DetailsViewProps {
   /**
@@ -27,7 +29,7 @@ interface DetailsViewProps {
   /**
    * The initially selected tab
    */
-  defaultTab?: string;
+  defaultTab?: DetailsViewTab;
 
   /**
    * Optional className for the root container
@@ -52,7 +54,7 @@ interface DetailsViewProps {
   /**
    * Callback fired when the active tab changes
    */
-  onTabChange?: (tabValue: string) => void;
+  onTabChange?: (tabValue: DetailsViewTab) => void;
 }
 
 export const DetailsView = ({
@@ -63,26 +65,30 @@ export const DetailsView = ({
   copyButton,
   onTabChange,
 }: DetailsViewProps): ReactElement => {
-  const tabItems = [
+  const [tab, setTab] = useState<DetailsViewTab>(defaultTab || "input-output");
+
+  const tabItems: TabItem<DetailsViewTab>[] = [
     {
       value: "input-output",
       label: "In/Out",
       icon: <ArrowRightLeft className="size-4" />,
-      content: <DetailsViewInputOutputTab data={data} />,
     },
     {
       value: "attributes",
       label: "Attributes",
       icon: <Tags className="size-4" />,
-      content: <DetailsViewAttributesTab data={data} />,
     },
     {
       value: "raw",
       label: "RAW",
       icon: <SquareTerminal className="size-4" />,
-      content: <DetailsViewRawDataTab data={data} />,
     },
   ];
+
+  function handleTabChange(tabValue: DetailsViewTab) {
+    setTab(tabValue);
+    onTabChange?.(tabValue);
+  }
 
   return (
     <div
@@ -97,10 +103,17 @@ export const DetailsView = ({
 
       <Tabs
         items={tabItems}
-        onValueChange={onTabChange}
+        value={tab}
+        onValueChange={handleTabChange}
         theme="underline"
         defaultValue={defaultTab}
       />
+
+      {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
+
+      {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
+
+      {tab === "raw" && <DetailsViewRawDataTab data={data} />}
     </div>
   );
 };
