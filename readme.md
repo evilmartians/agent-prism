@@ -51,7 +51,7 @@ function App() {
         {
           traceRecord: yourTraceRecord,
           spans:
-            openTelemetrySpanAdapter.convertRawDocumentsToSpan(yourTraceData),
+            openTelemetrySpanAdapter.convertRawDocumentsToSpans(yourTraceData),
         },
       ]}
     />
@@ -111,7 +111,7 @@ export function App() {
   );
   const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>([]);
 
-  const spans = openTelemetrySpanAdapter.convertRawDocumentsToSpan(traceData);
+  const spans = openTelemetrySpanAdapter.convertRawDocumentsToSpans(traceData);
 
   return (
     <div className="grid grid-cols-3 gap-4">
