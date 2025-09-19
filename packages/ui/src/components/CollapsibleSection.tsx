@@ -10,6 +10,11 @@ export interface CollapsibleSectionProps {
   title: string;
 
   /**
+   * The content to display on the right side of the title
+   */
+  rightContent?: React.ReactNode;
+
+  /**
    * The content to display when the section is expanded
    */
   children: React.ReactNode;
@@ -34,37 +39,53 @@ export interface CollapsibleSectionProps {
    * Optional className for the content area
    */
   contentClassName?: string;
+
+  /**
+   * Optional callback fired when the section is expanded or collapsed
+   */
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   title,
+  rightContent,
   children,
   defaultOpen = false,
   className = "",
   triggerClassName = "",
   contentClassName = "",
+  onOpenChange,
 }) => {
   const [open, setOpen] = React.useState(defaultOpen);
+
+  function handleOpenChange(open: boolean) {
+    setOpen(open);
+    onOpenChange?.(open);
+  }
 
   return (
     <Collapsible.Root
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       className={cn("rounded-lg", className)}
     >
       <Collapsible.Trigger
         className={cn(
-          "mb-1 flex w-full items-center gap-2 rounded-lg px-1 py-3 text-left text-sm font-medium text-gray-700 dark:text-white",
+          "mb-1 flex w-full items-center justify-between gap-2 rounded-lg px-1 py-3 text-left text-sm font-medium text-gray-700 dark:text-white",
           triggerClassName,
         )}
       >
-        <ChevronDown
-          className={cn(
-            "h-3 w-3 text-gray-500 transition-transform duration-200",
-            open && "rotate-180",
-          )}
-        />
-        <span className="truncate">{title}</span>
+        <div className="flex items-center gap-2">
+          <ChevronDown
+            className={cn(
+              "h-3 w-3 text-gray-500 transition-transform duration-200",
+              open && "rotate-180",
+            )}
+          />
+          <span className="truncate">{title}</span>
+        </div>
+
+        {rightContent}
       </Collapsible.Trigger>
 
       <Collapsible.Content
