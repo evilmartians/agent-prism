@@ -28,7 +28,6 @@ export const TraceList = ({
   onTraceSelect,
   selectedTrace,
 }: TraceListProps) => {
-  console.log(traces);
   return (
     <div
       className={cn(
