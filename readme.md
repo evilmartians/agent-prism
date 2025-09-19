@@ -42,7 +42,7 @@ The simplest way to get started is with the `TraceViewer` component, which provi
 
 ```tsx
 import { TraceViewer } from "./components/agent-prism/TraceViewer";
-import { convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
+import { openTelemetrySpanAdapter } from "@evilmartians/agent-prism-data";
 
 function App() {
   return (
@@ -50,7 +50,8 @@ function App() {
       data={[
         {
           traceRecord: yourTraceRecord,
-          spans: convertOTelDocumentToSpanCards(yourTraceData),
+          spans:
+            openTelemetrySpanAdapter.convertRawDocumentsToSpan(yourTraceData),
         },
       ]}
     />
@@ -72,7 +73,7 @@ For more control, use individual components to build custom layouts:
 ```tsx
 import { useState } from "react";
 import type { TraceRecord, TraceSpan } from "@evilmartians/agent-prism-types";
-import { convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
+import { openTelemetrySpanAdapter } from "@evilmartians/agent-prism-data";
 
 import { TraceList } from "./components/agent-prism/TraceList/TraceList";
 import { TreeView } from "./components/agent-prism/TreeView";
@@ -110,7 +111,7 @@ export function App() {
   );
   const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>([]);
 
-  const spans = convertOTelDocumentToSpanCards(traceData);
+  const spans = openTelemetrySpanAdapter.convertRawDocumentsToSpan(traceData);
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -142,16 +143,52 @@ export function App() {
 
 ## Data Integration
 
-AgentPrism uses a normalized data format optimized for UI rendering. Transform your trace data using the provided adapters:
+AgentPrism uses a normalized data format optimized for UI rendering. Transform your trace data using the provided adapters.
+
+All adapters implement the same interface and offer some helpful methods for transforming raw data (Open Telemetry, Langfuse etc.) and getting some info out of it.
+
+```tsx
+import {
+  openTelemetrySpanAdapter,
+  langfuseSpanAdapter,
+} from "@evilmartians/agent-prism-data";
+
+// convert whole documents to TraceSpans (normalized view)
+openTelemetrySpanAdapter.convertRawDocumentsToSpans(otlpData);
+
+// convert single span (a.k.a. record, a.k.a. Langfuse observation)
+openTelemetrySpanAdapter.convertRawSpanToTraceSpan(otlpData);
+
+// in case you want to use TreeView component
+openTelemetrySpanAdapter.convertRawSpansToSpanTree(otlpData);
+
+// get some data for a particular observation/span (e.g. when you loaded one record)
+langfuseSpanAdapter.getSpanCategory(observationData);
+langfuseSpanAdapter.getSpanCost(observationData);
+langfuseSpanAdapter.getSpanDuration(observationData);
+langfuseSpanAdapter.getSpanInputOutput(observationData);
+langfuseSpanAdapter.getSpanStatus(observationData);
+langfuseSpanAdapter.getSpanTokensCount(observationData);
+```
 
 ### OTLP Format
 
 For OpenTelemetry traces, use the OTLP adapter:
 
 ```tsx
-import { convertOTelDocumentToSpanCards } from "@evilmartians/agent-prism-data";
+import { openTelemetrySpanAdapter } from "@evilmartians/agent-prism-data";
 
-const spans = convertOTelDocumentToSpanCards(otlpDocument);
+const spans = openTelemetrySpanAdapter.convertRawDocumentsToSpans(otlpDocument);
+```
+
+### Langfuse Format
+
+For handling Langfuse observations, use Langfuse adapter
+
+```tsx
+import { langfuseSpanAdapter } from "@evilmartians/agent-prism-data";
+
+const spans = langfuseSpanAdapter.convertRawDocumentsToSpans(langfuseDocument);
 ```
 
 ### Expected Data Structure

@@ -16,38 +16,32 @@ Note: This package has a peer dependency on `@evilmartians/agent-prism-types`.
 
 ```typescript
 import {
-  convertOTelDocumentToSpanCards,
-  convertOTelTraceToSpanTree,
-  convertOTelSpanToSpanCard,
-  getDurationMs,
-  formatDuration,
-  getTimelineData,
-  flattenSpans,
-  findTimeRange,
-  extractInputOutput,
+  openTelemetrySpanAdapter,
+  langfuseSpanAdapter,
 } from "@evilmartians/agent-prism-data";
 
 // Main function: Convert OTLP document to UI-ready spans
-const spans = convertOTelDocumentToSpanCards(otelDocument);
+const spans = openTelemetrySpanAdapter.convertRawDocumentsToSpans(otlpDocument);
 
 // Build hierarchical tree structure
-const tree = convertOTelTraceToSpanTree(otelTrace);
+const tree =
+  langfuseSpanAdapter.convertRawSpansToSpanTree(langfuseObservations);
 
 // Convert individual span
-const spanCard = convertOTelSpanToSpanCard(otelSpan);
+const spanCard = openTelemetrySpanAdapter.convertRawSpanToTraceSpan(otlpSpan);
 
-// Utility functions
-const duration = getDurationMs(startNano, endNano);
-const formatted = formatDuration(durationMs);
-const timeline = getTimelineData(spans);
-const flat = flattenSpans(nestedSpans);
-const [start, end] = findTimeRange(spans);
-const { input, output } = extractInputOutput(span);
+// Get info for one record
+openTelemetrySpanAdapter.getSpanCategory(observationData);
+openTelemetrySpanAdapter.getSpanCost(observationData);
+openTelemetrySpanAdapter.getSpanDuration(observationData);
+openTelemetrySpanAdapter.getSpanInputOutput(observationData);
+openTelemetrySpanAdapter.getSpanStatus(observationData);
+openTelemetrySpanAdapter.getSpanTokensCount(observationData);
 ```
 
 ## Features
 
-- **OTLP to UI conversion**: Transform OpenTelemetry traces into visualization-ready format
+- **OTLP/Langfuse to UI conversion**: Transform OpenTelemetry/Langfuse traces into visualization-ready format
 - **Semantic convention support**: Handles OpenInference, GenAI, and standard OTEL attributes
 - **Hierarchical structure**: Build parent-child relationships for tree visualization
 - **Timeline calculations**: Calculate durations, offsets, and time ranges

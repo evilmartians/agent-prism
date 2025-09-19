@@ -19,24 +19,24 @@ import type {
   TraceSpan,
   SpanAttribute,
   TraceSpanCategory,
-  OTelSpan,
-  OTelDocument,
+  OpenTelemetrySpan,
+  OpenTelemetryDocument,
 } from "@evilmartians/agent-prism-types";
 
 // Import constants for OpenInference semantic conventions
 import {
   OPENINFERENCE_ATTRIBUTES,
   OPENINFERENCE_MAPPINGS,
-  GENAI_MAPPINGS,
-  STANDARD_OTEL_MAPPINGS,
+  OPENTELEMETRY_GENAI_MAPPINGS,
 } from "@evilmartians/agent-prism-types";
 ```
 
 ## What's Included
 
-- **Core Types**: `Span`, `TraceSpan`, `SpanAttribute` - UI-ready span representations
+- **Core Types**: `TraceSpan`, `TraceSpanAttribute` - UI-ready span representations
 - **Categories**: `TraceSpanCategory` - span categorization (LLM, Tool, Agent, etc.)
-- **OpenTelemetry Types**: `OTelSpan`, `OTelDocument` - OTLP format types
+- **OpenTelemetry Types**: `OpenTelemetrySpan`, `OpenTelemetryDocument`
+- **Langfuse Types**: `LangfuseObservation`, `LangfuseDocument`
 - **Semantic Convention Mappings**: Constants for OpenInference, GenAI, and standard OpenTelemetry attributes
 
 ## Related Packages
