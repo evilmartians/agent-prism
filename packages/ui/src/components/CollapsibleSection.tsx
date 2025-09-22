@@ -58,10 +58,23 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
 }) => {
   const [open, setOpen] = React.useState(defaultOpen);
 
-  function handleOpenChange(open: boolean) {
-    setOpen(open);
-    onOpenChange?.(open);
-  }
+  const handleOpenChange = React.useCallback(
+    (open: boolean): void => {
+      setOpen(open);
+      onOpenChange?.(open);
+    },
+    [onOpenChange],
+  );
+
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>): void => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleOpenChange(!open);
+      }
+    },
+    [handleOpenChange, open],
+  );
 
   return (
     <Collapsible.Root
@@ -69,23 +82,30 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       onOpenChange={handleOpenChange}
       className={cn("rounded-lg", className)}
     >
-      <Collapsible.Trigger
-        className={cn(
-          "mb-1 flex w-full items-center justify-between gap-2 rounded-lg px-1 py-3 text-left text-sm font-medium text-gray-700 dark:text-white",
-          triggerClassName,
-        )}
-      >
-        <div className="flex items-center gap-2">
-          <ChevronDown
-            className={cn(
-              "h-3 w-3 text-gray-500 transition-transform duration-200",
-              open && "rotate-180",
-            )}
-          />
-          <span className="truncate">{title}</span>
-        </div>
+      <Collapsible.Trigger asChild>
+        <div
+          tabIndex={0}
+          role="button"
+          className={cn(
+            "mb-1 flex w-full items-center justify-between gap-2 rounded-lg px-1 py-3 text-left text-sm font-medium text-gray-700 dark:text-white",
+            triggerClassName,
+          )}
+          onKeyDown={handleKeyDown}
+          aria-expanded={open}
+          aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
+        >
+          <div className="flex items-center gap-2">
+            <ChevronDown
+              className={cn(
+                "h-3 w-3 text-gray-500 transition-transform duration-200",
+                open && "rotate-180",
+              )}
+            />
+            <span className="truncate">{title}</span>
+          </div>
 
-        {rightContent}
+          {rightContent}
+        </div>
       </Collapsible.Trigger>
 
       <Collapsible.Content
