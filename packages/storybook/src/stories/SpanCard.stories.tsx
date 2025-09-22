@@ -43,11 +43,13 @@ const meta = {
     avatar: {
       description: "Optional avatar configuration",
     },
-    expandButton: {
-      control: { type: "select" },
-      options: ["inside", "outside"],
-      description: "Placement of the expand button",
-      defaultValue: "outside",
+    viewOptions: {
+      control: { type: "object" },
+      description: "View options for the span card",
+      defaultValue: {
+        expandButton: "outside",
+        withStatus: true,
+      },
     },
     isLastChild: {
       control: "boolean",
@@ -118,7 +120,9 @@ export const Default: Story = {
     isLastChild: false,
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
-    expandButton: "outside",
+    viewOptions: {
+      expandButton: "outside",
+    },
   },
 };
 
@@ -131,7 +135,9 @@ export const Level: Story = {
     isLastChild: false,
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
-    expandButton: "outside",
+    viewOptions: {
+      expandButton: "outside",
+    },
   },
 };
 
@@ -143,7 +149,9 @@ export const ExpandButton: Story = {
     isLastChild: false,
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
-    expandButton: "inside",
+    viewOptions: {
+      expandButton: "inside",
+    },
   },
 };
 
@@ -161,7 +169,9 @@ export const Avatar: Story = {
     isLastChild: false,
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
-    expandButton: "outside",
+    viewOptions: {
+      expandButton: "outside",
+    },
   },
 };
 
@@ -174,7 +184,9 @@ export const SelectedSpan: Story = {
     isLastChild: false,
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
-    expandButton: "outside",
+    viewOptions: {
+      expandButton: "outside",
+    },
   },
 };
 
@@ -186,6 +198,8 @@ export const WithChildren: Story = {
     isLastChild: false,
     expandedSpansIds: ["span-parent-001"],
     onExpandSpansIdsChange: () => {},
-    expandButton: "outside",
+    viewOptions: {
+      expandButton: "outside",
+    },
   },
 };
