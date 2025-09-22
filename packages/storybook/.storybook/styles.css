@@ -7,6 +7,11 @@ html {
   scrollbar-gutter: stable;
 }
 
+[data-mode="light"] .sb-show-main,
+[data-mode="light"] .docs-story {
+  background-color: white;
+}
+
 [data-mode="dark"] .sb-show-main,
 [data-mode="dark"] .docs-story {
   background-color: black;
