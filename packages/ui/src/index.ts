@@ -31,7 +31,10 @@ export { default as SpanStatusSource } from "./components/SpanStatus.tsx?raw";
 export { TokensBadge } from "./components/TokensBadge";
 export { default as TokensBadgeSource } from "./components/TokensBadge.tsx?raw";
 
-export { SpanCard } from "./components/SpanCard/SpanCard.tsx";
+export {
+  SpanCard,
+  type SpanCardViewOptions,
+} from "./components/SpanCard/SpanCard.tsx";
 export { default as SpanCardSource } from "./components/SpanCard/SpanCard.tsx?raw";
 
 export { TextInput, type TextInputProps } from "./components/TextInput.tsx";

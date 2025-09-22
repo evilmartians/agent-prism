@@ -150,6 +150,9 @@ const data: TraceViewerData[] = [
         theme: "gray",
       },
     ],
+    spanCardViewOptions: {
+      withStatus: false,
+    },
   },
   {
     traceRecord: {
@@ -170,6 +173,9 @@ const data: TraceViewerData[] = [
         theme: "gray",
       },
     ],
+    spanCardViewOptions: {
+      withStatus: false,
+    },
   },
   {
     traceRecord: {
@@ -190,17 +196,15 @@ const data: TraceViewerData[] = [
         theme: "gray",
       },
     ],
+    spanCardViewOptions: {
+      withStatus: false,
+    },
   },
 ];
 
 export const TraceViewerStory: Story = {
   render: () => {
-    return (
-      <TraceViewer
-        data={data}
-        withStatus={(data) => !data.id.includes("langfuse")}
-      />
-    );
+    return <TraceViewer data={data} />;
   },
 };
 
