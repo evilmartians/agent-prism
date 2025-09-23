@@ -31,19 +31,29 @@ const LAYOUT_CONSTANTS = {
 
 type ExpandButtonPlacement = "inside" | "outside";
 
+export type SpanCardViewOptions = {
+  withStatus?: boolean;
+  expandButton?: ExpandButtonPlacement;
+};
+
+const DEFAULT_VIEW_OPTIONS: Required<SpanCardViewOptions> = {
+  withStatus: true,
+  expandButton: "inside",
+};
+
 interface SpanCardProps {
   data: TraceSpan;
   level?: number;
   selectedSpan?: TraceSpan;
   avatar?: AvatarProps;
   onSpanSelect?: (span: TraceSpan) => void;
-  expandButton: ExpandButtonPlacement;
   minStart: number;
   maxEnd: number;
   isLastChild: boolean;
   prevLevelConnectors?: SpanCardConnectorType[];
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  viewOptions?: SpanCardViewOptions;
 }
 
 interface SpanCardState {
@@ -198,7 +208,6 @@ const useSpanCardEventHandlers = (
 };
 
 const SpanCardChildren: FC<{
-  expandButton: "inside" | "outside";
   data: TraceSpan;
   level: number;
   selectedSpan?: TraceSpan;
@@ -208,17 +217,18 @@ const SpanCardChildren: FC<{
   prevLevelConnectors: SpanCardConnectorType[];
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  viewOptions?: SpanCardViewOptions;
 }> = ({
   data,
   level,
   selectedSpan,
   onSpanSelect,
-  expandButton,
   minStart,
   maxEnd,
   prevLevelConnectors,
   expandedSpansIds,
   onExpandSpansIdsChange,
+  viewOptions = DEFAULT_VIEW_OPTIONS,
 }) => {
   if (!data.children?.length) return null;
 
@@ -228,7 +238,7 @@ const SpanCardChildren: FC<{
         <ul role="group">
           {data.children.map((child, idx) => (
             <SpanCard
-              expandButton={expandButton}
+              viewOptions={viewOptions}
               key={child.id}
               data={child}
               minStart={minStart}
@@ -253,7 +263,7 @@ export const SpanCard: FC<SpanCardProps> = ({
   level = 0,
   selectedSpan,
   onSpanSelect,
-  expandButton,
+  viewOptions = DEFAULT_VIEW_OPTIONS,
   avatar,
   minStart,
   maxEnd,
@@ -263,6 +273,10 @@ export const SpanCard: FC<SpanCardProps> = ({
   onExpandSpansIdsChange,
 }) => {
   const isExpanded = expandedSpansIds.includes(data.id);
+
+  const withStatus = viewOptions.withStatus ?? DEFAULT_VIEW_OPTIONS.withStatus;
+  const expandButton =
+    viewOptions.expandButton || DEFAULT_VIEW_OPTIONS.expandButton;
 
   const handleToggleClick = useCallback(
     (expanded: boolean) => {
@@ -399,7 +413,7 @@ export const SpanCard: FC<SpanCardProps> = ({
             </div>
 
             <div className="shrink-1 flex grow flex-wrap items-center justify-end gap-1">
-              {expandButton === "outside" && (
+              {expandButton === "outside" && withStatus && (
                 <div>
                   <SpanStatus status={data.status} />
                 </div>
@@ -418,7 +432,7 @@ export const SpanCard: FC<SpanCardProps> = ({
                   {formatDuration(durationMs)}
                 </span>
 
-                {expandButton === "inside" && (
+                {expandButton === "inside" && withStatus && (
                   <div>
                     <SpanStatus status={data.status} />
                   </div>
@@ -442,7 +456,7 @@ export const SpanCard: FC<SpanCardProps> = ({
         <SpanCardChildren
           minStart={minStart}
           maxEnd={maxEnd}
-          expandButton={expandButton}
+          viewOptions={viewOptions}
           data={data}
           level={level}
           selectedSpan={selectedSpan}

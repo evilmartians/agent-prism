@@ -36,10 +36,13 @@ const meta = {
     selectedSpan: {
       description: "Currently selected span for highlighting",
     },
-    expandButton: {
-      control: { type: "select" },
-      options: ["inside", "outside"],
-      description: "Placement of expand buttons for spans with children",
+    spanCardViewOptions: {
+      control: { type: "object" },
+      description: "View options for the span card",
+      defaultValue: {
+        expandButton: "outside",
+        withStatus: true,
+      },
     },
     expandedSpansIds: {
       description: "Array of span IDs that are currently expanded",
@@ -132,7 +135,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     spans: mockSpans,
-    expandButton: "outside",
+    spanCardViewOptions: {
+      expandButton: "outside",
+    },
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
   },
@@ -141,7 +146,9 @@ export const Default: Story = {
 export const ExpandButton: Story = {
   args: {
     spans: mockSpans,
-    expandButton: "inside",
+    spanCardViewOptions: {
+      expandButton: "inside",
+    },
     expandedSpansIds: [],
     onExpandSpansIdsChange: () => {},
   },
@@ -150,7 +157,9 @@ export const ExpandButton: Story = {
 export const ExpandedSpans: Story = {
   args: {
     spans: mockSpans,
-    expandButton: "outside",
+    spanCardViewOptions: {
+      expandButton: "outside",
+    },
     expandedSpansIds: ["span-root-001", "span-child-002"],
     onExpandSpansIdsChange: () => {},
   },
@@ -160,7 +169,9 @@ export const SelectedSpan: Story = {
   args: {
     spans: mockSpans,
     selectedSpan: mockSpans[0].children![1],
-    expandButton: "outside",
+    spanCardViewOptions: {
+      expandButton: "outside",
+    },
     expandedSpansIds: ["span-root-001"],
     onExpandSpansIdsChange: () => {},
     onSpanSelect: (span) => console.log("Selected span:", span),

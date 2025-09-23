@@ -4,16 +4,16 @@ import { findTimeRange, flattenSpans } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import { type FC } from "react";
 
-import { SpanCard } from "./SpanCard/SpanCard";
+import { SpanCard, type SpanCardViewOptions } from "./SpanCard/SpanCard";
 
 interface TreeViewProps {
   spans: TraceSpan[];
   className?: string;
   selectedSpan?: TraceSpan;
   onSpanSelect?: (span: TraceSpan) => void;
-  expandButton: "inside" | "outside";
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  spanCardViewOptions?: SpanCardViewOptions;
 }
 
 export const TreeView: FC<TreeViewProps> = ({
@@ -21,9 +21,9 @@ export const TreeView: FC<TreeViewProps> = ({
   onSpanSelect,
   className = "",
   selectedSpan,
-  expandButton,
   expandedSpansIds,
   onExpandSpansIdsChange,
+  spanCardViewOptions,
 }) => {
   const allCards = flattenSpans(spans);
 
@@ -38,7 +38,6 @@ export const TreeView: FC<TreeViewProps> = ({
       >
         {spans.map((span, idx) => (
           <SpanCard
-            expandButton={expandButton}
             key={span.id}
             data={span}
             level={0}
@@ -49,6 +48,7 @@ export const TreeView: FC<TreeViewProps> = ({
             isLastChild={idx === spans.length - 1}
             expandedSpansIds={expandedSpansIds}
             onExpandSpansIdsChange={onExpandSpansIdsChange}
+            viewOptions={spanCardViewOptions}
           />
         ))}
       </ul>

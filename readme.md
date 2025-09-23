@@ -127,11 +127,13 @@ export function App() {
       {/* Tree view */}
       <TreeView
         spans={spans}
-        expandButton="inside"
         onSpanSelect={setSelectedSpan}
         selectedSpan={selectedSpan}
         expandedSpansIds={expandedSpansIds}
         onExpandSpansIdsChange={setExpandedSpansIds}
+        spanCardViewOptions={{
+          expandButton: "inside",
+        }}
       />
 
       {/* Details panel */}

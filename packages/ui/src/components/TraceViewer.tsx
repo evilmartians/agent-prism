@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { BadgeProps } from "./Badge";
+import type { SpanCardViewOptions } from "./SpanCard/SpanCard";
 
 import { Button } from "./Button";
 import {
@@ -20,12 +21,16 @@ import { TraceList } from "./TraceList/TraceList";
 import { TraceListItemHeader } from "./TraceList/TraceListItemHeader";
 import { TreeView } from "./TreeView";
 
+export interface TraceViewerData {
+  traceRecord: TraceRecord;
+  badges?: Array<BadgeProps>;
+  spans: TraceSpan[];
+  spanCardViewOptions?: SpanCardViewOptions;
+}
+
 export interface TraceViewerProps {
-  data: Array<{
-    traceRecord: TraceRecord;
-    badges?: Array<BadgeProps>;
-    spans: TraceSpan[];
-  }>;
+  data: Array<TraceViewerData>;
+  spanCardViewOptions?: SpanCardViewOptions;
 }
 
 // Recursive filtering function that preserves nested structure
@@ -68,9 +73,9 @@ const filterSpansRecursively = (
 };
 
 export const TraceViewer = ({ data }: TraceViewerProps) => {
-  const [selectedTrace, setSelectedTrace] = useState<TraceRecord | undefined>(
-    data[0].traceRecord,
-  );
+  const [selectedTrace, setSelectedTrace] = useState<
+    TraceRecordWithDisplayData | undefined
+  >(data[0].traceRecord);
   const [selectedTraceSpans, setSelectedTraceSpans] = useState<TraceSpan[]>(
     data[0].spans,
   );
@@ -81,10 +86,11 @@ export const TraceViewer = ({ data }: TraceViewerProps) => {
 
   const [traceListExpanded, setTraceListExpanded] = useState(true);
 
-  const traceRecords = useMemo(() => {
+  const traceRecords: TraceRecordWithDisplayData[] = useMemo(() => {
     return data.map((item) => ({
       ...item.traceRecord,
       badges: item.badges,
+      spanCardViewOptions: item.spanCardViewOptions,
     }));
   }, [data]);
 
@@ -161,12 +167,17 @@ export const TraceViewer = ({ data }: TraceViewerProps) => {
   );
 };
 
+interface TraceRecordWithDisplayData extends TraceRecord {
+  spanCardViewOptions?: SpanCardViewOptions;
+  badges?: BadgeProps[];
+}
+
 interface LayoutProps {
-  traceRecords: TraceRecord[];
+  traceRecords: TraceRecordWithDisplayData[];
   traceListExpanded: boolean;
   setTraceListExpanded: (expanded: boolean) => void;
-  selectedTrace: TraceRecord | undefined;
-  setSelectedTrace: (trace: TraceRecord | undefined) => void;
+  selectedTrace: TraceRecordWithDisplayData | undefined;
+  setSelectedTrace: (trace: TraceRecordWithDisplayData | undefined) => void;
   selectedTraceSpans: TraceSpan[];
   setSelectedTraceSpans: (spans: TraceSpan[]) => void;
   selectedSpan: TraceSpan | undefined;
@@ -244,11 +255,11 @@ const DesktopLayout = ({
             ) : (
               <TreeView
                 spans={filteredSpans}
-                expandButton="inside"
                 onSpanSelect={setSelectedSpan}
                 selectedSpan={selectedSpan}
                 expandedSpansIds={expandedSpansIds}
                 onExpandSpansIdsChange={setExpandedSpansIds}
+                spanCardViewOptions={selectedTrace.spanCardViewOptions}
               />
             )}
           </div>
@@ -340,7 +351,7 @@ const MobileLayout = ({
           ) : (
             <TreeView
               spans={filteredSpans}
-              expandButton="inside"
+              spanCardViewOptions={selectedTrace.spanCardViewOptions}
               onSpanSelect={setSelectedSpan}
               selectedSpan={selectedSpan}
               expandedSpansIds={expandedSpansIds}
