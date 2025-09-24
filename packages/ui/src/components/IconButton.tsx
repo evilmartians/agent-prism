@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef } from "react";
 
 import cn from "classnames";
 
-type IconButtonSize = "sm" | "md" | "lg";
+type IconButtonSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 type IconButtonVariant = "default" | "ghost";
 
 export type IconButtonProps = ComponentPropsWithRef<"button"> & {
@@ -24,9 +24,13 @@ export type IconButtonProps = ComponentPropsWithRef<"button"> & {
 };
 
 const sizeClasses: Record<IconButtonSize, string> = {
-  sm: "h-5 min-h-5",
-  md: "h-6 min-h-6",
-  lg: "h-7 min-h-7",
+  xs: "h-6 min-h-6",
+  sm: "h-8 min-h-8",
+  md: "h-9 min-h-9",
+  lg: "h-10 min-h-10",
+  xl: "h-11 min-h-11",
+  "2xl": "h-12 min-h-12",
+  "3xl": "h-16 min-h-16",
 };
 
 const variantClasses: Record<IconButtonVariant, string> = {
@@ -38,7 +42,7 @@ const variantClasses: Record<IconButtonVariant, string> = {
 export const IconButton = ({
   children,
   className,
-  size = "md",
+  size = "xs",
   variant = "default",
   type = "button",
   "aria-label": ariaLabel,

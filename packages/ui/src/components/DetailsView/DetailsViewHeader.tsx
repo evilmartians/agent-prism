@@ -51,7 +51,6 @@ export const DetailsViewHeader = ({
               copyButton.isEnabled ? "Copy span details" : "Copy disabled"
             }
             variant="ghost"
-            size="sm"
             onClick={handleCopy}
           >
             {hasCopied ? (

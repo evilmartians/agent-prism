@@ -30,7 +30,7 @@ const meta = {
   argTypes: {
     size: {
       control: { type: "select" },
-      options: ["sm", "md", "lg"],
+      options: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl"],
       description: "The size of the icon button",
       defaultValue: "md",
     },
