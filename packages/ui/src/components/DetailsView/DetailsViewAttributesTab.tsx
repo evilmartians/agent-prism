@@ -9,6 +9,15 @@ interface AttributesTabProps {
 
 export const DetailsViewAttributesTab = ({ data }: AttributesTabProps) => (
   <div className="space-y-6">
+    {!data.attributes ||
+      (data.attributes.length === 0 && (
+        <div className="p-6 text-center">
+          <p className="text-gray-500 dark:text-gray-400">
+            No attributes available for this span.
+          </p>
+        </div>
+      ))}
+
     {(data.attributes || []).map((attribute, index) => {
       const value =
         attribute.value.stringValue ||
