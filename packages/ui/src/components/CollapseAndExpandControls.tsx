@@ -1,8 +1,7 @@
 import type { ComponentPropsWithRef } from "react";
 
-import { ChevronsUpDown, ChevronsDownUp } from "lucide-react";
-
 import { IconButton } from "./IconButton.tsx";
+import { ChevronsDownUpIcon, ChevronsUpDownIcon } from "./icons";
 
 export type SpanCardExpandAllButtonProps = ComponentPropsWithRef<"button"> & {
   onExpandAll: () => void;
@@ -18,7 +17,7 @@ export const ExpandAllButton = ({
 }: SpanCardExpandAllButtonProps) => {
   return (
     <IconButton onClick={onExpandAll} aria-label="Expand all" {...rest}>
-      <ChevronsUpDown className="size-3.5" />
+      <ChevronsUpDownIcon className="size-3.5" />
     </IconButton>
   );
 };
@@ -29,7 +28,7 @@ export const CollapseAllButton = ({
 }: SpanCardCollapseAllButtonProps) => {
   return (
     <IconButton onClick={onCollapseAll} aria-label="Collapse all" {...rest}>
-      <ChevronsDownUp className="size-3.5" />
+      <ChevronsDownUpIcon className="size-3.5" />
     </IconButton>
   );
 };

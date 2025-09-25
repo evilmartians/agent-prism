@@ -1,19 +1,19 @@
 import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
 
 import {
-  Zap,
-  Wrench,
-  Bot,
-  Link,
-  Search,
-  BarChart2,
-  Plus,
-  HelpCircle,
-  MoveHorizontal,
-  type LucideIcon,
-  CircleDot,
-  ShieldCheck,
-} from "lucide-react";
+  ZapIcon,
+  WrenchIcon,
+  BotIcon,
+  LinkIcon,
+  SearchIcon,
+  ChartBarIcon,
+  PlusIcon,
+  CircleQuestionMarkIcon,
+  MoveHorizontalIcon,
+  CircleDotIcon,
+  ShieldCheckIcon,
+  type IconType,
+} from "./icons";
 
 // TYPES
 
@@ -121,63 +121,63 @@ export const SPAN_CATEGORY_CONFIG: Record<
   {
     label: string;
     theme: ColorVariant;
-    icon: LucideIcon;
+    icon: IconType;
   }
 > = {
   llm_call: {
     label: "LLM",
     theme: "purple",
-    icon: Zap,
+    icon: ZapIcon,
   },
   tool_execution: {
     label: "TOOL",
     theme: "orange",
-    icon: Wrench,
+    icon: WrenchIcon,
   },
   agent_invocation: {
     label: "AGENT INVOCATION",
     theme: "indigo",
-    icon: Bot,
+    icon: BotIcon,
   },
   chain_operation: {
     label: "CHAIN",
     theme: "teal",
-    icon: Link,
+    icon: LinkIcon,
   },
   retrieval: {
     label: "RETRIEVAL",
     theme: "cyan",
-    icon: Search,
+    icon: SearchIcon,
   },
   embedding: {
     label: "EMBEDDING",
     theme: "emerald",
-    icon: BarChart2,
+    icon: ChartBarIcon,
   },
   create_agent: {
     label: "CREATE AGENT",
     theme: "sky",
-    icon: Plus,
+    icon: PlusIcon,
   },
   span: {
     label: "SPAN",
     theme: "cyan",
-    icon: MoveHorizontal,
+    icon: MoveHorizontalIcon,
   },
   event: {
     label: "EVENT",
     theme: "emerald",
-    icon: CircleDot,
+    icon: CircleDotIcon,
   },
   guardrail: {
     label: "GUARDRAIL",
     theme: "red",
-    icon: ShieldCheck,
+    icon: ShieldCheckIcon,
   },
   unknown: {
     label: "UNKNOWN",
     theme: "gray",
-    icon: HelpCircle,
+    icon: CircleQuestionMarkIcon,
   },
 };
 
@@ -193,6 +193,6 @@ export function getSpanCategoryLabel(category: TraceSpanCategory): string {
   return SPAN_CATEGORY_CONFIG[category].label;
 }
 
-export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
+export function getSpanCategoryIcon(category: TraceSpanCategory): IconType {
   return SPAN_CATEGORY_CONFIG[category].icon;
 }

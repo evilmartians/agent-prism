@@ -1,10 +1,10 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
-import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
 import { Avatar, type AvatarProps } from "../Avatar";
 import { IconButton } from "../IconButton";
+import { CheckIcon, CopyIcon } from "../icons";
 import { SpanStatus } from "../SpanStatus.tsx";
 import { DetailsViewHeaderActions } from "./DetailsViewHeaderActions";
 
@@ -55,9 +55,9 @@ export const DetailsViewHeader = ({
             onClick={handleCopy}
           >
             {hasCopied ? (
-              <Check className="size-3 text-gray-500" />
+              <CheckIcon className="size-3 text-gray-500" />
             ) : (
-              <Copy className="size-3 text-gray-500" />
+              <CopyIcon className="size-3 text-gray-500" />
             )}
           </IconButton>
         )}

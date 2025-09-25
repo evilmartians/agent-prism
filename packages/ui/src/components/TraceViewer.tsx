@@ -4,7 +4,6 @@ import {
   type TraceSpan,
 } from "@evilmartians/agent-prism-types";
 import cn from "classnames";
-import { ArrowLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { BadgeProps } from "./Badge";
@@ -16,6 +15,7 @@ import {
   ExpandAllButton,
 } from "./CollapseAndExpandControls";
 import { DetailsView } from "./DetailsView/DetailsView";
+import { ArrowLeftIcon } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { TraceList } from "./TraceList/TraceList";
 import { TraceListItemHeader } from "./TraceList/TraceListItemHeader";
@@ -316,7 +316,7 @@ const MobileLayout = ({
             setSelectedTrace(undefined);
             setSelectedTraceSpans([]);
           }}
-          iconStart={<ArrowLeft className="size-3" />}
+          iconStart={<ArrowLeftIcon className="size-3" />}
           variant="ghost"
           className="self-start"
         >
@@ -370,7 +370,7 @@ const MobileLayout = ({
           onClick={() => {
             setSelectedSpan(undefined);
           }}
-          iconStart={<ArrowLeft className="size-3" />}
+          iconStart={<ArrowLeftIcon className="size-3" />}
           variant="ghost"
           className="self-start"
         >

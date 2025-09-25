@@ -1,5 +1,4 @@
 import cn from "classnames";
-import { X } from "lucide-react";
 import {
   useRef,
   type ChangeEvent,
@@ -7,6 +6,8 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+
+import { XIcon } from "./icons";
 
 export type TextInputProps = ComponentPropsWithRef<"input"> & {
   /**
@@ -133,7 +134,7 @@ export const TextInput = ({
             onClick={handleClear}
             type="button"
           >
-            <X className="size-4" />
+            <XIcon className="size-4" />
           </button>
         )}
       </div>

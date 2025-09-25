@@ -9,7 +9,6 @@ Agent Trace UI is designed to be drop-in library for displaying agent traces. Ou
 
 Since our primary concept is having drop-in components with as little extra steps as possible, we try limiting dependencies to only those necessary:
 
-- [lucide-react](https://lucide.dev/guide/packages/lucide-react) for icons
 - [classnames](https://jedwatson.github.io/classnames/) for managing complex styles
 - [radix primitives](https://www.radix-ui.com/primitives) in a few places - to help with building reliable and accessible components
 - [react-json-pretty](https://www.npmjs.com/package/react-json-pretty) - lightweight package for displaying JSON data
@@ -98,3 +97,12 @@ import cn from "classnames";
 ## Requesting new components
 
 If you want new component to be added to the library, don't hesitate to create an issue on GitHub and start a discussion.
+
+## Adding new icon
+
+1. Go to [lucide-dev](https://lucide.dev/icons/) and pick a new icon
+2. Create new icon component in `packages/ui/src/components/icons`, name it `YourNewIconName.tsx`
+3. Add icon component, follow the same logic as in any other icon component
+4. On Lucide website, click "Sopy SVG", use it in your component
+5. Don't forget to add `className` and `{...props}` to the end of `<svg />` element
+6. Reexport your new icon from `packages/ui/src/components/icons/index.ts`

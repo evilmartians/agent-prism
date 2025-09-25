@@ -1,7 +1,8 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
 import cn from "classnames";
-import { ChevronDown } from "lucide-react";
 import * as React from "react";
+
+import { ChevronDownIcon } from "./icons";
 
 export interface CollapsibleSectionProps {
   /**
@@ -95,7 +96,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
         >
           <div className="flex items-center gap-2">
-            <ChevronDown
+            <ChevronDownIcon
               className={cn(
                 "h-3 w-3 text-gray-500 transition-transform duration-200",
                 open && "rotate-180",

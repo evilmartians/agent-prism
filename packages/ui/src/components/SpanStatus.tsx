@@ -2,7 +2,8 @@ import type { TraceSpanStatus } from "@evilmartians/agent-prism-types";
 import type { ComponentPropsWithRef } from "react";
 
 import cn from "classnames";
-import { Check, Ellipsis, Info, TriangleAlert } from "lucide-react";
+
+import { CheckIcon, EllipsisIcon, InfoIcon, TriangleAlertIcon } from "./icons";
 
 type StatusVariant = "dot" | "badge";
 
@@ -70,10 +71,14 @@ const SpanStatusBadge = ({ status, title }: StatusWithTitleProps) => {
       aria-label={title}
       title={title}
     >
-      {status === "success" && <Check className="size-2.5" aria-hidden />}
-      {status === "error" && <TriangleAlert className="size-2.5" aria-hidden />}
-      {status === "warning" && <Info className="size-2.5" aria-hidden />}
-      {status === "pending" && <Ellipsis className="size-2.5" aria-hidden />}
+      {status === "success" && <CheckIcon className="size-2.5" aria-hidden />}
+      {status === "error" && (
+        <TriangleAlertIcon className="size-2.5" aria-hidden />
+      )}
+      {status === "warning" && <InfoIcon className="size-2.5" aria-hidden />}
+      {status === "pending" && (
+        <EllipsisIcon className="size-2.5" aria-hidden />
+      )}
     </span>
   );
 };

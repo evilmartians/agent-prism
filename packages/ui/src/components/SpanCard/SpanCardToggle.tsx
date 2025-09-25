@@ -1,6 +1,7 @@
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import { type KeyboardEvent, type MouseEvent } from "react";
+
+import { ChevronDownIcon, ChevronRightIcon } from "../icons";
 
 interface SpanCardToggleProps {
   isExpanded: boolean;
@@ -23,9 +24,9 @@ export const SpanCardToggle = ({
       type="button"
     >
       {isExpanded ? (
-        <ChevronDown aria-hidden="true" className="size-3 text-gray-500" />
+        <ChevronDownIcon aria-hidden="true" className="size-3 text-gray-500" />
       ) : (
-        <ChevronRight aria-hidden="true" className="size-3 text-gray-500" />
+        <ChevronRightIcon aria-hidden="true" className="size-3 text-gray-500" />
       )}
     </button>
   </Collapsible.Trigger>

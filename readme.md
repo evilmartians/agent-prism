@@ -33,7 +33,7 @@ npm install @evilmartians/agent-prism-data @evilmartians/agent-prism-types
 Install required UI dependencies:
 
 ```bash
-npm install @radix-ui/react-collapsible @radix-ui/react-tabs classnames lucide-react react-json-pretty
+npm install @radix-ui/react-collapsible @radix-ui/react-tabs classnames react-json-pretty
 ```
 
 ## Quick Start
@@ -263,3 +263,10 @@ Use `TraceViewer` for quick setup, or compose individual components for custom l
 ## Contributing
 
 We welcome contributions to AgentPrism. Please see our [Contribution Guide](CONTRIBUTING.md) for details on getting involved.
+
+## Icons
+
+We use icons from [lucide-react](https://lucide.dev/guide/packages/lucide-react), but instead of installing the package, we copy them directly into the code. There are few reasons for this:
+
+- To reduce number of dependencies you need to install before using the library
+- To avoid conflicts with your icon library. Most likely you already have one, and most likely it's not Lucide (even though it's quite popular, there are a lot of other icon libraries and chances of you using _one of them_ is > 50%)

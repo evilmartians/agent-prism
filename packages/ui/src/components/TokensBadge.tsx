@@ -1,8 +1,7 @@
 import type { ComponentPropsWithRef } from "react";
 
-import { Coins } from "lucide-react";
-
 import { Badge, type BadgeProps } from "./Badge";
+import { CoinsIcon } from "./icons";
 
 export type TokensBadgeProps = ComponentPropsWithRef<"span"> & {
   tokensCount: number;
@@ -16,7 +15,7 @@ export const TokensBadge = ({
 }: TokensBadgeProps) => {
   return (
     <Badge
-      iconStart={<Coins className="size-2.5" />}
+      iconStart={<CoinsIcon className="size-2.5" />}
       theme="gray"
       size={size}
       {...rest}

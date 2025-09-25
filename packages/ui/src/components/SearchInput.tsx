@@ -1,5 +1,4 @@
-import { Search } from "lucide-react";
-
+import { SearchIcon } from "./icons";
 import { TextInput, type TextInputProps } from "./TextInput";
 
 /**
@@ -9,7 +8,7 @@ import { TextInput, type TextInputProps } from "./TextInput";
 export const SearchInput = ({ ...props }: TextInputProps) => {
   return (
     <TextInput
-      startIcon={<Search className="size-4" />}
+      startIcon={<SearchIcon className="size-4" />}
       placeholder="Filter..."
       {...props}
     />
