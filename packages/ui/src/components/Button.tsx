@@ -8,7 +8,13 @@ const BASE_CLASSES =
   "inline-flex items-center justify-center font-medium transition-all duration-200";
 
 const sizeClasses = {
-  xs: "px-2 py-1 text-xs",
+  xs: "h-6 px-2 gap-1 text-xs",
+  sm: "h-8 px-2 gap-1 text-xs",
+  md: "h-9 px-2.5 gap-2 text-sm",
+  lg: "h-10 px-4 gap-2 text-sm",
+  xl: "h-11 px-5 gap-3 text-base",
+  "2xl": "h-12 px-5 gap-2.5 text-base",
+  "3xl": "h-16 px-7 gap-3 text-lg",
 };
 
 const filledThemeClasses: Record<ColorVariant, string> = {
@@ -32,12 +38,14 @@ const variantClasses = {
   ghost: "bg-transparent text-gray-600 dark:text-gray-300",
 };
 
+type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+
 export type ButtonProps = ComponentPropsWithRef<"button"> & {
   /**
    * The size of the button
    * @default "xs"
    */
-  size?: "xs";
+  size?: ButtonSize;
 
   /**
    * The color theme of the button

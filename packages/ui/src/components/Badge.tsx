@@ -15,6 +15,7 @@ const textSizes = {
   xs: "text-xs font-normal leading-3",
   sm: "text-xs font-medium",
   md: "text-sm font-medium",
+  lg: "text-sm font-medium",
 };
 
 export type BadgeProps = ComponentPropsWithRef<"span"> & {
@@ -40,7 +41,7 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
    * The size of the badge
    * @default "md"
    */
-  size?: "sm" | "md" | "xs";
+  size?: "xs" | "sm" | "md" | "lg";
 
   /**
    * Optional icon to display at the start of the badge
@@ -72,7 +73,7 @@ export const Badge = ({
 
   const variantClasses =
     variant === "outline"
-      ? `border border-gray-200 dark:border-gray-800 ${text} ${darkText} bg-transparent dark:bg-transparent`
+      ? `border ${text} ${darkText} bg-transparent dark:bg-transparent border-current`
       : `${bg} ${text} ${darkBg} ${darkText}`;
 
   return (
