@@ -6,7 +6,7 @@ import colors from "tailwindcss/colors";
 
 import { CollapsibleSection } from "../CollapsibleSection";
 import { IconButton } from "../IconButton";
-import { CheckIcon, CopyIcon } from "../icons";
+import { Check, Copy } from "../icons";
 import { Tabs, type TabItem } from "../Tabs";
 
 interface DetailsViewInputOutputTabProps {
@@ -204,11 +204,7 @@ const CopyButton = ({ section, content }: CopyButtonProps) => {
       variant="ghost"
       className="absolute right-1.5 top-1.5"
     >
-      {isCopied ? (
-        <CheckIcon className="size-3" />
-      ) : (
-        <CopyIcon className="size-3" />
-      )}
+      {isCopied ? <Check className="size-3" /> : <Copy className="size-3" />}
     </IconButton>
   );
 };

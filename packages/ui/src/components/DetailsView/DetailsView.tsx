@@ -5,7 +5,7 @@ import { useState, type ReactElement } from "react";
 
 import type { AvatarProps } from "../Avatar";
 
-import { ArrowRightLeftIcon, SquareTerminalIcon, TagsIcon } from "../icons";
+import { ArrowRightLeft, SquareTerminal, Tags } from "../icons";
 import { Tabs, type TabItem } from "../Tabs";
 import { DetailsViewAttributesTab } from "./DetailsViewAttributesTab";
 import { DetailsViewHeader } from "./DetailsViewHeader";
@@ -71,17 +71,17 @@ export const DetailsView = ({
     {
       value: "input-output",
       label: "In/Out",
-      icon: <ArrowRightLeftIcon className="size-4" />,
+      icon: <ArrowRightLeft className="size-4" />,
     },
     {
       value: "attributes",
       label: "Attributes",
-      icon: <TagsIcon className="size-4" />,
+      icon: <Tags className="size-4" />,
     },
     {
       value: "raw",
       label: "RAW",
-      icon: <SquareTerminalIcon className="size-4" />,
+      icon: <SquareTerminal className="size-4" />,
     },
   ];
 

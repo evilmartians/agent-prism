@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type EllipsisIconProps = ComponentPropsWithRef<"svg">;
+export type EllipsisProps = ComponentPropsWithRef<"svg">;
 
-export const EllipsisIcon = ({
+export const Ellipsis = ({
   className,
   ...props
-}: EllipsisIconProps): ReactElement => (
+}: EllipsisProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

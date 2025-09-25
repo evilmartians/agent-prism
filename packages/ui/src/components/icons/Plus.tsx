@@ -2,12 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type PlusIconProps = ComponentPropsWithRef<"svg">;
+export type PlusProps = ComponentPropsWithRef<"svg">;
 
-export const PlusIcon = ({
-  className,
-  ...props
-}: PlusIconProps): ReactElement => (
+export const Plus = ({ className, ...props }: PlusProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

@@ -1,17 +1,17 @@
 import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
 
 import {
-  ZapIcon,
-  WrenchIcon,
-  BotIcon,
-  LinkIcon,
-  SearchIcon,
-  ChartBarIcon,
-  PlusIcon,
-  CircleQuestionMarkIcon,
-  MoveHorizontalIcon,
-  CircleDotIcon,
-  ShieldCheckIcon,
+  Zap,
+  Wrench,
+  Bot,
+  Link,
+  Search,
+  ChartBar,
+  Plus,
+  CircleQuestionMark,
+  MoveHorizontal,
+  CircleDot,
+  ShieldCheck,
   type IconType,
 } from "./icons";
 
@@ -127,57 +127,57 @@ export const SPAN_CATEGORY_CONFIG: Record<
   llm_call: {
     label: "LLM",
     theme: "purple",
-    icon: ZapIcon,
+    icon: Zap,
   },
   tool_execution: {
     label: "TOOL",
     theme: "orange",
-    icon: WrenchIcon,
+    icon: Wrench,
   },
   agent_invocation: {
     label: "AGENT INVOCATION",
     theme: "indigo",
-    icon: BotIcon,
+    icon: Bot,
   },
   chain_operation: {
     label: "CHAIN",
     theme: "teal",
-    icon: LinkIcon,
+    icon: Link,
   },
   retrieval: {
     label: "RETRIEVAL",
     theme: "cyan",
-    icon: SearchIcon,
+    icon: Search,
   },
   embedding: {
     label: "EMBEDDING",
     theme: "emerald",
-    icon: ChartBarIcon,
+    icon: ChartBar,
   },
   create_agent: {
     label: "CREATE AGENT",
     theme: "sky",
-    icon: PlusIcon,
+    icon: Plus,
   },
   span: {
     label: "SPAN",
     theme: "cyan",
-    icon: MoveHorizontalIcon,
+    icon: MoveHorizontal,
   },
   event: {
     label: "EVENT",
     theme: "emerald",
-    icon: CircleDotIcon,
+    icon: CircleDot,
   },
   guardrail: {
     label: "GUARDRAIL",
     theme: "red",
-    icon: ShieldCheckIcon,
+    icon: ShieldCheck,
   },
   unknown: {
     label: "UNKNOWN",
     theme: "gray",
-    icon: CircleQuestionMarkIcon,
+    icon: CircleQuestionMark,
   },
 };
 

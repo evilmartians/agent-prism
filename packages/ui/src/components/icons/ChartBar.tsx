@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type ChartBarIconProps = ComponentPropsWithRef<"svg">;
+export type ChartBarProps = ComponentPropsWithRef<"svg">;
 
-export const ChartBarIcon = ({
+export const ChartBar = ({
   className,
   ...props
-}: ChartBarIconProps): ReactElement => (
+}: ChartBarProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

@@ -3,7 +3,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import { getDurationMs, formatDuration } from "@evilmartians/agent-prism-data";
 
 import { Badge } from "../Badge";
-import { CoinsIcon } from "../icons/Coins.tsx";
+import { Coins } from "../icons/Coins.tsx";
 import {
   getSpanCategoryIcon,
   getSpanCategoryLabel,
@@ -29,7 +29,7 @@ export const DetailsViewMetrics = ({ data }: DetailsViewMetricsProps) => {
       />
 
       <Badge
-        iconStart={<CoinsIcon className="size-2.5" />}
+        iconStart={<Coins className="size-2.5" />}
         theme="gray"
         size="xs"
         label={data.tokensCount}

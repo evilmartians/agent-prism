@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type ShieldCheckIconProps = ComponentPropsWithRef<"svg">;
+export type ShieldCheckProps = ComponentPropsWithRef<"svg">;
 
-export const ShieldCheckIcon = ({
+export const ShieldCheck = ({
   className,
   ...props
-}: ShieldCheckIconProps): ReactElement => (
+}: ShieldCheckProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

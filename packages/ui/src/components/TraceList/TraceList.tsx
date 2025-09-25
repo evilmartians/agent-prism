@@ -4,7 +4,7 @@ import cn from "classnames";
 
 import { Badge, type BadgeProps } from "../Badge.tsx";
 import { IconButton } from "../IconButton.tsx";
-import { ArrowLeftIcon } from "../icons";
+import { ArrowLeft } from "../icons";
 import { TraceListItem } from "./TraceListItem.tsx";
 
 type TraceRecordWithBadges = TraceRecord & {
@@ -61,7 +61,7 @@ export const TraceList = ({
           onClick={() => onExpandStateChange(!expanded)}
           className="lg:hidden"
         >
-          <ArrowLeftIcon
+          <ArrowLeft
             className={cn(
               "size-3 transition-transform",
               expanded ? "" : "rotate-180",

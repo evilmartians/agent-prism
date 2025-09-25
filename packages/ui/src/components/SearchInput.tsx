@@ -1,4 +1,4 @@
-import { SearchIcon } from "./icons";
+import { Search } from "./icons";
 import { TextInput, type TextInputProps } from "./TextInput";
 
 /**
@@ -8,7 +8,7 @@ import { TextInput, type TextInputProps } from "./TextInput";
 export const SearchInput = ({ ...props }: TextInputProps) => {
   return (
     <TextInput
-      startIcon={<SearchIcon className="size-4" />}
+      startIcon={<Search className="size-4" />}
       placeholder="Filter..."
       {...props}
     />

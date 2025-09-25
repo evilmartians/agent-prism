@@ -2,12 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type TagsIconProps = ComponentPropsWithRef<"svg">;
+export type TagsProps = ComponentPropsWithRef<"svg">;
 
-export const TagsIcon = ({
-  className,
-  ...props
-}: TagsIconProps): ReactElement => (
+export const Tags = ({ className, ...props }: TagsProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

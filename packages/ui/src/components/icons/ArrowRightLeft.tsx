@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type ArrowRightLeftIconProps = ComponentPropsWithRef<"svg">;
+export type ArrowRightLeftProps = ComponentPropsWithRef<"svg">;
 
-export const ArrowRightLeftIcon = ({
+export const ArrowRightLeft = ({
   className,
   ...props
-}: ArrowRightLeftIconProps): ReactElement => (
+}: ArrowRightLeftProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

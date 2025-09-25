@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type SquareTerminalIconProps = ComponentPropsWithRef<"svg">;
+export type SquareTerminalProps = ComponentPropsWithRef<"svg">;
 
-export const SquareTerminalIcon = ({
+export const SquareTerminal = ({
   className,
   ...props
-}: SquareTerminalIconProps): ReactElement => (
+}: SquareTerminalProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

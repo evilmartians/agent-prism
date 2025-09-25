@@ -2,12 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type CopyIconProps = ComponentPropsWithRef<"svg">;
+export type CopyProps = ComponentPropsWithRef<"svg">;
 
-export const CopyIcon = ({
-  className,
-  ...props
-}: CopyIconProps): ReactElement => (
+export const Copy = ({ className, ...props }: CopyProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

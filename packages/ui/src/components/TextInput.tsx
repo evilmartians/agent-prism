@@ -7,7 +7,7 @@ import {
   type RefObject,
 } from "react";
 
-import { XIcon } from "./icons";
+import { X } from "./icons";
 
 export type TextInputProps = ComponentPropsWithRef<"input"> & {
   /**
@@ -134,7 +134,7 @@ export const TextInput = ({
             onClick={handleClear}
             type="button"
           >
-            <XIcon className="size-4" />
+            <X className="size-4" />
           </button>
         )}
       </div>

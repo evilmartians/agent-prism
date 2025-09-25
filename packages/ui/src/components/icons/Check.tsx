@@ -2,12 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type CheckIconProps = ComponentPropsWithRef<"svg">;
+export type CheckProps = ComponentPropsWithRef<"svg">;
 
-export const CheckIcon = ({
-  className,
-  ...props
-}: CheckIconProps): ReactElement => (
+export const Check = ({ className, ...props }: CheckProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

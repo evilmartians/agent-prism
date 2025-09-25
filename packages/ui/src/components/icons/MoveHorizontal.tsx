@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type MoveHorizontalIconProps = ComponentPropsWithRef<"svg">;
+export type MoveHorizontalProps = ComponentPropsWithRef<"svg">;
 
-export const MoveHorizontalIcon = ({
+export const MoveHorizontal = ({
   className,
   ...props
-}: MoveHorizontalIconProps): ReactElement => (
+}: MoveHorizontalProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

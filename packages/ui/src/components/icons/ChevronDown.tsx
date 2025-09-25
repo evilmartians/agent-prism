@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type ChevronDownIconProps = ComponentPropsWithRef<"svg">;
+export type ChevronDownProps = ComponentPropsWithRef<"svg">;
 
-export const ChevronDownIcon = ({
+export const ChevronDown = ({
   className,
   ...props
-}: ChevronDownIconProps): ReactElement => (
+}: ChevronDownProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

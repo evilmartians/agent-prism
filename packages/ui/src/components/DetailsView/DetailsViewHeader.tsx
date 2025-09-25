@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Avatar, type AvatarProps } from "../Avatar";
 import { IconButton } from "../IconButton";
-import { CheckIcon, CopyIcon } from "../icons";
+import { Check, Copy } from "../icons";
 import { SpanStatus } from "../SpanStatus.tsx";
 import { DetailsViewHeaderActions } from "./DetailsViewHeaderActions";
 
@@ -54,9 +54,9 @@ export const DetailsViewHeader = ({
             onClick={handleCopy}
           >
             {hasCopied ? (
-              <CheckIcon className="size-3 text-gray-500" />
+              <Check className="size-3 text-gray-500" />
             ) : (
-              <CopyIcon className="size-3 text-gray-500" />
+              <Copy className="size-3 text-gray-500" />
             )}
           </IconButton>
         )}

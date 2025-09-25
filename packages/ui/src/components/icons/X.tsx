@@ -2,9 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type XIconProps = ComponentPropsWithRef<"svg">;
+export type XProps = ComponentPropsWithRef<"svg">;
 
-export const XIcon = ({ className, ...props }: XIconProps): ReactElement => (
+export const X = ({ className, ...props }: XProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

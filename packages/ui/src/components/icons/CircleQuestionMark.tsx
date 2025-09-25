@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type CircleQuestionMarkIconProps = ComponentPropsWithRef<"svg">;
+export type CircleQuestionMarkProps = ComponentPropsWithRef<"svg">;
 
-export const CircleQuestionMarkIcon = ({
+export const CircleQuestionMark = ({
   className,
   ...props
-}: CircleQuestionMarkIconProps): ReactElement => (
+}: CircleQuestionMarkProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

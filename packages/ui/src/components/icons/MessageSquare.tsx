@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type MessageSquareIconProps = ComponentPropsWithRef<"svg">;
+export type MessageSquareProps = ComponentPropsWithRef<"svg">;
 
-export const MessageSquareIcon = ({
+export const MessageSquare = ({
   className,
   ...props
-}: MessageSquareIconProps): ReactElement => (
+}: MessageSquareProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

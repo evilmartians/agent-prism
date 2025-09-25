@@ -2,12 +2,12 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type TriangleAlertIconProps = ComponentPropsWithRef<"svg">;
+export type TriangleAlertProps = ComponentPropsWithRef<"svg">;
 
-export const TriangleAlertIcon = ({
+export const TriangleAlert = ({
   className,
   ...props
-}: TriangleAlertIconProps): ReactElement => (
+}: TriangleAlertProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

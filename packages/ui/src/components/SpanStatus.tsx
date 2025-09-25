@@ -3,7 +3,7 @@ import type { ComponentPropsWithRef } from "react";
 
 import cn from "classnames";
 
-import { CheckIcon, EllipsisIcon, InfoIcon, TriangleAlertIcon } from "./icons";
+import { Check, Ellipsis, Info, TriangleAlert } from "./icons";
 
 type StatusVariant = "dot" | "badge";
 
@@ -71,14 +71,10 @@ const SpanStatusBadge = ({ status, title }: StatusWithTitleProps) => {
       aria-label={title}
       title={title}
     >
-      {status === "success" && <CheckIcon className="size-2.5" aria-hidden />}
-      {status === "error" && (
-        <TriangleAlertIcon className="size-2.5" aria-hidden />
-      )}
-      {status === "warning" && <InfoIcon className="size-2.5" aria-hidden />}
-      {status === "pending" && (
-        <EllipsisIcon className="size-2.5" aria-hidden />
-      )}
+      {status === "success" && <Check className="size-2.5" aria-hidden />}
+      {status === "error" && <TriangleAlert className="size-2.5" aria-hidden />}
+      {status === "warning" && <Info className="size-2.5" aria-hidden />}
+      {status === "pending" && <Ellipsis className="size-2.5" aria-hidden />}
     </span>
   );
 };

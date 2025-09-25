@@ -2,12 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type WrenchIconProps = ComponentPropsWithRef<"svg">;
+export type WrenchProps = ComponentPropsWithRef<"svg">;
 
-export const WrenchIcon = ({
-  className,
-  ...props
-}: WrenchIconProps): ReactElement => (
+export const Wrench = ({ className, ...props }: WrenchProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

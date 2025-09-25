@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { useState, type ComponentPropsWithRef, type ReactElement } from "react";
 
-import { UserIcon } from "./icons";
+import { User } from "./icons";
 import { ROUNDED_CLASSES, type ColorVariant } from "./shared.ts";
 
 const sizeClasses = {
@@ -112,7 +112,7 @@ export const Avatar = ({
       {...rest}
     >
       {error ? (
-        <UserIcon
+        <User
           className={cn(
             iconSizeClasses[size],
             "text-gray-600 dark:text-gray-400",

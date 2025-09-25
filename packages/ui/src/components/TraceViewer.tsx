@@ -15,7 +15,7 @@ import {
   ExpandAllButton,
 } from "./CollapseAndExpandControls";
 import { DetailsView } from "./DetailsView/DetailsView";
-import { ArrowLeftIcon } from "./icons";
+import { ArrowLeft } from "./icons";
 import { SearchInput } from "./SearchInput";
 import { TraceList } from "./TraceList/TraceList";
 import { TraceListItemHeader } from "./TraceList/TraceListItemHeader";
@@ -316,7 +316,7 @@ const MobileLayout = ({
             setSelectedTrace(undefined);
             setSelectedTraceSpans([]);
           }}
-          iconStart={<ArrowLeftIcon className="size-3" />}
+          iconStart={<ArrowLeft className="size-3" />}
           variant="ghost"
           className="self-start"
         >
@@ -370,7 +370,7 @@ const MobileLayout = ({
           onClick={() => {
             setSelectedSpan(undefined);
           }}
-          iconStart={<ArrowLeftIcon className="size-3" />}
+          iconStart={<ArrowLeft className="size-3" />}
           variant="ghost"
           className="self-start"
         >

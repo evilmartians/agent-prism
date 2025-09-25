@@ -2,12 +2,9 @@
 
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
-export type ZapIconProps = ComponentPropsWithRef<"svg">;
+export type ZapProps = ComponentPropsWithRef<"svg">;
 
-export const ZapIcon = ({
-  className,
-  ...props
-}: ZapIconProps): ReactElement => (
+export const Zap = ({ className, ...props }: ZapProps): ReactElement => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
