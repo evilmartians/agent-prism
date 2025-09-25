@@ -77,7 +77,7 @@ export type LangfuseObservation = {
   startTime: string; // ISO date string
   endTime: string; // ISO date string
   name: string;
-  metadata?: string | Record<string, unknown> | null;
+  metadata?: unknown | null;
   type?: LangfuseObservationType;
   level?: LangfuseObservationLevel;
   input?: string | null;

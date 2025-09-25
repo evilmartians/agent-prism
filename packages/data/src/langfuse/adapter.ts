@@ -9,6 +9,8 @@ import type {
 
 import type { SpanAdapter } from "../types";
 
+import { getLangfuseAttributes } from "./utils/get-langfuse-attributes";
+
 export const langfuseSpanAdapter: SpanAdapter<
   LangfuseDocument,
   LangfuseObservation
@@ -69,12 +71,14 @@ export const langfuseSpanAdapter: SpanAdapter<
     const cost = this.getSpanCost(span);
     const ioData = this.getSpanInputOutput(span);
     const type = this.getSpanCategory(span);
+    const attributes = getLangfuseAttributes(span);
 
     return {
       id: span.id,
       title: span.name,
       type,
       status,
+      attributes,
       duration,
       tokensCount,
       raw: JSON.stringify(span, null, 2),

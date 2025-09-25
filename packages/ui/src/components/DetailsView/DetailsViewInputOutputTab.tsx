@@ -33,14 +33,41 @@ export const DetailsViewInputOutputTab = ({
     );
   }
 
+  let parsedInput: string | null = null;
+  let parsedOutput: string | null = null;
+
+  if (typeof data.input === "string") {
+    try {
+      parsedInput = JSON.parse(data.input);
+    } catch {
+      parsedInput = null;
+    }
+  }
+
+  if (typeof data.output === "string") {
+    try {
+      parsedOutput = JSON.parse(data.output);
+    } catch {
+      parsedOutput = null;
+    }
+  }
+
   return (
     <div className="space-y-3">
       {typeof data.input === "string" && (
-        <IOSection section="Input" content={data.input} />
+        <IOSection
+          section="Input"
+          content={data.input}
+          parsedContent={parsedInput}
+        />
       )}
 
       {typeof data.output === "string" && (
-        <IOSection section="Output" content={data.output} />
+        <IOSection
+          section="Output"
+          content={data.output}
+          parsedContent={parsedOutput}
+        />
       )}
     </div>
   );
@@ -49,25 +76,22 @@ export const DetailsViewInputOutputTab = ({
 interface IOSectionProps {
   section: IOSection;
   content: string;
+  parsedContent: string | null;
 }
 
-const IOSection = ({ section, content }: IOSectionProps): ReactElement => {
-  const [tab, setTab] = useState<IOTab>("json");
+const IOSection = ({
+  section,
+  content,
+  parsedContent,
+}: IOSectionProps): ReactElement => {
+  const [tab, setTab] = useState<IOTab>(parsedContent ? "json" : "plain");
   const [open, setOpen] = useState(true);
-
-  let parsedData: string | null = null;
-
-  try {
-    parsedData = JSON.parse(content);
-  } catch {
-    parsedData = null;
-  }
 
   const tabItems: TabItem<IOTab>[] = [
     {
       value: "json",
       label: "JSON",
-      disabled: !parsedData,
+      disabled: !parsedContent,
     },
     {
       value: "plain",
@@ -84,7 +108,7 @@ const IOSection = ({ section, content }: IOSectionProps): ReactElement => {
         open ? (
           <Tabs<IOTab>
             items={tabItems}
-            defaultValue={parsedData ? "json" : "plain"}
+            defaultValue={parsedContent ? "json" : "plain"}
             value={tab}
             onValueChange={setTab}
             theme="pill"
@@ -98,7 +122,7 @@ const IOSection = ({ section, content }: IOSectionProps): ReactElement => {
         content={content}
         section={section}
         tab={tab}
-        parsedData={parsedData}
+        parsedContent={parsedContent}
       />
     </CollapsibleSection>
   );
@@ -106,14 +130,14 @@ const IOSection = ({ section, content }: IOSectionProps): ReactElement => {
 
 interface IOContentProps extends Omit<IOSectionProps, "title"> {
   tab: IOTab;
-  parsedData: string | null;
+  parsedContent: string | null;
 }
 
 const IOContent = ({
   tab,
   content,
   section,
-  parsedData,
+  parsedContent,
 }: IOContentProps): ReactElement => {
   if (!content) {
     return (
@@ -129,11 +153,11 @@ const IOContent = ({
 
       {tab === "json" && (
         <>
-          {parsedData ? (
+          {parsedContent ? (
             <JSONPretty
               booleanStyle={`color: ${colors.blue[400]};`}
               className="overflow-x-auto rounded-xl p-4"
-              data={parsedData}
+              data={parsedContent}
               id={`json-pretty-${section}`}
               keyStyle={`color: ${colors.blue[400]};`}
               mainStyle={`color: ${colors.gray[400]}; font-size: 12px;`}
