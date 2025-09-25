@@ -16,10 +16,7 @@ export const DetailsViewHeaderActions = () => (
       Secondary
     </Button>
 
-    <IconButton
-      aria-label="Open chat with AI assistant (feature coming soon)"
-      size="md"
-    >
+    <IconButton aria-label="Open chat with AI assistant (feature coming soon)">
       <MessageSquareIcon className="size-3 text-gray-500" />
     </IconButton>
   </div>
