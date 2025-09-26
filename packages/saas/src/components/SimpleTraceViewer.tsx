@@ -70,11 +70,11 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[1fr_400px]">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_400px]">
       <div
         className={`rounded border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 ${showDetails ? "hidden lg:block" : "block"}`}
       >
-        <div className="flex flex-col gap-2 border-b border-gray-200 p-3 sm:flex-row sm:items-center sm:justify-between dark:border-gray-800">
+        <div className="flex flex-row gap-2 border-b border-gray-200 p-3 sm:items-center sm:justify-between dark:border-gray-800">
           <SearchInput
             id="span-search"
             name="search"
