@@ -12,7 +12,7 @@ export const DetailsViewRawDataTab = ({ data }: RawDataTabProps) => (
     <div className="rounded border border-gray-200 bg-transparent dark:border-gray-800">
       <JSONPretty
         booleanStyle={`color: ${colors.blue[400]};`}
-        className="overflow-x-auto rounded-xl p-4"
+        className="overflow-x-auto rounded-xl p-4 text-left"
         data={data.raw}
         id={`json-pretty-${data.id || "span-details"}`}
         keyStyle={`color: ${colors.blue[400]};`}
