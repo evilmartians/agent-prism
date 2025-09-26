@@ -1,20 +1,21 @@
-import { MessageSquare, Plus } from "lucide-react";
+import type { ReactNode } from "react";
 
-import { Button } from "../Button";
-import { IconButton } from "../IconButton";
+export interface DetailsViewHeaderActionsProps {
+  /**
+   * Custom actions to render in the header
+   */
+  children?: ReactNode;
+  /**
+   * Optional className for the actions container
+   */
+  className?: string;
+}
 
-export const DetailsViewHeaderActions = () => (
-  <div className="flex flex-wrap items-center gap-2">
-    <Button size="6" iconStart={<Plus className="size-4" />}>
-      Primary
-    </Button>
+export const DetailsViewHeaderActions = ({
+  children,
+  className = "flex flex-wrap items-center gap-2",
+}: DetailsViewHeaderActionsProps) => {
+  if (!children) return null;
 
-    <Button variant="ghost" size="6" iconStart={<Plus className="size-4" />}>
-      Secondary
-    </Button>
-
-    <IconButton aria-label="Open chat with AI assistant (feature coming soon)">
-      <MessageSquare className="size-3 text-gray-500" />
-    </IconButton>
-  </div>
-);
+  return <div className={className}>{children}</div>;
+};
