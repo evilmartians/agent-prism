@@ -10,32 +10,11 @@ import {
   openTelemetrySpanAdapter,
   langfuseSpanAdapter,
 } from "@evilmartians/agent-prism-data";
-import React, {
-  createContext,
-  useState,
-  ReactNode,
-  useEffect,
-  FC,
-} from "react";
+import React, { useState, ReactNode, useEffect, FC } from "react";
+
+import { TraceContext, TraceState } from "@/context/TraceContext";
 
 import testData from "../data/test.json";
-
-export interface TraceState {
-  spans: TraceSpan[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-export interface TraceContextType {
-  traceState: TraceState;
-  uploadTraces: (files: FileList) => Promise<void>;
-  clearTraces: () => void;
-  clearError: () => void;
-}
-
-export const TraceContext = createContext<TraceContextType | undefined>(
-  undefined,
-);
 
 function hasProperty<T extends string>(
   obj: object,

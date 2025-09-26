@@ -4,7 +4,7 @@ import { useContext } from "react";
 
 import { Hero } from "@/components/Hero";
 import { SimpleTraceViewer } from "@/components/SimpleTraceViewer";
-import { TraceContext } from "@/context/TraceProvider";
+import { TraceContext } from "@/context/TraceContext";
 
 export const HomeContent = () => {
   const traceContext = useContext(TraceContext);

@@ -4,7 +4,7 @@ import { Button } from "@evilmartians/agent-prism-ui";
 import { ChangeEvent, FC, useContext, useRef, useState } from "react";
 
 import { UploadFileErrorMessage } from "@/components/UploadFileErrorMessage.tsx";
-import { TraceContext } from "@/context/TraceProvider";
+import { TraceContext } from "@/context/TraceContext";
 
 const FileUploader: FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);

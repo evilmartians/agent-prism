@@ -1,5 +1,5 @@
 import { HomeContent } from "@/components/HomeContent.tsx";
-import { TraceProvider } from "@/context/TraceProvider";
+import { TraceProvider } from "@/components/TraceProvider.tsx";
 
 export default function Home() {
   return (
