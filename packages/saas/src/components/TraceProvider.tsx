@@ -1,98 +1,11 @@
 "use client";
 
-import type {
-  OpenTelemetryDocument,
-  LangfuseDocument,
-  TraceSpan,
-} from "@evilmartians/agent-prism-types";
-
-import {
-  openTelemetrySpanAdapter,
-  langfuseSpanAdapter,
-} from "@evilmartians/agent-prism-data";
-import React, { useState, ReactNode, useEffect, FC } from "react";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 
 import { TraceContext, TraceState } from "@/context/TraceContext";
+import { extractSpans } from "@/services/extract-spans.ts";
 
 import testData from "../data/test.json";
-
-function hasProperty<T extends string>(
-  obj: object,
-  prop: T,
-): obj is Record<T, unknown> {
-  return prop in obj;
-}
-
-function isValidTraceSpan(item: unknown): item is TraceSpan {
-  return (
-    typeof item === "object" &&
-    item !== null &&
-    hasProperty(item, "id") &&
-    hasProperty(item, "title") &&
-    hasProperty(item, "startTime") &&
-    hasProperty(item, "endTime") &&
-    hasProperty(item, "duration") &&
-    hasProperty(item, "type") &&
-    hasProperty(item, "status") &&
-    hasProperty(item, "raw")
-  );
-}
-
-function extractSpans(data: object): TraceSpan[] {
-  if (hasProperty(data, "resourceSpans") && Array.isArray(data.resourceSpans)) {
-    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-      data as OpenTelemetryDocument,
-    );
-  }
-
-  if (
-    Array.isArray(data) &&
-    data.length > 0 &&
-    data.every(
-      (item) =>
-        typeof item === "object" &&
-        item !== null &&
-        hasProperty(item, "resourceSpans") &&
-        Array.isArray(item.resourceSpans),
-    )
-  ) {
-    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-      data as OpenTelemetryDocument[],
-    );
-  }
-
-  if (hasProperty(data, "trace") || hasProperty(data, "observations")) {
-    return langfuseSpanAdapter.convertRawDocumentsToSpans([
-      data as LangfuseDocument,
-    ]);
-  }
-
-  if (Array.isArray(data) && data.length > 0 && data.every(isValidTraceSpan)) {
-    return data;
-  }
-
-  if (
-    hasProperty(data, "spans") &&
-    Array.isArray(data.spans) &&
-    data.spans.every(isValidTraceSpan)
-  ) {
-    return data.spans;
-  }
-
-  if (
-    hasProperty(data, "data") &&
-    Array.isArray(data.data) &&
-    data.data.every(isValidTraceSpan)
-  ) {
-    return data.data;
-  }
-
-  if (isValidTraceSpan(data)) {
-    return [data];
-  }
-
-  throw new Error("Invalid trace format. Expected OpenTelemetry or Langfuse.");
-}
 
 export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [traceState, setTraceState] = useState<TraceState>({
