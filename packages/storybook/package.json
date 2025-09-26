@@ -4,7 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
     "dev": "storybook dev -p 6006",
     "build-ui-lib": "cd ../ui && pnpm build",
     "build-storybook": "storybook build",

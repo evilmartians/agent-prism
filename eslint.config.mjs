@@ -19,6 +19,8 @@ export default defineConfig([
   pluginReact.configs.flat.recommended,
   {
     ignores: [
+      "packages/saas/.next",
+      "packages/saas/next-env.d.ts",
       "packages/core/dist",
       "packages/demo-app/dist",
       "packages/storybook/storybook-static",
