@@ -35,7 +35,7 @@ export const DetailsViewHeader = ({
   return (
     <div className="mb-4 flex flex-wrap items-center gap-4">
       <div className="flex items-center gap-1.5">
-        {avatar && <Avatar {...avatar} />}
+        {avatar && <Avatar size="4" {...avatar} />}
 
         <span className="text-base tracking-wide text-gray-900 dark:text-gray-200">
           {data.title}

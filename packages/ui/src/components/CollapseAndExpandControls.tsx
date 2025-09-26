@@ -17,7 +17,12 @@ export const ExpandAllButton = ({
   ...rest
 }: SpanCardExpandAllButtonProps) => {
   return (
-    <IconButton onClick={onExpandAll} aria-label="Expand all" {...rest}>
+    <IconButton
+      size="7"
+      onClick={onExpandAll}
+      aria-label="Expand all"
+      {...rest}
+    >
       <ChevronsUpDown className="size-3.5" />
     </IconButton>
   );
@@ -28,7 +33,12 @@ export const CollapseAllButton = ({
   ...rest
 }: SpanCardCollapseAllButtonProps) => {
   return (
-    <IconButton onClick={onCollapseAll} aria-label="Collapse all" {...rest}>
+    <IconButton
+      size="7"
+      onClick={onCollapseAll}
+      aria-label="Collapse all"
+      {...rest}
+    >
       <ChevronsDownUp className="size-3.5" />
     </IconButton>
   );

@@ -5,11 +5,11 @@ import { IconButton } from "../IconButton";
 
 export const DetailsViewHeaderActions = () => (
   <div className="flex flex-wrap items-center gap-2">
-    <Button size="xs" iconStart={<Plus className="size-4" />}>
+    <Button size="6" iconStart={<Plus className="size-4" />}>
       Primary
     </Button>
 
-    <Button variant="ghost" size="xs" iconStart={<Plus className="size-4" />}>
+    <Button variant="ghost" size="6" iconStart={<Plus className="size-4" />}>
       Secondary
     </Button>
 

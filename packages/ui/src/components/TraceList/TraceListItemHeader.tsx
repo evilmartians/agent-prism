@@ -17,7 +17,7 @@ export const TraceListItemHeader = ({
   return (
     <header className="flex min-w-0 flex-wrap items-center justify-between gap-2">
       <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
-        {avatar && <Avatar {...avatar} />}
+        {avatar && <Avatar size="4" {...avatar} />}
 
         <h3 className="font-regular max-w-full truncate text-sm text-gray-950 dark:text-gray-200">
           {trace.name}
@@ -26,7 +26,7 @@ export const TraceListItemHeader = ({
 
       <div className="flex items-center gap-2">
         <Badge
-          size="sm"
+          size="5"
           theme="gray"
           variant="outline"
           label={
@@ -35,7 +35,7 @@ export const TraceListItemHeader = ({
         />
 
         <Badge
-          size="sm"
+          size="5"
           theme="gray"
           variant="outline"
           label={formatDuration(trace.durationMs)}

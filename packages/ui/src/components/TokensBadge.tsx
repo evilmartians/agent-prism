@@ -11,7 +11,7 @@ export type TokensBadgeProps = ComponentPropsWithRef<"span"> & {
 
 export const TokensBadge = ({
   tokensCount,
-  size = "xs",
+  size,
   ...rest
 }: TokensBadgeProps) => {
   return (

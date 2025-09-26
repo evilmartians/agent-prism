@@ -30,9 +30,9 @@ const meta = {
   argTypes: {
     size: {
       control: { type: "select" },
-      options: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl"],
+      options: ["6", "7", "8", "9", "10", "11", "12", "16"],
       description: "The size of the icon button",
-      defaultValue: "md",
+      defaultValue: "8",
     },
     variant: {
       control: { type: "select" },
@@ -70,7 +70,7 @@ export const Size: Story = {
   args: {
     "aria-label": "Large settings button",
     children: "⚙",
-    size: "lg",
+    size: "16",
   },
 };
 
@@ -94,6 +94,6 @@ export const Small: Story = {
   args: {
     "aria-label": "Small button",
     children: "↻",
-    size: "sm",
+    size: "6",
   },
 };

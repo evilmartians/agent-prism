@@ -53,9 +53,9 @@ const meta = {
     },
     size: {
       control: { type: "select" },
-      options: ["xs", "sm", "md"],
+      options: ["4", "5", "6", "7"],
       description: "The size of the badge",
-      defaultValue: "md",
+      defaultValue: "5",
     },
     label: {
       control: "text",
@@ -78,7 +78,7 @@ export const Size: Story = {
   args: {
     label: "Small",
     theme: "indigo",
-    size: "sm",
+    size: "7",
   },
 };
 

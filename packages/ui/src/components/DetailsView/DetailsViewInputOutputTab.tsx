@@ -156,7 +156,7 @@ const IOContent = ({
           {parsedContent ? (
             <JSONPretty
               booleanStyle={`color: ${colors.blue[400]};`}
-              className="overflow-x-auto rounded-xl p-4"
+              className="overflow-x-auto rounded-xl p-4 text-left"
               data={parsedContent}
               id={`json-pretty-${section}`}
               keyStyle={`color: ${colors.blue[400]};`}
@@ -174,7 +174,7 @@ const IOContent = ({
 
       {tab === "plain" && (
         <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-          <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs text-gray-800 dark:text-gray-200">
+          <pre className="overflow-x-auto whitespace-pre-wrap text-left font-mono text-xs text-gray-800 dark:text-gray-200">
             {content}
           </pre>
         </div>

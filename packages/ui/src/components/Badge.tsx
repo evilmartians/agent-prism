@@ -2,20 +2,26 @@ import type { ComponentPropsWithRef, ReactElement, ReactNode } from "react";
 
 import cn from "classnames";
 
-import { COLOR_THEME_CLASSES, type ColorVariant } from "./shared.ts";
+import {
+  COLOR_THEME_CLASSES,
+  type ColorVariant,
+  type ComponentSize,
+} from "./shared.ts";
 
-const sizeClasses = {
-  xs: "px-1 gap-1 h-4",
-  sm: "px-1.5 gap-1 h-5",
-  md: "px-2 gap-1.5 h-6",
-  lg: "px-2.5 gap-2 h-7",
+type BadgeSize = Extract<ComponentSize, "4" | "5" | "6" | "7">;
+
+const sizeClasses: Record<BadgeSize, string> = {
+  "4": "px-1 gap-1 h-4",
+  "5": "px-1.5 gap-1 h-5",
+  "6": "px-2 gap-1.5 h-6",
+  "7": "px-2.5 gap-2 h-7",
 };
 
-const textSizes = {
-  xs: "text-xs font-normal leading-3",
-  sm: "text-xs font-medium",
-  md: "text-sm font-medium",
-  lg: "text-sm font-medium",
+const textSizes: Record<BadgeSize, string> = {
+  "4": "text-xs font-normal leading-3",
+  "5": "text-xs font-medium",
+  "6": "text-sm font-medium",
+  "7": "text-sm font-medium",
 };
 
 export type BadgeProps = ComponentPropsWithRef<"span"> & {
@@ -41,7 +47,7 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
    * The size of the badge
    * @default "md"
    */
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: BadgeSize;
 
   /**
    * Optional icon to display at the start of the badge
@@ -63,7 +69,7 @@ export const Badge = ({
   label,
   theme = "gray",
   variant = "solid",
-  size = "md",
+  size = "4",
   iconStart,
   iconEnd,
   className = "",

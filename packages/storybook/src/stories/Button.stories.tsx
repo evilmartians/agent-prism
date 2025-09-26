@@ -34,9 +34,9 @@ const meta = {
     },
     size: {
       control: { type: "select" },
-      options: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl"],
+      options: ["6", "7", "8", "9", "10", "11", "12", "16"],
       description: "The size of the button",
-      defaultValue: "xs",
+      defaultValue: "8",
     },
     theme: {
       control: { type: "select" },

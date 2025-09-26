@@ -49,7 +49,7 @@ export const TraceList = ({
           </h2>
 
           <Badge
-            size="sm"
+            size="5"
             theme="gray"
             aria-label={`Total number of traces: ${traces.length}`}
             label={traces.length}

@@ -29,6 +29,18 @@ export type ColorVariant =
   | "red"
   | "gray";
 
+export type ComponentSize =
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "10"
+  | "11"
+  | "12"
+  | "16";
+
 // CONSTANTS
 
 export const ROUNDED_CLASSES = {
