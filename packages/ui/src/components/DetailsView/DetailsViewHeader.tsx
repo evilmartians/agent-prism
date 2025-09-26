@@ -1,26 +1,35 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { Check, Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { Avatar, type AvatarProps } from "../Avatar";
 import { IconButton } from "../IconButton";
 import { SpanStatus } from "../SpanStatus.tsx";
-import { DetailsViewHeaderActions } from "./DetailsViewHeaderActions";
 
-interface DetailsViewHeaderProps {
+export interface DetailsViewHeaderProps {
   data: TraceSpan;
   avatar?: AvatarProps;
   copyButton?: {
     isEnabled?: boolean;
     onCopy?: (data: TraceSpan) => void;
   };
+  /**
+   * Custom actions to render in the header
+   */
+  actions?: ReactNode;
+  /**
+   * Optional className for the header container
+   */
+  className?: string;
 }
 
 export const DetailsViewHeader = ({
   data,
   avatar,
   copyButton,
+  actions,
+  className = "mb-4 flex flex-wrap items-center gap-4",
 }: DetailsViewHeaderProps) => {
   const [hasCopied, setHasCopied] = useState(false);
 
@@ -33,7 +42,7 @@ export const DetailsViewHeader = ({
   };
 
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-4">
+    <div className={className}>
       <div className="flex items-center gap-1.5">
         {avatar && <Avatar size="4" {...avatar} />}
 
@@ -62,7 +71,7 @@ export const DetailsViewHeader = ({
         )}
       </div>
 
-      <DetailsViewHeaderActions />
+      {actions}
     </div>
   );
 };

@@ -3,6 +3,7 @@ export { formatDuration } from "./common/format-duration.ts";
 export { getTimelineData } from "./common/get-timeline-data.ts";
 export { flattenSpans } from "./common/flatten-spans.ts";
 export { findTimeRange } from "./common/find-time-range.ts";
+export { filterSpansRecursively } from "./common/filter-spans-recursively.ts";
 
 export { openTelemetrySpanAdapter } from "./open-telemetry/adapter.ts";
 export { langfuseSpanAdapter } from "./langfuse/adapter.ts";

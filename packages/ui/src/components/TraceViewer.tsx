@@ -1,4 +1,7 @@
-import { flattenSpans } from "@evilmartians/agent-prism-data";
+import {
+  filterSpansRecursively,
+  flattenSpans,
+} from "@evilmartians/agent-prism-data";
 import {
   type TraceRecord,
   type TraceSpan,
@@ -32,45 +35,6 @@ export interface TraceViewerProps {
   data: Array<TraceViewerData>;
   spanCardViewOptions?: SpanCardViewOptions;
 }
-
-// Recursive filtering function that preserves nested structure
-const filterSpansRecursively = (
-  spans: TraceSpan[],
-  searchValue: string,
-): TraceSpan[] => {
-  if (!searchValue.trim()) {
-    return spans;
-  }
-
-  return spans
-    .map((span) => {
-      // Check if current span matches
-      const currentSpanMatches = span.title
-        .toLowerCase()
-        .includes(searchValue.toLowerCase());
-
-      // Recursively filter children
-      const filteredChildren = span.children
-        ? filterSpansRecursively(span.children, searchValue)
-        : undefined;
-
-      // Check if any children match
-      const hasMatchingChildren =
-        filteredChildren && filteredChildren.length > 0;
-
-      // Keep span if it matches or has matching children
-      if (currentSpanMatches || hasMatchingChildren) {
-        return {
-          ...span,
-          children: filteredChildren,
-        };
-      }
-
-      // Filter out this span if neither it nor its children match
-      return null;
-    })
-    .filter((span): span is NonNullable<typeof span> => span !== null);
-};
 
 export const TraceViewer = ({ data }: TraceViewerProps) => {
   const [selectedTrace, setSelectedTrace] = useState<

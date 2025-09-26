@@ -94,7 +94,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           aria-expanded={open}
           aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
         >
-          <div className="flex items-center gap-2">
+          <div className="flex w-full items-center gap-2">
             <ChevronDown
               className={cn(
                 "h-3 w-3 text-gray-500 transition-transform duration-200",

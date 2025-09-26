@@ -2,7 +2,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import cn from "classnames";
 import { SquareTerminal, Tags, ArrowRightLeft } from "lucide-react";
-import { useState, type ReactElement } from "react";
+import { useState, type ReactElement, type ReactNode } from "react";
 
 import type { AvatarProps } from "../Avatar";
 
@@ -15,7 +15,7 @@ import { DetailsViewRawDataTab } from "./DetailsViewRawDataTab";
 
 type DetailsViewTab = "input-output" | "attributes" | "raw";
 
-interface DetailsViewProps {
+export interface DetailsViewProps {
   /**
    * The span data to display in the details view
    */
@@ -40,16 +40,20 @@ interface DetailsViewProps {
    * Configuration for the copy button functionality
    */
   copyButton?: {
-    /**
-     * Whether the copy button is enabled
-     * @default false
-     */
     isEnabled?: boolean;
-    /**
-     * Callback fired when copy button is clicked
-     */
     onCopy?: (data: TraceSpan) => void;
   };
+
+  /**
+   * Custom header actions to render
+   * Can be a ReactNode or a render function that receives the data
+   */
+  headerActions?: ReactNode | ((data: TraceSpan) => ReactNode);
+
+  /**
+   * Optional custom header component to replace the default
+   */
+  customHeader?: ReactNode | ((props: { data: TraceSpan }) => ReactNode);
 
   /**
    * Callback fired when the active tab changes
@@ -63,6 +67,8 @@ export const DetailsView = ({
   defaultTab,
   className,
   copyButton,
+  headerActions,
+  customHeader,
   onTabChange,
 }: DetailsViewProps): ReactElement => {
   const [tab, setTab] = useState<DetailsViewTab>(defaultTab || "input-output");
@@ -90,6 +96,24 @@ export const DetailsView = ({
     onTabChange?.(tabValue);
   }
 
+  const resolvedHeaderActions =
+    typeof headerActions === "function" ? headerActions(data) : headerActions;
+
+  const headerContent = customHeader ? (
+    typeof customHeader === "function" ? (
+      customHeader({ data })
+    ) : (
+      customHeader
+    )
+  ) : (
+    <DetailsViewHeader
+      data={data}
+      avatar={avatar}
+      copyButton={copyButton}
+      actions={resolvedHeaderActions}
+    />
+  );
+
   return (
     <div
       className={cn(
@@ -97,7 +121,7 @@ export const DetailsView = ({
         className,
       )}
     >
-      <DetailsViewHeader data={data} avatar={avatar} copyButton={copyButton} />
+      {headerContent}
 
       <DetailsViewMetrics data={data} />
 
@@ -110,9 +134,7 @@ export const DetailsView = ({
       />
 
       {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
-
       {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
-
       {tab === "raw" && <DetailsViewRawDataTab data={data} />}
     </div>
   );
