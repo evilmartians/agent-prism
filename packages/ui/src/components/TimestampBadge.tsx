@@ -9,7 +9,7 @@ export type TimestampBadgeProps = ComponentPropsWithRef<"span"> & {
 
 export const TimestampBadge = ({
   timestamp,
-  size = "xs",
+  size,
   ...rest
 }: TimestampBadgeProps) => {
   return (

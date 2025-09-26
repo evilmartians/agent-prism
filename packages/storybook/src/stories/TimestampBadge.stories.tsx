@@ -37,9 +37,9 @@ const meta = {
     },
     size: {
       control: { type: "select" },
-      options: ["xs", "sm", "md"],
+      options: ["4", "5", "6", "7"],
       description: "The size of the badge",
-      defaultValue: "xs",
+      defaultValue: "4",
     },
   },
 } satisfies Meta<typeof TimestampBadge>;
@@ -50,6 +50,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     timestamp: Date.now(),
-    size: "xs",
+    size: "4",
   },
 };

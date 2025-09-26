@@ -2,19 +2,29 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
-import { ROUNDED_CLASSES, type ColorVariant } from "./shared.ts";
+import {
+  ROUNDED_CLASSES,
+  type ColorVariant,
+  type ComponentSize,
+} from "./shared.ts";
+
+type ButtonSize = Extract<
+  ComponentSize,
+  "6" | "7" | "8" | "9" | "10" | "11" | "12" | "16"
+>;
 
 const BASE_CLASSES =
   "inline-flex items-center justify-center font-medium transition-all duration-200";
 
 const sizeClasses = {
-  xs: "h-6 px-2 gap-1 text-xs",
-  sm: "h-8 px-2 gap-1 text-xs",
-  md: "h-9 px-2.5 gap-2 text-sm",
-  lg: "h-10 px-4 gap-2 text-sm",
-  xl: "h-11 px-5 gap-3 text-base",
-  "2xl": "h-12 px-5 gap-2.5 text-base",
-  "3xl": "h-16 px-7 gap-3 text-lg",
+  "6": "h-6 px-2 gap-1 text-xs",
+  "7": "h-7 px-2 gap-1 text-xs",
+  "8": "h-8 px-2 gap-1 text-xs",
+  "9": "h-9 px-2.5 gap-2 text-sm",
+  "10": "h-10 px-4 gap-2 text-sm",
+  "11": "h-11 px-5 gap-3 text-base",
+  "12": "h-12 px-5 gap-2.5 text-base",
+  "16": "h-16 px-7 gap-3 text-lg",
 };
 
 const filledThemeClasses: Record<ColorVariant, string> = {
@@ -38,12 +48,10 @@ const variantClasses = {
   ghost: "bg-transparent text-gray-600 dark:text-gray-300",
 };
 
-type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
-
 export type ButtonProps = ComponentPropsWithRef<"button"> & {
   /**
    * The size of the button
-   * @default "xs"
+   * @default "6"
    */
   size?: ButtonSize;
 
@@ -84,7 +92,7 @@ export type ButtonProps = ComponentPropsWithRef<"button"> & {
 
 export const Button = ({
   children,
-  size = "xs",
+  size = "6",
   theme = "gray",
   rounded = "md",
   variant = "filled",

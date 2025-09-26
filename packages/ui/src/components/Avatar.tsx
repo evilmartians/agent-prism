@@ -2,30 +2,48 @@ import cn from "classnames";
 import { User } from "lucide-react";
 import { useState, type ComponentPropsWithRef, type ReactElement } from "react";
 
-import { ROUNDED_CLASSES, type ColorVariant } from "./shared.ts";
+import {
+  ROUNDED_CLASSES,
+  type ColorVariant,
+  type ComponentSize,
+} from "./shared.ts";
 
-const sizeClasses = {
-  xs: "size-4 text-xs",
-  sm: "size-5 text-sm",
-  md: "size-8 text-base",
-  lg: "size-10 text-lg",
-  xl: "size-12 text-xl",
+export type AvatarSize = Extract<
+  ComponentSize,
+  "4" | "6" | "8" | "9" | "10" | "11" | "12" | "16"
+>;
+
+const sizeClasses: Record<AvatarSize, string> = {
+  "4": "size-4 text-xs",
+  "6": "size-6 text-xs",
+  "8": "size-8 text-xs",
+  "9": "size-9 text-sm",
+  "10": "size-10 text-base",
+  "11": "size-11 text-lg",
+  "12": "size-12 text-xl",
+  "16": "size-16 text-2xl",
 };
 
-const iconSizeClasses = {
-  xs: "size-3",
-  sm: "size-4",
-  md: "size-6",
-  lg: "size-8",
-  xl: "size-10",
+const iconSizeClasses: Record<AvatarSize, string> = {
+  "4": "size-3",
+  "6": "size-4",
+  "8": "size-6",
+  "9": "size-7",
+  "10": "size-8",
+  "11": "size-9",
+  "12": "size-10",
+  "16": "size-12",
 };
 
-const textSizeClasses = {
-  xs: "text-xs",
-  sm: "text-xs",
-  md: "text-base",
-  lg: "text-lg",
-  xl: "text-xl",
+const textSizeClasses: Record<AvatarSize, string> = {
+  "4": "text-xs",
+  "6": "text-xs",
+  "8": "text-xs",
+  "9": "text-sm",
+  "10": "text-base",
+  "11": "text-lg",
+  "12": "text-xl",
+  "16": "text-2xl",
 };
 
 const bgColorClasses: Record<ColorVariant, string> = {
@@ -54,7 +72,7 @@ export type AvatarProps = ComponentPropsWithRef<"div"> & {
    * The size of the avatar
    * @default "md"
    */
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: AvatarSize;
   /**
    * The border radius of the avatar
    * @default "full"
@@ -84,7 +102,7 @@ export type AvatarProps = ComponentPropsWithRef<"div"> & {
 export const Avatar = ({
   src,
   alt = "Avatar",
-  size = "md",
+  size = "10",
   rounded = "full",
   bgColor = "gray",
   textColor = "white",

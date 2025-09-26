@@ -161,7 +161,7 @@ export const Avatar: Story = {
     avatar: {
       alt: "LLM Service",
       bgColor: "purple",
-      size: "sm",
+      size: "4",
       letter: "AI",
     },
     minStart: mockTraceSpan.startTime.getTime(),

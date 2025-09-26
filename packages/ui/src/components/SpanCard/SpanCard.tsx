@@ -400,7 +400,7 @@ export const SpanCard: FC<SpanCardProps> = ({
                 minWidth: 140,
               }}
             >
-              {avatar && <Avatar {...avatar} />}
+              {avatar && <Avatar size="4" {...avatar} />}
 
               <h3
                 className="mr-1 h-4 max-w-32 truncate text-sm leading-[14px] text-gray-900 dark:text-gray-200"

@@ -24,18 +24,18 @@ export const DetailsViewMetrics = ({ data }: DetailsViewMetricsProps) => {
       <Badge
         iconStart={<Icon className="size-2.5" />}
         theme={getSpanCategoryTheme(data.type)}
-        size="xs"
+        size="4"
         label={getSpanCategoryLabel(data.type)}
       />
 
       <Badge
         iconStart={<Coins className="size-2.5" />}
         theme="gray"
-        size="xs"
+        size="4"
         label={data.tokensCount}
       />
 
-      <Badge theme="gray" size="xs" label={`$ ${data.cost}`} />
+      <Badge theme="gray" size="4" label={`$ ${data.cost}`} />
 
       <span className="text-xs text-gray-500 dark:text-gray-600">
         LATENCY: {formatDuration(durationMs)}

@@ -38,9 +38,9 @@ const meta = {
     },
     size: {
       control: { type: "select" },
-      options: ["xs", "sm", "md", "lg", "xl"],
+      options: ["4", "6", "8", "9", "10", "11", "12", "16"],
       description: "The size of the avatar",
-      defaultValue: "md",
+      defaultValue: "8",
     },
     letter: {
       control: "text",
@@ -93,7 +93,7 @@ export const Size: Story = {
   args: {
     alt: "Large",
     bgColor: "indigo",
-    size: "lg",
+    size: "16",
   },
 };
 

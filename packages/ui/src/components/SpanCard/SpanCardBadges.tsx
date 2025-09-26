@@ -21,7 +21,7 @@ export const SpanCardBadges = ({ data }: SpanCardBagdesProps) => {
       <Badge
         iconStart={<Icon className="size-2.5" />}
         theme={getSpanCategoryTheme(data.type)}
-        size="xs"
+        size="4"
         label={getSpanCategoryLabel(data.type)}
       />
 
