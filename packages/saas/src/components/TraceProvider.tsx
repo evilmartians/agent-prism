@@ -26,11 +26,11 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       setTraceState({ spans, isLoading: false, error: null });
     } catch (error) {
-      setTraceState((prev) => ({
-        ...prev,
+      setTraceState({
+        spans: [],
         isLoading: false,
         error: error instanceof Error ? error.message : "Failed to load",
-      }));
+      });
     }
   };
 

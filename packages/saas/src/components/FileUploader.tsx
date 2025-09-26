@@ -57,7 +57,7 @@ const FileUploader: FC = () => {
         disabled={isProcessing}
       />
 
-      <Button size="xl" theme="gray" onClick={handleButtonClick}>
+      <Button size="12" theme="gray" onClick={handleButtonClick}>
         Upload traces
       </Button>
 
