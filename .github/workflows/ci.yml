@@ -82,7 +82,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AI_AGENT_TRACE_UI }}"
-          projectId: agent-prism-ui
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AI_TRACE_EXPLORER }}"
+          projectId: ai-trace-explorer
           channelId: live
-          target: ai-trace-explorer

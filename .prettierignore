@@ -3,3 +3,4 @@ build
 coverage
 packages/storybook/storybook-static
 packages/saas/.next
+packages/saas/out

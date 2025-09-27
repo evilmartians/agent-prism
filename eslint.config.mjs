@@ -20,6 +20,7 @@ export default defineConfig([
   {
     ignores: [
       "packages/saas/.next",
+      "packages/saas/out",
       "packages/saas/next-env.d.ts",
       "packages/core/dist",
       "packages/demo-app/dist",
