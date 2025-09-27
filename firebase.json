@@ -1,13 +1,26 @@
 {
-  "hosting": {
-    "site": "agent-prism-ui",
-    "public": "packages/storybook/storybook-static",
-    "ignore": ["firebase.json", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "site": "agent-prism-ui",
+      "public": "packages/storybook/storybook-static",
+      "ignore": ["firebase.json", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "site": "ai-trace-explorer",
+      "public": "packages/saas/out",
+      "ignore": ["firebase.json", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
 }
