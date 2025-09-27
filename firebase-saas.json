@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "ai-trace-explorer",
     "public": "packages/saas/out",
     "ignore": ["firebase.json", "**/node_modules/**"],
     "rewrites": [
