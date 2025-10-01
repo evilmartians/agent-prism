@@ -3,7 +3,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import { getTimelineData } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 
-import type { ColorVariant } from "../shared.ts";
+import type { ColorVariant } from "../shared";
 
 interface SpanCardTimelineProps {
   spanCard: TraceSpan;

@@ -2,7 +2,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { getDurationMs } from "./get-duration-ms.ts";
+import { getDurationMs } from "./get-duration-ms";
 
 describe("getDurationMs", () => {
   it("should return the correct duration in milliseconds", () => {

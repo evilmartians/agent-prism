@@ -2,7 +2,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, it, expect } from "vitest";
 
-import { getTimelineData } from "./get-timeline-data.ts";
+import { getTimelineData } from "./get-timeline-data";
 
 describe("getTimelineData", () => {
   describe("basic functionality", () => {

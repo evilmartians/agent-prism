@@ -2,7 +2,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { findTimeRange } from "./find-time-range.ts";
+import { findTimeRange } from "./find-time-range";
 
 describe("findTimeRange", () => {
   it("should return minStart and maxEnd for a single card", () => {

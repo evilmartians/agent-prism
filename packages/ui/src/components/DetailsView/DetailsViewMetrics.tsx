@@ -8,8 +8,8 @@ import {
   getSpanCategoryIcon,
   getSpanCategoryLabel,
   getSpanCategoryTheme,
-} from "../shared.ts";
-import { TimestampBadge } from "../TimestampBadge.tsx";
+} from "../shared";
+import { TimestampBadge } from "../TimestampBadge";
 
 interface DetailsViewMetricsProps {
   data: TraceSpan;

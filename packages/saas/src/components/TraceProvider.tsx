@@ -3,7 +3,7 @@
 import React, { FC, ReactNode, useEffect, useState } from "react";
 
 import { TraceContext, TraceState } from "@/context/TraceContext";
-import { extractSpans } from "@/services/extract-spans.ts";
+import { extractSpans } from "@/services/extract-spans";
 
 import testData from "../data/test.json";
 

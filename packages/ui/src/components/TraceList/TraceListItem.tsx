@@ -3,12 +3,12 @@ import type { TraceRecord } from "@evilmartians/agent-prism-types";
 import cn from "classnames";
 import { useCallback, type KeyboardEvent } from "react";
 
-import { type AvatarProps } from "../Avatar.tsx";
-import { Badge, type BadgeProps } from "../Badge.tsx";
-import { PriceBadge } from "../PriceBadge.tsx";
-import { TimestampBadge } from "../TimestampBadge.tsx";
-import { TokensBadge } from "../TokensBadge.tsx";
-import { TraceListItemHeader } from "./TraceListItemHeader.tsx";
+import { type AvatarProps } from "../Avatar";
+import { Badge, type BadgeProps } from "../Badge";
+import { PriceBadge } from "../PriceBadge";
+import { TimestampBadge } from "../TimestampBadge";
+import { TokensBadge } from "../TokensBadge";
+import { TraceListItemHeader } from "./TraceListItemHeader";
 
 interface TraceListItemProps {
   trace: TraceRecord;

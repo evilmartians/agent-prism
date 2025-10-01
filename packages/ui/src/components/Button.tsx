@@ -6,7 +6,7 @@ import {
   ROUNDED_CLASSES,
   type ColorVariant,
   type ComponentSize,
-} from "./shared.ts";
+} from "./shared";
 
 type ButtonSize = Extract<
   ComponentSize,

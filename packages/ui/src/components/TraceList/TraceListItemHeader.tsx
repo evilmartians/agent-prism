@@ -2,8 +2,8 @@ import type { TraceRecord } from "@evilmartians/agent-prism-types";
 
 import { formatDuration } from "@evilmartians/agent-prism-data";
 
-import { Avatar, type AvatarProps } from "../Avatar.tsx";
-import { Badge } from "../Badge.tsx";
+import { Avatar, type AvatarProps } from "../Avatar";
+import { Badge } from "../Badge";
 
 interface TraceListItemHeaderProps {
   trace: TraceRecord;

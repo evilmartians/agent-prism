@@ -6,7 +6,7 @@ import {
   COLOR_THEME_CLASSES,
   type ColorVariant,
   type ComponentSize,
-} from "./shared.ts";
+} from "./shared";
 
 type BadgeSize = Extract<ComponentSize, "4" | "5" | "6" | "7">;
 

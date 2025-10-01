@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef } from "react";
 
 import { ChevronsUpDown, ChevronsDownUp } from "lucide-react";
 
-import { IconButton } from "./IconButton.tsx";
+import { IconButton } from "./IconButton";
 
 export type SpanCardExpandAllButtonProps = ComponentPropsWithRef<"button"> & {
   onExpandAll: () => void;

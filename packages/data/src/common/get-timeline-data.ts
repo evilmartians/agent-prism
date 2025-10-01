@@ -1,6 +1,6 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
-import { getDurationMs } from "./get-duration-ms.ts";
+import { getDurationMs } from "./get-duration-ms";
 
 export const getTimelineData = ({
   spanCard,

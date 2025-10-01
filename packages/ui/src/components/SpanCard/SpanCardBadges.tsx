@@ -1,13 +1,13 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
-import { Badge } from "../Badge.tsx";
-import { PriceBadge } from "../PriceBadge.tsx";
+import { Badge } from "../Badge";
+import { PriceBadge } from "../PriceBadge";
 import {
   getSpanCategoryIcon,
   getSpanCategoryLabel,
   getSpanCategoryTheme,
-} from "../shared.ts";
-import { TokensBadge } from "../TokensBadge.tsx";
+} from "../shared";
+import { TokensBadge } from "../TokensBadge";
 
 interface SpanCardBagdesProps {
   data: TraceSpan;

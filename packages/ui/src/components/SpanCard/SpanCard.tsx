@@ -13,16 +13,16 @@ import {
   type MouseEvent,
 } from "react";
 
-import { Avatar, type AvatarProps } from "../Avatar.tsx";
-import { getSpanCategoryTheme } from "../shared.ts";
-import { SpanStatus } from "../SpanStatus.tsx";
-import { SpanCardBadges } from "./SpanCardBadges.tsx";
+import { Avatar, type AvatarProps } from "../Avatar";
+import { getSpanCategoryTheme } from "../shared";
+import { SpanStatus } from "../SpanStatus";
+import { SpanCardBadges } from "./SpanCardBadges";
 import {
   type SpanCardConnectorType,
   SpanCardConnector,
-} from "./SpanCardConnector.tsx";
-import { SpanCardTimeline } from "./SpanCardTimeline.tsx";
-import { SpanCardToggle } from "./SpanCardToggle.tsx";
+} from "./SpanCardConnector";
+import { SpanCardTimeline } from "./SpanCardTimeline";
+import { SpanCardToggle } from "./SpanCardToggle";
 
 const LAYOUT_CONSTANTS = {
   CONNECTOR_WIDTH: 20,

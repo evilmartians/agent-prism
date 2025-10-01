@@ -5,7 +5,7 @@ import { useState, type ReactNode } from "react";
 
 import { Avatar, type AvatarProps } from "../Avatar";
 import { IconButton } from "../IconButton";
-import { SpanStatus } from "../SpanStatus.tsx";
+import { SpanStatus } from "../SpanStatus";
 
 export interface DetailsViewHeaderProps {
   data: TraceSpan;

@@ -3,7 +3,7 @@
 import { Button } from "@evilmartians/agent-prism-ui";
 import { ChangeEvent, FC, useContext, useRef, useState } from "react";
 
-import { UploadFileErrorMessage } from "@/components/UploadFileErrorMessage.tsx";
+import { UploadFileErrorMessage } from "@/components/UploadFileErrorMessage";
 import { TraceContext } from "@/context/TraceContext";
 
 const FileUploader: FC = () => {

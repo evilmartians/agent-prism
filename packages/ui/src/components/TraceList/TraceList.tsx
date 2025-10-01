@@ -3,9 +3,9 @@ import type { TraceRecord } from "@evilmartians/agent-prism-types";
 import cn from "classnames";
 import { ArrowLeft } from "lucide-react";
 
-import { Badge, type BadgeProps } from "../Badge.tsx";
-import { IconButton } from "../IconButton.tsx";
-import { TraceListItem } from "./TraceListItem.tsx";
+import { Badge, type BadgeProps } from "../Badge";
+import { IconButton } from "../IconButton";
+import { TraceListItem } from "./TraceListItem";
 
 type TraceRecordWithBadges = TraceRecord & {
   badges?: Array<BadgeProps>;
