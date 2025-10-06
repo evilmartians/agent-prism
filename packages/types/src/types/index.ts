@@ -16,7 +16,7 @@ export type InputOutputData = {
   output?: string;
 };
 
-export type TraceSpan = InputOutputData & {
+export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
   id: string;
   title: string;
   startTime: Date;
@@ -25,10 +25,11 @@ export type TraceSpan = InputOutputData & {
   type: TraceSpanCategory;
   raw: string;
   attributes?: TraceSpanAttribute[];
-  children?: TraceSpan[];
+  children?: TraceSpan<TMetadata>[];
   status: TraceSpanStatus;
   cost?: number;
   tokensCount?: number;
+  metadata?: TMetadata;
 };
 
 export type TraceSpanCategory =
