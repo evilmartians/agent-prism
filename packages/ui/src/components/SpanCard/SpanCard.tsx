@@ -1,4 +1,5 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { FC, KeyboardEvent, MouseEvent } from "react";
 
 import {
   formatDuration,
@@ -6,21 +7,17 @@ import {
 } from "@evilmartians/agent-prism-data";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import cn from "classnames";
-import {
-  type FC,
-  useCallback,
-  type KeyboardEvent,
-  type MouseEvent,
-} from "react";
+import { useCallback } from "react";
 
-import { Avatar, type AvatarProps } from "../Avatar";
+import type { AvatarProps } from "../Avatar";
+import type { SpanCardConnectorType } from "./SpanCardConnector";
+
+import { Avatar } from "../Avatar";
+import { BrandLogo } from "../BrandLogo";
 import { getSpanCategoryTheme } from "../shared";
 import { SpanStatus } from "../SpanStatus";
 import { SpanCardBadges } from "./SpanCardBadges";
-import {
-  type SpanCardConnectorType,
-  SpanCardConnector,
-} from "./SpanCardConnector";
+import { SpanCardConnector } from "./SpanCardConnector";
 import { SpanCardTimeline } from "./SpanCardTimeline";
 import { SpanCardToggle } from "./SpanCardToggle";
 
@@ -236,22 +233,35 @@ const SpanCardChildren: FC<{
     <div className="relative">
       <Collapsible.Content>
         <ul role="group">
-          {data.children.map((child, idx) => (
-            <SpanCard
-              viewOptions={viewOptions}
-              key={child.id}
-              data={child}
-              minStart={minStart}
-              maxEnd={maxEnd}
-              level={level + 1}
-              selectedSpan={selectedSpan}
-              onSpanSelect={onSpanSelect}
-              isLastChild={idx === (data.children || []).length - 1}
-              prevLevelConnectors={prevLevelConnectors}
-              expandedSpansIds={expandedSpansIds}
-              onExpandSpansIdsChange={onExpandSpansIdsChange}
-            />
-          ))}
+          {data.children.map((child, idx) => {
+            const brand = child.metadata?.brand as { type: string } | undefined;
+
+            return (
+              <SpanCard
+                viewOptions={viewOptions}
+                key={child.id}
+                data={child}
+                minStart={minStart}
+                maxEnd={maxEnd}
+                level={level + 1}
+                selectedSpan={selectedSpan}
+                onSpanSelect={onSpanSelect}
+                isLastChild={idx === (data.children || []).length - 1}
+                prevLevelConnectors={prevLevelConnectors}
+                expandedSpansIds={expandedSpansIds}
+                onExpandSpansIdsChange={onExpandSpansIdsChange}
+                avatar={
+                  brand
+                    ? {
+                        children: <BrandLogo brand={brand.type} />,
+                        size: "4",
+                        rounded: "sm",
+                      }
+                    : undefined
+                }
+              />
+            );
+          })}
         </ul>
       </Collapsible.Content>
     </div>
@@ -290,7 +300,7 @@ export const SpanCard: FC<SpanCardProps> = ({
         onExpandSpansIdsChange([...expandedSpansIds, data.id]);
       }
     },
-    [isExpanded, expandedSpansIds, data.id, onExpandSpansIdsChange],
+    [expandedSpansIds, data.id, onExpandSpansIdsChange],
   );
 
   const state: SpanCardState = {
@@ -338,6 +348,7 @@ export const SpanCard: FC<SpanCardProps> = ({
   return (
     <li
       role="treeitem"
+      aria-selected={state.isSelected ? true : selectedSpan ? false : undefined}
       aria-expanded={state.hasChildren ? state.isExpanded : undefined}
       className="list-none"
     >
@@ -394,7 +405,7 @@ export const SpanCard: FC<SpanCardProps> = ({
             )}
           >
             <div
-              className="relative flex min-h-4 shrink-0 grow flex-wrap items-start gap-1"
+              className="relative flex min-h-4 shrink-0 flex-wrap items-center gap-1.5"
               style={{
                 width: `min(${contentWidth}px, 100%)`,
                 minWidth: 140,
@@ -403,7 +414,7 @@ export const SpanCard: FC<SpanCardProps> = ({
               {avatar && <Avatar size="4" {...avatar} />}
 
               <h3
-                className="mr-1 h-4 max-w-32 truncate text-sm leading-[14px] text-gray-900 dark:text-gray-200"
+                className="max-w-32 truncate text-sm leading-[14px] text-gray-900 dark:text-gray-200"
                 title={data.title}
               >
                 {data.title}
@@ -412,7 +423,7 @@ export const SpanCard: FC<SpanCardProps> = ({
               <SpanCardBadges data={data} />
             </div>
 
-            <div className="shrink-1 flex grow flex-wrap items-center justify-end gap-1">
+            <div className="flex grow flex-wrap items-center justify-end gap-1">
               {expandButton === "outside" && withStatus && (
                 <div>
                   <SpanStatus status={data.status} />
@@ -424,7 +435,6 @@ export const SpanCard: FC<SpanCardProps> = ({
                 minStart={minStart}
                 maxEnd={maxEnd}
                 spanCard={data}
-                className="max-w-48"
               />
 
               <div className="flex items-center gap-2">

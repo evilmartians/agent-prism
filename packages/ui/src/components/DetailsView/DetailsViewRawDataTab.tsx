@@ -1,25 +1,31 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
-import JSONPretty from "react-json-pretty";
-import colors from "tailwindcss/colors";
+import { type ReactElement } from "react";
+
+import { CopyButton } from "../CopyButton";
+import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
 interface RawDataTabProps {
   data: TraceSpan;
 }
 
-export const DetailsViewRawDataTab = ({ data }: RawDataTabProps) => (
-  <div className="pt-4">
-    <div className="rounded border border-gray-200 bg-transparent dark:border-gray-800">
-      <JSONPretty
-        booleanStyle={`color: ${colors.blue[400]};`}
-        className="overflow-x-auto rounded-xl p-4 text-left"
-        data={data.raw}
-        id={`json-pretty-${data.id || "span-details"}`}
-        keyStyle={`color: ${colors.blue[400]};`}
-        mainStyle={`color: ${colors.gray[400]}; font-size: 12px;`}
-        stringStyle={`color: ${colors.red[600]};`}
-        valueStyle={`color: ${colors.red[600]};`}
-      />
+export const DetailsViewRawDataTab = ({
+  data,
+}: RawDataTabProps): ReactElement => (
+  <div className="rounded-md border border-gray-200 bg-transparent dark:border-gray-800">
+    <div className="relative">
+      <div className="pointer-events-none sticky top-0 z-10 flex justify-end p-1.5">
+        <div className="pointer-events-auto">
+          <CopyButton label="Raw" content={data.raw} />
+        </div>
+      </div>
+
+      <div className="-mt-12">
+        <DetailsViewJsonOutput
+          content={data.raw}
+          id={data.id || "span-details"}
+        />
+      </div>
     </div>
   </div>
 );

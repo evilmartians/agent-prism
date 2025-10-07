@@ -1,8 +1,8 @@
 import type { TraceRecord } from "@evilmartians/agent-prism-types";
 
-import { formatDuration } from "@evilmartians/agent-prism-data";
+import type { AvatarProps } from "../Avatar";
 
-import { Avatar, type AvatarProps } from "../Avatar";
+import { Avatar } from "../Avatar";
 import { Badge } from "../Badge";
 
 interface TraceListItemHeaderProps {
@@ -15,30 +15,23 @@ export const TraceListItemHeader = ({
   avatar,
 }: TraceListItemHeaderProps) => {
   return (
-    <header className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+    <header className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2">
       <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
         {avatar && <Avatar size="4" {...avatar} />}
 
-        <h3 className="font-regular max-w-full truncate text-sm text-gray-950 dark:text-gray-200">
+        <h3 className="max-w-full truncate text-sm text-gray-950 dark:text-gray-200">
           {trace.name}
         </h3>
       </div>
 
       <div className="flex items-center gap-2">
         <Badge
-          size="5"
+          size="4"
           theme="gray"
           variant="outline"
           label={
             trace.spansCount === 1 ? "1 span" : `${trace.spansCount} spans`
           }
-        />
-
-        <Badge
-          size="5"
-          theme="gray"
-          variant="outline"
-          label={formatDuration(trace.durationMs)}
         />
       </div>
     </header>

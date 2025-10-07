@@ -9,7 +9,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
         <div className="flex w-64 flex-col bg-gray-100">
           <div className="p-4">
             <div className="mb-6 flex items-center space-x-2">
-              <div className="h-8 w-8 rounded bg-gradient-to-br from-orange-500 to-red-500"></div>
+              <div className="size-8 rounded bg-gradient-to-br from-orange-500 to-red-500"></div>
               <span className="font-semibold">AI APP</span>
             </div>
 
@@ -18,7 +18,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
                 Workspace
               </div>
               <div className="flex cursor-pointer items-center space-x-2 rounded p-2 hover:bg-gray-200">
-                <Layers className="h-4 w-4" />
+                <Layers className="size-4" />
                 <span className="text-sm">Dashboard</span>
               </div>
             </div>
@@ -28,15 +28,15 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
                 Tools
               </div>
               <div className="flex cursor-pointer items-center space-x-2 rounded p-2 hover:bg-gray-200">
-                <Activity className="h-4 w-4" />
+                <Activity className="size-4" />
                 <span className="text-sm">Logs</span>
               </div>
               <div className="flex cursor-pointer items-center space-x-2 rounded p-2 hover:bg-gray-200">
-                <Search className="h-4 w-4" />
+                <Search className="size-4" />
                 <span className="text-sm">Detections</span>
               </div>
               <div className="flex cursor-pointer items-center space-x-2 rounded bg-gray-200 p-2">
-                <Layers className="h-4 w-4" />
+                <Layers className="size-4" />
                 <span className="text-sm">Traces</span>
               </div>
             </div>
@@ -44,11 +44,11 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
 
           <div className="mt-auto space-y-2 border-t border-gray-200 p-4">
             <div className="flex cursor-pointer items-center space-x-2 rounded p-2 hover:bg-gray-200">
-              <Info className="h-4 w-4" />
+              <Info className="size-4" />
               <span className="text-sm">Docs</span>
             </div>
             <div className="flex cursor-pointer items-center space-x-2 rounded p-2 hover:bg-gray-200">
-              <Settings className="h-4 w-4" />
+              <Settings className="size-4" />
               <span className="text-sm">Account Settings</span>
             </div>
             <div className="flex cursor-pointer items-center space-x-2 rounded p-2 hover:bg-gray-200">

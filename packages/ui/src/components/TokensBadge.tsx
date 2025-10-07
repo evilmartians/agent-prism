@@ -2,7 +2,9 @@ import type { ComponentPropsWithRef } from "react";
 
 import { Coins } from "lucide-react";
 
-import { Badge, type BadgeProps } from "./Badge";
+import type { BadgeProps } from "./Badge";
+
+import { Badge } from "./Badge";
 
 export type TokensBadgeProps = ComponentPropsWithRef<"span"> & {
   tokensCount: number;

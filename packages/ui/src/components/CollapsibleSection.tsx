@@ -87,7 +87,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           tabIndex={0}
           role="button"
           className={cn(
-            "mb-1 flex w-full items-center justify-between gap-2 rounded-lg px-1 py-3 text-left text-sm font-medium text-gray-700 dark:text-white",
+            "mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium text-gray-700 dark:text-white",
             triggerClassName,
           )}
           onKeyDown={handleKeyDown}
@@ -97,11 +97,11 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           <div className="flex w-full items-center gap-2">
             <ChevronDown
               className={cn(
-                "h-3 w-3 text-gray-500 transition-transform duration-200",
-                open && "rotate-180",
+                "h-3 w-3 -rotate-90 text-gray-500",
+                open && "rotate-0",
               )}
             />
-            <span className="truncate">{title}</span>
+            <span className="truncate text-sm font-medium">{title}</span>
           </div>
 
           {rightContent}

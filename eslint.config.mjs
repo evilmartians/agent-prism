@@ -1,6 +1,7 @@
 import js from "@eslint/js";
 import perfectionist from "eslint-plugin-perfectionist";
 import pluginReact from "eslint-plugin-react";
+import tailwind from "eslint-plugin-tailwindcss";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -17,6 +18,7 @@ export default defineConfig([
   },
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  ...tailwind.configs["flat/recommended"],
   {
     ignores: [
       "packages/saas/.next",

@@ -2,11 +2,9 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
-import {
-  ROUNDED_CLASSES,
-  type ColorVariant,
-  type ComponentSize,
-} from "./shared";
+import type { ColorVariant, ComponentSize } from "./shared";
+
+import { ROUNDED_CLASSES } from "./shared";
 
 type ButtonSize = Extract<
   ComponentSize,
@@ -22,13 +20,13 @@ const sizeClasses = {
   "8": "h-8 px-2 gap-1 text-xs",
   "9": "h-9 px-2.5 gap-2 text-sm",
   "10": "h-10 px-4 gap-2 text-sm",
-  "11": "h-11 px-5 gap-3 text-base",
-  "12": "h-12 px-5 gap-2.5 text-base",
+  "11": "h-11 px-5 gap-3 text-text-base",
+  "12": "h-12 px-5 gap-2.5 text-text-base",
   "16": "h-16 px-7 gap-3 text-lg",
 };
 
 const filledThemeClasses: Record<ColorVariant, string> = {
-  gray: "text-gray-900 bg-gray-100 dark:bg-gray-600 dark:text-gray-200",
+  gray: "text-gray-900 bg-fg-soft dark:bg-gray-600 dark:text-gray-200",
   purple: "text-gray-900 bg-purple-100 dark:bg-purple-600 dark:text-gray-200",
   indigo: "text-gray-900 bg-indigo-100 dark:bg-indigo-600 dark:text-gray-200",
   orange: "text-gray-900 bg-orange-100 dark:bg-orange-600 dark:text-gray-200",

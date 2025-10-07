@@ -2,11 +2,9 @@ import type { ComponentPropsWithRef, ReactElement, ReactNode } from "react";
 
 import cn from "classnames";
 
-import {
-  COLOR_THEME_CLASSES,
-  type ColorVariant,
-  type ComponentSize,
-} from "./shared";
+import type { ColorVariant, ComponentSize } from "./shared";
+
+import { COLOR_THEME_CLASSES } from "./shared";
 
 type BadgeSize = Extract<ComponentSize, "4" | "5" | "6" | "7">;
 
@@ -18,10 +16,10 @@ const sizeClasses: Record<BadgeSize, string> = {
 };
 
 const textSizes: Record<BadgeSize, string> = {
-  "4": "text-xs font-normal leading-3",
-  "5": "text-xs font-medium",
-  "6": "text-sm font-medium",
-  "7": "text-sm font-medium",
+  "4": "text-xs leading-3",
+  "5": "text-xs",
+  "6": "text-sm",
+  "7": "text-sm",
 };
 
 export type BadgeProps = ComponentPropsWithRef<"span"> & {
@@ -79,13 +77,13 @@ export const Badge = ({
 
   const variantClasses =
     variant === "outline"
-      ? `border ${text} ${darkText} bg-transparent dark:bg-transparent border-current`
+      ? `border ${text} ${darkText} bg-transparent dark:bg-transparent`
       : `${bg} ${text} ${darkBg} ${darkText}`;
 
   return (
     <span
       className={cn(
-        "inline-flex min-w-0 items-center overflow-hidden rounded font-medium",
+        "inline-flex min-w-0 items-center overflow-hidden rounded-md font-medium",
         variantClasses,
         sizeClasses[size],
         className,
@@ -97,7 +95,7 @@ export const Badge = ({
       <span
         className={cn(
           textSizes[size],
-          "min-w-0 max-w-full flex-shrink-0 truncate tracking-normal",
+          "min-w-0 max-w-full flex-shrink-0 truncate font-medium tracking-normal",
         )}
       >
         {label}

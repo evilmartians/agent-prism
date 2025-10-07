@@ -1,12 +1,12 @@
+import type { ComponentPropsWithRef, ReactElement } from "react";
+
 import cn from "classnames";
 import { User } from "lucide-react";
-import { useState, type ComponentPropsWithRef, type ReactElement } from "react";
+import { useState } from "react";
 
-import {
-  ROUNDED_CLASSES,
-  type ColorVariant,
-  type ComponentSize,
-} from "./shared";
+import type { ColorVariant, ComponentSize } from "./shared";
+
+import { ROUNDED_CLASSES } from "./shared";
 
 export type AvatarSize = Extract<
   ComponentSize,
@@ -18,10 +18,10 @@ const sizeClasses: Record<AvatarSize, string> = {
   "6": "size-6 text-xs",
   "8": "size-8 text-xs",
   "9": "size-9 text-sm",
-  "10": "size-10 text-base",
+  "10": "size-10 text-text-base",
   "11": "size-11 text-lg",
-  "12": "size-12 text-xl",
-  "16": "size-16 text-2xl",
+  "12": "size-12 text-text-xl",
+  "16": "size-16 text-text-2xl",
 };
 
 const iconSizeClasses: Record<AvatarSize, string> = {
@@ -40,7 +40,7 @@ const textSizeClasses: Record<AvatarSize, string> = {
   "6": "text-xs",
   "8": "text-xs",
   "9": "text-sm",
-  "10": "text-base",
+  "10": "text-text-base",
   "11": "text-lg",
   "12": "text-xl",
   "16": "text-2xl",
@@ -107,6 +107,7 @@ export const Avatar = ({
   bgColor = "gray",
   textColor = "white",
   letter,
+  children,
   className = "",
   ...rest
 }: AvatarProps): ReactElement => {
@@ -120,7 +121,7 @@ export const Avatar = ({
     <div
       className={cn(
         "flex items-center justify-center overflow-hidden",
-        "bg-gray-200 dark:bg-gray-700",
+        !children && "bg-gray-200 dark:bg-gray-700",
         error && "border border-gray-200 dark:border-gray-800",
         sizeClasses[size],
         textSizeClasses[size],
@@ -129,7 +130,9 @@ export const Avatar = ({
       )}
       {...rest}
     >
-      {error ? (
+      {children ? (
+        children
+      ) : error ? (
         <User
           className={cn(
             iconSizeClasses[size],
@@ -142,7 +145,7 @@ export const Avatar = ({
             <img
               src={src}
               alt={alt}
-              className="h-full w-full object-cover"
+              className="size-full object-cover"
               onError={() => setError(true)}
             />
           ) : (

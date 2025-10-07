@@ -56,7 +56,7 @@ export {
   TraceViewer,
   type TraceViewerProps,
   type TraceViewerData,
-} from "./components/TraceViewer";
+} from "./components/TraceViewer/TraceViewer";
 export { default as TraceViewerSource } from "./components/TraceViewer.tsx?raw";
 
 export { TimestampBadge } from "./components/TimestampBadge.tsx";

@@ -112,7 +112,7 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
             className="mb-3 flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 lg:hidden dark:text-gray-400 dark:hover:text-gray-200"
           >
             <svg
-              className="h-4 w-4"
+              className="size-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
