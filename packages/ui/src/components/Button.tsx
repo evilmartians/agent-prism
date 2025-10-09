@@ -20,8 +20,8 @@ const sizeClasses = {
   "8": "h-8 px-2 gap-1 text-xs",
   "9": "h-9 px-2.5 gap-2 text-sm",
   "10": "h-10 px-4 gap-2 text-sm",
-  "11": "h-11 px-5 gap-3 text-text-base",
-  "12": "h-12 px-5 gap-2.5 text-text-base",
+  "11": "h-11 px-5 gap-3 text-base",
+  "12": "h-12 px-5 gap-2.5 text-base",
   "16": "h-16 px-7 gap-3 text-lg",
 };
 

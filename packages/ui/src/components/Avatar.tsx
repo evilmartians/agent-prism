@@ -18,10 +18,10 @@ const sizeClasses: Record<AvatarSize, string> = {
   "6": "size-6 text-xs",
   "8": "size-8 text-xs",
   "9": "size-9 text-sm",
-  "10": "size-10 text-text-base",
+  "10": "size-10 text-base",
   "11": "size-11 text-lg",
-  "12": "size-12 text-text-xl",
-  "16": "size-16 text-text-2xl",
+  "12": "size-12 text-xl",
+  "16": "size-16 text-2xl",
 };
 
 const iconSizeClasses: Record<AvatarSize, string> = {
@@ -40,7 +40,7 @@ const textSizeClasses: Record<AvatarSize, string> = {
   "6": "text-xs",
   "8": "text-xs",
   "9": "text-sm",
-  "10": "text-text-base",
+  "10": "text-base",
   "11": "text-lg",
   "12": "text-xl",
   "16": "text-2xl",
