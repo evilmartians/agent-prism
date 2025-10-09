@@ -119,7 +119,7 @@ export const COLOR_THEME_CLASSES: Record<
     darkText: "dark:text-red-300",
   },
   gray: {
-    bg: "bg-fg-soft",
+    bg: "bg-gray-100",
     darkBg: "dark:bg-gray-900",
     text: "text-gray-600",
     darkText: "dark:text-gray-400",

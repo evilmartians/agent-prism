@@ -4,7 +4,6 @@ import { Button } from "../Button";
 import { DetailsView } from "../DetailsView/DetailsView";
 import { TraceList } from "../TraceList/TraceList";
 import { type TraceViewerLayoutProps } from "../TraceViewer/TraceViewer";
-import { TraceViewerPlaceholder } from "./TraceViewerPlaceholder";
 import { TraceViewerTreeViewContainer } from "./TraceViewerTreeViewContainer";
 
 export const TraceViewerMobileLayout = ({
@@ -23,18 +22,9 @@ export const TraceViewerMobileLayout = ({
   handleExpandAll,
   handleCollapseAll,
   handleTraceSelect,
-  loadingSelectedTrace,
   spanCardViewOptions,
   onClearTraceSelection,
 }: TraceViewerLayoutProps) => {
-  if (loadingSelectedTrace) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <TraceViewerPlaceholder title="Loading trace details..." />
-      </div>
-    );
-  }
-
   if (
     selectedTrace &&
     selectedTraceId &&

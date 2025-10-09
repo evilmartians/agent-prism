@@ -7,7 +7,7 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type BadgeProps } from "../Badge";
-import { useIsMobile, type ColorVariant } from "../shared";
+import { useIsMobile } from "../shared";
 import { type SpanCardViewOptions } from "../SpanCard/SpanCard";
 import { TraceViewerDesktopLayout } from "./TraceViewerDesktopLayout";
 import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
@@ -20,29 +20,14 @@ export interface TraceViewerData {
 }
 
 export interface TraceViewerProps {
-  data?: Array<TraceViewerData>;
-
-  traceListMetadata?: TraceInfo[];
-  selectedTraceData?: TraceViewerData | null;
-  selectedTraceId?: string | null;
-  onTraceSelect?: (traceId: string) => void;
-  onClearSelection?: () => void;
-  loadingSelectedTrace?: boolean;
-
+  data: Array<TraceViewerData>;
   spanCardViewOptions?: SpanCardViewOptions;
 }
 
 export const TraceViewer = ({
   data,
-  traceListMetadata,
-  selectedTraceData,
-  selectedTraceId,
-  onTraceSelect,
-  onClearSelection,
-  loadingSelectedTrace = false,
   spanCardViewOptions,
 }: TraceViewerProps) => {
-  const isProgressiveMode = traceListMetadata !== undefined;
   const isMobile = useIsMobile();
   const hasInitialized = React.useRef(false);
 
@@ -53,7 +38,7 @@ export const TraceViewer = ({
   const [selectedTrace, setSelectedTrace] = useState<
     TraceRecordWithDisplayData | undefined
   >(
-    data?.[0]
+    data[0]
       ? {
           ...data[0].traceRecord,
           badges: data[0].badges,
@@ -62,72 +47,27 @@ export const TraceViewer = ({
       : undefined,
   );
   const [selectedTraceSpans, setSelectedTraceSpans] = useState<TraceSpan[]>(
-    data?.[0]?.spans || [],
+    data[0]?.spans || [],
   );
 
   const traceRecords: TraceRecordWithDisplayData[] = useMemo(() => {
-    if (isProgressiveMode && traceListMetadata) {
-      return traceListMetadata.map((meta) => ({
-        id: meta.trace_id,
-        name: meta.root_span_name,
-        spansCount: meta.total_spans || 0,
-        durationMs: 0,
-        agentDescription: meta.resource_attributes["app.name"] || "Unknown",
-        startTime: new Date(meta.root_span_start_time).getTime(),
-        badges: [
-          ...(meta.resource_attributes["app.name"]
-            ? [
-                {
-                  theme: "indigo" as ColorVariant,
-                  label: meta.resource_attributes["app.name"],
-                },
-              ]
-            : []),
-          ...(meta.resource_attributes["app.environment"]
-            ? [
-                {
-                  theme: "teal" as ColorVariant,
-                  label: meta.resource_attributes["app.environment"],
-                },
-              ]
-            : []),
-        ],
-      }));
-    }
-
-    return (data || []).map((item) => ({
+    return data.map((item) => ({
       ...item.traceRecord,
       badges: item.badges,
       spanCardViewOptions: item.spanCardViewOptions,
     }));
-  }, [isProgressiveMode, traceListMetadata, data]);
-
-  const currentSelectedTrace = isProgressiveMode
-    ? selectedTraceData
-      ? {
-          ...selectedTraceData.traceRecord,
-          badges: selectedTraceData.badges,
-          spanCardViewOptions: selectedTraceData.spanCardViewOptions,
-        }
-      : undefined
-    : selectedTrace;
-
-  const currentSpans = useMemo(() => {
-    return isProgressiveMode
-      ? selectedTraceData?.spans || []
-      : selectedTraceSpans;
-  }, [isProgressiveMode, selectedTraceData?.spans, selectedTraceSpans]);
+  }, [data]);
 
   const filteredSpans = useMemo(() => {
     if (!searchValue.trim()) {
-      return currentSpans;
+      return selectedTraceSpans;
     }
-    return filterSpansRecursively(currentSpans, searchValue);
-  }, [currentSpans, searchValue]);
+    return filterSpansRecursively(selectedTraceSpans, searchValue);
+  }, [selectedTraceSpans, searchValue]);
 
   const allIds = useMemo(() => {
-    return flattenSpans(currentSpans).map((span) => span.id);
-  }, [currentSpans]);
+    return flattenSpans(selectedTraceSpans).map((span) => span.id);
+  }, [selectedTraceSpans]);
 
   const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>(allIds);
 
@@ -140,25 +80,10 @@ export const TraceViewer = ({
       hasInitialized.current = true;
     }
 
-    if (!isMobile && currentSpans.length > 0 && !selectedSpan) {
-      setSelectedSpan(currentSpans[0]);
+    if (!isMobile && selectedTraceSpans.length > 0 && !selectedSpan) {
+      setSelectedSpan(selectedTraceSpans[0]);
     }
-  }, [currentSpans, isMobile, selectedSpan]);
-
-  useEffect(() => {
-    if (loadingSelectedTrace) {
-      setSelectedSpan(undefined);
-      setExpandedSpansIds([]);
-      setSearchValue("");
-    }
-  }, [loadingSelectedTrace]);
-
-  useEffect(() => {
-    if (isProgressiveMode) {
-      setSelectedSpan(undefined);
-      setExpandedSpansIds([]);
-    }
-  }, [isProgressiveMode, selectedTraceId]);
+  }, [selectedTraceSpans, isMobile, selectedSpan]);
 
   const handleExpandAll = useCallback(() => {
     setExpandedSpansIds(allIds);
@@ -172,41 +97,27 @@ export const TraceViewer = ({
     (trace: TraceRecord) => {
       setSelectedSpan(undefined);
       setExpandedSpansIds([]);
-
-      if (isProgressiveMode && onTraceSelect) {
-        onTraceSelect(trace.id);
-      } else {
-        setSelectedTrace(trace);
-        setSelectedTraceSpans(
-          (data || []).find((item) => item.traceRecord.id === trace.id)
-            ?.spans ?? [],
-        );
-      }
+      setSelectedTrace(trace);
+      setSelectedTraceSpans(
+        data.find((item) => item.traceRecord.id === trace.id)?.spans ?? [],
+      );
     },
-    [isProgressiveMode, onTraceSelect, data],
+    [data],
   );
 
   const handleClearTraceSelection = useCallback(() => {
-    if (isProgressiveMode) {
-      if (onClearSelection) {
-        onClearSelection();
-      }
-    } else {
-      setSelectedTrace(undefined);
-      setSelectedTraceSpans([]);
-    }
+    setSelectedTrace(undefined);
+    setSelectedTraceSpans([]);
     setSelectedSpan(undefined);
     setExpandedSpansIds([]);
-  }, [isProgressiveMode, onClearSelection]);
+  }, []);
 
   const props: TraceViewerLayoutProps = {
     traceRecords,
     traceListExpanded,
     setTraceListExpanded,
-    selectedTrace: currentSelectedTrace,
-    selectedTraceId: isProgressiveMode
-      ? selectedTraceId
-      : currentSelectedTrace?.id,
+    selectedTrace,
+    selectedTraceId: selectedTrace?.id,
     selectedSpan,
     setSelectedSpan,
     searchValue,
@@ -217,9 +128,8 @@ export const TraceViewer = ({
     handleExpandAll,
     handleCollapseAll,
     handleTraceSelect,
-    loadingSelectedTrace,
     spanCardViewOptions:
-      spanCardViewOptions || currentSelectedTrace?.spanCardViewOptions,
+      spanCardViewOptions || selectedTrace?.spanCardViewOptions,
     onClearTraceSelection: handleClearTraceSelection,
   };
 
@@ -245,7 +155,7 @@ export interface TraceViewerLayoutProps {
   traceListExpanded: boolean;
   setTraceListExpanded: (expanded: boolean) => void;
   selectedTrace: TraceRecordWithDisplayData | undefined;
-  selectedTraceId?: string | null;
+  selectedTraceId?: string;
   selectedSpan: TraceSpan | undefined;
   setSelectedSpan: (span: TraceSpan | undefined) => void;
   searchValue: string;
@@ -256,7 +166,6 @@ export interface TraceViewerLayoutProps {
   handleExpandAll: () => void;
   handleCollapseAll: () => void;
   handleTraceSelect: (trace: TraceRecord) => void;
-  loadingSelectedTrace: boolean;
   spanCardViewOptions?: SpanCardViewOptions;
-  onClearTraceSelection?: () => void;
+  onClearTraceSelection: () => void;
 }

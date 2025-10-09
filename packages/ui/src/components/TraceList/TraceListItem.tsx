@@ -49,7 +49,7 @@ export const TraceListItem = ({
         "flex flex-col gap-2 p-4",
         "cursor-pointer",
         isSelected
-          ? "bg-fg-soft dark:bg-gray-900"
+          ? "bg-gray-100 dark:bg-gray-900"
           : "bg-white dark:bg-gray-950",
       )}
       role="button"

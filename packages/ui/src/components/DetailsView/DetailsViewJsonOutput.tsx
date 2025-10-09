@@ -16,11 +16,11 @@ export const DetailsViewJsonOutput: FC<JsonViewerProps> = ({
   return (
     <JSONPretty
       booleanStyle={`color: ${colors.blue[800]};`}
-      className={`overflow-x-auto rounded-xl p-4 text-left ${className}`}
+      className={`overflow-x-hidden rounded-xl p-4 text-left ${className}`}
       data={content}
       id={`json-pretty-${id}`}
       keyStyle={`color: ${colors.blue[600]};`}
-      mainStyle={`color: ${colors.gray[400]}; font-size: 12px;`}
+      mainStyle={`color: ${colors.gray[400]}; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;`}
       stringStyle={`color: ${colors.red[800]};`}
       valueStyle={`color: ${colors.red[800]};`}
     />

@@ -27,7 +27,7 @@ const THEMES = {
       hover:border-gray-300 dark:hover:border-gray-600`,
   },
   pill: {
-    list: "h-9 inline-flex gap-1 p-1 bg-fg-soft dark:bg-gray-900 rounded-lg",
+    list: "h-9 inline-flex gap-1 p-1 bg-gray-100 dark:bg-gray-900 rounded-lg",
     trigger: `px-3 ${BASE_TRIGGER} rounded-md
       text-gray-600 hover:text-gray-900 data-[state=active]:text-gray-900
       dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:text-gray-200

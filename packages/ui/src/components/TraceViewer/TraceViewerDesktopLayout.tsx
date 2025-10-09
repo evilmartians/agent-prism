@@ -22,7 +22,6 @@ export const TraceViewerDesktopLayout = ({
   handleExpandAll,
   handleCollapseAll,
   handleTraceSelect,
-  loadingSelectedTrace,
   spanCardViewOptions,
 }: TraceViewerLayoutProps) => {
   const actualSelectedTrace =
@@ -49,15 +48,7 @@ export const TraceViewerDesktopLayout = ({
 
       <PanelResizeHandle />
 
-      {loadingSelectedTrace ? (
-        <Panel
-          id="tree-view"
-          minSize={30}
-          className="flex h-full items-center justify-center"
-        >
-          <TraceViewerPlaceholder title="Loading trace details..." />
-        </Panel>
-      ) : selectedTrace ? (
+      {selectedTrace ? (
         <Panel
           id="tree-view"
           minSize={30}
@@ -96,9 +87,7 @@ export const TraceViewerDesktopLayout = ({
         maxSize={50}
         className="h-full overflow-hidden"
       >
-        {loadingSelectedTrace ? (
-          <TraceViewerPlaceholder title="Loading span details..." />
-        ) : selectedSpan ? (
+        {selectedSpan ? (
           <DetailsView data={selectedSpan} />
         ) : (
           <TraceViewerPlaceholder title="Select a span to see the details" />

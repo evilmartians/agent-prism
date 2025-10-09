@@ -26,7 +26,7 @@ const sizeClasses = {
 };
 
 const filledThemeClasses: Record<ColorVariant, string> = {
-  gray: "text-gray-900 bg-fg-soft dark:bg-gray-600 dark:text-gray-200",
+  gray: "text-gray-900 bg-gray-100 dark:bg-gray-600 dark:text-gray-200",
   purple: "text-gray-900 bg-purple-100 dark:bg-purple-600 dark:text-gray-200",
   indigo: "text-gray-900 bg-indigo-100 dark:bg-indigo-600 dark:text-gray-200",
   orange: "text-gray-900 bg-orange-100 dark:bg-orange-600 dark:text-gray-200",

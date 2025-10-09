@@ -94,17 +94,22 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           aria-expanded={open}
           aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
         >
-          <div className="flex w-full items-center gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
             <ChevronDown
               className={cn(
-                "h-3 w-3 -rotate-90 text-gray-500",
+                "h-3 w-3 shrink-0 -rotate-90 text-gray-500",
                 open && "rotate-0",
               )}
             />
-            <span className="truncate text-sm font-medium">{title}</span>
+            <span
+              className="min-w-0 truncate text-sm font-medium"
+              title={title}
+            >
+              {title}
+            </span>
           </div>
 
-          {rightContent}
+          <div className="shrink-0">{rightContent}</div>
         </div>
       </Collapsible.Trigger>
 

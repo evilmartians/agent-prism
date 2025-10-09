@@ -89,16 +89,18 @@ export const DetailsViewHeader = ({
         label={getSpanCategoryLabel(data.type)}
       />
 
-      {data.tokensCount && (
+      {data.tokensCount ? (
         <Badge
           iconStart={<Coins className="size-2.5" />}
           theme="gray"
           size="4"
           label={data.tokensCount}
         />
-      )}
+      ) : null}
 
-      {data.cost && <Badge theme="gray" size="4" label={`$ ${data.cost}`} />}
+      {data.cost ? (
+        <Badge theme="gray" size="4" label={`$ ${data.cost}`} />
+      ) : null}
 
       <span className="text-xs text-gray-500 dark:text-gray-600">
         LATENCY: {formatDuration(durationMs)}
