@@ -1,6 +1,7 @@
+import type { KeyboardEvent, MouseEvent } from "react";
+
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { type KeyboardEvent, type MouseEvent } from "react";
 
 interface SpanCardToggleProps {
   isExpanded: boolean;

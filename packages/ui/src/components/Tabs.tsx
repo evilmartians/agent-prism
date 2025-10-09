@@ -122,7 +122,7 @@ export const Tabs = <T extends string = string>({
             value={item.value}
             disabled={item.disabled}
             className={cn(
-              "flex items-center overflow-hidden",
+              "group flex items-center overflow-hidden",
               currentTheme.trigger,
               triggerClassName,
             )}
@@ -132,7 +132,7 @@ export const Tabs = <T extends string = string>({
                 {item.icon}
               </span>
             )}
-            <span className="truncate">{item.label}</span>
+            <span className="truncate text-sm font-medium">{item.label}</span>
           </RadixTabs.Trigger>
         ))}
       </RadixTabs.List>

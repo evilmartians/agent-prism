@@ -22,8 +22,8 @@
     "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch"
   },
   "dependencies": {
-    "@evilmartians/agent-prism-types": "workspace:^",
     "@evilmartians/agent-prism-data": "workspace:^",
+    "@evilmartians/agent-prism-types": "workspace:^",
     "@radix-ui/react-collapsible": "^1.1.11",
     "@radix-ui/react-tabs": "^1.1.13",
     "autoprefixer": "^10.4.21",
@@ -33,6 +33,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-json-pretty": "^2.2.0",
+    "react-resizable-panels": "^3.0.6",
     "tailwindcss": "3.4.17"
   },
   "devDependencies": {

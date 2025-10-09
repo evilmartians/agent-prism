@@ -1,10 +1,13 @@
 import type { TraceRecord } from "@evilmartians/agent-prism-types";
+import type { KeyboardEvent } from "react";
 
 import cn from "classnames";
-import { useCallback, type KeyboardEvent } from "react";
+import { useCallback } from "react";
 
-import { type AvatarProps } from "../Avatar";
-import { Badge, type BadgeProps } from "../Badge";
+import type { AvatarProps } from "../Avatar";
+import type { BadgeProps } from "../Badge";
+
+import { Badge } from "../Badge";
 import { PriceBadge } from "../PriceBadge";
 import { TimestampBadge } from "../TimestampBadge";
 import { TokensBadge } from "../TokensBadge";
@@ -16,6 +19,7 @@ interface TraceListItemProps {
   avatar?: AvatarProps;
   onClick?: () => void;
   isSelected?: boolean;
+  showDescription?: boolean;
 }
 
 export const TraceListItem = ({
@@ -24,6 +28,7 @@ export const TraceListItem = ({
   onClick,
   badges,
   isSelected,
+  showDescription = true,
 }: TraceListItemProps) => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
@@ -41,7 +46,7 @@ export const TraceListItem = ({
     <div
       className={cn(
         "group w-full",
-        "flex flex-col gap-2.5 p-4",
+        "flex flex-col gap-2 p-4",
         "cursor-pointer",
         isSelected
           ? "bg-gray-100 dark:bg-gray-900"
@@ -56,9 +61,11 @@ export const TraceListItem = ({
       <TraceListItemHeader trace={trace} avatar={avatar} />
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-4 max-w-full truncate text-sm text-gray-600 dark:text-gray-400">
-          {agentDescription}
-        </span>
+        {showDescription && (
+          <span className="mr-4 max-w-full truncate text-sm text-gray-600 dark:text-gray-400">
+            {agentDescription}
+          </span>
+        )}
 
         {typeof totalCost === "number" && <PriceBadge cost={totalCost} />}
 

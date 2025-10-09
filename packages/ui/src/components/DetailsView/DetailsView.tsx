@@ -1,16 +1,17 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReactElement, ReactNode } from "react";
 
 import cn from "classnames";
 import { SquareTerminal, Tags, ArrowRightLeft } from "lucide-react";
-import { useState, type ReactElement, type ReactNode } from "react";
+import { useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
+import type { TabItem } from "../Tabs";
 
-import { Tabs, type TabItem } from "../Tabs";
+import { TabSelector } from "../TabSelector";
 import { DetailsViewAttributesTab } from "./DetailsViewAttributesTab";
 import { DetailsViewHeader } from "./DetailsViewHeader";
 import { DetailsViewInputOutputTab } from "./DetailsViewInputOutputTab";
-import { DetailsViewMetrics } from "./DetailsViewMetrics";
 import { DetailsViewRawDataTab } from "./DetailsViewRawDataTab";
 
 type DetailsViewTab = "input-output" | "attributes" | "raw";
@@ -61,40 +62,40 @@ export interface DetailsViewProps {
   onTabChange?: (tabValue: DetailsViewTab) => void;
 }
 
+const TAB_ITEMS: TabItem<DetailsViewTab>[] = [
+  {
+    value: "input-output",
+    label: "In/Out",
+    icon: <ArrowRightLeft className="size-4" />,
+  },
+  {
+    value: "attributes",
+    label: "Attributes",
+    icon: <Tags className="size-4" />,
+  },
+  {
+    value: "raw",
+    label: "RAW",
+    icon: <SquareTerminal className="size-4" />,
+  },
+];
+
 export const DetailsView = ({
   data,
   avatar,
-  defaultTab,
+  defaultTab = "input-output",
   className,
   copyButton,
   headerActions,
   customHeader,
   onTabChange,
 }: DetailsViewProps): ReactElement => {
-  const [tab, setTab] = useState<DetailsViewTab>(defaultTab || "input-output");
+  const [tab, setTab] = useState<DetailsViewTab>(defaultTab);
 
-  const tabItems: TabItem<DetailsViewTab>[] = [
-    {
-      value: "input-output",
-      label: "In/Out",
-      icon: <ArrowRightLeft className="size-4" />,
-    },
-    {
-      value: "attributes",
-      label: "Attributes",
-      icon: <Tags className="size-4" />,
-    },
-    {
-      value: "raw",
-      label: "RAW",
-      icon: <SquareTerminal className="size-4" />,
-    },
-  ];
-
-  function handleTabChange(tabValue: DetailsViewTab) {
+  const handleTabChange = (tabValue: DetailsViewTab) => {
     setTab(tabValue);
     onTabChange?.(tabValue);
-  }
+  };
 
   const resolvedHeaderActions =
     typeof headerActions === "function" ? headerActions(data) : headerActions;
@@ -117,25 +118,26 @@ export const DetailsView = ({
   return (
     <div
       className={cn(
-        "min-w-0 rounded border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950",
+        "flex h-full min-h-0 flex-col rounded-md border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950",
         className,
       )}
     >
-      {headerContent}
+      <div className="mb-4 shrink-0">{headerContent}</div>
+      <div className="shrink-0">
+        <TabSelector
+          items={TAB_ITEMS}
+          value={tab}
+          onValueChange={handleTabChange}
+          theme="underline"
+          defaultValue={defaultTab}
+        />
+      </div>
 
-      <DetailsViewMetrics data={data} />
-
-      <Tabs
-        items={tabItems}
-        value={tab}
-        onValueChange={handleTabChange}
-        theme="underline"
-        defaultValue={defaultTab}
-      />
-
-      {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
-      {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
-      {tab === "raw" && <DetailsViewRawDataTab data={data} />}
+      <div key={tab} className="min-h-0 flex-1 overflow-y-auto py-4">
+        {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
+        {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
+        {tab === "raw" && <DetailsViewRawDataTab data={data} />}
+      </div>
     </div>
   );
 };

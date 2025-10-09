@@ -2,11 +2,9 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
-import {
-  ROUNDED_CLASSES,
-  type ColorVariant,
-  type ComponentSize,
-} from "./shared";
+import type { ColorVariant, ComponentSize } from "./shared";
+
+import { ROUNDED_CLASSES } from "./shared";
 
 type ButtonSize = Extract<
   ComponentSize,

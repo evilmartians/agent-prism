@@ -63,18 +63,6 @@ const data: TraceViewerData[] = [
         label: "app: dev-chatbot",
         theme: "sky",
       },
-      {
-        label: "env: dev",
-        theme: "gray",
-      },
-      {
-        label: "gpt-4",
-        theme: "purple",
-      },
-      {
-        label: "5 tools",
-        theme: "orange",
-      },
     ],
   },
   {
@@ -91,18 +79,6 @@ const data: TraceViewerData[] = [
       {
         label: "app: staging-assistant",
         theme: "sky",
-      },
-      {
-        label: "env: staging",
-        theme: "gray",
-      },
-      {
-        label: "claude-3-sonnet",
-        theme: "purple",
-      },
-      {
-        label: "10 tools",
-        theme: "orange",
       },
     ],
   },
@@ -121,14 +97,6 @@ const data: TraceViewerData[] = [
         label: "app: prod-analyzer",
         theme: "sky",
       },
-      {
-        label: "env: production",
-        theme: "gray",
-      },
-      {
-        label: "gpt-4-turbo",
-        theme: "purple",
-      },
     ],
   },
   {
@@ -144,10 +112,6 @@ const data: TraceViewerData[] = [
       {
         label: "app: demo-qa",
         theme: "sky",
-      },
-      {
-        label: "env: production",
-        theme: "gray",
       },
     ],
     spanCardViewOptions: {
@@ -168,10 +132,6 @@ const data: TraceViewerData[] = [
         label: "app: demo-qa",
         theme: "sky",
       },
-      {
-        label: "env: production",
-        theme: "gray",
-      },
     ],
     spanCardViewOptions: {
       withStatus: false,
@@ -190,10 +150,6 @@ const data: TraceViewerData[] = [
       {
         label: "app: demo-qa",
         theme: "sky",
-      },
-      {
-        label: "env: production",
-        theme: "gray",
       },
     ],
     spanCardViewOptions: {

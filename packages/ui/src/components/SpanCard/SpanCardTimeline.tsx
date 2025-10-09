@@ -14,16 +14,16 @@ interface SpanCardTimelineProps {
 }
 
 const timelineBgColors: Record<ColorVariant, string> = {
-  purple: "bg-purple-400 dark:bg-purple-600",
-  indigo: "bg-indigo-400 dark:bg-indigo-600",
-  orange: "bg-orange-400 dark:bg-orange-600",
-  teal: "bg-teal-400 dark:bg-teal-600",
-  cyan: "bg-cyan-400 dark:bg-cyan-600",
-  sky: "bg-sky-400 dark:bg-sky-600",
-  yellow: "bg-yellow-400 dark:bg-yellow-600",
-  emerald: "bg-emerald-400 dark:bg-emerald-600",
-  red: "bg-red-400 dark:bg-red-600",
-  gray: "bg-gray-400 dark:bg-gray-600",
+  purple: "bg-purple-500",
+  indigo: "bg-indigo-500",
+  orange: "bg-orange-500",
+  teal: "bg-teal-500",
+  cyan: "bg-cyan-500",
+  sky: "bg-sky-500",
+  yellow: "bg-yellow-500",
+  emerald: "bg-emerald-500",
+  red: "bg-red-500",
+  gray: "bg-gray-500",
 };
 
 export const SpanCardTimeline = ({
@@ -42,7 +42,7 @@ export const SpanCardTimeline = ({
   return (
     <span
       className={cn(
-        "relative flex h-4 min-w-20 flex-1 rounded bg-gray-200 dark:bg-gray-900",
+        "relative flex h-4 min-w-20 flex-1 rounded-md bg-gray-200 dark:bg-gray-900",
         className,
       )}
     >

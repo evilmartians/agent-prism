@@ -1,6 +1,8 @@
 import type { ComponentPropsWithRef } from "react";
 
-import { Badge, type BadgeProps } from "./Badge";
+import type { BadgeProps } from "./Badge";
+
+import { Badge } from "./Badge";
 
 export type PriceBadgeProps = ComponentPropsWithRef<"span"> & {
   cost: number;

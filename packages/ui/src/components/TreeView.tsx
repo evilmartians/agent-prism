@@ -1,10 +1,13 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
-import { findTimeRange, flattenSpans } from "@evilmartians/agent-prism-data";
+import { flattenSpans, findTimeRange } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import { type FC } from "react";
 
-import { SpanCard, type SpanCardViewOptions } from "./SpanCard/SpanCard";
+import type { SpanCardViewOptions } from "./SpanCard/SpanCard";
+
+import { BrandLogo } from "./BrandLogo";
+import { SpanCard } from "./SpanCard/SpanCard";
 
 interface TreeViewProps {
   spans: TraceSpan[];
@@ -26,31 +29,43 @@ export const TreeView: FC<TreeViewProps> = ({
   spanCardViewOptions,
 }) => {
   const allCards = flattenSpans(spans);
-
   const { minStart, maxEnd } = findTimeRange(allCards);
 
   return (
-    <div className="w-full min-w-0 p-2">
+    <div className="w-full min-w-0 px-4">
       <ul
-        className={cn(className, "overflow-x-auto pt-4")}
+        className={cn(className, "overflow-x-auto pt-2")}
         role="tree"
         aria-label="Hierarchical card list"
       >
-        {spans.map((span, idx) => (
-          <SpanCard
-            key={span.id}
-            data={span}
-            level={0}
-            selectedSpan={selectedSpan}
-            onSpanSelect={onSpanSelect}
-            minStart={minStart}
-            maxEnd={maxEnd}
-            isLastChild={idx === spans.length - 1}
-            expandedSpansIds={expandedSpansIds}
-            onExpandSpansIdsChange={onExpandSpansIdsChange}
-            viewOptions={spanCardViewOptions}
-          />
-        ))}
+        {spans.map((span, idx) => {
+          const brand = span.metadata?.brand as { type: string } | undefined;
+
+          return (
+            <SpanCard
+              key={span.id}
+              data={span}
+              level={0}
+              selectedSpan={selectedSpan}
+              onSpanSelect={onSpanSelect}
+              minStart={minStart}
+              maxEnd={maxEnd}
+              isLastChild={idx === spans.length - 1}
+              expandedSpansIds={expandedSpansIds}
+              onExpandSpansIdsChange={onExpandSpansIdsChange}
+              viewOptions={spanCardViewOptions}
+              avatar={
+                brand
+                  ? {
+                      children: <BrandLogo brand={brand.type} />,
+                      size: "4",
+                      rounded: "sm",
+                    }
+                  : undefined
+              }
+            />
+          );
+        })}
       </ul>
     </div>
   );

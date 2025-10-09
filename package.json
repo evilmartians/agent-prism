@@ -24,6 +24,7 @@
     "eslint-plugin-perfectionist": "^4.15.0",
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-tailwindcss": "^3.18.2",
     "globals": "^16.3.0",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",

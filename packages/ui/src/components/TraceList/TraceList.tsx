@@ -3,7 +3,9 @@ import type { TraceRecord } from "@evilmartians/agent-prism-types";
 import cn from "classnames";
 import { ArrowLeft } from "lucide-react";
 
-import { Badge, type BadgeProps } from "../Badge";
+import type { BadgeProps } from "../Badge";
+
+import { Badge } from "../Badge";
 import { IconButton } from "../IconButton";
 import { TraceListItem } from "./TraceListItem";
 
@@ -31,22 +33,19 @@ export const TraceList = ({
   return (
     <div
       className={cn(
-        "w-full min-w-0",
-        "flex flex-col gap-3",
-        expanded ? "w-full" : "w-fit",
+        "flex min-w-0 flex-col",
+        expanded ? "h-full w-full gap-3" : "h-auto w-fit gap-1",
         className,
       )}
     >
-      <header className="flex min-h-6 items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <h2
-            className={cn(
-              "font-regular text-base text-gray-950 dark:text-gray-200",
-              !expanded && "hidden",
-            )}
-          >
-            Traces
-          </h2>
+      <header className="flex min-h-6 shrink-0 items-center justify-between gap-2">
+        <div
+          className={cn(
+            "flex items-center gap-2",
+            expanded ? "opacity-100" : "hidden opacity-0",
+          )}
+        >
+          <h2 className="dark:text-gray-200">Traces</h2>
 
           <Badge
             size="5"
@@ -59,32 +58,29 @@ export const TraceList = ({
         <IconButton
           aria-label={expanded ? "Collapse Trace List" : "Expand Trace List"}
           onClick={() => onExpandStateChange(!expanded)}
-          className="lg:hidden"
         >
-          <ArrowLeft
-            className={cn(
-              "size-3 transition-transform",
-              expanded ? "" : "rotate-180",
-            )}
-          />
+          <ArrowLeft className={cn("size-3", expanded ? "" : "rotate-180")} />
         </IconButton>
       </header>
 
       {expanded && (
-        <ul className="flex flex-col items-center overflow-hidden rounded border border-gray-200 dark:border-gray-800">
-          {traces.map((trace) => (
-            <li
-              className="w-full list-none border-b-gray-200 dark:border-b-gray-900 [&:not(:last-child)]:border-b"
-              key={trace.id}
-            >
-              <TraceListItem
-                trace={trace}
-                onClick={() => onTraceSelect?.(trace)}
-                isSelected={selectedTrace?.id === trace.id}
-                badges={trace.badges}
-              />
-            </li>
-          ))}
+        <ul className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 dark:border-gray-800">
+          <div className="flex-1 overflow-y-auto">
+            {traces.map((trace) => (
+              <li
+                className="w-full list-none border-b-gray-200 dark:border-b-gray-900 [&:not(:last-child)]:border-b"
+                key={trace.id}
+              >
+                <TraceListItem
+                  showDescription={false}
+                  trace={trace}
+                  onClick={() => onTraceSelect?.(trace)}
+                  isSelected={selectedTrace?.id === trace.id}
+                  badges={trace.badges}
+                />
+              </li>
+            ))}
+          </div>
         </ul>
       )}
     </div>
