@@ -4,7 +4,7 @@ AgentPrism is an open sourcy library of React components for visualizing traces 
 
 Use AgentPrism and turn traces into clear, visual diagrams for debugging AI agents. Plug in OpenTelemetry data and see your agent’s process unfold: display LLM calls, tool executions, and agent workflows in a hierarchical timeline. 
 
-**⚠️ Alpha Release:** This library is under active development. APIs may change.
+**⚠️ Alpha Release:** *This library is under active development. APIs may change*.
 
 <img width="1280" height="755" alt="github-cover-screen" src="https://github.com/user-attachments/assets/7fa167ab-aa33-4b18-b6f0-83af9ef5cfba" />
 
