@@ -6,7 +6,12 @@ Use AgentPrism and turn traces into clear, visual diagrams for debugging AI agen
 
 **⚠️ Alpha Release:** *This library is under active development. APIs may change*.
 
-<img width="1280" height="755" alt="github-cover-screen" src="https://github.com/user-attachments/assets/7fa167ab-aa33-4b18-b6f0-83af9ef5cfba" />
+Read this post for [more AgentPrism info and testimonials](https://evilmartians.com/chronicles/debug-ai-fast-agent-prism-open-source-library-visualize-agent-traces).
+
+<video width="1280" height="755" controls poster="https://github.com/user-attachments/assets/7fa167ab-aa33-4b18-b6f0-83af9ef5cfba">
+  <source src="./agentprism.mp4" type="video/mp4">
+  <img src="https://github.com/user-attachments/assets/7fa167ab-aa33-4b18-b6f0-83af9ef5cfba" width="1280" height="755" alt="AgentPrism preview cover">
+</video>
 
 ## Storybook
 
