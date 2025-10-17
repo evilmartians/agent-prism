@@ -157,6 +157,9 @@ importers:
       "@evilmartians/agent-prism-ui":
         specifier: workspace:^
         version: link:../ui
+      lucide-react:
+        specifier: ^0.534.0
+        version: 0.534.0(react@19.1.0)
       next:
         specifier: 15.5.3
         version: 15.5.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -166,6 +169,9 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
+      react-resizable-panels:
+        specifier: ^3.0.6
+        version: 3.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
       "@types/node":
         specifier: ^20
@@ -7409,6 +7415,10 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
+  lucide-react@0.534.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+
   lucide-react@0.534.0(react@19.1.1):
     dependencies:
       react: 19.1.1
@@ -7731,6 +7741,11 @@ snapshots:
       react-dom: 19.1.1(react@19.1.1)
 
   react-refresh@0.17.0: {}
+
+  react-resizable-panels@3.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   react-resizable-panels@3.0.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:

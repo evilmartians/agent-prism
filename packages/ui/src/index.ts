@@ -56,8 +56,14 @@ export {
   TraceViewer,
   type TraceViewerProps,
   type TraceViewerData,
+  type TraceRecordWithDisplayData,
+  type TraceViewerLayoutProps,
 } from "./components/TraceViewer/TraceViewer";
-export { default as TraceViewerSource } from "./components/TraceViewer/TraceViewer.tsx?raw";
+
+export { TraceViewerPlaceholder } from "./components/TraceViewer/TraceViewerPlaceholder.tsx";
+export { TraceViewerTreeViewContainer } from "./components/TraceViewer/TraceViewerTreeViewContainer.tsx";
 
 export { TimestampBadge } from "./components/TimestampBadge.tsx";
 export { default as TimestampBadgeSource } from "./components/TimestampBadge.tsx?raw";
+
+export { useIsMobile } from "./components/shared.ts";
