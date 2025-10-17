@@ -4,7 +4,6 @@ import {
   TraceViewerTreeViewContainer,
   type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
-// SimpleTraceViewerDesktopLayout.tsx
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 export const SimpleTraceViewerDesktopLayout = ({
