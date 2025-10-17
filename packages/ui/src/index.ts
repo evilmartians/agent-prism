@@ -25,7 +25,7 @@ export { default as PriceBadgeSource } from "./components/PriceBadge.tsx?raw";
 export { SearchInput } from "./components/SearchInput";
 export { default as SearchInputSource } from "./components/SearchInput.tsx?raw";
 
-export { SpanStatus } from "./components/SpanStatus.tsx";
+export { SpanStatus } from "./components/SpanStatus";
 export { default as SpanStatusSource } from "./components/SpanStatus.tsx?raw";
 
 export { TokensBadge } from "./components/TokensBadge";
@@ -34,30 +34,36 @@ export { default as TokensBadgeSource } from "./components/TokensBadge.tsx?raw";
 export {
   SpanCard,
   type SpanCardViewOptions,
-} from "./components/SpanCard/SpanCard.tsx";
+} from "./components/SpanCard/SpanCard";
 export { default as SpanCardSource } from "./components/SpanCard/SpanCard.tsx?raw";
 
-export { TextInput, type TextInputProps } from "./components/TextInput.tsx";
+export { TextInput, type TextInputProps } from "./components/TextInput";
 export { default as TextInputSource } from "./components/TextInput.tsx?raw";
 
 export { TreeView } from "./components/TreeView";
 export { default as TreeViewSource } from "./components/TreeView.tsx?raw";
 
-export { TraceList } from "./components/TraceList/TraceList.tsx";
+export { TraceList } from "./components/TraceList/TraceList";
 export { default as TraceListSource } from "./components/TraceList/TraceList.tsx?raw";
 
-export { DetailsView } from "./components/DetailsView/DetailsView.tsx";
+export { DetailsView } from "./components/DetailsView/DetailsView";
 export { default as DetailsViewSource } from "./components/DetailsView/DetailsView.tsx?raw";
 
-export { Tabs } from "./components/Tabs.tsx";
+export { Tabs } from "./components/Tabs";
 export { default as TabsSource } from "./components/Tabs.tsx?raw";
 
 export {
   TraceViewer,
   type TraceViewerProps,
   type TraceViewerData,
+  type TraceRecordWithDisplayData,
+  type TraceViewerLayoutProps,
 } from "./components/TraceViewer/TraceViewer";
-export { default as TraceViewerSource } from "./components/TraceViewer/TraceViewer.tsx?raw";
 
-export { TimestampBadge } from "./components/TimestampBadge.tsx";
+export { TraceViewerPlaceholder } from "./components/TraceViewer/TraceViewerPlaceholder";
+export { TraceViewerTreeViewContainer } from "./components/TraceViewer/TraceViewerTreeViewContainer";
+
+export { TimestampBadge } from "./components/TimestampBadge";
 export { default as TimestampBadgeSource } from "./components/TimestampBadge.tsx?raw";
+
+export { useIsMobile } from "./components/shared";
