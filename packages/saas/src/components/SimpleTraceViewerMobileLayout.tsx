@@ -44,18 +44,18 @@ export const SimpleTraceViewerMobileLayout = ({
   return (
     <div className="flex h-full flex-col gap-4">
       <TraceViewerTreeViewContainer
-        searchValue={searchValue!}
-        setSearchValue={setSearchValue!}
-        handleExpandAll={handleExpandAll!}
-        handleCollapseAll={handleCollapseAll!}
-        filteredSpans={filteredSpans!}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        handleExpandAll={handleExpandAll}
+        handleCollapseAll={handleCollapseAll}
+        filteredSpans={filteredSpans}
         selectedSpan={selectedSpan}
         setSelectedSpan={(span) => {
-          setSelectedSpan!(span);
+          setSelectedSpan(span);
           if (span) setShowDetails(true);
         }}
-        expandedSpansIds={expandedSpansIds!}
-        setExpandedSpansIds={setExpandedSpansIds!}
+        expandedSpansIds={expandedSpansIds}
+        setExpandedSpansIds={setExpandedSpansIds}
         selectedTrace={selectedTrace}
         showHeader={false}
       />

@@ -27,15 +27,15 @@ export const SimpleTraceViewerDesktopLayout = ({
         className="flex h-full flex-col overflow-hidden pr-2" // Added pr-2 for spacing
       >
         <TraceViewerTreeViewContainer
-          searchValue={searchValue!}
-          setSearchValue={setSearchValue!}
-          handleExpandAll={handleExpandAll!}
-          handleCollapseAll={handleCollapseAll!}
-          filteredSpans={filteredSpans!}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          handleExpandAll={handleExpandAll}
+          handleCollapseAll={handleCollapseAll}
+          filteredSpans={filteredSpans}
           selectedSpan={selectedSpan}
-          setSelectedSpan={setSelectedSpan!}
-          expandedSpansIds={expandedSpansIds!}
-          setExpandedSpansIds={setExpandedSpansIds!}
+          setSelectedSpan={setSelectedSpan}
+          expandedSpansIds={expandedSpansIds}
+          setExpandedSpansIds={setExpandedSpansIds}
           selectedTrace={selectedTrace}
           showHeader={false}
         />
