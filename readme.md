@@ -6,15 +6,15 @@ Use AgentPrism and turn traces into clear, visual diagrams for debugging AI agen
 
 **⚠️ Alpha Release:** *This library is under active development. APIs may change*.
 
-Read this post for [more AgentPrism info and testimonials](https://evilmartians.com/chronicles/debug-ai-fast-agent-prism-open-source-library-visualize-agent-traces).
+Read this post for [more AgentPrism info and testimonials](https://evilmartians.com/chronicles/debug-ai-fast-agent-prism-open-source-library-visualize-agent-traces?utm_source=github&utm_medium=social).
 
-Try AgentPrism live at [agent-prism.evilmartians.io](https://agent-prism.evilmartians.io) — visualize and debug your own agent traces.
+Try AgentPrism live at [agent-prism.evilmartians.io](https://agent-prism.evilmartians.io?utm_source=github&utm_medium=social) — visualize and debug your own agent traces.
 
 https://github.com/user-attachments/assets/69e592e2-b67c-4ebc-b301-2d8b73492e0d
 
 ## Storybook
 
-[storybook.agent-prism.evilmartians.io](https://storybook.agent-prism.evilmartians.io/)
+[storybook.agent-prism.evilmartians.io](https://storybook.agent-prism.evilmartians.io/?utm_source=github&utm_medium=social)
 
 ## Prerequisites
 
