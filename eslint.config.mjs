@@ -27,6 +27,7 @@ export default defineConfig([
       "packages/core/dist",
       "packages/demo-app/dist",
       "packages/storybook/storybook-static",
+      "bin",
     ],
   },
   {
