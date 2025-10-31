@@ -67,3 +67,11 @@ export { TimestampBadge } from "./components/TimestampBadge";
 export { default as TimestampBadgeSource } from "./components/TimestampBadge.tsx?raw";
 
 export { useIsMobile } from "./components/shared";
+
+// Theming
+export type { AgentPrismTheme, AgentPrismThemePrefixed } from "./themes/types";
+export { defaultTheme } from "./themes/default";
+export { highContrastTheme } from "./themes/high-contrast";
+export { createTheme } from "./themes/utils/createTheme";
+export { setTheme } from "./themes/utils/setTheme";
+export { agentPrismTailwindColors } from "./themes";

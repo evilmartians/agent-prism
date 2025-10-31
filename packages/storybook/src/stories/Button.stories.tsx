@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Button, ButtonSource } from "@evilmartians/agent-prism-ui";
+import {
+  Button,
+  ButtonSource,
+  defaultTheme,
+  highContrastTheme,
+  setTheme as setThemeGlobal,
+} from "@evilmartians/agent-prism-ui";
 import {
   Description,
   Primary,
@@ -8,6 +14,7 @@ import {
   Stories,
   Source,
 } from "@storybook/blocks";
+import { useEffect, useState } from "react";
 
 const meta = {
   title: "Atoms/Button",
@@ -92,6 +99,29 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: "Button",
+  },
+  render: (args) => {
+    const [theme, setTheme] = useState<"default" | "high-contrast">("default");
+
+    useEffect(() => {
+      console.log("theme", theme);
+      if (theme === "default") {
+        setThemeGlobal(defaultTheme);
+      } else {
+        setThemeGlobal(highContrastTheme);
+      }
+    }, [theme]);
+
+    return (
+      <div>
+        <Button
+          {...args}
+          onClick={() =>
+            setTheme((t) => (t === "default" ? "high-contrast" : "default"))
+          }
+        />
+      </div>
+    );
   },
 };
 

@@ -19,7 +19,8 @@
   "scripts": {
     "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck",
     "build": "tailwind -i ./src/index.css -o ./dist/styles.css --minify",
-    "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch"
+    "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch",
+    "create-theme-files": "tsx ./src/themes/scripts/build-theme-files.ts && prettier --write ./src/themes/styles/*.css"
   },
   "dependencies": {
     "@evilmartians/agent-prism-data": "workspace:^",
