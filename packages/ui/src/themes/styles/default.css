@@ -1,0 +1,141 @@
+@layer base {
+  :root {
+    --ap-background-light: 255 255 255;
+    --ap-background-dark: 3 7 18;
+
+    --ap-foreground-light: 17 24 39;
+    --ap-foreground-dark: 243 244 246;
+
+    --ap-muted-light: 249 250 251;
+    --ap-muted-dark: 17 24 39;
+
+    --ap-muted-foreground-light: 75 85 99;
+    --ap-muted-foreground-dark: 156 163 175;
+
+    --ap-secondary-light: 243 244 246;
+    --ap-secondary-dark: 31 41 55;
+
+    --ap-secondary-foreground-light: 107 114 128;
+    --ap-secondary-foreground-dark: 107 114 128;
+
+    --ap-border-light: 229 231 235;
+    --ap-border-dark: 55 65 81;
+
+    --ap-input-light: 209 213 219;
+    --ap-input-dark: 75 85 99;
+
+    --ap-ring-light: 168 85 247;
+    --ap-ring-dark: 192 132 252;
+
+    --ap-badge-llm-light: 250 245 255;
+    --ap-badge-llm-dark: 59 7 100;
+
+    --ap-badge-llm-foreground-light: 168 85 247;
+    --ap-badge-llm-foreground-dark: 216 180 254;
+
+    --ap-badge-agent-light: 238 242 255;
+    --ap-badge-agent-dark: 30 27 75;
+
+    --ap-badge-agent-foreground-light: 99 102 241;
+    --ap-badge-agent-foreground-dark: 165 180 252;
+
+    --ap-badge-tool-light: 255 247 237;
+    --ap-badge-tool-dark: 67 20 7;
+
+    --ap-badge-tool-foreground-light: 234 88 12;
+    --ap-badge-tool-foreground-dark: 253 186 116;
+
+    --ap-badge-chain-light: 240 253 250;
+    --ap-badge-chain-dark: 4 47 46;
+
+    --ap-badge-chain-foreground-light: 13 148 136;
+    --ap-badge-chain-foreground-dark: 94 234 212;
+
+    --ap-badge-retrieval-light: 236 254 255;
+    --ap-badge-retrieval-dark: 8 51 68;
+
+    --ap-badge-retrieval-foreground-light: 8 145 178;
+    --ap-badge-retrieval-foreground-dark: 103 232 249;
+
+    --ap-badge-embedding-light: 236 253 245;
+    --ap-badge-embedding-dark: 2 44 34;
+
+    --ap-badge-embedding-foreground-light: 4 120 87;
+    --ap-badge-embedding-foreground-dark: 110 231 183;
+
+    --ap-badge-guardrail-light: 254 242 242;
+    --ap-badge-guardrail-dark: 69 10 10;
+
+    --ap-badge-guardrail-foreground-light: 220 38 38;
+    --ap-badge-guardrail-foreground-dark: 252 165 165;
+
+    --ap-badge-default-light: 243 244 246;
+    --ap-badge-default-dark: 17 24 39;
+
+    --ap-badge-default-foreground-light: 75 85 99;
+    --ap-badge-default-foreground-dark: 156 163 175;
+
+    --ap-badge-accent-light: 240 249 255;
+    --ap-badge-accent-dark: 8 47 73;
+
+    --ap-badge-accent-foreground-light: 2 132 199;
+    --ap-badge-accent-foreground-dark: 125 211 252;
+
+    --ap-badge-highlight-light: 254 252 232;
+    --ap-badge-highlight-dark: 66 32 6;
+
+    --ap-badge-highlight-foreground-light: 161 98 7;
+    --ap-badge-highlight-foreground-dark: 253 224 71;
+
+    --ap-success-light: 16 185 129;
+    --ap-success-dark: 16 185 129;
+
+    --ap-success-muted-light: 236 253 245;
+    --ap-success-muted-dark: 2 44 34;
+
+    --ap-success-muted-foreground-light: 4 120 87;
+    --ap-success-muted-foreground-dark: 110 231 183;
+
+    --ap-error-light: 239 68 68;
+    --ap-error-dark: 239 68 68;
+
+    --ap-error-muted-light: 254 242 242;
+    --ap-error-muted-dark: 69 10 10;
+
+    --ap-error-muted-foreground-light: 220 38 38;
+    --ap-error-muted-foreground-dark: 252 165 165;
+
+    --ap-warning-light: 234 179 8;
+    --ap-warning-dark: 234 179 8;
+
+    --ap-warning-muted-light: 254 252 232;
+    --ap-warning-muted-dark: 66 32 6;
+
+    --ap-warning-muted-foreground-light: 161 98 7;
+    --ap-warning-muted-foreground-dark: 253 224 71;
+
+    --ap-pending-light: 139 92 246;
+    --ap-pending-dark: 139 92 246;
+
+    --ap-pending-muted-light: 237 233 254;
+    --ap-pending-muted-dark: 46 16 101;
+
+    --ap-pending-muted-foreground-light: 124 58 237;
+    --ap-pending-muted-foreground-dark: 167 139 250;
+
+    --ap-code-string-light: 220 38 38;
+    --ap-code-string-dark: 248 113 113;
+
+    --ap-code-number-light: 0 0 0;
+    --ap-code-number-dark: 248 113 113;
+
+    --ap-code-boolean-light: 30 64 175;
+    --ap-code-boolean-dark: 96 165 250;
+
+    --ap-code-key-light: 37 99 235;
+    --ap-code-key-dark: 147 197 253;
+
+    --ap-code-base-light: 107 114 128;
+    --ap-code-base-dark: 156 163 175;
+  }
+}

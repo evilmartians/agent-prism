@@ -15,7 +15,8 @@
     "eslint": "pnpm dlx eslint . --fix",
     "eslint:check": "pnpm dlx eslint .",
     "tsc": "pnpm run --parallel tsc",
-    "test": "pnpm run --parallel test"
+    "test": "pnpm run --parallel test",
+    "themes:build": "pnpm --filter @evilmartians/agent-prism-ui create-theme-files"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
@@ -28,6 +29,7 @@
     "globals": "^16.3.0",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "tsx": "^4.20.6",
     "typescript-eslint": "^8.38.0"
   },
   "dependencies": {
