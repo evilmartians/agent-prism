@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   @media (prefers-color-scheme: light) {
     --brand: 0 0 0;
