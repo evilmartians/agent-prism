@@ -38,23 +38,6 @@ const meta = {
       description: "The size of the button",
       defaultValue: "8",
     },
-    theme: {
-      control: { type: "select" },
-      options: [
-        "gray",
-        "red",
-        "orange",
-        "yellow",
-        "teal",
-        "indigo",
-        "purple",
-        "sky",
-        "cyan",
-        "emerald",
-      ],
-      description: "The color theme of the button",
-      defaultValue: "gray",
-    },
     rounded: {
       control: { type: "select" },
       options: ["none", "sm", "md", "lg", "full"],
@@ -63,9 +46,16 @@ const meta = {
     },
     variant: {
       control: { type: "select" },
-      options: ["filled", "outlined", "ghost"],
+      options: [
+        "primary",
+        "outlined",
+        "secondary",
+        "ghost",
+        "destructive",
+        "success",
+      ],
       description: "The visual variant of the button",
-      defaultValue: "filled",
+      defaultValue: "primary",
     },
     fullWidth: {
       control: "boolean",
@@ -92,13 +82,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     children: "Button",
-  },
-};
-
-export const Theme: Story = {
-  args: {
-    children: "Purple",
-    theme: "purple",
   },
 };
 
@@ -137,7 +120,6 @@ export const IconStart: Story = {
   args: {
     children: "With Icon",
     iconStart: <span>✓</span>,
-    theme: "emerald",
   },
 };
 
@@ -145,6 +127,5 @@ export const IconEnd: Story = {
   args: {
     children: "With Icon",
     iconEnd: <span>→</span>,
-    theme: "indigo",
   },
 };

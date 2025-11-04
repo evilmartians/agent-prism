@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
-import type { ColorVariant, ComponentSize } from "./shared";
+import type { ComponentSize } from "./shared";
 
 import { ROUNDED_CLASSES } from "./shared";
 
@@ -10,6 +10,14 @@ type ButtonSize = Extract<
   ComponentSize,
   "6" | "7" | "8" | "9" | "10" | "11" | "12" | "16"
 >;
+
+type ButtonVariant =
+  | "primary"
+  | "outlined"
+  | "secondary"
+  | "ghost"
+  | "destructive"
+  | "success";
 
 const BASE_CLASSES =
   "inline-flex items-center justify-center font-medium transition-all duration-200";
@@ -25,25 +33,14 @@ const sizeClasses = {
   "16": "h-16 px-7 gap-3 text-lg",
 };
 
-const filledThemeClasses: Record<ColorVariant, string> = {
-  gray: "text-gray-900 bg-gray-100 dark:bg-gray-600 dark:text-gray-200",
-  purple: "text-gray-900 bg-purple-100 dark:bg-purple-600 dark:text-gray-200",
-  indigo: "text-gray-900 bg-indigo-100 dark:bg-indigo-600 dark:text-gray-200",
-  orange: "text-gray-900 bg-orange-100 dark:bg-orange-600 dark:text-gray-200",
-  teal: "text-gray-900 bg-teal-100 dark:bg-teal-600 dark:text-gray-200",
-  cyan: "text-gray-900 bg-cyan-100 dark:bg-cyan-600 dark:text-gray-200",
-  sky: "text-gray-900 bg-sky-100 dark:bg-sky-600 dark:text-gray-200",
-  yellow: "text-gray-900 bg-yellow-100 dark:bg-yellow-600 dark:text-gray-200",
-  emerald:
-    "text-gray-900 bg-emerald-100 dark:bg-emerald-600 dark:text-gray-200",
-  red: "text-gray-900 bg-red-100 dark:bg-red-600 dark:text-gray-200",
-};
-
-const variantClasses = {
-  filled: "",
+const variantClasses: Record<ButtonVariant, string> = {
+  primary: "text-agentprism-primary-foreground bg-agentprism-primary",
   outlined:
-    "border border-2 bg-transparent text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-800",
-  ghost: "bg-transparent text-gray-600 dark:text-gray-300",
+    "border border-1 bg-transparent text-agentprism-foreground border-agentprism-foreground",
+  secondary: "bg-agentprism-secondary text-agentprism-secondary-foreground",
+  ghost: "bg-transparent text-agentprism-foreground",
+  destructive: "bg-agentprism-error text-agentprism-primary-foreground",
+  success: "bg-agentprism-success text-agentprism-primary-foreground",
 };
 
 export type ButtonProps = ComponentPropsWithRef<"button"> & {
@@ -54,12 +51,6 @@ export type ButtonProps = ComponentPropsWithRef<"button"> & {
   size?: ButtonSize;
 
   /**
-   * The color theme of the button
-   * @default "gray"
-   */
-  theme?: ColorVariant;
-
-  /**
    * The border radius of the button
    * @default "md"
    */
@@ -67,9 +58,9 @@ export type ButtonProps = ComponentPropsWithRef<"button"> & {
 
   /**
    * The visual variant of the button
-   * @default "filled"
+   * @default "primary"
    */
-  variant?: "filled" | "outlined" | "ghost";
+  variant?: ButtonVariant;
 
   /**
    * Makes the button full width
@@ -91,9 +82,8 @@ export type ButtonProps = ComponentPropsWithRef<"button"> & {
 export const Button = ({
   children,
   size = "6",
-  theme = "gray",
   rounded = "md",
-  variant = "filled",
+  variant = "primary",
   fullWidth = false,
   disabled = false,
   iconStart,
@@ -107,10 +97,6 @@ export const Button = ({
   const stateClasses = disabled
     ? "cursor-not-allowed opacity-50"
     : "hover:opacity-70";
-  const filledThemeClass =
-    variant === "filled"
-      ? filledThemeClasses[theme] || filledThemeClasses.gray
-      : "";
 
   return (
     <button
@@ -122,7 +108,6 @@ export const Button = ({
         sizeClasses[size],
         ROUNDED_CLASSES[rounded],
         variantClasses[variant],
-        filledThemeClass,
         widthClass,
         stateClasses,
         className,
