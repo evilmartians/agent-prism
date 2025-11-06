@@ -10,7 +10,8 @@
       "import": "./src/index.ts",
       "types": "./src/index.ts"
     },
-    "./styles.css": "./dist/styles.css"
+    "./styles.css": "./dist/styles.css",
+    "./theme.css": "./src/components/theme/theme.css"
   },
   "files": [
     "src",
