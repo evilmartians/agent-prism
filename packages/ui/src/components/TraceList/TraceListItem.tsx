@@ -48,9 +48,7 @@ export const TraceListItem = ({
         "group w-full",
         "flex flex-col gap-2 p-4",
         "cursor-pointer",
-        isSelected
-          ? "bg-gray-100 dark:bg-gray-900"
-          : "bg-white dark:bg-gray-950",
+        isSelected ? "bg-agentprism-muted/75" : "bg-agentprism-background",
       )}
       role="button"
       tabIndex={0}
@@ -62,7 +60,7 @@ export const TraceListItem = ({
 
       <div className="flex flex-wrap items-center gap-2">
         {showDescription && (
-          <span className="mr-4 max-w-full truncate text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-agentprism-muted-foreground mr-4 max-w-full truncate text-sm">
             {agentDescription}
           </span>
         )}

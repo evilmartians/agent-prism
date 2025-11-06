@@ -87,7 +87,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           tabIndex={0}
           role="button"
           className={cn(
-            "mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium text-gray-700 dark:text-white",
+            "text-agentprism-accent-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
             triggerClassName,
           )}
           onKeyDown={handleKeyDown}
@@ -97,7 +97,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <ChevronDown
               className={cn(
-                "h-3 w-3 shrink-0 -rotate-90 text-gray-500",
+                "text-agentprism-muted-foreground h-3 w-3 shrink-0 -rotate-90",
                 open && "rotate-0",
               )}
             />

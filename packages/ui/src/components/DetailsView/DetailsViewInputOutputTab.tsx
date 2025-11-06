@@ -26,8 +26,8 @@ export const DetailsViewInputOutputTab = ({
 
   if (!hasInput && !hasOutput) {
     return (
-      <div className="rounded-md border border-gray-200 p-4 dark:border-gray-800">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+      <div className="border-agentprism-border rounded-md border p-4">
+        <p className="text-agentprism-muted-foreground text-sm">
           No input or output data available for this span
         </p>
       </div>
