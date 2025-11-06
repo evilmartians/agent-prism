@@ -74,7 +74,7 @@ export const TraceListItem = ({
         )}
 
         {badges?.map((badge, index) => (
-          <Badge key={index} theme={badge.theme} size="4" label={badge.label} />
+          <Badge key={index} size="4" label={badge.label} />
         ))}
 
         {typeof startTime === "number" && (

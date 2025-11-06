@@ -19,7 +19,6 @@ export const TokensBadge = ({
   return (
     <Badge
       iconStart={<Coins className="size-2.5" />}
-      theme="gray"
       size={size}
       {...rest}
       label={tokensCount}

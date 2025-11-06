@@ -66,4 +66,6 @@ export { TraceViewerTreeViewContainer } from "./components/TraceViewer/TraceView
 export { TimestampBadge } from "./components/TimestampBadge";
 export { default as TimestampBadgeSource } from "./components/TimestampBadge.tsx?raw";
 
+export { ThemePalette } from "./components/theme/ThemePalette";
+
 export { useIsMobile } from "./components/shared";

@@ -42,12 +42,7 @@ export const TraceViewerTreeViewContainer = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {selectedTrace.badges?.map((badge, index) => (
-            <Badge
-              key={index}
-              theme={badge.theme}
-              size="4"
-              label={badge.label}
-            />
+            <Badge key={index} size="4" label={badge.label} />
           ))}
         </div>
       </div>

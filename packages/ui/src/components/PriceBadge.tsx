@@ -10,5 +10,5 @@ export type PriceBadgeProps = ComponentPropsWithRef<"span"> & {
 };
 
 export const PriceBadge = ({ cost, size, ...rest }: PriceBadgeProps) => {
-  return <Badge theme="gray" size={size} {...rest} label={`$ ${cost}`} />;
+  return <Badge size={size} {...rest} label={`$ ${cost}`} />;
 };

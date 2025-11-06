@@ -2,21 +2,18 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactNode } from "react";
 
 import { getDurationMs, formatDuration } from "@evilmartians/agent-prism-data";
-import { Check, Copy, Coins } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
 
 import { Avatar } from "../Avatar";
-import { Badge } from "../Badge";
 import { IconButton } from "../IconButton";
-import {
-  getSpanCategoryIcon,
-  getSpanCategoryLabel,
-  getSpanCategoryTheme,
-} from "../shared";
+import { PriceBadge } from "../PriceBadge";
+import { SpanBadge } from "../SpanBadge";
 import { SpanStatus } from "../SpanStatus";
 import { TimestampBadge } from "../TimestampBadge";
+import { TokensBadge } from "../TokensBadge";
 
 export interface DetailsViewHeaderProps {
   data: TraceSpan;
@@ -43,7 +40,6 @@ export const DetailsViewHeader = ({
   className,
 }: DetailsViewHeaderProps) => {
   const [hasCopied, setHasCopied] = useState(false);
-  const Icon = getSpanCategoryIcon(data.type);
   const durationMs = getDurationMs(data);
 
   const handleCopy = () => {
@@ -82,27 +78,15 @@ export const DetailsViewHeader = ({
         </IconButton>
       )}
 
-      <Badge
-        iconStart={<Icon className="size-2.5" />}
-        theme={getSpanCategoryTheme(data.type)}
-        size="4"
-        label={getSpanCategoryLabel(data.type)}
-      />
+      <SpanBadge category={data.type} />
 
-      {data.tokensCount ? (
-        <Badge
-          iconStart={<Coins className="size-2.5" />}
-          theme="gray"
-          size="4"
-          label={data.tokensCount}
-        />
-      ) : null}
+      {typeof data.tokensCount === "number" && (
+        <TokensBadge tokensCount={data.tokensCount} />
+      )}
 
-      {data.cost ? (
-        <Badge theme="gray" size="4" label={`$ ${data.cost}`} />
-      ) : null}
+      {typeof data.cost === "number" && <PriceBadge cost={data.cost} />}
 
-      <span className="text-xs text-gray-500 dark:text-gray-600">
+      <span className="text-agentprism-muted-foreground text-xs">
         LATENCY: {formatDuration(durationMs)}
       </span>
 

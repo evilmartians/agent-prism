@@ -27,7 +27,6 @@ export const TraceListItemHeader = ({
       <div className="flex items-center gap-2">
         <Badge
           size="4"
-          theme="gray"
           variant="outline"
           label={
             trace.spansCount === 1 ? "1 span" : `${trace.spansCount} spans`
