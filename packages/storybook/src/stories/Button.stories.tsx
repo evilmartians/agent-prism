@@ -47,6 +47,7 @@ const meta = {
     variant: {
       control: { type: "select" },
       options: [
+        "brand",
         "primary",
         "outlined",
         "secondary",

@@ -19,7 +19,7 @@ export const TraceListItemHeader = ({
       <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
         {avatar && <Avatar size="4" {...avatar} />}
 
-        <h3 className="max-w-full truncate text-sm text-gray-950 dark:text-gray-200">
+        <h3 className="text-agentprism-muted-foreground max-w-full truncate text-sm">
           {trace.name}
         </h3>
       </div>
@@ -27,7 +27,6 @@ export const TraceListItemHeader = ({
       <div className="flex items-center gap-2">
         <Badge
           size="4"
-          theme="gray"
           variant="outline"
           label={
             trace.spansCount === 1 ? "1 span" : `${trace.spansCount} spans`

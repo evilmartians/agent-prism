@@ -45,11 +45,10 @@ export const TraceList = ({
             expanded ? "opacity-100" : "hidden opacity-0",
           )}
         >
-          <h2 className="dark:text-gray-200">Traces</h2>
+          <h2 className="text-agentprism-muted-foreground">Traces</h2>
 
           <Badge
             size="5"
-            theme="gray"
             aria-label={`Total number of traces: ${traces.length}`}
             label={traces.length}
           />
@@ -64,11 +63,11 @@ export const TraceList = ({
       </header>
 
       {expanded && (
-        <ul className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200 dark:border-gray-800">
+        <ul className="border-agentprism-border flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border">
           <div className="flex-1 overflow-y-auto">
             {traces.map((trace) => (
               <li
-                className="w-full list-none border-b-gray-200 dark:border-b-gray-900 [&:not(:last-child)]:border-b"
+                className="border-agentprism-border w-full list-none border-b [&:not(:last-child)]:border-b"
                 key={trace.id}
               >
                 <TraceListItem

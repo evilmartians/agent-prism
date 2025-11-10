@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Badge, BadgeSource } from "@evilmartians/agent-prism-ui";
+import { SpanBadge, SpanBadgeSource } from "@evilmartians/agent-prism-ui";
 import {
   Description,
   Primary,
@@ -10,8 +10,8 @@ import {
 } from "@storybook/blocks";
 
 const meta = {
-  title: "Atoms/Badge",
-  component: Badge,
+  title: "Atoms/SpanBadge",
+  component: SpanBadge,
   parameters: {
     layout: "centered",
     docs: {
@@ -21,52 +21,52 @@ const meta = {
           <Primary />
           <Controls />
           <Stories />
-          <Source code={BadgeSource} language="tsx" />
+          <Source code={SpanBadgeSource} language="tsx" />
         </>
       ),
     },
   },
   tags: ["autodocs"],
   argTypes: {
+    category: {
+      control: { type: "select" },
+      options: [
+        "llm_call",
+        "tool_execution",
+        "agent_invocation",
+        "chain_operation",
+        "retrieval",
+        "embedding",
+        "create_agent",
+        "span",
+        "event",
+        "guardrail",
+        "unknown",
+      ],
+      description: "The category of the span which avatar is associated with",
+      defaultValue: "llm_call",
+    },
     size: {
       control: { type: "select" },
       options: ["4", "5", "6", "7"],
       description: "The size of the badge",
       defaultValue: "5",
     },
-    label: {
-      control: "text",
-      description: "The content of the badge",
-    },
   },
-} satisfies Meta<typeof Badge>;
+} satisfies Meta<typeof SpanBadge>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    label: "Badge",
+    category: "llm_call",
   },
 };
 
 export const Size: Story = {
   args: {
-    label: "Small",
+    category: "llm_call",
     size: "7",
-  },
-};
-
-export const IconStart: Story = {
-  args: {
-    label: "Start",
-    iconStart: <span>✓</span>,
-  },
-};
-
-export const IconEnd: Story = {
-  args: {
-    label: "End",
-    iconEnd: <span>→</span>,
   },
 };

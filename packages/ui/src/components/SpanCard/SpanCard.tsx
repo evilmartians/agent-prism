@@ -14,7 +14,6 @@ import type { SpanCardConnectorType } from "./SpanCardConnector";
 
 import { Avatar } from "../Avatar";
 import { BrandLogo } from "../BrandLogo";
-import { getSpanCategoryTheme } from "../shared";
 import { SpanStatus } from "../SpanStatus";
 import { SpanCardBadges } from "./SpanCardBadges";
 import { SpanCardConnector } from "./SpanCardConnector";
@@ -256,6 +255,7 @@ const SpanCardChildren: FC<{
                         children: <BrandLogo brand={brand.type} />,
                         size: "4",
                         rounded: "sm",
+                        category: child.type,
                       }
                     : undefined
                 }
@@ -360,9 +360,9 @@ export const SpanCard: FC<SpanCardProps> = ({
           className={cn(
             "relative grid w-full",
             state.isSelected &&
-              "before:absolute before:-top-2 before:h-2 before:w-full before:bg-gray-100/75 before:dark:bg-gray-900/75",
+              "before:bg-agentprism-muted/75 before:absolute before:-top-2 before:h-2 before:w-full",
             state.isSelected &&
-              "bg-gradient-to-b from-gray-100/75 to-gray-100/75 dark:from-gray-900/75 dark:to-gray-900/75",
+              "from-agentprism-muted/75 to-agentprism-muted/75 bg-gradient-to-b",
           )}
           style={{
             gridTemplateColumns,
@@ -414,7 +414,7 @@ export const SpanCard: FC<SpanCardProps> = ({
               {avatar && <Avatar size="4" {...avatar} />}
 
               <h3
-                className="max-w-32 truncate text-sm leading-[14px] text-gray-900 dark:text-gray-200"
+                className="text-agentprism-foreground max-w-32 truncate text-sm leading-[14px]"
                 title={data.title}
               >
                 {data.title}
@@ -431,14 +431,13 @@ export const SpanCard: FC<SpanCardProps> = ({
               )}
 
               <SpanCardTimeline
-                theme={getSpanCategoryTheme(data.type)}
                 minStart={minStart}
                 maxEnd={maxEnd}
                 spanCard={data}
               />
 
               <div className="flex items-center gap-2">
-                <span className="inline-block w-14 flex-1 shrink-0 whitespace-nowrap px-1 text-right text-xs text-black dark:text-white">
+                <span className="text-agentprism-foreground inline-block w-14 flex-1 shrink-0 whitespace-nowrap px-1 text-right text-xs">
                   {formatDuration(durationMs)}
                 </span>
 

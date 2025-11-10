@@ -53,28 +53,23 @@ const meta = {
       description: "The border radius of the avatar",
       defaultValue: "full",
     },
-    bgColor: {
+    category: {
       control: { type: "select" },
       options: [
-        "gray",
-        "red",
-        "orange",
-        "yellow",
-        "teal",
-        "indigo",
-        "purple",
-        "sky",
-        "cyan",
-        "emerald",
+        "llm_call",
+        "tool_execution",
+        "agent_invocation",
+        "chain_operation",
+        "retrieval",
+        "embedding",
+        "create_agent",
+        "span",
+        "event",
+        "guardrail",
+        "unknown",
       ],
-      description: "Background color theme for the letter avatar",
-      defaultValue: "gray",
-    },
-    textColor: {
-      control: { type: "select" },
-      options: ["white", "black"],
-      description: "Text color for the letter avatar",
-      defaultValue: "white",
+      description: "The category of the span which avatar is associated with",
+      defaultValue: "llm_call",
     },
   },
 } satisfies Meta<typeof Avatar>;
@@ -86,13 +81,14 @@ export const Default: Story = {
   args: {
     src: "https://i.pravatar.cc/150?img=3",
     alt: "Sarah Johnson",
+    category: "llm_call",
   },
 };
 
 export const Size: Story = {
   args: {
     alt: "Large",
-    bgColor: "indigo",
+    category: "llm_call",
     size: "16",
   },
 };
@@ -101,29 +97,28 @@ export const Letter: Story = {
   args: {
     letter: "JD",
     alt: "John Doe",
-    bgColor: "indigo",
+    category: "agent_invocation",
   },
 };
 
 export const BgColor: Story = {
   args: {
     alt: "Red Avatar",
-    bgColor: "red",
+    category: "guardrail",
   },
 };
 
 export const TextColor: Story = {
   args: {
     alt: "Black Text",
-    bgColor: "yellow",
-    textColor: "black",
+    category: "tool_execution",
   },
 };
 
 export const Rounded: Story = {
   args: {
     alt: "Square",
-    bgColor: "purple",
+    category: "chain_operation",
     rounded: "none",
   },
 };
@@ -132,5 +127,6 @@ export const FailedToLoad: Story = {
   args: {
     alt: "Failed to load",
     src: "that-does-not-exist.jpg",
+    category: "unknown",
   },
 };

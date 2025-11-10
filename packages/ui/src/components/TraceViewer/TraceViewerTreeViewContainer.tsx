@@ -42,18 +42,13 @@ export const TraceViewerTreeViewContainer = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {selectedTrace.badges?.map((badge, index) => (
-            <Badge
-              key={index}
-              theme={badge.theme}
-              size="4"
-              label={badge.label}
-            />
+            <Badge key={index} size="4" label={badge.label} />
           ))}
         </div>
       </div>
     )}
 
-    <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-md bg-white dark:bg-gray-950">
+    <div className="bg-agentprism-background flex min-h-0 flex-1 flex-col overflow-hidden rounded-md">
       <TraceViewerSearchAndControls
         searchValue={searchValue}
         setSearchValue={setSearchValue}
@@ -62,7 +57,7 @@ export const TraceViewerTreeViewContainer = ({
       />
       <div className="min-h-0 flex-1 overflow-y-auto">
         {filteredSpans.length === 0 ? (
-          <div className="p-3 text-center text-gray-600 dark:text-gray-200">
+          <div className="text-agentprism-muted-foreground p-3 text-center">
             No spans found
           </div>
         ) : (

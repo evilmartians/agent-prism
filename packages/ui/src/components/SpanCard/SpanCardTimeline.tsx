@@ -1,34 +1,34 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type {
+  TraceSpan,
+  TraceSpanCategory,
+} from "@evilmartians/agent-prism-types";
 
 import { getTimelineData } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 
-import type { ColorVariant } from "../shared";
-
 interface SpanCardTimelineProps {
   spanCard: TraceSpan;
-  theme: ColorVariant;
   minStart: number;
   maxEnd: number;
   className?: string;
 }
 
-const timelineBgColors: Record<ColorVariant, string> = {
-  purple: "bg-purple-500",
-  indigo: "bg-indigo-500",
-  orange: "bg-orange-500",
-  teal: "bg-teal-500",
-  cyan: "bg-cyan-500",
-  sky: "bg-sky-500",
-  yellow: "bg-yellow-500",
-  emerald: "bg-emerald-500",
-  red: "bg-red-500",
-  gray: "bg-gray-500",
+const timelineBgColors: Record<TraceSpanCategory, string> = {
+  llm_call: "bg-agentprism-timeline-llm",
+  agent_invocation: "bg-agentprism-timeline-agent",
+  tool_execution: "bg-agentprism-timeline-tool",
+  chain_operation: "bg-agentprism-timeline-chain",
+  retrieval: "bg-agentprism-timeline-retrieval",
+  embedding: "bg-agentprism-timeline-embedding",
+  guardrail: "bg-agentprism-timeline-guardrail",
+  create_agent: "bg-agentprism-timeline-create-agent",
+  span: "bg-agentprism-timeline-span",
+  event: "bg-agentprism-timeline-event",
+  unknown: "bg-agentprism-timeline-unknown",
 };
 
 export const SpanCardTimeline = ({
   spanCard,
-  theme,
   minStart,
   maxEnd,
   className,
@@ -42,13 +42,13 @@ export const SpanCardTimeline = ({
   return (
     <span
       className={cn(
-        "relative flex h-4 min-w-20 flex-1 rounded-md bg-gray-200 dark:bg-gray-900",
+        "bg-agentprism-secondary relative flex h-4 min-w-20 flex-1 rounded-md",
         className,
       )}
     >
       <span className="pointer-events-none absolute inset-x-1 top-1/2 h-1.5 -translate-y-1/2">
         <span
-          className={`absolute h-full rounded-sm ${timelineBgColors[theme]}`}
+          className={`absolute h-full rounded-sm ${timelineBgColors[spanCard.type]}`}
           style={{
             left: `${startPercent}%`,
             width: `${widthPercent}%`,

@@ -17,7 +17,6 @@ export const TimestampBadge = ({
   return (
     <Badge
       variant="outline"
-      theme="gray"
       size={size}
       {...rest}
       label={formatTimestamp(timestamp)}

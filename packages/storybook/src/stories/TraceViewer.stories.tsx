@@ -61,7 +61,6 @@ const data: TraceViewerData[] = [
     badges: [
       {
         label: "app: dev-chatbot",
-        theme: "sky",
       },
     ],
   },
@@ -78,7 +77,6 @@ const data: TraceViewerData[] = [
     badges: [
       {
         label: "app: staging-assistant",
-        theme: "sky",
       },
     ],
   },
@@ -95,7 +93,6 @@ const data: TraceViewerData[] = [
     badges: [
       {
         label: "app: prod-analyzer",
-        theme: "sky",
       },
     ],
   },
@@ -111,7 +108,6 @@ const data: TraceViewerData[] = [
     badges: [
       {
         label: "app: demo-qa",
-        theme: "sky",
       },
     ],
     spanCardViewOptions: {
@@ -130,7 +126,6 @@ const data: TraceViewerData[] = [
     badges: [
       {
         label: "app: demo-qa",
-        theme: "sky",
       },
     ],
     spanCardViewOptions: {
@@ -149,7 +144,6 @@ const data: TraceViewerData[] = [
     badges: [
       {
         label: "app: demo-qa",
-        theme: "sky",
       },
     ],
     spanCardViewOptions: {

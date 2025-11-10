@@ -60,6 +60,7 @@ export const TreeView: FC<TreeViewProps> = ({
                       children: <BrandLogo brand={brand.type} />,
                       size: "4",
                       rounded: "sm",
+                      category: span.type,
                     }
                   : undefined
               }

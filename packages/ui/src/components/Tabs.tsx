@@ -18,21 +18,20 @@ const BASE_TRIGGER =
 
 const THEMES = {
   underline: {
-    list: "h-9 flex border-b border-gray-200 dark:border-gray-800",
+    list: "h-9 flex border-b border-agentprism-border",
     trigger: `w-full justify-center px-3 ${BASE_TRIGGER} 
-      text-gray-600 hover:text-gray-900 data-[state=active]:text-gray-900
-      dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:text-gray-200
-      border-b-2 border-transparent data-[state=active]:border-gray-900 
-      dark:data-[state=active]:border-gray-300 -mb-[2px]
-      hover:border-gray-300 dark:hover:border-gray-600`,
+      text-agentprism-secondary-foreground data-[state=active]:text-agentprism-foreground
+      border-b-2 border-transparent data-[state=active]:border-agentprism-border-inverse
+      -mb-[2px]
+      data-[state=inactive]:[&:not(:disabled)]:hover:border-agentprism-border-inverse/20
+      data-[state=inactive]:[&:not(:disabled)]:hover:text-agentprism-muted-foreground`,
   },
   pill: {
-    list: "h-9 inline-flex gap-1 p-1 bg-gray-100 dark:bg-gray-900 rounded-lg",
+    list: "h-9 inline-flex gap-1 p-1 bg-agentprism-secondary rounded-lg",
     trigger: `px-3 ${BASE_TRIGGER} rounded-md
-      text-gray-600 hover:text-gray-900 data-[state=active]:text-gray-900
-      dark:text-gray-400 dark:hover:text-gray-200 dark:data-[state=active]:text-gray-200
-      hover:bg-gray-50 data-[state=active]:bg-white data-[state=active]:shadow-sm
-      dark:hover:bg-gray-700 dark:data-[state=active]:bg-gray-600 dark:data-[state=active]:shadow-none`,
+      text-agentprism-muted-foreground data-[state=active]:text-agentprism-foreground
+      data-[state=inactive]:[&:not(:disabled)]:hover:bg-agentprism-background/50 data-[state=active]:bg-agentprism-background data-[state=active]:shadow-sm
+      dark:data-[state=active]:shadow-none`,
   },
 } as const;
 
@@ -128,7 +127,7 @@ export const Tabs = <T extends string = string>({
             )}
           >
             {item.icon && (
-              <span className="mr-2 text-gray-500 group-data-[state=active]:text-current dark:text-gray-400">
+              <span className="text-agentprism-secondary-foreground mr-2 group-data-[state=active]:text-current">
                 {item.icon}
               </span>
             )}

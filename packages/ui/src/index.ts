@@ -28,6 +28,9 @@ export { default as SearchInputSource } from "./components/SearchInput.tsx?raw";
 export { SpanStatus } from "./components/SpanStatus";
 export { default as SpanStatusSource } from "./components/SpanStatus.tsx?raw";
 
+export { SpanBadge } from "./components/SpanBadge";
+export { default as SpanBadgeSource } from "./components/SpanBadge.tsx?raw";
+
 export { TokensBadge } from "./components/TokensBadge";
 export { default as TokensBadgeSource } from "./components/TokensBadge.tsx?raw";
 
@@ -65,5 +68,7 @@ export { TraceViewerTreeViewContainer } from "./components/TraceViewer/TraceView
 
 export { TimestampBadge } from "./components/TimestampBadge";
 export { default as TimestampBadgeSource } from "./components/TimestampBadge.tsx?raw";
+
+export { ThemePalette } from "./theming/ThemePalette";
 
 export { useIsMobile } from "./components/shared";
