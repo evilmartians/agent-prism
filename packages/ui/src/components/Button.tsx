@@ -12,6 +12,7 @@ type ButtonSize = Extract<
 >;
 
 type ButtonVariant =
+  | "brand"
   | "primary"
   | "outlined"
   | "secondary"
@@ -34,6 +35,7 @@ const sizeClasses = {
 };
 
 const variantClasses: Record<ButtonVariant, string> = {
+  brand: "text-agentprism-brand-foreground bg-agentprism-brand",
   primary: "text-agentprism-primary-foreground bg-agentprism-primary",
   outlined:
     "border border bg-transparent text-agentprism-foreground border-agentprism-foreground",
