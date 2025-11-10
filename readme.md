@@ -1,10 +1,10 @@
 # AgentPrism
 
-AgentPrism is an open source library of React components for visualizing traces from AI agents. Agentic traces contain perfect information about an agent’s behavior with every plan, action, and retry. But that information gets lost in a sea of JSON. 
+AgentPrism is an open source library of React components for visualizing traces from AI agents. Agentic traces contain perfect information about an agent’s behavior with every plan, action, and retry. But that information gets lost in a sea of JSON.
 
-Use AgentPrism and turn traces into clear, visual diagrams for debugging AI agents. Plug in OpenTelemetry data and see your agent’s process unfold: display LLM calls, tool executions, and agent workflows in a hierarchical timeline. 
+Use AgentPrism and turn traces into clear, visual diagrams for debugging AI agents. Plug in OpenTelemetry data and see your agent’s process unfold: display LLM calls, tool executions, and agent workflows in a hierarchical timeline.
 
-**⚠️ Alpha Release:** *This library is under active development. APIs may change*.
+**⚠️ Alpha Release:** _This library is under active development. APIs may change_.
 
 Read this post for [more AgentPrism info and testimonials](https://evilmartians.com/chronicles/debug-ai-fast-agent-prism-open-source-library-visualize-agent-traces?utm_source=github&utm_medium=social).
 
@@ -265,6 +265,29 @@ TraceViewer (complete solution)
 ```
 
 Use `TraceViewer` for quick setup, or compose individual components for custom layouts.
+
+## Theming
+
+We use semantic tokens for all of the colors. Along with the the components `theme` folder will be cloned. It has 2 files:
+
+- `theme.css` - you need to import this file anywhere in your app for your bundler to process it. It will setup css variables on the `:root`
+- `index.ts` - it exports few types and `agentPrismTailwindColors`. You need to import `agentPrismTailwindColors` in your tailwind config and extend it, so that our semantic tokens will be supported by tailwind. Like this:
+
+```jsx
+import { agentPrismTailwindColors } from "./src/components/theme";
+
+export default {
+  theme: {
+    extend: {
+      colors: agentPrismTailwindColors,
+    },
+  },
+};
+```
+
+In order to tailor `agent-prism` to your needs, you can change values of semantic tokens in `theme.css`. Default values have been taken from tailwind colors (and you will see a comment next to each token), but you are free to change it however you desire.
+
+Each token is defined by 3 values, which are Lightness, Chroma and Hue of a color in Oklch format. We need to write it like this, so we can later use `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)` in tailwind colors config. That way it would be possible to use opacity syntax. For example - `bg-agentprism-primary/50`.
 
 ## Contributing
 
