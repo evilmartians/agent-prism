@@ -95,6 +95,22 @@ import cn from "classnames";
 
 - When creating a new util or data adapter in `packages/data`, add tests for it. We use [Vitest](https://vitest.dev) for testing.
 
+## Theming
+
+We use semantic tokens, and theme is provided as `theme.css` and `index.ts` in `packages/ui/components/theme`. These 2 files are copied to user's project along with the rest of the components. How does it work:
+
+- In `theme.css` we use syntax `--agentprism-tokenName: l c h;`, where l, c and h are Lightness, Chroma and Hue values of color in oklch format.
+- Later in `index.ts` we create tailwind theme object, where each entry is `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)`. This way we will use variable's value for each token
+- `agentPrismTailwindColors` are exported for use in tailwind config, and you need to import `theme.css` in your project (usually in a root file)
+
+Why not define colors as `oklch(l c h)` in `theme.css`, and only use 3 numbers? We need this in order for opacity syntax (e.g. `text-gray/50`) to work, that's why we pass `<alpha-value>` when defining variable for tailwind config.
+
+So to edit theme you will have to edit `theme.css` and `index.ts` by hand. To make our life a bit easier, we have some scripts in `packages/ui/src/theming/scripts`, and `pnpm run theme:generate` command (should be run from the root). It will take `agentPrismTheme` object from the `packages/ui/src/theming/theme.ts` and generate both `theme.css` and `index.ts` out of it.
+
+Inisde this object we have categories, and do some extra work to use tokens from tailwind. It was done in this format to leave category comments in `theme.css` as well as comments like `/* gray.500 */` after each token. Also tokens are displayed in `ThemePalette`.
+
+While our approach allows users to override the values in any way they want, we used tailwind tokens for the default theme for simplicity.
+
 ## Requesting new components
 
 If you want new component to be added to the library, don't hesitate to create an issue on GitHub and start a discussion.

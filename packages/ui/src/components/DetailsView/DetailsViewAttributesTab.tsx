@@ -25,7 +25,7 @@ export const DetailsViewAttributesTab = ({
   if (!data.attributes || data.attributes.length === 0) {
     return (
       <div className="p-6 text-center">
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-agentprism-muted-foreground">
           No attributes available for this span.
         </p>
       </div>
@@ -68,12 +68,12 @@ export const DetailsViewAttributesTab = ({
         return (
           <div
             key={`${attribute.key}-${index}`}
-            className="rounded-md border border-gray-200 p-4 dark:border-gray-800"
+            className="border-agentprism-border rounded-md border p-4"
           >
-            <dt className="mb-1 text-sm text-gray-500 dark:text-gray-400">
+            <dt className="text-agentprism-muted-foreground mb-1 text-sm">
               {attribute.key}
             </dt>
-            <dd className="break-words text-sm text-gray-900 dark:text-gray-100">
+            <dd className="text-agentprism-foreground break-words text-sm">
               {simpleValue}
             </dd>
           </div>

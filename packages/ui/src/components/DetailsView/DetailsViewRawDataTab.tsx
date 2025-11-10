@@ -12,7 +12,7 @@ interface RawDataTabProps {
 export const DetailsViewRawDataTab = ({
   data,
 }: RawDataTabProps): ReactElement => (
-  <div className="rounded-md border border-gray-200 bg-transparent dark:border-gray-800">
+  <div className="border-agentprism-border rounded-md border bg-transparent">
     <div className="relative">
       <div className="pointer-events-none sticky top-0 z-10 flex justify-end p-1.5">
         <div className="pointer-events-auto">

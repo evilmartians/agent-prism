@@ -2,6 +2,8 @@ import { type FC } from "react";
 import JSONPretty from "react-json-pretty";
 import colors from "tailwindcss/colors";
 
+import { agentPrismPrefix } from "../theme";
+
 export interface JsonViewerProps {
   content: string;
   id: string;
@@ -19,10 +21,10 @@ export const DetailsViewJsonOutput: FC<JsonViewerProps> = ({
       className={`overflow-x-hidden rounded-xl p-4 text-left ${className}`}
       data={content}
       id={`json-pretty-${id}`}
-      keyStyle={`color: ${colors.blue[600]};`}
-      mainStyle={`color: ${colors.gray[400]}; font-size: 12px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;`}
-      stringStyle={`color: ${colors.red[800]};`}
-      valueStyle={`color: ${colors.red[800]};`}
+      keyStyle={`color: oklch(var(--${agentPrismPrefix}-code-key));`}
+      mainStyle={`color: oklch(var(--${agentPrismPrefix}-code-base)); font-size: 12px; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;`}
+      stringStyle={`color: oklch(var(--${agentPrismPrefix}-code-string));`}
+      valueStyle={`color: oklch(var(--${agentPrismPrefix}-code-number));`}
     />
   );
 };

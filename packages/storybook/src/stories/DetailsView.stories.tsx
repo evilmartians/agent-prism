@@ -106,8 +106,8 @@ export const Avatar: Story = {
     data: mockSpanData,
     avatar: {
       alt: "Service Avatar",
-      bgColor: "indigo",
       letter: "US",
+      category: "llm_call",
     },
   },
 };

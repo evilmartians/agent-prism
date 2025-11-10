@@ -24,7 +24,7 @@ export const DetailsViewContentViewer = ({
 }: DetailsViewContentViewerProps): ReactElement => {
   if (!content) {
     return (
-      <p className="p-3 text-sm italic text-gray-500 dark:text-gray-400">
+      <p className="text-agentprism-muted-foreground p-3 text-sm italic">
         No data available
       </p>
     );
@@ -32,7 +32,7 @@ export const DetailsViewContentViewer = ({
 
   return (
     <div
-      className={`relative rounded-lg border border-gray-200 dark:border-gray-800 ${className}`}
+      className={`border-agentprism-border relative rounded-lg border ${className}`}
     >
       <div className="absolute right-1.5 top-1.5 z-10">
         <CopyButton label={label} content={content} />
@@ -40,8 +40,8 @@ export const DetailsViewContentViewer = ({
       {mode === "json" && parsedContent ? (
         <DetailsViewJsonOutput content={parsedContent} id={id} />
       ) : (
-        <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-          <pre className="overflow-x-auto whitespace-pre-wrap text-left font-mono text-sm text-gray-900 dark:text-gray-100">
+        <div className="bg-agentprism-background rounded-lg p-4">
+          <pre className="text-agentprism-foreground overflow-x-auto whitespace-pre-wrap text-left font-mono text-sm">
             {content}
           </pre>
         </div>

@@ -160,7 +160,7 @@ export const Avatar: Story = {
     data: mockTraceSpan,
     avatar: {
       alt: "LLM Service",
-      bgColor: "purple",
+      category: "llm_call",
       size: "4",
       letter: "AI",
     },

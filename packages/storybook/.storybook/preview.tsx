@@ -1,6 +1,7 @@
 import type { Preview } from "@storybook/react-vite";
 
 import "@evilmartians/agent-prism-ui/styles.css";
+import "@evilmartians/agent-prism-ui/theme.css";
 
 import "./styles.css";
 

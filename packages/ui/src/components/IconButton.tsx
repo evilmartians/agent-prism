@@ -40,7 +40,7 @@ const sizeClasses: Record<IconButtonSize, string> = {
 };
 
 const variantClasses: Record<IconButtonVariant, string> = {
-  default: "border border-gray-200 bg-transparent dark:border-gray-800",
+  default: "border border-agentprism-border bg-transparent",
   ghost: "bg-transparent",
 };
 
@@ -64,8 +64,8 @@ export const IconButton = ({
         "inline-flex aspect-square shrink-0 items-center justify-center",
         "rounded-md",
         variantClasses[variant],
-        "text-gray-500 dark:text-gray-400",
-        "hover:bg-gray-200 dark:hover:bg-gray-800",
+        "text-agentprism-secondary-foreground",
+        "hover:bg-agentprism-secondary",
       )}
       {...rest}
     >

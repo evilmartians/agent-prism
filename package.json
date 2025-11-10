@@ -15,7 +15,8 @@
     "eslint": "pnpm dlx eslint . --fix",
     "eslint:check": "pnpm dlx eslint .",
     "tsc": "pnpm run --parallel tsc",
-    "test": "pnpm run --parallel test"
+    "test": "pnpm run --parallel test",
+    "theme:generate": "pnpm --filter @evilmartians/agent-prism-ui generate-theme-files"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",

@@ -49,8 +49,8 @@ export const TraceListItem = ({
         "flex flex-col gap-2 p-4",
         "cursor-pointer",
         isSelected
-          ? "bg-gray-100 dark:bg-gray-900"
-          : "bg-white dark:bg-gray-950",
+          ? "bg-agentprism-secondary/75 dark:bg-agentprism-muted/80"
+          : "bg-agentprism-background hover:bg-agentprism-secondary/45 dark:hover:bg-agentprism-muted/70",
       )}
       role="button"
       tabIndex={0}
@@ -62,7 +62,7 @@ export const TraceListItem = ({
 
       <div className="flex flex-wrap items-center gap-2">
         {showDescription && (
-          <span className="mr-4 max-w-full truncate text-sm text-gray-600 dark:text-gray-400">
+          <span className="text-agentprism-muted-foreground mr-4 max-w-full truncate text-sm">
             {agentDescription}
           </span>
         )}
@@ -74,7 +74,7 @@ export const TraceListItem = ({
         )}
 
         {badges?.map((badge, index) => (
-          <Badge key={index} theme={badge.theme} size="4" label={badge.label} />
+          <Badge key={index} size="4" label={badge.label} />
         ))}
 
         {typeof startTime === "number" && (

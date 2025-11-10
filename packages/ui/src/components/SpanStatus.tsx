@@ -12,19 +12,20 @@ export type StatusProps = ComponentPropsWithRef<"div"> & {
 };
 
 const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {
-  success: "bg-green-500 dark:bg-green-500",
-  error: "bg-red-500 dark:bg-red-500",
-  pending: "bg-violet-500 dark:bg-violet-500",
-  warning: "bg-yellow-500 dark:bg-yellow-500",
+  success: "bg-agentprism-success",
+  error: "bg-agentprism-error",
+  pending: "bg-agentprism-pending",
+  warning: "bg-agentprism-warning",
 };
 
 const STATUS_COLORS_BADGE: Record<TraceSpanStatus, string> = {
-  success: "bg-green-100 dark:bg-green-950 text-green-600 dark:text-green-400",
-  error: "bg-red-100 dark:bg-red-950 text-red-600 dark:text-red-400",
+  success:
+    "bg-agentprism-success-muted text-agentprism-success-muted-foreground",
+  error: "bg-agentprism-error-muted text-agentprism-error-muted-foreground",
   pending:
-    "bg-violet-100 dark:bg-violet-950 text-violet-600 dark:text-violet-400",
+    "bg-agentprism-pending-muted text-agentprism-pending-muted-foreground",
   warning:
-    "bg-yellow-100 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400",
+    "bg-agentprism-warning-muted text-agentprism-warning-muted-foreground",
 };
 
 export const SpanStatus = ({

@@ -1,4 +1,5 @@
 export const formatDuration = (durationMs: number): string => {
+  if (durationMs <= 0) return "0ms";
   if (durationMs < 1000) return `${Math.round(durationMs)}ms`;
   if (durationMs < 60000) return `${Math.round(durationMs / 1000)}s`;
   if (durationMs < 3600000) {
