@@ -20,7 +20,7 @@ const THEMES = {
   underline: {
     list: "h-9 flex border-b border-agentprism-border",
     trigger: `w-full justify-center px-3 ${BASE_TRIGGER} 
-      text-agentprism-secondary-foreground data-[state=active]:text-agentprism-accent-foreground
+      text-agentprism-secondary-foreground data-[state=active]:text-agentprism-foreground
       border-b-2 border-transparent data-[state=active]:border-agentprism-border-inverse
       -mb-[2px]
       data-[state=inactive]:[&:not(:disabled)]:hover:border-agentprism-border-inverse/20
@@ -29,7 +29,7 @@ const THEMES = {
   pill: {
     list: "h-9 inline-flex gap-1 p-1 bg-agentprism-secondary rounded-lg",
     trigger: `px-3 ${BASE_TRIGGER} rounded-md
-      text-agentprism-muted-foreground data-[state=active]:text-agentprism-accent-foreground
+      text-agentprism-muted-foreground data-[state=active]:text-agentprism-foreground
       data-[state=inactive]:[&:not(:disabled)]:hover:bg-agentprism-background/50 data-[state=active]:bg-agentprism-background data-[state=active]:shadow-sm
       dark:data-[state=active]:shadow-none`,
   },

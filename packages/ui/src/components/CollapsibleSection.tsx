@@ -87,19 +87,16 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
           tabIndex={0}
           role="button"
           className={cn(
-            "text-agentprism-accent-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
+            "text-agentprism-muted-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
             triggerClassName,
           )}
           onKeyDown={handleKeyDown}
           aria-expanded={open}
           aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
         >
-          <div className="flex min-w-0 flex-1 items-center gap-2">
+          <div className="text-agentprism-muted-foreground flex min-w-0 flex-1 items-center gap-2">
             <ChevronDown
-              className={cn(
-                "text-agentprism-muted-foreground h-3 w-3 shrink-0 -rotate-90",
-                open && "rotate-0",
-              )}
+              className={cn("h-3 w-3 shrink-0 -rotate-90", open && "rotate-0")}
             />
             <span
               className="min-w-0 truncate text-sm font-medium"
@@ -116,6 +113,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       <Collapsible.Content
         className={cn(
           "data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
+          "text-agentprism-muted-foreground",
           contentClassName,
         )}
       >
