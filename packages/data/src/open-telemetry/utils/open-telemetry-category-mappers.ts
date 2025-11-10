@@ -4,7 +4,7 @@ import {
   type OpenTelemetrySpan,
 } from "@evilmartians/agent-prism-types";
 
-import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value";
+import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export const openTelemetryCategoryMappers = {
   isHttpCall: (span: OpenTelemetrySpan): boolean => {

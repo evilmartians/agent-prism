@@ -49,7 +49,7 @@ importers:
   packages/data:
     dependencies:
       '@evilmartians/agent-prism-types':
-        specifier: workspace:^
+        specifier: file:../types
         version: link:../types
     devDependencies:
       '@eslint/js':
