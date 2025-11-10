@@ -20,7 +20,8 @@
   "scripts": {
     "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck",
     "build": "tailwind -i ./src/index.css -o ./dist/styles.css --minify",
-    "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch"
+    "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch",
+    "generate-theme-files": "tsx ./src/theming/scripts/generate-theme-files.ts && prettier --write ./src/components/theme"
   },
   "dependencies": {
     "@evilmartians/agent-prism-data": "workspace:^",
@@ -46,6 +47,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "tsx": "4.20.6",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4"
