@@ -14,14 +14,7 @@ export const TimestampBadge = ({
   size,
   ...rest
 }: TimestampBadgeProps) => {
-  return (
-    <Badge
-      variant="outline"
-      size={size}
-      {...rest}
-      label={formatTimestamp(timestamp)}
-    />
-  );
+  return <Badge size={size} {...rest} label={formatTimestamp(timestamp)} />;
 };
 
 function formatTimestamp(timestamp: number): string {
