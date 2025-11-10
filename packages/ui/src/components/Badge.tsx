@@ -27,12 +27,6 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
   label: ReactNode;
 
   /**
-   * The visual variant of the badge
-   * @default "solid"
-   */
-  variant?: "solid" | "outline";
-
-  /**
    * The size of the badge
    * @default "md"
    */

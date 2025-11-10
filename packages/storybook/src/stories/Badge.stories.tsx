@@ -28,29 +28,6 @@ const meta = {
   },
   tags: ["autodocs"],
   argTypes: {
-    theme: {
-      control: { type: "select" },
-      options: [
-        "gray",
-        "red",
-        "orange",
-        "yellow",
-        "teal",
-        "indigo",
-        "purple",
-        "sky",
-        "cyan",
-        "emerald",
-      ],
-      description: "The color theme of the badge",
-      defaultValue: "gray",
-    },
-    variant: {
-      control: { type: "select" },
-      options: ["solid", "outline"],
-      description: "The visual variant of the badge",
-      defaultValue: "solid",
-    },
     size: {
       control: { type: "select" },
       options: ["4", "5", "6", "7"],
@@ -70,37 +47,19 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     label: "Badge",
-    theme: "gray",
   },
 };
 
 export const Size: Story = {
   args: {
     label: "Small",
-    theme: "indigo",
     size: "7",
-  },
-};
-
-export const Variant: Story = {
-  args: {
-    label: "Outline",
-    theme: "indigo",
-    variant: "outline",
-  },
-};
-
-export const Theme: Story = {
-  args: {
-    label: "Red",
-    theme: "red",
   },
 };
 
 export const IconStart: Story = {
   args: {
     label: "Start",
-    theme: "emerald",
     iconStart: <span>✓</span>,
   },
 };
@@ -108,7 +67,6 @@ export const IconStart: Story = {
 export const IconEnd: Story = {
   args: {
     label: "End",
-    theme: "orange",
     iconEnd: <span>→</span>,
   },
 };
