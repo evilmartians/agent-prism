@@ -39,7 +39,7 @@ npm install @evilmartians/agent-prism-data @evilmartians/agent-prism-types
 Install required UI dependencies:
 
 ```bash
-npm install @radix-ui/react-collapsible @radix-ui/react-tabs classnames lucide-react react-json-pretty
+npm install @radix-ui/react-collapsible @radix-ui/react-tabs classnames lucide-react react-json-pretty react-resizable-panels
 ```
 
 ## Quick Start
