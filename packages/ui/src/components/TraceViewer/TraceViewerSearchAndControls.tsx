@@ -2,7 +2,7 @@ import {
   CollapseAllButton,
   ExpandAllButton,
 } from "../CollapseAndExpandControls";
-import { SearchInput } from "../SearchInput.tsx";
+import { SearchInput } from "../SearchInput";
 
 export const TraceViewerSearchAndControls = ({
   searchValue,
