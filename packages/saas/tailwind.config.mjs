@@ -1,12 +1,15 @@
+import { agentPrismTailwindColors } from "@evilmartians/agent-prism-ui/theme";
+
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line no-undef
-module.exports = {
+export default {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@evilmartians/agent-prism-ui/src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: agentPrismTailwindColors,
+    },
   },
   plugins: [],
 };
