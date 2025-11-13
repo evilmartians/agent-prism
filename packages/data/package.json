@@ -21,7 +21,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@evilmartians/agent-prism-types": "file:../types"
+    "@evilmartians/agent-prism-types": "workspace:^"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
