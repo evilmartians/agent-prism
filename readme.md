@@ -268,10 +268,10 @@ Use `TraceViewer` for quick setup, or compose individual components for custom l
 
 ## Theming
 
-We use semantic tokens for all of the colors. Along with the the components `theme` folder will be cloned. It has 2 files:
+Use semantic tokens for colors. Components' `theme` folder has 2 files:
 
-- `theme.css` - you need to import this file anywhere in your app for your bundler to process it. It will setup css variables on the `:root`
-- `index.ts` - it exports few types and `agentPrismTailwindColors`. You need to import `agentPrismTailwindColors` in your tailwind config and extend it, so that our semantic tokens will be supported by tailwind. Like this:
+- `theme.css` - import anywhere for bundler to process. Sets CSS variables on `:root`
+- `index.ts` - exports types and `agentPrismTailwindColors`. Import in tailwind config:
 
 ```jsx
 import { agentPrismTailwindColors } from "./src/components/theme";
@@ -285,9 +285,9 @@ export default {
 };
 ```
 
-In order to tailor `agent-prism` to your needs, you can change values of semantic tokens in `theme.css`. Default values have been taken from tailwind colors (and you will see a comment next to each token), but you are free to change it however you desire.
+Customize by changing semantic token values in `theme.css`. Defaults from tailwind colors (commented), but fully customizable.
 
-Each token is defined by 3 values, which are Lightness, Chroma and Hue of a color in Oklch format. We need to write it like this, so we can later use `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)` in tailwind colors config. That way it would be possible to use opacity syntax. For example - `bg-agentprism-primary/50`.
+Each token: 3 values (Lightness, Chroma, Hue) in Oklch. Enables `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)` in tailwind for opacity syntax like `bg-agentprism-primary/50`.
 
 ## Contributing
 
