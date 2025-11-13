@@ -11,7 +11,12 @@
       "types": "./src/index.ts"
     },
     "./styles.css": "./dist/styles.css",
-    "./theme.css": "./src/components/theme/theme.css"
+    "./theme.css": "./src/components/theme/theme.css",
+    "./theme": {
+      "require": "./src/components/theme/index.ts",
+      "import": "./src/components/theme/index.ts",
+      "types": "./src/components/theme/index.ts"
+    }
   },
   "files": [
     "src",
