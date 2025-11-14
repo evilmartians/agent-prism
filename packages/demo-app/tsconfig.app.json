@@ -22,7 +22,11 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "paths": {
+      "@evilmartians/agent-prism-types": ["../types/src"],
+      "@evilmartians/agent-prism-data": ["../data/src"]
+    }
   },
   "include": ["src"]
 }

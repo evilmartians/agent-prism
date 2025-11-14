@@ -9,7 +9,7 @@ import type {
 
 import type { SpanAdapter } from "../types";
 
-import { getLangfuseAttributes } from "./utils/get-langfuse-attributes";
+import { getLangfuseAttributes } from "./utils/get-langfuse-attributes.js";
 
 export const langfuseSpanAdapter: SpanAdapter<
   LangfuseDocument,

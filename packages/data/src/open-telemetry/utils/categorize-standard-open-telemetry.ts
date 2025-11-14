@@ -3,7 +3,7 @@ import type {
   TraceSpanCategory,
 } from "@evilmartians/agent-prism-types";
 
-import { openTelemetryCategoryMappers } from "./open-telemetry-category-mappers";
+import { openTelemetryCategoryMappers } from "./open-telemetry-category-mappers.js";
 
 export function categorizeStandardOpenTelemetry(
   span: OpenTelemetrySpan,

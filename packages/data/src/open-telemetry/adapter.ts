@@ -12,13 +12,13 @@ import {
 
 import type { SpanAdapter } from "../types";
 
-import { categorizeOpenInference } from "./utils/categorize-open-inference";
-import { categorizeOpenTelemetryGenAI } from "./utils/categorize-open-telemetry-gen-ai";
-import { categorizeStandardOpenTelemetry } from "./utils/categorize-standard-open-telemetry";
-import { convertNanoTimestampToDate } from "./utils/convert-nano-timestamp-to-date";
-import { generateOpenTelemetrySpanTitle } from "./utils/generate-open-telemetry-span-title";
-import { getOpenTelemetryAttributeValue } from "./utils/get-open-telemetry-attribute-value";
-import { getOpenTelemetrySpanStandard } from "./utils/get-open-telemetry-span-standard";
+import { categorizeOpenInference } from "./utils/categorize-open-inference.js";
+import { categorizeOpenTelemetryGenAI } from "./utils/categorize-open-telemetry-gen-ai.js";
+import { categorizeStandardOpenTelemetry } from "./utils/categorize-standard-open-telemetry.js";
+import { convertNanoTimestampToDate } from "./utils/convert-nano-timestamp-to-date.js";
+import { generateOpenTelemetrySpanTitle } from "./utils/generate-open-telemetry-span-title.js";
+import { getOpenTelemetryAttributeValue } from "./utils/get-open-telemetry-attribute-value.js";
+import { getOpenTelemetrySpanStandard } from "./utils/get-open-telemetry-span-standard.js";
 
 export const openTelemetrySpanAdapter: SpanAdapter<
   OpenTelemetryDocument,
