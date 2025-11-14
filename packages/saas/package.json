@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "tsc": "tsc -p tsconfig.json --noEmit --skipLibCheck"
+    "tsc": "tsc -p tsconfig.dev.json --noEmit --skipLibCheck"
   },
   "dependencies": {
     "@evilmartians/agent-prism-data": "workspace:^",
