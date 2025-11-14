@@ -563,10 +563,10 @@ packages:
     peerDependencies:
       storybook: ^0.0.0-0 || ^9.0.0 || ^9.1.0-0 || ^9.2.0-0 || ^10.0.0-0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0
 
-  "@emnapi/runtime@1.7.0":
+  "@emnapi/runtime@1.7.1":
     resolution:
       {
-        integrity: sha512-oAYoQnCYaQZKVS53Fq23ceWMRxq5EhQsE0x0RdQ55jT7wagMu5k+fS39v1fiSLrtrLQlXwVINenqhLMtTrV/1Q==,
+        integrity: sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA==,
       }
 
   "@esbuild/aix-ppc64@0.25.12":
@@ -5446,7 +5446,7 @@ snapshots:
       - "@chromatic-com/cypress"
       - "@chromatic-com/playwright"
 
-  "@emnapi/runtime@1.7.0":
+  "@emnapi/runtime@1.7.1":
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -5671,7 +5671,7 @@ snapshots:
 
   "@img/sharp-wasm32@0.34.5":
     dependencies:
-      "@emnapi/runtime": 1.7.0
+      "@emnapi/runtime": 1.7.1
     optional: true
 
   "@img/sharp-win32-arm64@0.34.5":

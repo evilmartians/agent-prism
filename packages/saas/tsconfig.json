@@ -21,10 +21,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@evilmartians/agent-prism-types": ["../types/src"],
-      "@evilmartians/agent-prism-data": ["../data/src"],
-      "@evilmartians/agent-prism-ui": ["../ui/src"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "types.d.ts", ".next/types/**/*.ts"],

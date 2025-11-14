@@ -1,18 +1,15 @@
 {
-  "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "composite": true,
+    "target": "ES2022",
+    "module": "ESNext",
     "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "noEmit": false,
-    "allowImportingTsExtensions": false,
-    "verbatimModuleSyntax": false
+    "skipLibCheck": true
   },
-  "references": [{ "path": "../types/tsconfig.build.json" }],
   "include": ["src"],
   "exclude": ["src/**/*.test.ts"]
 }

@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "pnpm run --parallel dev",
-    "build": "pnpm run --parallel build",
+    "build": "pnpm --filter './packages/{types,data}' build && pnpm --filter './packages/{ui,demo-app,storybook,saas}' build",
     "deploy:storybook": "pnpm --filter @evilmartians/agent-prism-storybook build && firebase deploy --only hosting",
     "deploy:saas": "pnpm --filter saas build && firebase deploy --only hosting:ai-trace-explorer",
     "format": "pnpm exec prettier . --write",
@@ -16,7 +16,8 @@
     "eslint:check": "pnpm dlx eslint .",
     "tsc": "pnpm run --parallel tsc",
     "test": "pnpm run --parallel test",
-    "theme:generate": "pnpm --filter @evilmartians/agent-prism-ui generate-theme-files"
+    "theme:generate": "pnpm --filter @evilmartians/agent-prism-ui generate-theme-files",
+    "dist:rm": "pnpm -r exec rm -rf dist out"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
