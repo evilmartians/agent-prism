@@ -79,13 +79,3 @@ jobs:
           projectId: agent-prism-ui
           channelId: live
           target: agent-prism-ui
-
-      - name: Deploy SaaS to Firebase
-        if: github.ref == 'refs/heads/main'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_AI_TRACE_EXPLORER }}"
-          projectId: ai-trace-explorer
-          channelId: live
-          target: ai-trace-explorer
