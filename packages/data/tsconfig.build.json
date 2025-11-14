@@ -10,9 +10,10 @@
     "sourceMap": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "verbatimModuleSyntax": false,
-    "paths": {}
+    "verbatimModuleSyntax": false
   },
-  "references": [{ "path": "../types/tsconfig.build.json" }],
+  "references": [
+    { "path": "../types/tsconfig.build.json" }
+  ],
   "include": ["src"]
 }
