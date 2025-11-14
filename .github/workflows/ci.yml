@@ -51,6 +51,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build libraries
+        run: pnpm --filter "./packages/types" --filter "./packages/data" build
+
       - name: Run format check
         run: pnpm format
 
