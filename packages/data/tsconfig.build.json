@@ -12,6 +12,9 @@
     "allowImportingTsExtensions": false,
     "verbatimModuleSyntax": false
   },
-  "references": [{ "path": "../types/tsconfig.build.json" }],
-  "include": ["src"]
+  "references": [
+    { "path": "../types/tsconfig.build.json" }
+  ],
+  "include": ["src"],
+  "exclude": ["src/**/*.test.ts"]
 }
