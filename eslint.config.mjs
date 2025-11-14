@@ -28,6 +28,7 @@ export default defineConfig([
       "packages/demo-app/dist",
       "packages/storybook/storybook-static",
       "packages/data/dist",
+      "packages/types/dist",
     ],
   },
   {
