@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
+    "composite": true,
+    "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./src",
     "declaration": true,
@@ -8,7 +10,9 @@
     "sourceMap": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "paths": {}
   },
+  "references": [{ "path": "../types/tsconfig.build.json" }],
   "include": ["src"]
 }
