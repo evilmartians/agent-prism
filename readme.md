@@ -268,7 +268,7 @@ Use `TraceViewer` for quick setup, or compose individual components for custom l
 
 ## Theming
 
-Use semantic tokens for colors. Components' `theme` folder has 2 files:
+Use semantic tokens for colors. The `theme` folder in components has 2 files:
 
 - `theme.css` - import anywhere for bundler to process. Sets CSS variables on `:root`
 - `index.ts` - exports types and `agentPrismTailwindColors`. Import in tailwind config:
