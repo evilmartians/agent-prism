@@ -287,7 +287,7 @@ export default {
 
 Customize by changing semantic token values in `theme.css`. Defaults from tailwind colors (commented), but fully customizable.
 
-Each token: 3 values (Lightness, Chroma, Hue) in Oklch. Enables `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)` in tailwind for opacity syntax like `bg-agentprism-primary/50`.
+Each token has 3 values (Lightness, Chroma, Hue) in Oklch format. This enables the use of `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)` in Tailwind for opacity syntax like `bg-agentprism-primary/50`.
 
 ## Contributing
 
