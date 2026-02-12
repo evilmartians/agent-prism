@@ -8,6 +8,7 @@ import {
 } from "@evilmartians/agent-prism-data";
 import {
   useIsMobile,
+  useIsMounted,
   type TraceRecordWithDisplayData,
   type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
@@ -21,7 +22,8 @@ interface SimpleTraceViewerProps {
 }
 
 export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
-  const { isMobile, isMounted } = useIsMobile();
+  const isMobile = useIsMobile();
+  const isMounted = useIsMounted();
   const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
 

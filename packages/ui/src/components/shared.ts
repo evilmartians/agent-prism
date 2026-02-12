@@ -137,12 +137,11 @@ export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
 }
 
 export const useIsMobile = () => {
+  const isMounted = useIsMounted();
+
   const [isMobile, setIsMobile] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-
     // TODO: replace with something more beautiful and correct (tailwind screens?)
     const mediaQuery = window.matchMedia("(max-width: 1023px)");
 
@@ -157,8 +156,15 @@ export const useIsMobile = () => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  return {
-    isMounted,
-    isMobile: isMounted ? isMobile : false,
-  };
+  return isMounted ? isMobile : false;
+};
+
+export const useIsMounted = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return isMounted;
 };

@@ -7,7 +7,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type BadgeProps } from "../Badge";
-import { useIsMobile } from "../shared";
+import { useIsMobile, useIsMounted } from "../shared";
 import { type SpanCardViewOptions } from "../SpanCard/SpanCard";
 import { TraceViewerDesktopLayout } from "./TraceViewerDesktopLayout";
 import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
@@ -28,7 +28,8 @@ export const TraceViewer = ({
   data,
   spanCardViewOptions,
 }: TraceViewerProps) => {
-  const { isMobile, isMounted } = useIsMobile();
+  const isMobile = useIsMobile();
+  const isMounted = useIsMounted();
 
   const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
