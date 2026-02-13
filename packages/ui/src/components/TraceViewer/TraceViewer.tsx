@@ -4,10 +4,10 @@ import {
   filterSpansRecursively,
   flattenSpans,
 } from "@evilmartians/agent-prism-data";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { type BadgeProps } from "../Badge";
-import { useIsMobile } from "../shared";
+import { useIsMobile, useIsMounted } from "../shared";
 import { type SpanCardViewOptions } from "../SpanCard/SpanCard";
 import { TraceViewerDesktopLayout } from "./TraceViewerDesktopLayout";
 import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
@@ -29,7 +29,7 @@ export const TraceViewer = ({
   spanCardViewOptions,
 }: TraceViewerProps) => {
   const isMobile = useIsMobile();
-  const hasInitialized = React.useRef(false);
+  const isMounted = useIsMounted();
 
   const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
@@ -76,14 +76,12 @@ export const TraceViewer = ({
   }, [allIds]);
 
   useEffect(() => {
-    if (!hasInitialized.current) {
-      hasInitialized.current = true;
-    }
+    if (!isMounted || isMobile) return;
 
-    if (!isMobile && selectedTraceSpans.length > 0 && !selectedSpan) {
+    if (selectedTraceSpans.length > 0 && !selectedSpan) {
       setSelectedSpan(selectedTraceSpans[0]);
     }
-  }, [selectedTraceSpans, isMobile, selectedSpan]);
+  }, [selectedTraceSpans, isMobile, isMounted, selectedSpan]);
 
   const handleExpandAll = useCallback(() => {
     setExpandedSpansIds(allIds);
