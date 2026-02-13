@@ -5,8 +5,6 @@
     --agentprism-foreground: 21% 0.034 264.665; /* gray.900 */
     --agentprism-primary: 21% 0.034 264.665; /* gray.900 */
     --agentprism-primary-foreground: 98.5% 0.002 247.839; /* gray.50 */
-    --agentprism-primary: 21% 0.034 264.665; /* gray.900 */
-    --agentprism-primary-foreground: 98.5% 0.002 247.839; /* gray.50 */
     --agentprism-secondary: 96.7% 0.003 264.542; /* gray.100 */
     --agentprism-secondary-foreground: 55.1% 0.027 264.364; /* gray.500 */
     --agentprism-muted: 98.5% 0.002 247.839; /* gray.50 */
@@ -127,8 +125,6 @@
     /* General purpose colors */
     --agentprism-background: 13% 0.028 261.692; /* gray.950 */
     --agentprism-foreground: 96.7% 0.003 264.542; /* gray.100 */
-    --agentprism-primary: 96.7% 0.003 264.542; /* gray.100 */
-    --agentprism-primary-foreground: 13% 0.028 261.692; /* gray.950 */
     --agentprism-primary: 96.7% 0.003 264.542; /* gray.100 */
     --agentprism-primary-foreground: 13% 0.028 261.692; /* gray.950 */
     --agentprism-secondary: 27.8% 0.033 256.848; /* gray.800 */

@@ -5,8 +5,6 @@ export const AGENT_PRISM_TOKENS = [
   "foreground",
   "primary",
   "primary-foreground",
-  "primary",
-  "primary-foreground",
   "secondary",
   "secondary-foreground",
   "muted",
