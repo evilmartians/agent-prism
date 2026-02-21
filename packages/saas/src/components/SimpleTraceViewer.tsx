@@ -8,6 +8,7 @@ import {
 } from "@evilmartians/agent-prism-data";
 import {
   useIsMobile,
+  useIsMounted,
   type TraceRecordWithDisplayData,
   type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
@@ -22,6 +23,7 @@ interface SimpleTraceViewerProps {
 
 export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   const isMobile = useIsMobile();
+  const isMounted = useIsMounted();
   const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
 
@@ -40,10 +42,12 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   }, [allIds]);
 
   useEffect(() => {
-    if (!isMobile && spans.length > 0 && !selectedSpan) {
+    if (!isMounted || isMobile) return;
+
+    if (spans.length > 0 && !selectedSpan) {
       setSelectedSpan(spans[0]);
     }
-  }, [spans, selectedSpan, isMobile]);
+  }, [spans, selectedSpan, isMobile, isMounted]);
 
   const handleExpandAll = useCallback(() => {
     setExpandedSpansIds(allIds);

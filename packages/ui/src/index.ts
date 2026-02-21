@@ -71,4 +71,4 @@ export { default as TimestampBadgeSource } from "./components/TimestampBadge.tsx
 
 export { ThemePalette } from "./theming/ThemePalette";
 
-export { useIsMobile } from "./components/shared";
+export { useIsMobile, useIsMounted } from "./components/shared";
