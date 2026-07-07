@@ -23,6 +23,13 @@ export interface DetailsViewProps {
   data: TraceSpan;
 
   /**
+   * All spans of the selected trace. When provided, enables run-level error
+   * blocks in the Input/Output tab (a run summary when the root span is
+   * selected, otherwise the selected span's own error).
+   */
+  allSpans?: TraceSpan[];
+
+  /**
    * Optional avatar configuration for the header
    */
   avatar?: AvatarProps;
@@ -82,6 +89,7 @@ const TAB_ITEMS: TabItem<DetailsViewTab>[] = [
 
 export const DetailsView = ({
   data,
+  allSpans,
   avatar,
   defaultTab = "input-output",
   className,
@@ -134,7 +142,9 @@ export const DetailsView = ({
       </div>
 
       <div key={tab} className="min-h-0 flex-1 overflow-y-auto py-4">
-        {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
+        {tab === "input-output" && (
+          <DetailsViewInputOutputTab data={data} allSpans={allSpans} />
+        )}
         {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
         {tab === "raw" && <DetailsViewRawDataTab data={data} />}
       </div>

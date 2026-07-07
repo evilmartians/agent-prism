@@ -1,7 +1,8 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
-import { useState, useEffect } from "react";
+import { spanHasErrorSurface } from "@evilmartians/agent-prism-data";
+import { useState, useEffect, useMemo } from "react";
 
 import type { TabItem } from "../Tabs";
 
@@ -11,25 +12,52 @@ import {
   DetailsViewContentViewer,
   type DetailsViewContentViewMode,
 } from "./DetailsViewContentViewer";
+import { DetailsViewErrorBlocks } from "./DetailsViewErrorBlocks";
 
 interface DetailsViewInputOutputTabProps {
   data: TraceSpan;
+  allSpans?: TraceSpan[];
 }
+
+// Stable reference so memo deps don't change when allSpans is omitted.
+const EMPTY_SPANS: TraceSpan[] = [];
 
 type IOSection = "Input" | "Output";
 
 export const DetailsViewInputOutputTab = ({
   data,
+  allSpans,
 }: DetailsViewInputOutputTabProps): ReactElement => {
   const hasInput = Boolean(data.input);
   const hasOutput = Boolean(data.output);
 
+  const resolvedSpans = allSpans ?? EMPTY_SPANS;
+
+  // Always rendered: shows the selected span's own error even when the full
+  // trace isn't supplied. Renders nothing when there is no error to show.
+  const errorBlocks = (
+    <DetailsViewErrorBlocks span={data} allSpans={resolvedSpans} />
+  );
+
+  // Whether errorBlocks will render content — used to hide the redundant
+  // "no data" placeholder when an error is already shown.
+  const hasErrorContent = useMemo(
+    () => spanHasErrorSurface(data, resolvedSpans),
+    [data, resolvedSpans],
+  );
+
   if (!hasInput && !hasOutput) {
     return (
-      <div className="border-agentprism-border rounded-md border p-4">
-        <p className="text-agentprism-muted-foreground text-sm">
-          No input or output data available for this span
-        </p>
+      <div className="space-y-4">
+        {errorBlocks}
+
+        {!hasErrorContent && (
+          <div className="border-agentprism-border rounded-md border p-4">
+            <p className="text-agentprism-muted-foreground text-sm">
+              No input or output data available for this span
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -55,6 +83,8 @@ export const DetailsViewInputOutputTab = ({
 
   return (
     <div className="space-y-4">
+      {errorBlocks}
+
       {typeof data.input === "string" && (
         <IOSection
           section="Input"

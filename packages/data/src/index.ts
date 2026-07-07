@@ -4,6 +4,24 @@ export { getTimelineData } from "./common/get-timeline-data.js";
 export { flattenSpans } from "./common/flatten-spans.js";
 export { findTimeRange } from "./common/find-time-range.js";
 export { filterSpansRecursively } from "./common/filter-spans-recursively.js";
+export {
+  extractSpanError,
+  collectErrorSpans,
+  traceRunHasErrors,
+  collectRunErrorEntries,
+  collectSpanErrorEntry,
+  isRootTraceSpan,
+  spanHasErrorSurface,
+  deriveTraceRunStatus,
+  errorCountLabel,
+  type SpanErrorDetails,
+  type RunErrorEntry,
+  type TraceRunStatus,
+} from "./common/extract-span-error.js";
+export {
+  formatSpanErrorForAgent,
+  formatRunErrorsForAgent,
+} from "./common/format-errors-for-agent.js";
 
 export { openTelemetrySpanAdapter } from "./open-telemetry/adapter.js";
 export { langfuseSpanAdapter } from "./langfuse/adapter.js";

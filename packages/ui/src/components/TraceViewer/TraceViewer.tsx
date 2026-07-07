@@ -118,6 +118,7 @@ export const TraceViewer = ({
     selectedTraceId: selectedTrace?.id,
     selectedSpan,
     setSelectedSpan,
+    selectedTraceSpans,
     searchValue,
     setSearchValue,
     filteredSpans,
@@ -156,6 +157,7 @@ export interface TraceViewerLayoutProps {
   selectedTraceId?: string;
   selectedSpan: TraceSpan | undefined;
   setSelectedSpan: (span: TraceSpan | undefined) => void;
+  selectedTraceSpans: TraceSpan[];
   searchValue: string;
   setSearchValue: (value: string) => void;
   filteredSpans: TraceSpan[];
