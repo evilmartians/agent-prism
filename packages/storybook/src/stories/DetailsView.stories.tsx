@@ -121,3 +121,16 @@ export const CopyButton: Story = {
     },
   },
 };
+
+// The "Images" tab only appears when the span exposes images (here, image paths
+// referenced in the input/output). Spans without images never show the tab.
+export const WithImages: Story = {
+  args: {
+    data: {
+      ...mockSpanData,
+      input: "Analyze the screenshot at /uploads/screenshot.png",
+      output: "Annotated result saved to /results/annotated.png",
+    },
+    defaultTab: "images",
+  },
+};

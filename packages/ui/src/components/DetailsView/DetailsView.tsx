@@ -1,9 +1,15 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement, ReactNode } from "react";
 
+import { spanHasImages } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
-import { SquareTerminal, Tags, ArrowRightLeft } from "lucide-react";
-import { useState } from "react";
+import {
+  SquareTerminal,
+  Tags,
+  ArrowRightLeft,
+  Image as ImageIcon,
+} from "lucide-react";
+import { useMemo, useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
 import type { TabItem } from "../Tabs";
@@ -11,10 +17,11 @@ import type { TabItem } from "../Tabs";
 import { TabSelector } from "../TabSelector";
 import { DetailsViewAttributesTab } from "./DetailsViewAttributesTab";
 import { DetailsViewHeader } from "./DetailsViewHeader";
+import { DetailsViewImagesTab } from "./DetailsViewImagesTab";
 import { DetailsViewInputOutputTab } from "./DetailsViewInputOutputTab";
 import { DetailsViewRawDataTab } from "./DetailsViewRawDataTab";
 
-type DetailsViewTab = "input-output" | "attributes" | "raw";
+type DetailsViewTab = "input-output" | "attributes" | "raw" | "images";
 
 export interface DetailsViewProps {
   /**
@@ -80,6 +87,12 @@ const TAB_ITEMS: TabItem<DetailsViewTab>[] = [
   },
 ];
 
+const IMAGES_TAB_ITEM: TabItem<DetailsViewTab> = {
+  value: "images",
+  label: "Images",
+  icon: <ImageIcon className="size-4" />,
+};
+
 export const DetailsView = ({
   data,
   avatar,
@@ -91,6 +104,11 @@ export const DetailsView = ({
   onTabChange,
 }: DetailsViewProps): ReactElement => {
   const [tab, setTab] = useState<DetailsViewTab>(defaultTab);
+
+  const tabItems = useMemo(
+    () => (spanHasImages(data) ? [...TAB_ITEMS, IMAGES_TAB_ITEM] : TAB_ITEMS),
+    [data],
+  );
 
   const handleTabChange = (tabValue: DetailsViewTab) => {
     setTab(tabValue);
@@ -125,7 +143,7 @@ export const DetailsView = ({
       <div className="mb-4 shrink-0">{headerContent}</div>
       <div className="shrink-0">
         <TabSelector
-          items={TAB_ITEMS}
+          items={tabItems}
           value={tab}
           onValueChange={handleTabChange}
           theme="underline"
@@ -137,6 +155,7 @@ export const DetailsView = ({
         {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
         {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
         {tab === "raw" && <DetailsViewRawDataTab data={data} />}
+        {tab === "images" && <DetailsViewImagesTab data={data} />}
       </div>
     </div>
   );
