@@ -41,28 +41,37 @@ function formatTokens(tokens: number): string {
   return String(tokens);
 }
 
-function StatRow({
-  label,
-  value,
-  sub,
-}: {
+interface StatRowData {
   label: string;
   value: string;
   sub?: string;
-}) {
+}
+
+/**
+ * A three-column grid (label / value / sub). Using a shared subgrid keeps the
+ * bold values right-aligned in one column and the muted `sub` annotations in the
+ * next, so rows line up regardless of label or value length and the value never
+ * collides with a long label.
+ */
+function StatGrid({ rows }: { rows: StatRowData[] }): ReactElement {
   return (
-    <div className="flex items-center justify-between py-1.5">
-      <span className="text-agentprism-muted-foreground text-xs">{label}</span>
-      <div className="text-right">
-        <span className="text-agentprism-foreground text-xs font-medium">
-          {value}
-        </span>
-        {sub && (
-          <span className="text-agentprism-muted-foreground ml-1.5 text-[10px]">
-            {sub}
+    <div className="divide-agentprism-border grid grid-cols-[1fr_auto_auto] divide-y">
+      {rows.map((row) => (
+        <div
+          key={row.label}
+          className="col-span-3 grid grid-cols-subgrid items-baseline py-1.5"
+        >
+          <span className="text-agentprism-muted-foreground pr-3 text-xs">
+            {row.label}
           </span>
-        )}
-      </div>
+          <span className="text-agentprism-foreground text-right text-xs font-medium">
+            {row.value}
+          </span>
+          <span className="text-agentprism-muted-foreground pl-1.5 text-[10px]">
+            {row.sub ?? ""}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -127,6 +136,60 @@ export function DetailsViewContextTab({
   // NaN or Infinity below.
   const limit = contextLimit && contextLimit > 0 ? contextLimit : 200_000;
 
+  const contextRows: StatRowData[] = [];
+  if (cumulativeTokens !== undefined) {
+    contextRows.push({
+      label: "Cumulative tokens",
+      value: formatTokens(cumulativeTokens),
+      sub: `of ${formatTokens(limit)}`,
+    });
+  }
+  if (cappedFill !== undefined) {
+    contextRows.push({
+      label: "Context fill",
+      value: `${cappedFill.toFixed(1)}%`,
+    });
+  }
+  if (cacheHitRatio !== undefined) {
+    contextRows.push({
+      label: "Cache hit ratio",
+      value: `${(cacheHitRatio * 100).toFixed(0)}%`,
+      sub: cacheHitRatio > 0.9 ? "mostly cached" : undefined,
+    });
+  }
+
+  const breakdownRows: StatRowData[] = [];
+  if (inputTokens !== undefined) {
+    breakdownRows.push({
+      label: "Input tokens",
+      value: formatTokens(inputTokens),
+    });
+  }
+  if (outputTokens !== undefined) {
+    breakdownRows.push({
+      label: "Output tokens",
+      value: formatTokens(outputTokens),
+    });
+  }
+  if (cacheReadTokens !== undefined && cacheReadTokens > 0) {
+    breakdownRows.push({
+      label: "Cache read",
+      value: formatTokens(cacheReadTokens),
+    });
+  }
+  if (cacheCreationTokens !== undefined && cacheCreationTokens > 0) {
+    breakdownRows.push({
+      label: "Cache write",
+      value: formatTokens(cacheCreationTokens),
+    });
+  }
+  if (data.tokensCount !== undefined) {
+    breakdownRows.push({
+      label: "Total",
+      value: formatTokens(data.tokensCount),
+    });
+  }
+
   return (
     <div className="space-y-4">
       {model && (
@@ -170,27 +233,8 @@ export function DetailsViewContextTab({
             </>
           )}
 
-          <div className="divide-agentprism-border mt-2 divide-y">
-            {cumulativeTokens !== undefined && (
-              <StatRow
-                label="Cumulative tokens"
-                value={formatTokens(cumulativeTokens)}
-                sub={`of ${formatTokens(limit)}`}
-              />
-            )}
-            {cappedFill !== undefined && (
-              <StatRow
-                label="Context fill"
-                value={`${cappedFill.toFixed(1)}%`}
-              />
-            )}
-            {cacheHitRatio !== undefined && (
-              <StatRow
-                label="Cache hit ratio"
-                value={`${(cacheHitRatio * 100).toFixed(0)}%`}
-                sub={cacheHitRatio > 0.9 ? "mostly cached" : undefined}
-              />
-            )}
+          <div className="mt-2">
+            <StatGrid rows={contextRows} />
           </div>
         </div>
       )}
@@ -200,38 +244,15 @@ export function DetailsViewContextTab({
           <h4 className="text-agentprism-muted-foreground mb-2 text-xs font-medium">
             Token Breakdown
           </h4>
-          <div className="divide-agentprism-border divide-y">
-            {inputTokens !== undefined && (
-              <StatRow label="Input tokens" value={formatTokens(inputTokens)} />
-            )}
-            {outputTokens !== undefined && (
-              <StatRow
-                label="Output tokens"
-                value={formatTokens(outputTokens)}
-              />
-            )}
-            {cacheReadTokens !== undefined && cacheReadTokens > 0 && (
-              <StatRow
-                label="Cache read"
-                value={formatTokens(cacheReadTokens)}
-              />
-            )}
-            {cacheCreationTokens !== undefined && cacheCreationTokens > 0 && (
-              <StatRow
-                label="Cache write"
-                value={formatTokens(cacheCreationTokens)}
-              />
-            )}
-            {data.tokensCount !== undefined && (
-              <StatRow label="Total" value={formatTokens(data.tokensCount)} />
-            )}
-          </div>
+          <StatGrid rows={breakdownRows} />
         </div>
       )}
 
       {data.cost !== undefined && (
         <div className="border-agentprism-border rounded-md border p-3">
-          <StatRow label="Cost" value={`$${data.cost.toFixed(4)}`} />
+          <StatGrid
+            rows={[{ label: "Cost", value: `$${data.cost.toFixed(4)}` }]}
+          />
         </div>
       )}
     </div>
