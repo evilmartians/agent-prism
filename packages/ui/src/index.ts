@@ -52,6 +52,12 @@ export { default as TraceListSource } from "./components/TraceList/TraceList.tsx
 export { DetailsView } from "./components/DetailsView/DetailsView";
 export { default as DetailsViewSource } from "./components/DetailsView/DetailsView.tsx?raw";
 
+export {
+  DetailsViewCodeViewer,
+  type DetailsViewCodeViewerProps,
+} from "./components/DetailsView/DetailsViewCodeViewer";
+export { default as DetailsViewCodeViewerSource } from "./components/DetailsView/DetailsViewCodeViewer.tsx?raw";
+
 export { Tabs } from "./components/Tabs";
 export { default as TabsSource } from "./components/Tabs.tsx?raw";
 

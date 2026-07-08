@@ -23,6 +23,13 @@ export interface DetailsViewProps {
   data: TraceSpan;
 
   /**
+   * Optional verbatim vendor payload for this span, shown in the RAW tab as
+   * pretty JSON in place of the normalized `data.raw`. Omit (or pass `null`) to
+   * show the normalized string unchanged.
+   */
+  rawVendorSlice?: unknown;
+
+  /**
    * Optional avatar configuration for the header
    */
   avatar?: AvatarProps;
@@ -82,6 +89,7 @@ const TAB_ITEMS: TabItem<DetailsViewTab>[] = [
 
 export const DetailsView = ({
   data,
+  rawVendorSlice,
   avatar,
   defaultTab = "input-output",
   className,
@@ -136,7 +144,9 @@ export const DetailsView = ({
       <div key={tab} className="min-h-0 flex-1 overflow-y-auto py-4">
         {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
         {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
-        {tab === "raw" && <DetailsViewRawDataTab data={data} />}
+        {tab === "raw" && (
+          <DetailsViewRawDataTab data={data} vendorSlice={rawVendorSlice} />
+        )}
       </div>
     </div>
   );
