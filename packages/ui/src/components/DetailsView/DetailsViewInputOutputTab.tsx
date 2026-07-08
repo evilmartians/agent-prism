@@ -1,6 +1,7 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
+import { hasTodos } from "@evilmartians/agent-prism-data";
 import { useState, useEffect } from "react";
 
 import type { TabItem } from "../Tabs";
@@ -11,6 +12,7 @@ import {
   DetailsViewContentViewer,
   type DetailsViewContentViewMode,
 } from "./DetailsViewContentViewer";
+import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
 
 interface DetailsViewInputOutputTabProps {
   data: TraceSpan;
@@ -24,7 +26,7 @@ export const DetailsViewInputOutputTab = ({
   const hasInput = Boolean(data.input);
   const hasOutput = Boolean(data.output);
 
-  if (!hasInput && !hasOutput) {
+  if (!hasInput && !hasOutput && !hasTodos(data)) {
     return (
       <div className="border-agentprism-border rounded-md border p-4">
         <p className="text-agentprism-muted-foreground text-sm">
@@ -55,6 +57,7 @@ export const DetailsViewInputOutputTab = ({
 
   return (
     <div className="space-y-4">
+      <DetailsViewTodosSection data={data} />
       {typeof data.input === "string" && (
         <IOSection
           section="Input"

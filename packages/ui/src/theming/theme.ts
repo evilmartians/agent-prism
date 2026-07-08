@@ -131,6 +131,26 @@ export const agentPrismTheme: Theme = {
       ],
     },
     {
+      title: "Agent content colors (claude)",
+      tokens: [
+        {
+          name: "badge-claude-thinking",
+          light: "purple.50",
+          dark: "purple.950",
+        },
+        {
+          name: "badge-claude-thinking-foreground",
+          light: "purple.500",
+          dark: "purple.300",
+        },
+        {
+          name: "context-source-conversation",
+          light: "violet.500",
+          dark: "violet.400",
+        },
+      ],
+    },
+    {
       title: "Trace colors (llm)",
       tokens: [
         { name: "avatar-llm", light: "purple.500", dark: "purple.300" },
