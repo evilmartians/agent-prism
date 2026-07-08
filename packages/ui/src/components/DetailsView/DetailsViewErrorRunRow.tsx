@@ -17,8 +17,8 @@ interface DetailsViewErrorRunRowProps {
 export const DetailsViewErrorRunRow = ({
   entry,
 }: DetailsViewErrorRunRowProps): ReactElement => {
-  const { span, details } = entry;
-  const title = details.nodeName ?? span.title;
+  const { details } = entry;
+  const title = details.nodeName;
 
   return (
     <article className="border-agentprism-border rounded-md border p-4">
@@ -35,7 +35,7 @@ export const DetailsViewErrorRunRow = ({
 
             <CopyButton
               label="error for agent"
-              content={formatSpanErrorForAgent(span, details)}
+              content={formatSpanErrorForAgent(details)}
             />
           </div>
 

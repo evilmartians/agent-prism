@@ -43,6 +43,13 @@ interface RunErrorsSummaryProps {
 const RunErrorsSummary = ({
   entries,
 }: RunErrorsSummaryProps): ReactElement | null => {
+  // Memoized (hook must precede the early return) so the agent Markdown isn't
+  // rebuilt on unrelated re-renders of this component.
+  const agentContent = useMemo(
+    () => formatRunErrorsForAgent(entries),
+    [entries],
+  );
+
   if (entries.length === 0) return null;
 
   return (
@@ -59,7 +66,7 @@ const RunErrorsSummary = ({
         >
           <CopyButton
             label="all errors for agent"
-            content={formatRunErrorsForAgent(entries)}
+            content={agentContent}
           />
           <ErrorCountBadge count={entries.length} />
         </div>

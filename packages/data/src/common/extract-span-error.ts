@@ -5,7 +5,7 @@ import { flattenSpans } from "./flatten-spans.js";
 export interface SpanErrorDetails {
   message: string;
   stack?: string;
-  nodeName?: string;
+  nodeName: string;
 }
 
 export interface RunErrorEntry {

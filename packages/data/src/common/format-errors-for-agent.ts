@@ -1,5 +1,3 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
-
 import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error";
 
 /**
@@ -7,10 +5,9 @@ import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error";
  * agent — a title heading followed by the error message.
  */
 export const formatSpanErrorForAgent = (
-  span: TraceSpan,
   details: SpanErrorDetails,
 ): string => {
-  const title = details.nodeName ?? span.title;
+  const title = details.nodeName;
   const lines = [`# ${title}`, "", details.message];
 
   if (details.stack) {
@@ -34,7 +31,7 @@ export const formatRunErrorsForAgent = (entries: RunErrorEntry[]): string => {
 
   entries.forEach((entry, index) => {
     const { details } = entry;
-    const title = details.nodeName ?? entry.span.title;
+    const title = details.nodeName;
 
     lines.push(`## ${index + 1}. ${title}`, "", details.message, "");
 

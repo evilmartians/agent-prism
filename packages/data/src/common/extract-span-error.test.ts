@@ -316,7 +316,7 @@ describe("format helpers", () => {
   it("formatSpanErrorForAgent includes title and message", () => {
     const details = extractSpanError(rawStatusMessageSpan)!;
 
-    expect(formatSpanErrorForAgent(rawStatusMessageSpan, details)).toBe(
+    expect(formatSpanErrorForAgent(details)).toBe(
       "# Structured Output Parser\n\nModel output doesn't fit required format",
     );
   });
@@ -331,7 +331,7 @@ describe("format helpers", () => {
 
   it("formatSpanErrorForAgent includes the stack when present", () => {
     const details = extractSpanError(otlpExceptionSpan)!;
-    const text = formatSpanErrorForAgent(otlpExceptionSpan, details);
+    const text = formatSpanErrorForAgent(details);
 
     expect(text).toMatch(/Connection refused: redis:6379/);
     expect(text).toMatch(/RedisClient\.connect/);
@@ -339,7 +339,7 @@ describe("format helpers", () => {
 
   it("formatSpanErrorForAgent omits stack section when absent", () => {
     const details = extractSpanError(rawStatusMessageSpan)!;
-    const text = formatSpanErrorForAgent(rawStatusMessageSpan, details);
+    const text = formatSpanErrorForAgent(details);
 
     expect(text).not.toMatch(/Stack/);
   });
