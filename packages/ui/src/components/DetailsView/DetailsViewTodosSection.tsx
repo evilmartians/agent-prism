@@ -46,7 +46,7 @@ function TodoItemRow({ todo }: { todo: TodoItem }): ReactElement {
       <StatusIcon status={todo.status} />
       <span
         className={cn(
-          "text-sm",
+          "min-w-0 break-words text-sm",
           isCompleted && "text-agentprism-muted-foreground line-through",
           isInProgress &&
             "text-agentprism-pending-muted-foreground font-medium",

@@ -122,7 +122,7 @@ export const DetailsViewThinkingTab = ({
   return (
     <div className="space-y-4">
       {metadata && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <ThinkingLevelBadge level={metadata.level} />
           {metadata.triggers.length > 0 && (
             <span className="text-agentprism-muted-foreground text-xs">
@@ -137,7 +137,7 @@ export const DetailsViewThinkingTab = ({
           <Brain className="size-4" />
           Extended Thinking
         </div>
-        <div className="text-agentprism-foreground max-h-[60vh] overflow-y-auto whitespace-pre-wrap text-sm leading-relaxed">
+        <div className="text-agentprism-foreground max-h-[60vh] overflow-y-auto whitespace-pre-wrap break-words text-sm leading-relaxed">
           {thinkingContent}
         </div>
       </div>
