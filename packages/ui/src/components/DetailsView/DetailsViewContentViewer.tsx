@@ -1,6 +1,7 @@
 import { type ReactElement } from "react";
 
 import { CopyButton } from "../CopyButton";
+import { DetailsViewCodeViewer } from "./DetailsViewCodeViewer";
 import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
 export type DetailsViewContentViewMode = "json" | "plain";
@@ -12,6 +13,10 @@ export interface DetailsViewContentViewerProps {
   label: string;
   id: string;
   className?: string;
+  /** Shiki language id for the non-JSON (code) view. Wins over `filename`. */
+  language?: string;
+  /** Filename whose extension detects the language for the non-JSON (code) view. */
+  filename?: string;
 }
 
 export const DetailsViewContentViewer = ({
@@ -21,6 +26,8 @@ export const DetailsViewContentViewer = ({
   label,
   id,
   className = "",
+  language,
+  filename,
 }: DetailsViewContentViewerProps): ReactElement => {
   if (!content) {
     return (
@@ -41,9 +48,11 @@ export const DetailsViewContentViewer = ({
         <DetailsViewJsonOutput content={parsedContent} id={id} />
       ) : (
         <div className="bg-agentprism-background rounded-lg p-4">
-          <pre className="text-agentprism-foreground overflow-x-auto whitespace-pre-wrap text-left font-mono text-sm">
-            {content}
-          </pre>
+          <DetailsViewCodeViewer
+            code={content}
+            language={language}
+            filename={filename}
+          />
         </div>
       )}
     </div>
