@@ -35,6 +35,12 @@ export { TokensBadge } from "./components/TokensBadge";
 export { default as TokensBadgeSource } from "./components/TokensBadge.tsx?raw";
 
 export {
+  ThinkingBadge,
+  type ThinkingBadgeProps,
+} from "./components/ThinkingBadge";
+export { default as ThinkingBadgeSource } from "./components/ThinkingBadge.tsx?raw";
+
+export {
   SpanCard,
   type SpanCardViewOptions,
 } from "./components/SpanCard/SpanCard";
@@ -51,6 +57,15 @@ export { default as TraceListSource } from "./components/TraceList/TraceList.tsx
 
 export { DetailsView } from "./components/DetailsView/DetailsView";
 export { default as DetailsViewSource } from "./components/DetailsView/DetailsView.tsx?raw";
+
+export { DetailsViewThinkingTab } from "./components/DetailsView/DetailsViewThinkingTab";
+export { default as DetailsViewThinkingTabSource } from "./components/DetailsView/DetailsViewThinkingTab.tsx?raw";
+
+export { DetailsViewContextTab } from "./components/DetailsView/DetailsViewContextTab";
+export { default as DetailsViewContextTabSource } from "./components/DetailsView/DetailsViewContextTab.tsx?raw";
+
+export { DetailsViewTodosSection } from "./components/DetailsView/DetailsViewTodosSection";
+export { default as DetailsViewTodosSectionSource } from "./components/DetailsView/DetailsViewTodosSection.tsx?raw";
 
 export { Tabs } from "./components/Tabs";
 export { default as TabsSource } from "./components/Tabs.tsx?raw";

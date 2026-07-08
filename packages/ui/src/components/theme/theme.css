@@ -53,6 +53,9 @@
     /* Generic badge colors */
     --agentprism-badge-default: 96.7% 0.003 264.542; /* gray.100 */
     --agentprism-badge-default-foreground: 44.6% 0.03 256.802; /* gray.600 */
+    --agentprism-badge-claude-thinking: 97.7% 0.014 308.299; /* purple.50 */
+    --agentprism-badge-claude-thinking-foreground: 62.7% 0.265 303.9; /* purple.500 */
+    --agentprism-context-source-conversation: 60.6% 0.25 292.717; /* violet.500 */
 
     /* Trace colors (llm) */
     --agentprism-avatar-llm: 62.7% 0.265 303.9; /* purple.500 */
@@ -175,6 +178,9 @@
     /* Generic badge colors */
     --agentprism-badge-default: 21% 0.034 264.665; /* gray.900 */
     --agentprism-badge-default-foreground: 70.7% 0.022 261.325; /* gray.400 */
+    --agentprism-badge-claude-thinking: 29.1% 0.149 302.717; /* purple.950 */
+    --agentprism-badge-claude-thinking-foreground: 82.7% 0.119 306.383; /* purple.300 */
+    --agentprism-context-source-conversation: 70.2% 0.183 293.541; /* violet.400 */
 
     /* Trace colors (llm) */
     --agentprism-avatar-llm: 82.7% 0.119 306.383; /* purple.300 */
