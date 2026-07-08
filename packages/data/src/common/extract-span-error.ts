@@ -50,7 +50,7 @@ const readAttribute = (
 ): string | undefined => {
   for (const key of keys) {
     const match = span.attributes?.find((entry) => entry.key === key);
-    const value = normalize(match?.value.stringValue);
+    const value = normalize(match?.value?.stringValue);
 
     if (value) return value;
   }
@@ -78,10 +78,16 @@ export const extractSpanError = (span: TraceSpan): SpanErrorDetails | null => {
   const rawMessage = isRecord(rawStatus)
     ? nonEmptyString(rawStatus.message)
     : undefined;
+  // Langfuse observations carry the error text on a top-level `statusMessage`
+  // rather than a nested `status.message`.
+  const rawStatusMessage = isRecord(raw)
+    ? nonEmptyString(raw.statusMessage)
+    : undefined;
   const rawName = isRecord(raw) ? nonEmptyString(raw.name) : undefined;
 
   const message =
     rawMessage ??
+    rawStatusMessage ??
     readAttribute(span, ERROR_MESSAGE_KEYS) ??
     "Error (no message in span payload)";
 

@@ -134,6 +134,50 @@ describe("extractSpanError", () => {
     );
   });
 
+  it("reads nodeName from raw.name over the span title", () => {
+    const span = makeSpan({
+      id: "renamed",
+      title: "renamed", // matches id; distinct from raw.name below
+      status: "error",
+      raw: JSON.stringify({
+        status: { message: "boom" },
+        name: "Human-readable node name",
+      }),
+    });
+
+    expect(extractSpanError(span)?.nodeName).toBe("Human-readable node name");
+  });
+
+  it("prefers the raw status message over the error.message attribute", () => {
+    const span = makeSpan({
+      id: "both",
+      title: "Both sources",
+      status: "error",
+      raw: JSON.stringify({ status: { message: "from raw status" } }),
+      attributes: [
+        { key: "error.message", value: { stringValue: "from attribute" } },
+      ],
+    });
+
+    expect(extractSpanError(span)?.message).toBe("from raw status");
+  });
+
+  it("reads message from a top-level statusMessage (Langfuse)", () => {
+    const span = makeSpan({
+      id: "langfuse-obs",
+      title: "Langfuse observation",
+      status: "error",
+      // Langfuse observations expose the error text on `statusMessage`, not a
+      // nested `status.message`.
+      raw: JSON.stringify({ statusMessage: "Observation failed", name: "Obs" }),
+    });
+
+    const error = extractSpanError(span);
+
+    expect(error?.message).toBe("Observation failed");
+    expect(error?.nodeName).toBe("Obs");
+  });
+
   it("reads OTLP exception message and stack", () => {
     const error = extractSpanError(otlpExceptionSpan);
 
@@ -327,6 +371,45 @@ describe("format helpers", () => {
     expect(text).toMatch(/Failed spans: 3/);
     expect(text).toMatch(/Structured Output Parser/);
     expect(text).toMatch(/Child node failed/);
+  });
+
+  it("formatRunErrorsForAgent numbers sections in entry order and includes stacks", () => {
+    const root = makeSpan({
+      id: "run-root",
+      status: "success",
+      children: [
+        makeSpan({
+          id: "first-fail",
+          title: "First failure",
+          status: "error",
+          raw: JSON.stringify({ status: { message: "first boom" } }),
+          attributes: [
+            {
+              key: "exception.stacktrace",
+              value: { stringValue: "at first()" },
+            },
+          ],
+        }),
+        makeSpan({
+          id: "second-fail",
+          title: "Second failure",
+          status: "error",
+          raw: JSON.stringify({ status: { message: "second boom" } }),
+        }),
+      ],
+    });
+
+    const text = formatRunErrorsForAgent(collectRunErrorEntries([root]));
+
+    // Sections are numbered 1..N in traversal order (regression guard for an
+    // off-by-one or reversed ordering that substring matching would miss).
+    expect(text).toMatch(/## 1\. First failure/);
+    expect(text).toMatch(/## 2\. Second failure/);
+    expect(text.indexOf("First failure")).toBeLessThan(
+      text.indexOf("Second failure"),
+    );
+    // The run-level export renders stacks, not only the single-span formatter.
+    expect(text).toMatch(/Stack:\nat first\(\)/);
   });
 
   it("formatSpanErrorForAgent includes the stack when present", () => {

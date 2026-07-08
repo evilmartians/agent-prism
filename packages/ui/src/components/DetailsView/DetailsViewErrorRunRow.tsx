@@ -2,6 +2,7 @@ import type { RunErrorEntry } from "@evilmartians/agent-prism-data";
 import type { ReactElement } from "react";
 
 import { formatSpanErrorForAgent } from "@evilmartians/agent-prism-data";
+import { useMemo } from "react";
 
 import { CopyButton } from "../CopyButton";
 import { ErrorStatusCircle } from "../ErrorStatusCircle";
@@ -19,6 +20,12 @@ export const DetailsViewErrorRunRow = ({
 }: DetailsViewErrorRunRowProps): ReactElement => {
   const { details } = entry;
   const title = details.nodeName;
+  // Built lazily-ish: only read on copy click, so avoid rebuilding the Markdown
+  // on unrelated re-renders.
+  const agentContent = useMemo(
+    () => formatSpanErrorForAgent(details),
+    [details],
+  );
 
   return (
     <article className="border-agentprism-border rounded-md border p-4">
@@ -30,13 +37,13 @@ export const DetailsViewErrorRunRow = ({
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-start justify-between gap-2">
             <h4 className="text-agentprism-error line-clamp-3 min-w-0 flex-1 text-sm font-medium leading-5">
+              {/* Convey "error" to assistive tech / colorblind users; the red
+                  title and decorative dot are the only other error signals. */}
+              <span className="sr-only">Error: </span>
               {title}
             </h4>
 
-            <CopyButton
-              label="error for agent"
-              content={formatSpanErrorForAgent(details)}
-            />
+            <CopyButton label="error for agent" content={agentContent} />
           </div>
 
           <p className="text-agentprism-foreground whitespace-pre-wrap break-words text-sm">

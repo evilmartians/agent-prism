@@ -157,7 +157,7 @@ export interface TraceViewerLayoutProps {
   selectedTraceId?: string;
   selectedSpan: TraceSpan | undefined;
   setSelectedSpan: (span: TraceSpan | undefined) => void;
-  selectedTraceSpans: TraceSpan[];
+  selectedTraceSpans?: TraceSpan[];
   searchValue: string;
   setSearchValue: (value: string) => void;
   filteredSpans: TraceSpan[];

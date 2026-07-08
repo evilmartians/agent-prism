@@ -18,13 +18,19 @@ export interface ErrorCountBadgeProps {
  */
 export const ErrorCountBadge = ({
   count,
-}: ErrorCountBadgeProps): ReactElement => (
+}: ErrorCountBadgeProps): ReactElement | null => {
+  // A badge that reads "0 errors" with an error accent is misleading; render
+  // nothing when there are no failures.
+  if (count <= 0) return null;
+
   // The visible "N errors" label is the accessible name; the icon is decorative.
-  <Badge
-    size="4"
-    label={errorCountLabel(count)}
-    className="text-agentprism-error border-0 bg-transparent px-0 shadow-none"
-    iconStart={<ErrorStatusCircle />}
-    unstyled
-  />
-);
+  return (
+    <Badge
+      size="4"
+      label={errorCountLabel(count)}
+      className="text-agentprism-error border-0 bg-transparent px-0 shadow-none"
+      iconStart={<ErrorStatusCircle />}
+      unstyled
+    />
+  );
+};
