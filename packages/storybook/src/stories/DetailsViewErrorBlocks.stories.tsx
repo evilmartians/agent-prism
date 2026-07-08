@@ -93,7 +93,7 @@ const exceptionSpan = baseSpan({
 });
 
 const meta = {
-  title: "Main Components/DetailsView/ErrorBlocks",
+  title: "Main Components/DetailsViewErrorBlocks",
   component: DetailsViewErrorBlocks,
   parameters: {
     layout: "padded",

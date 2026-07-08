@@ -1,6 +1,7 @@
 import type {
   LangfuseDocument,
   OpenTelemetryDocument,
+  TraceSpan,
 } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -47,7 +48,138 @@ const langfuse3 = langfuseSpanAdapter.convertRawDocumentsToSpans(
   langfuseData3 as LangfuseDocument,
 );
 
+const errorSpan = (
+  span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
+): TraceSpan => ({
+  title: span.id,
+  startTime: new Date("2024-01-15T10:30:00Z"),
+  endTime: new Date("2024-01-15T10:30:03Z"),
+  duration: 3000,
+  type: "span",
+  raw: "{}",
+  status: "success",
+  ...span,
+});
+
+// A run that failed end-to-end: the error propagates from a leaf tool call up
+// through the agent to the root chain, so every span on the path is failed.
+const failedRunSpans: TraceSpan[] = [
+  errorSpan({
+    id: "failed-root",
+    title: "Relevancy scoring workflow",
+    type: "chain_operation",
+    status: "error",
+    raw: JSON.stringify({
+      status: { message: "Run failed" },
+      name: "Relevancy scoring workflow",
+    }),
+    children: [
+      errorSpan({
+        id: "failed-agent",
+        title: "AI Agent",
+        type: "agent_invocation",
+        status: "error",
+        raw: JSON.stringify({
+          status: { message: "Child node failed" },
+          name: "AI Agent",
+        }),
+        children: [
+          errorSpan({
+            id: "failed-parser",
+            title: "Structured Output Parser",
+            type: "tool_execution",
+            status: "error",
+            raw: JSON.stringify({
+              status: {
+                code: "ERROR",
+                message: "Model output doesn't fit required format",
+              },
+              name: "Structured Output Parser",
+            }),
+          }),
+        ],
+      }),
+    ],
+  }),
+];
+
+// A run that mostly succeeded but has one failed tool call among healthy
+// siblings — the partial-failure case.
+const partialFailureSpans: TraceSpan[] = [
+  errorSpan({
+    id: "partial-root",
+    title: "Customer support workflow",
+    type: "chain_operation",
+    children: [
+      errorSpan({
+        id: "partial-ok-1",
+        title: "Fetch conversation",
+        type: "tool_execution",
+      }),
+      errorSpan({
+        id: "partial-error",
+        title: "Redis connection",
+        type: "tool_execution",
+        status: "error",
+        attributes: [
+          {
+            key: "exception.message",
+            value: { stringValue: "Connection refused: redis:6379" },
+          },
+          {
+            key: "exception.stacktrace",
+            value: {
+              stringValue: [
+                "Error: Connection refused: redis:6379",
+                "    at RedisClient.connect (/app/node_modules/redis/client.js:142:19)",
+                "    at async CacheService.get (/app/src/cache.ts:38:5)",
+              ].join("\n"),
+            },
+          },
+        ],
+      }),
+      errorSpan({
+        id: "partial-ok-2",
+        title: "Draft reply",
+        type: "llm_call",
+      }),
+    ],
+  }),
+];
+
 const data: TraceViewerData[] = [
+  {
+    traceRecord: {
+      id: "failed-run",
+      name: "failed-run",
+      spansCount: 3,
+      durationMs: 3000,
+      agentDescription: "relevancy-scoring-agent",
+      startTime: Date.now(),
+    },
+    spans: failedRunSpans,
+    badges: [
+      {
+        label: "app: prod-scorer",
+      },
+    ],
+  },
+  {
+    traceRecord: {
+      id: "partial-failure",
+      name: "partial-failure",
+      spansCount: 4,
+      durationMs: 3000,
+      agentDescription: "customer-support-ai",
+      startTime: Date.now(),
+    },
+    spans: partialFailureSpans,
+    badges: [
+      {
+        label: "app: prod-support",
+      },
+    ],
+  },
   {
     traceRecord: {
       id: "test-data-1",
