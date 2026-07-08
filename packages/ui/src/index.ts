@@ -34,6 +34,17 @@ export { default as SpanBadgeSource } from "./components/SpanBadge.tsx?raw";
 export { TokensBadge } from "./components/TokensBadge";
 export { default as TokensBadgeSource } from "./components/TokensBadge.tsx?raw";
 
+export { ImageBadge, type ImageBadgeProps } from "./components/ImageBadge";
+export { default as ImageBadgeSource } from "./components/ImageBadge.tsx?raw";
+
+export {
+  ImageViewer,
+  ImageGallery,
+  type ImageViewerProps,
+  type ImageGalleryProps,
+} from "./components/ImageViewer";
+export { default as ImageViewerSource } from "./components/ImageViewer.tsx?raw";
+
 export {
   SpanCard,
   type SpanCardViewOptions,
@@ -51,6 +62,9 @@ export { default as TraceListSource } from "./components/TraceList/TraceList.tsx
 
 export { DetailsView } from "./components/DetailsView/DetailsView";
 export { default as DetailsViewSource } from "./components/DetailsView/DetailsView.tsx?raw";
+
+export { DetailsViewImagesTab } from "./components/DetailsView/DetailsViewImagesTab";
+export { default as DetailsViewImagesTabSource } from "./components/DetailsView/DetailsViewImagesTab.tsx?raw";
 
 export { Tabs } from "./components/Tabs";
 export { default as TabsSource } from "./components/Tabs.tsx?raw";
