@@ -54,6 +54,16 @@
     --agentprism-badge-default: 96.7% 0.003 264.542; /* gray.100 */
     --agentprism-badge-default-foreground: 44.6% 0.03 256.802; /* gray.600 */
 
+    /* Attribute badge colors (cache / skill / mcp) */
+    --agentprism-badge-cache: 97% 0.014 254.604; /* blue.50 */
+    --agentprism-badge-cache-foreground: 62.3% 0.214 259.815; /* blue.500 */
+    --agentprism-badge-skill: 97.7% 0.017 320.058; /* fuchsia.50 */
+    --agentprism-badge-skill-foreground: 66.7% 0.295 322.15; /* fuchsia.500 */
+    --agentprism-badge-mcp: 98.4% 0.014 180.72; /* teal.50 */
+    --agentprism-badge-mcp-foreground: 60% 0.118 184.704; /* teal.600 */
+    --agentprism-badge-sidechain: 96.9% 0.016 293.756; /* violet.50 */
+    --agentprism-badge-sidechain-foreground: 60.6% 0.25 292.717; /* violet.500 */
+
     /* Trace colors (llm) */
     --agentprism-avatar-llm: 62.7% 0.265 303.9; /* purple.500 */
     --agentprism-badge-llm: 97.7% 0.014 308.299; /* purple.50 */
@@ -175,6 +185,16 @@
     /* Generic badge colors */
     --agentprism-badge-default: 21% 0.034 264.665; /* gray.900 */
     --agentprism-badge-default-foreground: 70.7% 0.022 261.325; /* gray.400 */
+
+    /* Attribute badge colors (cache / skill / mcp) */
+    --agentprism-badge-cache: 28.2% 0.091 267.935; /* blue.950 */
+    --agentprism-badge-cache-foreground: 80.9% 0.105 251.813; /* blue.300 */
+    --agentprism-badge-skill: 29.3% 0.136 325.661; /* fuchsia.950 */
+    --agentprism-badge-skill-foreground: 83.3% 0.145 321.434; /* fuchsia.300 */
+    --agentprism-badge-mcp: 27.7% 0.046 192.524; /* teal.950 */
+    --agentprism-badge-mcp-foreground: 85.5% 0.138 181.071; /* teal.300 */
+    --agentprism-badge-sidechain: 28.3% 0.141 291.089; /* violet.950 */
+    --agentprism-badge-sidechain-foreground: 81.1% 0.111 293.571; /* violet.300 */
 
     /* Trace colors (llm) */
     --agentprism-avatar-llm: 82.7% 0.119 306.383; /* purple.300 */

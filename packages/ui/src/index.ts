@@ -34,6 +34,36 @@ export { default as SpanBadgeSource } from "./components/SpanBadge.tsx?raw";
 export { TokensBadge } from "./components/TokensBadge";
 export { default as TokensBadgeSource } from "./components/TokensBadge.tsx?raw";
 
+export { ModelBadge, type ModelBadgeProps } from "./components/ModelBadge";
+export { default as ModelBadgeSource } from "./components/ModelBadge.tsx?raw";
+
+export { CacheBadge, type CacheBadgeProps } from "./components/CacheBadge";
+export { default as CacheBadgeSource } from "./components/CacheBadge.tsx?raw";
+
+export {
+  CachedTokensBadge,
+  type CachedTokensBadgeProps,
+} from "./components/CachedTokensBadge";
+export { default as CachedTokensBadgeSource } from "./components/CachedTokensBadge.tsx?raw";
+
+export {
+  ReasoningBadge,
+  type ReasoningBadgeProps,
+} from "./components/ReasoningBadge";
+export { default as ReasoningBadgeSource } from "./components/ReasoningBadge.tsx?raw";
+
+export { SkillBadge, type SkillBadgeProps } from "./components/SkillBadge";
+export { default as SkillBadgeSource } from "./components/SkillBadge.tsx?raw";
+
+export {
+  SidechainBadge,
+  type SidechainBadgeProps,
+} from "./components/SidechainBadge";
+export { default as SidechainBadgeSource } from "./components/SidechainBadge.tsx?raw";
+
+export { McpBadge, type McpBadgeProps } from "./components/McpBadge";
+export { default as McpBadgeSource } from "./components/McpBadge.tsx?raw";
+
 export {
   SpanCard,
   type SpanCardViewOptions,
