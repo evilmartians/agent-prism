@@ -114,8 +114,15 @@ export const langfuseSpanAdapter: SpanAdapter<
       output: typeof span.output === "string" ? span.output : undefined,
     };
   },
-  getSpanStatus(): TraceSpanStatus {
-    return "success";
+  getSpanStatus(span: LangfuseObservation): TraceSpanStatus {
+    switch (span.level) {
+      case "ERROR":
+        return "error";
+      case "WARNING":
+        return "warning";
+      default:
+        return "success";
+    }
   },
   getSpanCategory(span: LangfuseObservation): TraceSpanCategory {
     switch (span.type) {

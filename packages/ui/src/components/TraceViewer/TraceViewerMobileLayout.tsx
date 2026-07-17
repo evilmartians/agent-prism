@@ -14,6 +14,7 @@ export const TraceViewerMobileLayout = ({
   selectedTraceId,
   selectedSpan,
   setSelectedSpan,
+  selectedTraceSpans,
   searchValue,
   setSearchValue,
   filteredSpans,
@@ -43,7 +44,7 @@ export const TraceViewerMobileLayout = ({
         >
           Tree View
         </Button>
-        <DetailsView data={selectedSpan} />
+        <DetailsView data={selectedSpan} allSpans={selectedTraceSpans} />
       </div>
     );
   }
