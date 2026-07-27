@@ -205,6 +205,66 @@ import { langfuseSpanAdapter } from "@evilmartians/agent-prism-data";
 const spans = langfuseSpanAdapter.convertRawDocumentsToSpans(langfuseDocument);
 ```
 
+### Tuning Engines Runtime Traces
+
+If your runtime stores first-class run events instead of raw OTLP documents, map
+them into `TraceRecord` and `TraceSpan` before rendering. For example, Tuning
+Engines exposes stored runtime traces with normalized event types such as
+`model.call`, `mcp.tool_call`, `skill.invoke`, `agent.message`,
+`workflow.step`, and `outcome.recorded`.
+
+```tsx
+import type { TraceRecord, TraceSpan } from "@evilmartians/agent-prism-types";
+
+type TuningEnginesTrace = {
+  run_id: string;
+  runtime: string;
+  status: string;
+  started_at?: string;
+  events: Array<{
+    id: string;
+    parent_id?: string | null;
+    type: string;
+    status?: string | null;
+    started_at?: string | null;
+    ended_at?: string | null;
+    metadata?: Record<string, unknown>;
+  }>;
+};
+
+function toTraceViewerData(trace: TuningEnginesTrace): {
+  traceRecord: TraceRecord;
+  spans: TraceSpan[];
+} {
+  const spans: TraceSpan[] = trace.events.map((event) => ({
+    id: event.id,
+    parentId: event.parent_id ?? undefined,
+    name: event.type,
+    status: event.status ?? "ok",
+    startTime: event.started_at ?? trace.started_at ?? new Date().toISOString(),
+    endTime: event.ended_at ?? event.started_at ?? trace.started_at ?? new Date().toISOString(),
+    attributes: {
+      runtime: trace.runtime,
+      ...event.metadata,
+    },
+  }));
+
+  return {
+    traceRecord: {
+      id: trace.run_id,
+      name: trace.runtime,
+      spansCount: spans.length,
+      durationMs: 0,
+      agentDescription: `Tuning Engines runtime trace (${trace.status})`,
+    },
+    spans,
+  };
+}
+```
+
+This pattern also works for other SDK-side event streams as long as you keep
+stable parent-child relationships and timestamps.
+
 ### Expected Data Structure
 
 The UI components expect this data shape:
