@@ -12,6 +12,12 @@ Try AgentPrism live at [agent-prism.evilmartians.io](https://agent-prism.evilmar
 
 https://github.com/user-attachments/assets/69e592e2-b67c-4ebc-b301-2d8b73492e0d
 
+---
+
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="Evil Martians logo" width="22" height="16" /> <b>AgentPrism</b> is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
+
+---
+
 ## Storybook
 
 [storybook.agent-prism.evilmartians.io](https://storybook.agent-prism.evilmartians.io/?utm_source=github&utm_medium=social)
