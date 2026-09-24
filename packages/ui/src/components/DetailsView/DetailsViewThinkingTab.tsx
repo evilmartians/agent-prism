@@ -1,6 +1,6 @@
 import type {
   TraceSpan,
-  TraceSpanAttribute,
+  TraceReasoningLevel,
 } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
@@ -11,58 +11,8 @@ interface DetailsViewThinkingTabProps {
   data: TraceSpan;
 }
 
-type ThinkingLevel = "high" | "medium" | "low";
-
-interface ThinkingMetadata {
-  level: ThinkingLevel;
-  disabled: boolean;
-  triggers: string[];
-}
-
-function getAttributeString(
-  attributes: TraceSpanAttribute[] | undefined,
-  key: string,
-): string | undefined {
-  return attributes?.find((a) => a.key === key)?.value.stringValue;
-}
-
-function isThinkingLevel(value: unknown): value is ThinkingLevel {
-  return value === "high" || value === "medium" || value === "low";
-}
-
-/**
- * Parses `claude_code.thinking_metadata` at the boundary with a guard (no casts):
- * an unknown `level` or a non-array `triggers` would otherwise crash the render.
- */
-function parseThinkingMetadata(data: TraceSpan): ThinkingMetadata | null {
-  const metadataStr = getAttributeString(
-    data.attributes,
-    "claude_code.thinking_metadata",
-  );
-  if (!metadataStr) return null;
-
-  let parsed: unknown;
-
-  try {
-    parsed = JSON.parse(metadataStr);
-  } catch {
-    return null;
-  }
-
-  if (typeof parsed !== "object" || parsed === null) return null;
-  if (!("level" in parsed) || !isThinkingLevel(parsed.level)) return null;
-
-  const triggers =
-    "triggers" in parsed && Array.isArray(parsed.triggers)
-      ? parsed.triggers.filter((t): t is string => typeof t === "string")
-      : [];
-  const disabled = "disabled" in parsed && parsed.disabled === true;
-
-  return { level: parsed.level, disabled, triggers };
-}
-
 const LEVEL_CONFIG: Record<
-  ThinkingLevel,
+  TraceReasoningLevel,
   { label: string; className: string }
 > = {
   high: {
@@ -81,7 +31,11 @@ const LEVEL_CONFIG: Record<
   },
 };
 
-function ThinkingLevelBadge({ level }: { level: ThinkingLevel }): ReactElement {
+function ThinkingLevelBadge({
+  level,
+}: {
+  level: TraceReasoningLevel;
+}): ReactElement {
   const config = LEVEL_CONFIG[level];
 
   return (
@@ -99,13 +53,9 @@ function ThinkingLevelBadge({ level }: { level: ThinkingLevel }): ReactElement {
 export const DetailsViewThinkingTab = ({
   data,
 }: DetailsViewThinkingTabProps): ReactElement => {
-  const thinkingContent = getAttributeString(
-    data.attributes,
-    "claude_code.thinking",
-  );
-  const metadata = parseThinkingMetadata(data);
+  const { reasoning } = data;
 
-  if (!thinkingContent) {
+  if (!reasoning) {
     return (
       <div className="border-agentprism-border rounded-md border p-4">
         <p className="text-agentprism-muted-foreground text-sm">
@@ -119,14 +69,25 @@ export const DetailsViewThinkingTab = ({
     );
   }
 
+  const triggers = reasoning.triggers ?? [];
+  const hasSummary =
+    reasoning.level !== undefined ||
+    triggers.length > 0 ||
+    reasoning.tokens !== undefined;
+
   return (
     <div className="space-y-4">
-      {metadata && (
+      {hasSummary && (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <ThinkingLevelBadge level={metadata.level} />
-          {metadata.triggers.length > 0 && (
+          {reasoning.level && <ThinkingLevelBadge level={reasoning.level} />}
+          {reasoning.tokens !== undefined && (
             <span className="text-agentprism-muted-foreground text-xs">
-              Triggers: {metadata.triggers.join(", ")}
+              {reasoning.tokens.toLocaleString()} thinking tokens
+            </span>
+          )}
+          {triggers.length > 0 && (
+            <span className="text-agentprism-muted-foreground text-xs">
+              Triggers: {triggers.join(", ")}
             </span>
           )}
         </div>
@@ -137,9 +98,16 @@ export const DetailsViewThinkingTab = ({
           <Brain className="size-4" />
           Extended Thinking
         </div>
-        <div className="text-agentprism-foreground max-h-[60vh] overflow-y-auto whitespace-pre-wrap break-words text-sm leading-relaxed">
-          {thinkingContent}
-        </div>
+        {reasoning.content ? (
+          <div className="text-agentprism-foreground max-h-[60vh] overflow-y-auto whitespace-pre-wrap break-words text-sm leading-relaxed">
+            {reasoning.content}
+          </div>
+        ) : (
+          <p className="text-agentprism-muted-foreground text-sm">
+            The provider reported thinking tokens but did not return the
+            thinking text.
+          </p>
+        )}
       </div>
     </div>
   );

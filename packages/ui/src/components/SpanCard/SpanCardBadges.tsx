@@ -1,5 +1,7 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
+import { getTotalCost, getTotalTokens } from "@evilmartians/agent-prism-data";
+
 import { PriceBadge } from "../PriceBadge";
 import { SpanBadge } from "../SpanBadge";
 import { TokensBadge } from "../TokensBadge";
@@ -13,11 +15,12 @@ export const SpanCardBadges = ({ data }: SpanCardBagdesProps) => {
     <div className="flex flex-wrap items-center justify-start gap-1">
       <SpanBadge category={data.type} />
 
-      {typeof data.tokensCount === "number" && (
-        <TokensBadge tokensCount={data.tokensCount} />
+      {data.tokenUsage && (
+        <>
+          <TokensBadge tokensCount={getTotalTokens(data.tokenUsage)} />
+          <PriceBadge cost={getTotalCost(data.tokenUsage)} />
+        </>
       )}
-
-      {typeof data.cost === "number" && <PriceBadge cost={data.cost} />}
     </div>
   );
 };

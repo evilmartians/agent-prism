@@ -1,4 +1,9 @@
-import type { InputOutputData } from "@evilmartians/agent-prism-types";
+import type {
+  InputOutputData,
+  TokenUsage,
+  TraceReasoning,
+  TraceTodo,
+} from "@evilmartians/agent-prism-types";
 
 import {
   INPUT_OUTPUT_ATTRIBUTES,
@@ -12,6 +17,7 @@ import {
 
 import type { SpanAdapter } from "../types";
 
+import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { categorizeOpenInference } from "./utils/categorize-open-inference.js";
 import { categorizeOpenTelemetryGenAI } from "./utils/categorize-open-telemetry-gen-ai.js";
 import { categorizeStandardOpenTelemetry } from "./utils/categorize-standard-open-telemetry.js";
@@ -19,6 +25,17 @@ import { convertNanoTimestampToDate } from "./utils/convert-nano-timestamp-to-da
 import { generateOpenTelemetrySpanTitle } from "./utils/generate-open-telemetry-span-title.js";
 import { getOpenTelemetryAttributeValue } from "./utils/get-open-telemetry-attribute-value.js";
 import { getOpenTelemetrySpanStandard } from "./utils/get-open-telemetry-span-standard.js";
+
+const getNumberAttribute = (
+  span: OpenTelemetrySpan,
+  key: string,
+): number | undefined => {
+  const value = getOpenTelemetryAttributeValue(span, key);
+
+  return typeof value === "number" && Number.isFinite(value)
+    ? value
+    : undefined;
+};
 
 export const openTelemetrySpanAdapter: SpanAdapter<
   OpenTelemetryDocument,
@@ -79,102 +96,105 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     span: OpenTelemetrySpan,
     children: TraceSpan[] = [],
   ): TraceSpan {
-    const duration = this.getSpanDuration(span);
-    const status = this.getSpanStatus(span);
-    const type = this.getSpanCategory(span);
-    const tokensCount = this.getSpanTokensCount(span);
-    const cost = this.getSpanCost(span);
     const ioData = this.getSpanInputOutput(span);
-    const title = generateOpenTelemetrySpanTitle(span);
 
     return {
       id: span.spanId,
-      title,
-      type,
-      status,
+      title: generateOpenTelemetrySpanTitle(span),
+      type: this.getSpanCategory(span),
+      status: this.getSpanStatus(span),
       attributes: span.attributes,
-      duration,
-      tokensCount,
-      raw: JSON.stringify(span, null, 2),
-      cost,
+      raw: [JSON.stringify(span, null, 2)],
       startTime: convertNanoTimestampToDate(span.startTimeUnixNano),
       endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
       children,
       input: ioData.input,
       output: ioData.output,
+      tokenUsage: this.getTokenUsage(span),
+      reasoning: this.getTraceReasoning(span),
+      todos: this.getTraceTodos(span),
     };
   },
 
-  getSpanDuration(span: OpenTelemetrySpan): number {
-    // Convert string nanosecond timestamps to BigInt for precise arithmetic
-    const startNano = BigInt(span.startTimeUnixNano);
-    const endNano = BigInt(span.endTimeUnixNano);
-
-    // Calculate duration in nanoseconds
-    const durationNano = endNano - startNano;
-
-    // Divide by 1_000_000 to get milliseconds
-    return Number(durationNano / BigInt(1_000_000));
-  },
-
-  getSpanCost(span: OpenTelemetrySpan): number {
-    const inputCost = getOpenTelemetryAttributeValue(
+  getTokenUsage(span: OpenTelemetrySpan): TokenUsage | undefined {
+    const input = getNumberAttribute(
+      span,
+      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS,
+    );
+    const output = getNumberAttribute(
+      span,
+      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_TOKENS,
+    );
+    const inputCost = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_COST,
     );
-
-    const outputCost = getOpenTelemetryAttributeValue(
+    const outputCost = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_COST,
     );
 
-    let totalCost = 0;
+    // Per the GenAI semantic conventions, cache counts are part of
+    // input_tokens; they are taken out of it so no token is counted twice.
+    const cacheRead = getNumberAttribute(
+      span,
+      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_CACHE_READ_INPUT_TOKENS,
+    );
+    const cacheWrite = getNumberAttribute(
+      span,
+      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_CACHE_CREATION_INPUT_TOKENS,
+    );
 
-    if (typeof inputCost === "number") {
-      totalCost += inputCost;
-    }
+    let usage: TokenUsage = {};
 
-    if (typeof outputCost === "number") {
-      totalCost += outputCost;
-    }
+    if (input !== undefined || inputCost !== undefined) {
+      const uncachedInput = (input ?? 0) - (cacheRead ?? 0) - (cacheWrite ?? 0);
 
-    // If both are missing, use fallback
-    if (totalCost === 0) {
-      const fallbackCost = getOpenTelemetryAttributeValue(
-        span,
-        "gen_ai.usage.cost",
+      usage = addTokenUsage(
+        usage,
+        "input",
+        Math.max(uncachedInput, 0),
+        inputCost,
       );
-
-      if (typeof fallbackCost === "number") {
-        totalCost = fallbackCost;
-      }
     }
 
-    return totalCost;
+    // Reasoning tokens stay inside output; getTraceReasoning reports them.
+    if (output !== undefined || outputCost !== undefined) {
+      usage = addTokenUsage(usage, "output", output ?? 0, outputCost);
+    }
+
+    if (cacheRead !== undefined) {
+      usage = addTokenUsage(usage, "cache_read", cacheRead);
+    }
+
+    if (cacheWrite !== undefined) {
+      usage = addTokenUsage(usage, "cache_write", cacheWrite);
+    }
+
+    usage = addReportedTotal(
+      usage,
+      getNumberAttribute(
+        span,
+        OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS,
+      ),
+      getNumberAttribute(span, OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_COST),
+    );
+
+    return Object.keys(usage).length > 0 ? usage : undefined;
   },
 
-  getSpanTokensCount(span: OpenTelemetrySpan): number {
-    const totalTokens = getOpenTelemetryAttributeValue(
+  getTraceReasoning(span: OpenTelemetrySpan): TraceReasoning | undefined {
+    const tokens = getNumberAttribute(
       span,
-      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_TOTAL_TOKENS,
-    );
-    const inputTokens = getOpenTelemetryAttributeValue(
-      span,
-      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS,
-    );
-    const outputTokens = getOpenTelemetryAttributeValue(
-      span,
-      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_TOKENS,
+      OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_REASONING_OUTPUT_TOKENS,
     );
 
-    if (typeof totalTokens === "number") {
-      return totalTokens;
-    }
+    // The semantic conventions carry the reasoning token count, not the text.
+    return tokens !== undefined ? { content: "", tokens } : undefined;
+  },
 
-    const input = typeof inputTokens === "number" ? inputTokens : 0;
-    const output = typeof outputTokens === "number" ? outputTokens : 0;
-
-    return input + output;
+  getTraceTodos(): TraceTodo[] | undefined {
+    return undefined;
   },
 
   getSpanInputOutput(span: OpenTelemetrySpan): InputOutputData {

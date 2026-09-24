@@ -16,6 +16,9 @@ Note: This package has a peer dependency on `@evilmartians/agent-prism-types`.
 
 ```typescript
 import {
+  getDurationMs,
+  getTotalCost,
+  getTotalTokens,
   openTelemetrySpanAdapter,
   langfuseSpanAdapter,
 } from "@evilmartians/agent-prism-data";
@@ -36,11 +39,16 @@ const spanCard = openTelemetrySpanAdapter.convertRawSpanToTraceSpan(otlpSpan);
 
 // Extract information from spans
 const category = openTelemetrySpanAdapter.getSpanCategory(otlpSpan);
-const cost = openTelemetrySpanAdapter.getSpanCost(otlpSpan);
-const duration = openTelemetrySpanAdapter.getSpanDuration(otlpSpan);
 const inputOutput = openTelemetrySpanAdapter.getSpanInputOutput(otlpSpan);
 const status = openTelemetrySpanAdapter.getSpanStatus(otlpSpan);
-const tokens = openTelemetrySpanAdapter.getSpanTokensCount(otlpSpan);
+const usage = openTelemetrySpanAdapter.getTokenUsage(otlpSpan);
+const reasoning = openTelemetrySpanAdapter.getTraceReasoning(otlpSpan);
+const todos = openTelemetrySpanAdapter.getTraceTodos(otlpSpan);
+
+// Derived values are computed from the span's fields
+const duration = getDurationMs(spanCard); // from startTime/endTime
+const totalTokens = getTotalTokens(usage);
+const totalCost = getTotalCost(usage);
 ```
 
 ## Features

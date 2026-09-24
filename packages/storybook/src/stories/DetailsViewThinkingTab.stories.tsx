@@ -1,4 +1,7 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type {
+  TraceSpan,
+  TraceReasoning,
+} from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
@@ -12,18 +15,14 @@ const baseSpan: TraceSpan = {
   title: "Assistant message",
   startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  duration: 3000,
   type: "llm_call",
-  raw: "",
+  raw: [],
   status: "success",
-  cost: 0,
-  tokensCount: 0,
-  attributes: [],
 };
 
-const withAttributes = (attributes: TraceSpan["attributes"]): TraceSpan => ({
+const withReasoning = (reasoning?: TraceReasoning): TraceSpan => ({
   ...baseSpan,
-  attributes,
+  reasoning,
 });
 
 const meta = {
@@ -50,44 +49,34 @@ type Story = StoryObj<typeof meta>;
 
 export const WithThinking: Story = {
   args: {
-    data: withAttributes([
-      {
-        key: "claude_code.thinking",
-        value: {
-          stringValue:
-            "Let me reason about the request step by step. First I need to understand the constraints, then evaluate the options, then pick the safest path.",
-        },
-      },
-    ]),
+    data: withReasoning({
+      content:
+        "Let me reason about the request step by step. First I need to understand the constraints, then evaluate the options, then pick the safest path.",
+    }),
   },
 };
 
 export const WithMetadata: Story = {
   args: {
-    data: withAttributes([
-      {
-        key: "claude_code.thinking",
-        value: {
-          stringValue:
-            "Considering the trade-offs between latency and accuracy before responding.",
-        },
-      },
-      {
-        key: "claude_code.thinking_metadata",
-        value: {
-          stringValue: JSON.stringify({
-            level: "high",
-            disabled: false,
-            triggers: ["complex reasoning", "multi-step"],
-          }),
-        },
-      },
-    ]),
+    data: withReasoning({
+      content:
+        "Considering the trade-offs between latency and accuracy before responding.",
+      tokens: 1280,
+      level: "high",
+      triggers: ["complex reasoning", "multi-step"],
+    }),
+  },
+};
+
+/** The provider reported reasoning tokens but withheld the text. */
+export const TokensOnly: Story = {
+  args: {
+    data: withReasoning({ content: "", tokens: 512 }),
   },
 };
 
 export const Empty: Story = {
   args: {
-    data: withAttributes([]),
+    data: withReasoning(),
   },
 };

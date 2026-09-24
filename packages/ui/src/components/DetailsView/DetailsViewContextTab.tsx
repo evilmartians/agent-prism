@@ -4,6 +4,12 @@ import type {
 } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
+import {
+  getTokenUsageEntries,
+  getTotalCost,
+  getTotalTokens,
+} from "@evilmartians/agent-prism-data";
+
 interface DetailsViewContextTabProps {
   data: TraceSpan;
 }
@@ -40,6 +46,17 @@ function formatTokens(tokens: number): string {
   if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}k`;
   return String(tokens);
 }
+
+function formatCost(cost: number): string {
+  return `$${cost.toFixed(4)}`;
+}
+
+const TOKEN_TYPE_LABELS: Record<string, string> = {
+  input: "Input tokens",
+  output: "Output tokens",
+  cache_read: "Cache read",
+  cache_write: "Cache write",
+};
 
 interface StatRowData {
   label: string;
@@ -95,24 +112,11 @@ export function DetailsViewContextTab({
   const model = getStringAttr(data.attributes, "gen_ai.request.model");
   const speed = getStringAttr(data.attributes, "claude_code.usage.speed");
 
-  const inputTokens = getIntAttr(data.attributes, "gen_ai.usage.input_tokens");
-  const outputTokens = getIntAttr(
-    data.attributes,
-    "gen_ai.usage.output_tokens",
-  );
-  const cacheReadTokens = getIntAttr(
-    data.attributes,
-    "gen_ai.usage.cache_read_input_tokens",
-  );
-  const cacheCreationTokens = getIntAttr(
-    data.attributes,
-    "gen_ai.usage.cache_creation_input_tokens",
-  );
+  const usage = data.tokenUsage;
 
   const hasContextData =
     cumulativeTokens !== undefined || fillPercent !== undefined;
-  const hasTokenBreakdown =
-    inputTokens !== undefined || outputTokens !== undefined;
+  const hasTokenBreakdown = usage !== undefined;
 
   if (!hasContextData && !hasTokenBreakdown) {
     return (
@@ -158,37 +162,22 @@ export function DetailsViewContextTab({
     });
   }
 
-  const breakdownRows: StatRowData[] = [];
-  if (inputTokens !== undefined) {
-    breakdownRows.push({
-      label: "Input tokens",
-      value: formatTokens(inputTokens),
-    });
-  }
-  if (outputTokens !== undefined) {
-    breakdownRows.push({
-      label: "Output tokens",
-      value: formatTokens(outputTokens),
-    });
-  }
-  if (cacheReadTokens !== undefined && cacheReadTokens > 0) {
-    breakdownRows.push({
-      label: "Cache read",
-      value: formatTokens(cacheReadTokens),
-    });
-  }
-  if (cacheCreationTokens !== undefined && cacheCreationTokens > 0) {
-    breakdownRows.push({
-      label: "Cache write",
-      value: formatTokens(cacheCreationTokens),
-    });
-  }
-  if (data.tokensCount !== undefined) {
-    breakdownRows.push({
-      label: "Total",
-      value: formatTokens(data.tokensCount),
-    });
-  }
+  // The `total` entry holds whatever the source did not break down by type, so
+  // it has no row of its own: it is already part of the Total row.
+  const breakdownRows: StatRowData[] = getTokenUsageEntries(usage)
+    .filter(
+      (entry) =>
+        entry.type !== "total" && (entry.tokens !== 0 || entry.cost !== 0),
+    )
+    .map((entry) => ({
+      label: TOKEN_TYPE_LABELS[entry.type] ?? entry.type,
+      value: formatTokens(entry.tokens),
+      sub: entry.cost !== 0 ? formatCost(entry.cost) : undefined,
+    }));
+  breakdownRows.push({
+    label: "Total",
+    value: formatTokens(getTotalTokens(usage)),
+  });
 
   return (
     <div className="space-y-4">
@@ -248,10 +237,10 @@ export function DetailsViewContextTab({
         </div>
       )}
 
-      {data.cost !== undefined && (
+      {hasTokenBreakdown && (
         <div className="border-agentprism-border rounded-md border p-3">
           <StatGrid
-            rows={[{ label: "Cost", value: `$${data.cost.toFixed(4)}` }]}
+            rows={[{ label: "Cost", value: formatCost(getTotalCost(usage)) }]}
           />
         </div>
       )}

@@ -1,7 +1,12 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactNode } from "react";
 
-import { getDurationMs, formatDuration } from "@evilmartians/agent-prism-data";
+import {
+  formatDuration,
+  getDurationMs,
+  getTotalCost,
+  getTotalTokens,
+} from "@evilmartians/agent-prism-data";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
@@ -80,11 +85,12 @@ export const DetailsViewHeader = ({
 
       <SpanBadge category={data.type} />
 
-      {typeof data.tokensCount === "number" && (
-        <TokensBadge tokensCount={data.tokensCount} />
+      {data.tokenUsage && (
+        <>
+          <TokensBadge tokensCount={getTotalTokens(data.tokenUsage)} />
+          <PriceBadge cost={getTotalCost(data.tokenUsage)} />
+        </>
       )}
-
-      {typeof data.cost === "number" && <PriceBadge cost={data.cost} />}
 
       <span className="text-agentprism-muted-foreground text-xs">
         LATENCY: {formatDuration(durationMs)}

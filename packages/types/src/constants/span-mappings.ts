@@ -11,6 +11,10 @@ export const OPENTELEMETRY_GENAI_ATTRIBUTES = {
   USAGE_INPUT_TOKENS: "gen_ai.usage.input_tokens",
   USAGE_OUTPUT_TOKENS: "gen_ai.usage.output_tokens",
   USAGE_TOTAL_TOKENS: "gen_ai.usage.total_tokens",
+  // Part of input_tokens / output_tokens, per the GenAI semantic conventions
+  USAGE_CACHE_READ_INPUT_TOKENS: "gen_ai.usage.cache_read.input_tokens",
+  USAGE_CACHE_CREATION_INPUT_TOKENS: "gen_ai.usage.cache_creation.input_tokens",
+  USAGE_REASONING_OUTPUT_TOKENS: "gen_ai.usage.reasoning.output_tokens",
   USAGE_COST: "gen_ai.usage.cost",
   USAGE_INPUT_COST: "gen_ai.usage.input_cost",
   USAGE_OUTPUT_COST: "gen_ai.usage.output_cost",

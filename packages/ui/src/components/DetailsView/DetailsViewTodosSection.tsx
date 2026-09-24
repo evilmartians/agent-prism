@@ -1,11 +1,10 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type {
+  TraceSpan,
+  TraceTodo,
+  TraceTodoStatus,
+} from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
-import {
-  parseTodos,
-  type TodoItem,
-  type TodoStatus,
-} from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import { CheckCircle2, Circle, CircleDot, ListTodo } from "lucide-react";
 
@@ -14,7 +13,7 @@ interface DetailsViewTodosSectionProps {
   className?: string;
 }
 
-function StatusIcon({ status }: { status: TodoStatus }): ReactElement {
+function StatusIcon({ status }: { status: TraceTodoStatus }): ReactElement {
   switch (status) {
     case "completed":
       return (
@@ -32,7 +31,7 @@ function StatusIcon({ status }: { status: TodoStatus }): ReactElement {
   }
 }
 
-function TodoItemRow({ todo }: { todo: TodoItem }): ReactElement {
+function TodoItemRow({ todo }: { todo: TraceTodo }): ReactElement {
   const isCompleted = todo.status === "completed";
   const isInProgress = todo.status === "in_progress";
 
@@ -53,7 +52,7 @@ function TodoItemRow({ todo }: { todo: TodoItem }): ReactElement {
           !isCompleted && !isInProgress && "text-agentprism-foreground",
         )}
       >
-        {todo.content}
+        {todo.title}
       </span>
     </div>
   );
@@ -63,7 +62,7 @@ export const DetailsViewTodosSection = ({
   data,
   className,
 }: DetailsViewTodosSectionProps): ReactElement | null => {
-  const todos = parseTodos(data);
+  const { todos } = data;
 
   if (!todos || todos.length === 0) {
     return null;
@@ -108,7 +107,7 @@ export const DetailsViewTodosSection = ({
 
       <div className="space-y-0.5 p-2">
         {todos.map((todo, index) => (
-          <TodoItemRow key={`${todo.content}-${index}`} todo={todo} />
+          <TodoItemRow key={`${todo.title}-${index}`} todo={todo} />
         ))}
       </div>
     </div>
