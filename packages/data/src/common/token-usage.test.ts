@@ -6,6 +6,7 @@ import {
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
+  hasReportedCost,
 } from "./token-usage";
 
 describe("token usage", () => {
@@ -81,13 +82,51 @@ describe("token usage", () => {
     });
 
     it.each([Number.NaN, Number.POSITIVE_INFINITY])(
-      "counts %s as zero",
+      "counts %s tokens as zero and ignores it as a cost",
       (value) => {
         expect(addTokenUsage({}, "input", value, value)).toEqual({
-          input: { tokens: 0, cost: 0 },
+          input: { tokens: 0 },
         });
       },
     );
+
+    it("leaves the cost out when none was reported", () => {
+      expect(addTokenUsage({}, "input", 100)).toEqual({
+        input: { tokens: 100 },
+      });
+    });
+
+    it("keeps an explicitly reported zero cost", () => {
+      expect(addTokenUsage({}, "input", 100, 0)).toEqual({
+        input: { tokens: 100, cost: 0 },
+      });
+    });
+
+    it("keeps an earlier cost when later tokens come without one", () => {
+      const usage = addTokenUsage(
+        addTokenUsage({}, "input", 100, 0.001),
+        "input",
+        50,
+      );
+
+      expect(usage).toEqual({ input: { tokens: 150, cost: 0.001 } });
+    });
+  });
+
+  describe("hasReportedCost", () => {
+    it("is false when no entry carries a cost", () => {
+      expect(hasReportedCost({ input: { tokens: 100 } })).toBe(false);
+      expect(hasReportedCost(undefined)).toBe(false);
+    });
+
+    it("is true for any reported cost, zero included", () => {
+      expect(
+        hasReportedCost({
+          input: { tokens: 100 },
+          output: { tokens: 5, cost: 0 },
+        }),
+      ).toBe(true);
+    });
   });
 
   describe("addReportedTotal", () => {
@@ -120,7 +159,8 @@ describe("token usage", () => {
     });
 
     it("records a reported zero", () => {
-      expect(addReportedTotal({}, 0)).toEqual({
+      expect(addReportedTotal({}, 0)).toEqual({ total: { tokens: 0 } });
+      expect(addReportedTotal({}, undefined, 0)).toEqual({
         total: { tokens: 0, cost: 0 },
       });
     });

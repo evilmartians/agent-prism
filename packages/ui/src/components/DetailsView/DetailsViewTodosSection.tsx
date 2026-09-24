@@ -13,20 +13,37 @@ interface DetailsViewTodosSectionProps {
   className?: string;
 }
 
+// Status is otherwise shown only by icon, color and strike-through, so each row
+// and count also carries it as text for screen readers.
+const STATUS_LABELS: Record<TraceTodoStatus, string> = {
+  completed: "Completed",
+  in_progress: "In progress",
+  pending: "Pending",
+};
+
 function StatusIcon({ status }: { status: TraceTodoStatus }): ReactElement {
   switch (status) {
     case "completed":
       return (
-        <CheckCircle2 className="text-agentprism-success-muted-foreground size-4 shrink-0" />
+        <CheckCircle2
+          aria-hidden
+          className="text-agentprism-success-muted-foreground size-4 shrink-0"
+        />
       );
     case "in_progress":
       return (
-        <CircleDot className="text-agentprism-pending-muted-foreground size-4 shrink-0" />
+        <CircleDot
+          aria-hidden
+          className="text-agentprism-pending-muted-foreground size-4 shrink-0"
+        />
       );
     case "pending":
     default:
       return (
-        <Circle className="text-agentprism-muted-foreground size-4 shrink-0" />
+        <Circle
+          aria-hidden
+          className="text-agentprism-muted-foreground size-4 shrink-0"
+        />
       );
   }
 }
@@ -52,6 +69,7 @@ function TodoItemRow({ todo }: { todo: TraceTodo }): ReactElement {
           !isCompleted && !isInProgress && "text-agentprism-foreground",
         )}
       >
+        <span className="sr-only">{STATUS_LABELS[todo.status]}: </span>
         {todo.title}
       </span>
     </div>
@@ -78,7 +96,10 @@ export const DetailsViewTodosSection = ({
     >
       <div className="border-agentprism-border flex items-center justify-between border-b px-3 py-2">
         <div className="flex items-center gap-2">
-          <ListTodo className="text-agentprism-muted-foreground size-4" />
+          <ListTodo
+            aria-hidden
+            className="text-agentprism-muted-foreground size-4"
+          />
           <span className="text-agentprism-foreground text-sm font-medium">
             Tasks
           </span>
@@ -86,20 +107,29 @@ export const DetailsViewTodosSection = ({
         <div className="text-agentprism-muted-foreground flex items-center gap-3 text-xs">
           {completed > 0 && (
             <span className="flex items-center gap-1">
-              <CheckCircle2 className="text-agentprism-success-muted-foreground size-3" />
+              <CheckCircle2
+                aria-hidden
+                className="text-agentprism-success-muted-foreground size-3"
+              />
               {completed}
+              <span className="sr-only"> completed</span>
             </span>
           )}
           {inProgress > 0 && (
             <span className="flex items-center gap-1">
-              <CircleDot className="text-agentprism-pending-muted-foreground size-3" />
+              <CircleDot
+                aria-hidden
+                className="text-agentprism-pending-muted-foreground size-3"
+              />
               {inProgress}
+              <span className="sr-only"> in progress</span>
             </span>
           )}
           {pending > 0 && (
             <span className="flex items-center gap-1">
-              <Circle className="size-3" />
+              <Circle aria-hidden className="size-3" />
               {pending}
+              <span className="sr-only"> pending</span>
             </span>
           )}
         </div>

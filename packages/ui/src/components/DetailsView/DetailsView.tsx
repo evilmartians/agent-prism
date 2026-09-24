@@ -88,9 +88,9 @@ export interface DetailsViewProps {
 }
 
 /**
- * Tabs are content-aware: the Thinking and Context tabs are only offered when the
- * span actually carries that content, so a plain OTLP/Langfuse span shows just the
- * generic tabs (cross-vendor safe).
+ * Tabs are content-aware. Thinking is offered for any span that reports
+ * reasoning, whatever the vendor, even when only a reasoning-token count is
+ * known.
  */
 const getTabItems = (data: TraceSpan): TabItem<DetailsViewTab>[] => [
   {

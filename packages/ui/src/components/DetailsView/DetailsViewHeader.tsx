@@ -6,6 +6,7 @@ import {
   getDurationMs,
   getTotalCost,
   getTotalTokens,
+  hasReportedCost,
 } from "@evilmartians/agent-prism-data";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
@@ -88,7 +89,9 @@ export const DetailsViewHeader = ({
       {data.tokenUsage && (
         <>
           <TokensBadge tokensCount={getTotalTokens(data.tokenUsage)} />
-          <PriceBadge cost={getTotalCost(data.tokenUsage)} />
+          {hasReportedCost(data.tokenUsage) && (
+            <PriceBadge cost={getTotalCost(data.tokenUsage)} />
+          )}
         </>
       )}
 

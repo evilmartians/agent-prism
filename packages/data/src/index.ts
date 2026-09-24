@@ -13,6 +13,7 @@ export {
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
+  hasReportedCost,
   type TokenUsageRow,
 } from "./common/token-usage.js";
 export {

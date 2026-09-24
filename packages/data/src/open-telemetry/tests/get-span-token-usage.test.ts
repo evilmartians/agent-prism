@@ -6,6 +6,7 @@ import {
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
+  hasReportedCost,
 } from "../../common/token-usage";
 import { openTelemetrySpanAdapter } from "../adapter";
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
@@ -163,7 +164,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
       expect(getTotalCost(usage)).toBe(0.0045);
     });
 
-    it("reports zero cost for a local model", () => {
+    it("reports no cost for a local model that sends none", () => {
       const usage = usageOf({
         "gen_ai.request.model": "llama-2-7b",
         [GENAI.USAGE_INPUT_TOKENS]: 200,
@@ -171,6 +172,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
       });
 
       expect(getTotalCost(usage)).toBe(0);
+      expect(hasReportedCost(usage)).toBe(false);
       expect(getTotalTokens(usage)).toBe(350);
     });
 
@@ -236,6 +238,9 @@ describe("openTelemetrySpanAdapter.getTraceReasoning", () => {
 
   it("is undefined when the span reports no reasoning tokens", () => {
     expect(reasoningOf({ "gen_ai.request.model": "gpt-4" })).toBeUndefined();
+    expect(
+      reasoningOf({ [GENAI.USAGE_REASONING_OUTPUT_TOKENS]: 0 }),
+    ).toBeUndefined();
   });
 
   it("reads reasoning tokens reported without the text", () => {

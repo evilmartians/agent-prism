@@ -8,6 +8,7 @@ import {
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
+  hasReportedCost,
 } from "@evilmartians/agent-prism-data";
 
 interface DetailsViewContextTabProps {
@@ -47,8 +48,18 @@ function formatTokens(tokens: number): string {
   return String(tokens);
 }
 
+const smallCostFormat = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumSignificantDigits: 2,
+});
+
+// Four decimals suit typical LLM costs. Smaller non-zero costs keep two
+// significant digits instead, so a real charge never reads as $0.0000.
 function formatCost(cost: number): string {
-  return `$${cost.toFixed(4)}`;
+  return cost !== 0 && Math.abs(cost) < 0.0001
+    ? smallCostFormat.format(cost)
+    : `$${cost.toFixed(4)}`;
 }
 
 const TOKEN_TYPE_LABELS: Record<string, string> = {
@@ -136,16 +147,22 @@ export function DetailsViewContextTab({
     fillPercent !== undefined
       ? Math.min(Math.max(fillPercent, 0), 100)
       : undefined;
-  // Guard against a zero/negative context_limit, which would make the bar width
-  // NaN or Infinity below.
-  const limit = contextLimit && contextLimit > 0 ? contextLimit : 200_000;
+  // Context windows differ by model, so only a reported, positive limit is used.
+  // Without one, the limit stays unknown rather than defaulting to a guess.
+  const limit =
+    contextLimit !== undefined && contextLimit > 0 ? contextLimit : undefined;
+  const barFill =
+    cappedFill ??
+    (cumulativeTokens !== undefined && limit !== undefined
+      ? Math.min(Math.max((cumulativeTokens / limit) * 100, 0), 100)
+      : undefined);
 
   const contextRows: StatRowData[] = [];
   if (cumulativeTokens !== undefined) {
     contextRows.push({
       label: "Cumulative tokens",
       value: formatTokens(cumulativeTokens),
-      sub: `of ${formatTokens(limit)}`,
+      sub: limit !== undefined ? `of ${formatTokens(limit)}` : undefined,
     });
   }
   if (cappedFill !== undefined) {
@@ -200,14 +217,20 @@ export function DetailsViewContextTab({
             Context Window Position
           </h4>
 
-          {cumulativeTokens !== undefined && (
+          {barFill !== undefined && (
             <>
-              <div className="bg-agentprism-secondary relative h-4 overflow-hidden rounded-md">
+              <div
+                role="progressbar"
+                aria-label="Context window fill"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Number(barFill.toFixed(1))}
+                aria-valuetext={`${barFill.toFixed(1)}%`}
+                className="bg-agentprism-secondary relative h-4 overflow-hidden rounded-md"
+              >
                 <div
                   className="bg-agentprism-context-source-conversation absolute left-0 top-0 h-full transition-all"
-                  style={{
-                    width: `${cappedFill ?? Math.min(Math.max((cumulativeTokens / limit) * 100, 0), 100)}%`,
-                  }}
+                  style={{ width: `${barFill}%` }}
                 />
                 <div
                   className="bg-agentprism-warning absolute top-0 h-full w-px"
@@ -215,10 +238,12 @@ export function DetailsViewContextTab({
                   title="Compaction threshold"
                 />
               </div>
-              <div className="text-agentprism-muted-foreground mt-1 flex justify-between text-[10px]">
-                <span>0</span>
-                <span>{formatTokens(limit)}</span>
-              </div>
+              {limit !== undefined && (
+                <div className="text-agentprism-muted-foreground mt-1 flex justify-between text-[10px]">
+                  <span>0</span>
+                  <span>{formatTokens(limit)}</span>
+                </div>
+              )}
             </>
           )}
 
@@ -237,7 +262,7 @@ export function DetailsViewContextTab({
         </div>
       )}
 
-      {hasTokenBreakdown && (
+      {hasReportedCost(usage) && (
         <div className="border-agentprism-border rounded-md border p-3">
           <StatGrid
             rows={[{ label: "Cost", value: formatCost(getTotalCost(usage)) }]}

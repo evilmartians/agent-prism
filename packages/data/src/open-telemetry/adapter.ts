@@ -190,7 +190,10 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     );
 
     // The semantic conventions carry the reasoning token count, not the text.
-    return tokens !== undefined ? { content: "", tokens } : undefined;
+    // Non-reasoning calls often report 0, which is no reasoning to show.
+    return tokens !== undefined && tokens > 0
+      ? { content: "", tokens }
+      : undefined;
   },
 
   getTraceTodos(): TraceTodo[] | undefined {

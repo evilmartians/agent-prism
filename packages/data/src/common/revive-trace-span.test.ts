@@ -24,8 +24,25 @@ describe("isTraceSpanLike", () => {
     expect(isTraceSpanLike({ ...baseJSON, status: undefined })).toBe(false);
   });
 
-  it("rejects a raw that is not a list", () => {
+  it.each([
+    ["an unknown status", { status: "failed" }],
+    ["an unknown type", { type: "llm" }],
+    ["an unparseable startTime", { startTime: "yesterday" }],
+    ["an unparseable endTime", { endTime: Number.NaN }],
+    ["a non-timestamp endTime", { endTime: { at: 1 } }],
+  ])("rejects %s", (_label, override) => {
+    expect(isTraceSpanLike({ ...baseJSON, ...override })).toBe(false);
+  });
+
+  it("accepts epoch-millisecond timestamps", () => {
+    expect(isTraceSpanLike({ ...baseJSON, startTime: 0, endTime: 1_000 })).toBe(
+      true,
+    );
+  });
+
+  it("rejects a raw that is not a list of strings", () => {
     expect(isTraceSpanLike({ ...baseJSON, raw: "{}" })).toBe(false);
+    expect(isTraceSpanLike({ ...baseJSON, raw: ["{}", 42] })).toBe(false);
   });
 
   it("rejects non-objects", () => {
@@ -53,5 +70,77 @@ describe("reviveTraceSpan", () => {
 
   it("throws on a value that is not span-shaped", () => {
     expect(() => reviveTraceSpan({ id: "1" })).toThrow(TypeError);
+  });
+
+  describe("malformed optional structures", () => {
+    it("keeps only well-formed todos", () => {
+      const span = reviveTraceSpan({
+        ...baseJSON,
+        todos: [
+          { title: "Plan", status: "pending" },
+          { title: "No status" },
+          { title: 42, status: "completed" },
+          { title: "Unknown status", status: "blocked" },
+          "not a todo",
+        ],
+      });
+
+      expect(span.todos).toEqual([{ title: "Plan", status: "pending" }]);
+    });
+
+    it("drops todos that are not a list", () => {
+      expect(reviveTraceSpan({ ...baseJSON, todos: "bad" }).todos).toBe(
+        undefined,
+      );
+    });
+
+    it("keeps only the well-formed parts of reasoning", () => {
+      const span = reviveTraceSpan({
+        ...baseJSON,
+        reasoning: {
+          content: "weighing options",
+          tokens: "many",
+          level: "extreme",
+          triggers: ["think hard", 7],
+        },
+      });
+
+      expect(span.reasoning).toEqual({
+        content: "weighing options",
+        triggers: ["think hard"],
+      });
+    });
+
+    it.each([
+      ["a string", "thinking"],
+      ["an empty object", {}],
+    ])("drops reasoning given as %s", (_label, reasoning) => {
+      expect(
+        reviveTraceSpan({ ...baseJSON, reasoning }).reasoning,
+      ).toBeUndefined();
+    });
+
+    it("keeps only token usage entries with a finite token count", () => {
+      const span = reviveTraceSpan({
+        ...baseJSON,
+        tokenUsage: {
+          input: { tokens: 100, cost: 0.001 },
+          output: { tokens: 50, cost: "free" },
+          cache_read: { tokens: "lots" },
+          total: 7,
+        },
+      });
+
+      expect(span.tokenUsage).toEqual({
+        input: { tokens: 100, cost: 0.001 },
+        output: { tokens: 50 },
+      });
+    });
+
+    it("drops token usage with no valid entries", () => {
+      expect(
+        reviveTraceSpan({ ...baseJSON, tokenUsage: "none" }).tokenUsage,
+      ).toBeUndefined();
+    });
   });
 });

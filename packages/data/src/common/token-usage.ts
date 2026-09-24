@@ -60,30 +60,40 @@ export const getTokenUsageEntries = (
 export const getTotalTokens = (usage: TokenUsage | undefined): number =>
   getTokenUsageEntries(usage).reduce((total, row) => total + row.tokens, 0);
 
+/** 0 when no cost was reported; use hasReportedCost to tell that from free. */
 export const getTotalCost = (usage: TokenUsage | undefined): number =>
   roundCost(
     getTokenUsageEntries(usage).reduce((total, row) => total + row.cost, 0),
   );
 
+/** Whether the source reported a cost for any token type (0 included). */
+export const hasReportedCost = (usage: TokenUsage | undefined): boolean =>
+  Object.values(usage ?? {}).some((entry) => isFiniteNumber(entry?.cost));
+
 /**
  * Returns `usage` with tokens (and optionally their cost) added under a type,
- * summing into an entry that is already there. Non-finite values count as 0.
+ * summing into an entry that is already there. A non-finite token count counts
+ * as 0. A cost is recorded only when one is reported (0 included), so an
+ * unknown cost never reads as a free call.
  */
 export const addTokenUsage = (
   usage: TokenUsage,
   type: TokenType,
   tokens: number,
-  cost = 0,
+  cost?: number,
 ): TokenUsage => {
   const existing = usage[type];
-
-  return {
-    ...usage,
-    [type]: {
-      tokens: toFiniteNumber(existing?.tokens) + toFiniteNumber(tokens),
-      cost: roundCost(toFiniteNumber(existing?.cost) + toFiniteNumber(cost)),
-    },
+  const entry: TokenUsageEntry = {
+    tokens: toFiniteNumber(existing?.tokens) + toFiniteNumber(tokens),
   };
+
+  if (isFiniteNumber(cost) || isFiniteNumber(existing?.cost)) {
+    entry.cost = roundCost(
+      toFiniteNumber(existing?.cost) + toFiniteNumber(cost),
+    );
+  }
+
+  return { ...usage, [type]: entry };
 };
 
 /**
