@@ -13,6 +13,7 @@ export const SimpleTraceViewerDesktopLayout = ({
   searchValue,
   setSearchValue,
   filteredSpans,
+  selectedTraceSpans,
   expandedSpansIds,
   setExpandedSpansIds,
   handleExpandAll,
@@ -50,7 +51,7 @@ export const SimpleTraceViewerDesktopLayout = ({
         className="h-full overflow-hidden"
       >
         {selectedSpan ? (
-          <DetailsView data={selectedSpan} />
+          <DetailsView data={selectedSpan} allSpans={selectedTraceSpans} />
         ) : (
           <TraceViewerPlaceholder title="Select a span to see the details" />
         )}

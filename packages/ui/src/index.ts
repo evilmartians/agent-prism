@@ -57,6 +57,21 @@ export { default as TraceListSource } from "./components/TraceList/TraceList.tsx
 
 export { DetailsView } from "./components/DetailsView/DetailsView";
 export { default as DetailsViewSource } from "./components/DetailsView/DetailsView.tsx?raw";
+export {
+  DetailsViewErrorBlocks,
+  type DetailsViewErrorBlocksProps,
+} from "./components/DetailsView/DetailsViewErrorBlocks";
+export { default as DetailsViewErrorBlocksSource } from "./components/DetailsView/DetailsViewErrorBlocks.tsx?raw";
+export {
+  ErrorStatusCircle,
+  type ErrorStatusCircleProps,
+} from "./components/ErrorStatusCircle";
+export { default as ErrorStatusCircleSource } from "./components/ErrorStatusCircle.tsx?raw";
+export {
+  ErrorCountBadge,
+  type ErrorCountBadgeProps,
+} from "./components/ErrorCountBadge";
+export { default as ErrorCountBadgeSource } from "./components/ErrorCountBadge.tsx?raw";
 
 export { DetailsViewThinkingTab } from "./components/DetailsView/DetailsViewThinkingTab";
 export { default as DetailsViewThinkingTabSource } from "./components/DetailsView/DetailsViewThinkingTab.tsx?raw";
