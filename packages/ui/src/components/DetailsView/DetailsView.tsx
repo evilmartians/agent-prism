@@ -81,7 +81,8 @@ export interface DetailsViewProps {
   customHeader?: ReactNode | ((props: { data: TraceSpan }) => ReactNode);
 
   /**
-   * Callback fired when the active tab changes
+   * Callback fired when the active tab changes, including when the current tab
+   * isn't available for a new span and the view falls back to the first tab
    */
   onTabChange?: (tabValue: DetailsViewTab) => void;
 }
@@ -145,12 +146,16 @@ export const DetailsView = ({
   // Reconcile the selected tab when the available tabs change (e.g. the same
   // DetailsView is reused for a different span that lacks the current tab's
   // content). Fall back to the first always-present tab instead of showing an
-  // orphaned empty state.
+  // orphaned empty state, and report it like any other tab change so callers
+  // tracking the active tab stay in sync.
   useEffect(() => {
     if (!tabItems.some((item) => item.value === tab)) {
-      setTab(tabItems[0]?.value ?? defaultTab);
+      const fallbackTab = tabItems[0]?.value ?? defaultTab;
+
+      setTab(fallbackTab);
+      onTabChange?.(fallbackTab);
     }
-  }, [tabItems, tab, defaultTab]);
+  }, [tabItems, tab, defaultTab, onTabChange]);
 
   const handleTabChange = (tabValue: DetailsViewTab) => {
     setTab(tabValue);
