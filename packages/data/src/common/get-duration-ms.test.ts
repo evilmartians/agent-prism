@@ -11,13 +11,11 @@ describe("getDurationMs", () => {
       title: "Test Span",
       startTime: new Date("2023-01-01T00:00:00.000Z"),
       endTime: new Date("2023-01-01T00:00:05.500Z"),
-      duration: 0,
       type: "llm_call",
       status: "success",
-      cost: 0,
-      raw: "",
+      tokenUsage: { total: { tokens: 0, cost: 0 } },
+      raw: [],
       attributes: [],
-      tokensCount: 0,
     };
 
     const result = getDurationMs(spanCard);
@@ -30,13 +28,11 @@ describe("getDurationMs", () => {
       title: "Test Span",
       startTime: new Date("2023-01-01T00:00:00.000Z"),
       endTime: new Date("2023-01-01T00:00:00.000Z"),
-      duration: 0,
-      cost: 0,
+      tokenUsage: { total: { tokens: 0, cost: 0 } },
       type: "llm_call",
       status: "success",
-      raw: "",
+      raw: [],
       attributes: [],
-      tokensCount: 0,
     };
 
     const result = getDurationMs(spanCard);
@@ -49,13 +45,11 @@ describe("getDurationMs", () => {
       title: "Test Span",
       startTime: new Date("2023-01-01T00:05:00.000Z"),
       endTime: new Date("2023-01-01T00:00:00.000Z"),
-      duration: 0,
-      cost: 0,
+      tokenUsage: { total: { tokens: 0, cost: 0 } },
       type: "llm_call",
       status: "success",
-      raw: "",
+      raw: [],
       attributes: [],
-      tokensCount: 0,
     };
 
     const result = getDurationMs(spanCard);

@@ -1,16 +1,16 @@
 /**
- * Resolves what the per-span RAW tab shows: the verbatim vendor span when a
- * slice exists, else the normalized per-span JSON already carried in the span
- * tree. A `null` slice (non-OTLP bodies like n8n, manual uploads, or an unknown
- * span) falls back to the normalized string unchanged.
+ * Resolves the records the per-span RAW tab shows: the verbatim vendor span,
+ * as a single record, when a slice exists, else the span's own `raw` records.
+ * A `null` slice (non-OTLP bodies like n8n, manual uploads, or an unknown span)
+ * falls back to those records unchanged.
  */
 export const resolveSpanRaw = (
   vendorSlice: unknown | null,
-  normalizedRaw: string,
-): string => {
-  if (vendorSlice === null) return normalizedRaw;
+  spanRaw: string[],
+): string[] => {
+  if (vendorSlice === null) return spanRaw;
 
-  return JSON.stringify(vendorSlice, null, 2);
+  return [JSON.stringify(vendorSlice, null, 2)];
 };
 
 /** A fetched vendor slice tagged with the span it was resolved for. */

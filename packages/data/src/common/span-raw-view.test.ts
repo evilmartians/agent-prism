@@ -3,26 +3,27 @@ import { describe, expect, it } from "vitest";
 import { resolveSpanRaw, selectSliceForSpan } from "./span-raw-view";
 
 describe("resolveSpanRaw", () => {
-  it("renders the vendor slice as pretty JSON when present", () => {
-    const out = resolveSpanRaw(
-      { spanId: "abc", name: "target" },
+  it("renders the vendor slice as a single pretty-JSON record when present", () => {
+    const out = resolveSpanRaw({ spanId: "abc", name: "target" }, [
       '{"normalized":true}',
-    );
+      '{"normalized":"end"}',
+    ]);
 
-    expect(out).toMatch(/"name": "target"/);
-    expect(out).not.toMatch(/normalized/);
+    expect(out).toHaveLength(1);
+    expect(out[0]).toMatch(/"name": "target"/);
+    expect(out[0]).not.toMatch(/normalized/);
   });
 
-  it("falls back to the normalized raw string when there is no vendor slice", () => {
-    const normalized = '{"normalized":true}';
+  it("falls back to the span's raw records when there is no vendor slice", () => {
+    const records = ['{"normalized":true}', '{"normalized":"end"}'];
 
-    expect(resolveSpanRaw(null, normalized)).toBe(normalized);
+    expect(resolveSpanRaw(null, records)).toBe(records);
   });
 
   it("pretty-prints a nested vendor slice", () => {
-    const out = resolveSpanRaw(
+    const [out] = resolveSpanRaw(
       { attributes: [{ key: "gen_ai.system", value: { stringValue: "openai" } }] },
-      "fallback",
+      ["fallback"],
     );
 
     expect(out).toMatch(/"gen_ai.system"/);

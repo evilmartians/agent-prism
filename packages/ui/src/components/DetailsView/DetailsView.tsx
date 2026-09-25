@@ -1,20 +1,37 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement, ReactNode } from "react";
 
+import {
+  hasContextContent,
+  hasThinkingContent,
+} from "@evilmartians/agent-prism-data";
 import cn from "classnames";
-import { SquareTerminal, Tags, ArrowRightLeft } from "lucide-react";
-import { useState } from "react";
+import {
+  SquareTerminal,
+  Tags,
+  ArrowRightLeft,
+  Brain,
+  Gauge,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
 import type { TabItem } from "../Tabs";
 
 import { TabSelector } from "../TabSelector";
 import { DetailsViewAttributesTab } from "./DetailsViewAttributesTab";
+import { DetailsViewContextTab } from "./DetailsViewContextTab";
 import { DetailsViewHeader } from "./DetailsViewHeader";
 import { DetailsViewInputOutputTab } from "./DetailsViewInputOutputTab";
 import { DetailsViewRawDataTab } from "./DetailsViewRawDataTab";
+import { DetailsViewThinkingTab } from "./DetailsViewThinkingTab";
 
-type DetailsViewTab = "input-output" | "attributes" | "raw";
+type DetailsViewTab =
+  | "input-output"
+  | "thinking"
+  | "context"
+  | "attributes"
+  | "raw";
 
 export interface DetailsViewProps {
   /**
@@ -23,9 +40,16 @@ export interface DetailsViewProps {
   data: TraceSpan;
 
   /**
+   * All spans of the selected trace. When provided, enables run-level error
+   * blocks in the Input/Output tab (a run summary when the root span is
+   * selected, otherwise the selected span's own error).
+   */
+  allSpans?: TraceSpan[];
+
+  /**
    * Optional verbatim vendor payload for this span, shown in the RAW tab as
-   * pretty JSON in place of the normalized `data.raw`. Omit (or pass `null`) to
-   * show the normalized string unchanged.
+   * pretty JSON in place of the span's `raw` records. Omit (or pass `null`) to
+   * show those records unchanged.
    */
   rawVendorSlice?: unknown;
 
@@ -64,17 +88,41 @@ export interface DetailsViewProps {
   customHeader?: ReactNode | ((props: { data: TraceSpan }) => ReactNode);
 
   /**
-   * Callback fired when the active tab changes
+   * Callback fired when the active tab changes, including when the current tab
+   * isn't available for a new span and the view falls back to the first tab
    */
   onTabChange?: (tabValue: DetailsViewTab) => void;
 }
 
-const TAB_ITEMS: TabItem<DetailsViewTab>[] = [
+/**
+ * Tabs are content-aware. Thinking is offered for any span that reports
+ * reasoning, whatever the vendor, even when only a reasoning-token count is
+ * known.
+ */
+const getTabItems = (data: TraceSpan): TabItem<DetailsViewTab>[] => [
   {
     value: "input-output",
     label: "In/Out",
     icon: <ArrowRightLeft className="size-4" />,
   },
+  ...(hasThinkingContent(data)
+    ? [
+        {
+          value: "thinking" as const,
+          label: "Thinking",
+          icon: <Brain className="size-4" />,
+        },
+      ]
+    : []),
+  ...(hasContextContent(data)
+    ? [
+        {
+          value: "context" as const,
+          label: "Context",
+          icon: <Gauge className="size-4" />,
+        },
+      ]
+    : []),
   {
     value: "attributes",
     label: "Attributes",
@@ -89,6 +137,7 @@ const TAB_ITEMS: TabItem<DetailsViewTab>[] = [
 
 export const DetailsView = ({
   data,
+  allSpans,
   rawVendorSlice,
   avatar,
   defaultTab = "input-output",
@@ -99,6 +148,22 @@ export const DetailsView = ({
   onTabChange,
 }: DetailsViewProps): ReactElement => {
   const [tab, setTab] = useState<DetailsViewTab>(defaultTab);
+
+  const tabItems = useMemo(() => getTabItems(data), [data]);
+
+  // Reconcile the selected tab when the available tabs change (e.g. the same
+  // DetailsView is reused for a different span that lacks the current tab's
+  // content). Fall back to the first always-present tab instead of showing an
+  // orphaned empty state, and report it like any other tab change so callers
+  // tracking the active tab stay in sync.
+  useEffect(() => {
+    if (!tabItems.some((item) => item.value === tab)) {
+      const fallbackTab = tabItems[0]?.value ?? defaultTab;
+
+      setTab(fallbackTab);
+      onTabChange?.(fallbackTab);
+    }
+  }, [tabItems, tab, defaultTab, onTabChange]);
 
   const handleTabChange = (tabValue: DetailsViewTab) => {
     setTab(tabValue);
@@ -133,7 +198,7 @@ export const DetailsView = ({
       <div className="mb-4 shrink-0">{headerContent}</div>
       <div className="shrink-0">
         <TabSelector
-          items={TAB_ITEMS}
+          items={tabItems}
           value={tab}
           onValueChange={handleTabChange}
           theme="underline"
@@ -142,7 +207,11 @@ export const DetailsView = ({
       </div>
 
       <div key={tab} className="min-h-0 flex-1 overflow-y-auto py-4">
-        {tab === "input-output" && <DetailsViewInputOutputTab data={data} />}
+        {tab === "input-output" && (
+          <DetailsViewInputOutputTab data={data} allSpans={allSpans} />
+        )}
+        {tab === "thinking" && <DetailsViewThinkingTab data={data} />}
+        {tab === "context" && <DetailsViewContextTab data={data} />}
         {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
         {tab === "raw" && (
           <DetailsViewRawDataTab data={data} vendorSlice={rawVendorSlice} />

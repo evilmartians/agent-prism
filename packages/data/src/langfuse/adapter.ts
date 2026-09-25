@@ -2,14 +2,35 @@ import type {
   InputOutputData,
   LangfuseDocument,
   LangfuseObservation,
+  TokenType,
+  TokenUsage,
   TraceSpan,
   TraceSpanCategory,
+  TraceReasoning,
   TraceSpanStatus,
+  TraceTodo,
 } from "@evilmartians/agent-prism-types";
 
 import type { SpanAdapter } from "../types";
 
+import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { getLangfuseAttributes } from "./utils/get-langfuse-attributes.js";
+
+/**
+ * Langfuse usage keys that name one of the canonical token types; any other key
+ * is kept as is. Langfuse splits reasoning out of output, so it is folded back
+ * in: `output` then matches the provider's own count, and the reasoning share is
+ * reported on `TraceSpan.reasoning` instead.
+ */
+const LANGFUSE_TOKEN_TYPES: Record<string, TokenType> = {
+  input_cached_tokens: "cache_read",
+  cache_read_input_tokens: "cache_read",
+  cache_creation_input_tokens: "cache_write",
+  output_reasoning_tokens: "output",
+};
+
+const toTokenType = (key: string): TokenType =>
+  LANGFUSE_TOKEN_TYPES[key] ?? key;
 
 export const langfuseSpanAdapter: SpanAdapter<
   LangfuseDocument,
@@ -65,48 +86,72 @@ export const langfuseSpanAdapter: SpanAdapter<
     span: LangfuseObservation,
     children: TraceSpan[] = [],
   ): TraceSpan {
-    const duration = this.getSpanDuration(span);
-    const status = this.getSpanStatus(span);
-    const tokensCount = this.getSpanTokensCount(span);
-    const cost = this.getSpanCost(span);
     const ioData = this.getSpanInputOutput(span);
-    const type = this.getSpanCategory(span);
-    const attributes = getLangfuseAttributes(span);
 
     return {
       id: span.id,
       title: span.name,
-      type,
-      status,
-      attributes,
-      duration,
-      tokensCount,
-      raw: JSON.stringify(span, null, 2),
-      cost,
+      type: this.getSpanCategory(span),
+      status: this.getSpanStatus(span),
+      attributes: getLangfuseAttributes(span),
+      raw: [JSON.stringify(span, null, 2)],
       startTime: new Date(span.startTime),
-      endTime: new Date(span.endTime),
+      // Langfuse leaves endTime null while an observation is still running.
+      endTime: new Date(span.endTime ?? span.startTime),
       children,
       input: ioData.input,
       output: ioData.output,
+      tokenUsage: this.getTokenUsage(span),
+      reasoning: this.getTraceReasoning(span),
+      todos: this.getTraceTodos(span),
     };
   },
-  getSpanDuration(span: LangfuseObservation): number {
-    if (!span.endTime || !span.startTime) {
-      return 0;
-    }
-    try {
-      return (
-        new Date(span.endTime).getTime() - new Date(span.startTime).getTime()
-      );
-    } catch {
-      return 0;
-    }
+  getTokenUsage(span: LangfuseObservation): TokenUsage | undefined {
+    // The flat input/output/total fields are sums Langfuse derives from the
+    // details, so they are read only when an observation comes without them.
+    const usageDetails: Record<string, number | null | undefined> =
+      span.usageDetails ?? {
+        input: span.inputUsage,
+        output: span.outputUsage,
+        total: span.totalUsage,
+      };
+    const costDetails: Record<string, number | null | undefined> =
+      span.costDetails ?? {
+        input: span.inputCost,
+        output: span.outputCost,
+        total: span.totalCost,
+      };
+
+    let usage: TokenUsage = {};
+
+    Object.entries(usageDetails).forEach(([key, tokens]) => {
+      if (key !== "total" && typeof tokens === "number") {
+        usage = addTokenUsage(usage, toTokenType(key), tokens);
+      }
+    });
+
+    Object.entries(costDetails).forEach(([key, cost]) => {
+      if (key !== "total" && typeof cost === "number") {
+        usage = addTokenUsage(usage, toTokenType(key), 0, cost);
+      }
+    });
+
+    usage = addReportedTotal(
+      usage,
+      usageDetails.total ?? undefined,
+      costDetails.total ?? undefined,
+    );
+
+    return Object.keys(usage).length > 0 ? usage : undefined;
   },
-  getSpanCost(span: LangfuseObservation): number {
-    return span.costDetails?.total || 0;
+  getTraceReasoning(span: LangfuseObservation): TraceReasoning | undefined {
+    const tokens = span.usageDetails?.output_reasoning_tokens;
+
+    // Langfuse records how many tokens went to reasoning, but not the text.
+    return tokens ? { content: "", tokens } : undefined;
   },
-  getSpanTokensCount(span: LangfuseObservation): number {
-    return span.usageDetails?.total || 0;
+  getTraceTodos(): TraceTodo[] | undefined {
+    return undefined;
   },
   getSpanInputOutput(span: LangfuseObservation): InputOutputData {
     return {
@@ -114,8 +159,15 @@ export const langfuseSpanAdapter: SpanAdapter<
       output: typeof span.output === "string" ? span.output : undefined,
     };
   },
-  getSpanStatus(): TraceSpanStatus {
-    return "success";
+  getSpanStatus(span: LangfuseObservation): TraceSpanStatus {
+    switch (span.level) {
+      case "ERROR":
+        return "error";
+      case "WARNING":
+        return "warning";
+      default:
+        return "success";
+    }
   },
   getSpanCategory(span: LangfuseObservation): TraceSpanCategory {
     switch (span.type) {
