@@ -47,6 +47,13 @@ export interface DetailsViewProps {
   allSpans?: TraceSpan[];
 
   /**
+   * Optional verbatim vendor payload for this span, shown in the RAW tab as
+   * pretty JSON in place of the span's `raw` records. Omit (or pass `null`) to
+   * show those records unchanged.
+   */
+  rawVendorSlice?: unknown;
+
+  /**
    * Optional avatar configuration for the header
    */
   avatar?: AvatarProps;
@@ -131,6 +138,7 @@ const getTabItems = (data: TraceSpan): TabItem<DetailsViewTab>[] => [
 export const DetailsView = ({
   data,
   allSpans,
+  rawVendorSlice,
   avatar,
   defaultTab = "input-output",
   className,
@@ -205,7 +213,9 @@ export const DetailsView = ({
         {tab === "thinking" && <DetailsViewThinkingTab data={data} />}
         {tab === "context" && <DetailsViewContextTab data={data} />}
         {tab === "attributes" && <DetailsViewAttributesTab data={data} />}
-        {tab === "raw" && <DetailsViewRawDataTab data={data} />}
+        {tab === "raw" && (
+          <DetailsViewRawDataTab data={data} vendorSlice={rawVendorSlice} />
+        )}
       </div>
     </div>
   );
