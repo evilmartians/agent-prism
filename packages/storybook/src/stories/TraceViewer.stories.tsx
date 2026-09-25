@@ -54,9 +54,8 @@ const errorSpan = (
   title: span.id,
   startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  duration: 3000,
   type: "span",
-  raw: "{}",
+  raw: ["{}"],
   status: "success",
   ...span,
 });
@@ -69,33 +68,39 @@ const failedRunSpans: TraceSpan[] = [
     title: "Relevancy scoring workflow",
     type: "chain_operation",
     status: "error",
-    raw: JSON.stringify({
-      status: { message: "Run failed" },
-      name: "Relevancy scoring workflow",
-    }),
+    raw: [
+      JSON.stringify({
+        status: { message: "Run failed" },
+        name: "Relevancy scoring workflow",
+      }),
+    ],
     children: [
       errorSpan({
         id: "failed-agent",
         title: "AI Agent",
         type: "agent_invocation",
         status: "error",
-        raw: JSON.stringify({
-          status: { message: "Child node failed" },
-          name: "AI Agent",
-        }),
+        raw: [
+          JSON.stringify({
+            status: { message: "Child node failed" },
+            name: "AI Agent",
+          }),
+        ],
         children: [
           errorSpan({
             id: "failed-parser",
             title: "Structured Output Parser",
             type: "tool_execution",
             status: "error",
-            raw: JSON.stringify({
-              status: {
-                code: "ERROR",
-                message: "Model output doesn't fit required format",
-              },
-              name: "Structured Output Parser",
-            }),
+            raw: [
+              JSON.stringify({
+                status: {
+                  code: "ERROR",
+                  message: "Model output doesn't fit required format",
+                },
+                name: "Structured Output Parser",
+              }),
+            ],
           }),
         ],
       }),

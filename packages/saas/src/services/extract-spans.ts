@@ -5,11 +5,16 @@ import type {
 } from "@evilmartians/agent-prism-types";
 
 import {
+  isTraceSpanLike,
   langfuseSpanAdapter,
   openTelemetrySpanAdapter,
+  reviveTraceSpan,
 } from "@evilmartians/agent-prism-data";
 
-import { isValidTraceSpan } from "./is-valid-trace-span";
+// Parsed JSON carries timestamps as strings; reviving turns them back into
+// Dates.
+const isTraceSpanList = (value: unknown): value is unknown[] =>
+  Array.isArray(value) && value.every(isTraceSpanLike);
 
 export const extractSpans = (data: object): TraceSpan[] => {
   if ("resourceSpans" in data && Array.isArray(data.resourceSpans)) {
@@ -40,28 +45,20 @@ export const extractSpans = (data: object): TraceSpan[] => {
     ]);
   }
 
-  if (Array.isArray(data) && data.length > 0 && data.every(isValidTraceSpan)) {
-    return data;
+  if (Array.isArray(data) && data.length > 0 && isTraceSpanList(data)) {
+    return data.map(reviveTraceSpan);
   }
 
-  if (
-    "spans" in data &&
-    Array.isArray(data.spans) &&
-    data.spans.every(isValidTraceSpan)
-  ) {
-    return data.spans;
+  if ("spans" in data && isTraceSpanList(data.spans)) {
+    return data.spans.map(reviveTraceSpan);
   }
 
-  if (
-    "data" in data &&
-    Array.isArray(data.data) &&
-    data.data.every(isValidTraceSpan)
-  ) {
-    return data.data;
+  if ("data" in data && isTraceSpanList(data.data)) {
+    return data.data.map(reviveTraceSpan);
   }
 
-  if (isValidTraceSpan(data)) {
-    return [data];
+  if (isTraceSpanLike(data)) {
+    return [reviveTraceSpan(data)];
   }
 
   throw new Error("Invalid trace format. Expected OpenTelemetry or Langfuse.");

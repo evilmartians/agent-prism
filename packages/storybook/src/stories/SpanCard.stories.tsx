@@ -64,15 +64,19 @@ const mockTraceSpan: TraceSpan = {
   title: "GPT-4 Text Generation",
   startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  duration: 3000,
-  cost: 0.045,
+  tokenUsage: {
+    input: { tokens: 600, cost: 0.018 },
+    output: { tokens: 250, cost: 0.027 },
+  },
   type: "llm_call",
-  raw: JSON.stringify({
-    model: "gpt-4",
-    prompt: "Generate a creative story about AI",
-    temperature: 0.7,
-    max_tokens: 1000,
-  }),
+  raw: [
+    JSON.stringify({
+      model: "gpt-4",
+      prompt: "Generate a creative story about AI",
+      temperature: 0.7,
+      max_tokens: 1000,
+    }),
+  ],
   attributes: [
     {
       key: "llm.model",
@@ -83,7 +87,6 @@ const mockTraceSpan: TraceSpan = {
       value: { intValue: "0.7" },
     },
   ],
-  tokensCount: 850,
   status: "success",
 };
 

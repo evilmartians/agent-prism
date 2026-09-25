@@ -1,9 +1,12 @@
 import type {
+  InputOutputData,
+  TokenUsage,
   TraceSpan,
   TraceSpanCategory,
+  TraceReasoning,
   TraceSpanStatus,
+  TraceTodo,
 } from "@evilmartians/agent-prism-types";
-import type { InputOutputData } from "@evilmartians/agent-prism-types";
 
 export interface SpanAdapter<TRawDocument, TRawSpan> {
   convertRawDocumentsToSpans(
@@ -14,11 +17,11 @@ export interface SpanAdapter<TRawDocument, TRawSpan> {
 
   convertRawSpanToTraceSpan(span: TRawSpan): TraceSpan;
 
-  getSpanDuration(document: TRawSpan): number;
+  getTokenUsage(document: TRawSpan): TokenUsage | undefined;
 
-  getSpanCost(document: TRawSpan): number;
+  getTraceReasoning(document: TRawSpan): TraceReasoning | undefined;
 
-  getSpanTokensCount(document: TRawSpan): number;
+  getTraceTodos(document: TRawSpan): TraceTodo[] | undefined;
 
   getSpanInputOutput(document: TRawSpan): InputOutputData;
 

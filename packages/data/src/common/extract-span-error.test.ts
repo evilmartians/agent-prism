@@ -22,9 +22,8 @@ const makeSpan = (span: Partial<TraceSpan> & Pick<TraceSpan, "id">): TraceSpan =
   title: span.id,
   startTime: new Date("2026-06-05T10:00:00.000Z"),
   endTime: new Date("2026-06-05T10:00:01.000Z"),
-  duration: 1000,
   type: "span",
-  raw: "{}",
+  raw: ["{}"],
   status: "success",
   ...span,
 });
@@ -34,10 +33,10 @@ const rawStatusMessageSpan = makeSpan({
   id: "parser",
   title: "Structured Output Parser",
   status: "error",
-  raw: JSON.stringify({
+  raw: [JSON.stringify({
     status: { code: "ERROR", message: "Model output doesn't fit required format" },
     name: "Structured Output Parser",
-  }),
+  })],
 });
 
 // No message in `raw` — falls back to the `error.message` attribute.
@@ -45,7 +44,7 @@ const errorMessageAttributeSpan = makeSpan({
   id: "tool",
   title: "Weather Tool",
   status: "error",
-  raw: "{}",
+  raw: ["{}"],
   attributes: [
     { key: "error.message", value: { stringValue: "Tool timed out after 30s" } },
   ],
@@ -56,7 +55,7 @@ const otlpExceptionSpan = makeSpan({
   id: "redis",
   title: "Redis connect",
   status: "error",
-  raw: "{}",
+  raw: ["{}"],
   attributes: [
     { key: "exception.message", value: { stringValue: "Connection refused: redis:6379" } },
     {
@@ -71,7 +70,7 @@ const statusMessageAttributeSpan = makeSpan({
   id: "rate-limited",
   title: "LLM call",
   status: "error",
-  raw: "{}",
+  raw: ["{}"],
   attributes: [
     { key: "status.message", value: { stringValue: "Rate limit exceeded (429)" } },
   ],
@@ -82,7 +81,7 @@ const noMessageErrorSpan = makeSpan({
   id: "mystery",
   title: "Mystery node",
   status: "error",
-  raw: "not-json",
+  raw: ["not-json"],
 });
 
 // A failed run: workflow root → agent → parser, all in error state.
@@ -92,14 +91,14 @@ const failedRunSpans: TraceSpan[] = [
     title: "Relevancy scoring workflow",
     type: "chain_operation",
     status: "error",
-    raw: JSON.stringify({ status: { message: "Run failed" }, name: "Relevancy scoring workflow" }),
+    raw: [JSON.stringify({ status: { message: "Run failed" }, name: "Relevancy scoring workflow" })],
     children: [
       makeSpan({
         id: "agent",
         title: "AI Agent",
         type: "agent_invocation",
         status: "error",
-        raw: JSON.stringify({ status: { message: "Child node failed" }, name: "AI Agent" }),
+        raw: [JSON.stringify({ status: { message: "Child node failed" }, name: "AI Agent" })],
         children: [rawStatusMessageSpan],
       }),
     ],
@@ -139,10 +138,10 @@ describe("extractSpanError", () => {
       id: "renamed",
       title: "renamed", // matches id; distinct from raw.name below
       status: "error",
-      raw: JSON.stringify({
+      raw: [JSON.stringify({
         status: { message: "boom" },
         name: "Human-readable node name",
-      }),
+      })],
     });
 
     expect(extractSpanError(span)?.nodeName).toBe("Human-readable node name");
@@ -153,13 +152,31 @@ describe("extractSpanError", () => {
       id: "both",
       title: "Both sources",
       status: "error",
-      raw: JSON.stringify({ status: { message: "from raw status" } }),
+      raw: [JSON.stringify({ status: { message: "from raw status" } })],
       attributes: [
         { key: "error.message", value: { stringValue: "from attribute" } },
       ],
     });
 
     expect(extractSpanError(span)?.message).toBe("from raw status");
+  });
+
+  it("reads message and nodeName across several raw records", () => {
+    const span = makeSpan({
+      id: "multi-record",
+      title: "Multi-record span",
+      status: "error",
+      raw: [
+        JSON.stringify({ name: "Start event" }),
+        "not-json",
+        JSON.stringify({ status: { message: "Failed at the end" } }),
+      ],
+    });
+
+    const error = extractSpanError(span);
+
+    expect(error?.message).toBe("Failed at the end");
+    expect(error?.nodeName).toBe("Start event");
   });
 
   it("reads message from a top-level statusMessage (Langfuse)", () => {
@@ -169,7 +186,7 @@ describe("extractSpanError", () => {
       status: "error",
       // Langfuse observations expose the error text on `statusMessage`, not a
       // nested `status.message`.
-      raw: JSON.stringify({ statusMessage: "Observation failed", name: "Obs" }),
+      raw: [JSON.stringify({ statusMessage: "Observation failed", name: "Obs" })],
     });
 
     const error = extractSpanError(span);
@@ -190,7 +207,7 @@ describe("extractSpanError", () => {
     const span = makeSpan({
       id: "stack-whitespace",
       status: "error",
-      raw: JSON.stringify({ status: { message: "Boom" } }),
+      raw: [JSON.stringify({ status: { message: "Boom" } })],
       attributes: [{ key: "error.stack", value: { stringValue: stack } }],
     });
 
@@ -213,7 +230,7 @@ describe("extractSpanError", () => {
     const span = makeSpan({
       id: "blank-raw-message",
       status: "error",
-      raw: JSON.stringify({ status: { message: "   " }, name: "Node" }),
+      raw: [JSON.stringify({ status: { message: "   " }, name: "Node" })],
       attributes: [
         { key: "error.message", value: { stringValue: "Real failure" } },
       ],
@@ -227,7 +244,7 @@ describe("extractSpanError", () => {
       id: "blank-name",
       title: "Fallback Title",
       status: "error",
-      raw: JSON.stringify({ status: { message: "Boom" }, name: "" }),
+      raw: [JSON.stringify({ status: { message: "Boom" }, name: "" })],
     });
 
     expect(extractSpanError(span)?.nodeName).toBe("Fallback Title");
@@ -237,7 +254,7 @@ describe("extractSpanError", () => {
     const span = makeSpan({
       id: "blank-attr",
       status: "error",
-      raw: "{}",
+      raw: ["{}"],
       attributes: [{ key: "error.message", value: { stringValue: "   " } }],
     });
 
@@ -254,7 +271,7 @@ describe("extractSpanError", () => {
     const objectMessageSpan = makeSpan({
       id: "object-message",
       status: "error",
-      raw: JSON.stringify({ status: { message: { text: "nested" } } }),
+      raw: [JSON.stringify({ status: { message: { text: "nested" } } })],
       attributes: [
         { key: "error.message", value: { stringValue: "Flat message" } },
       ],
@@ -262,7 +279,7 @@ describe("extractSpanError", () => {
     const primitiveRawSpan = makeSpan({
       id: "primitive-raw",
       status: "error",
-      raw: JSON.stringify("just a string"),
+      raw: [JSON.stringify("just a string")],
     });
 
     expect(typeof extractSpanError(objectMessageSpan)?.message).toBe("string");
@@ -319,7 +336,7 @@ describe("spanHasErrorSurface", () => {
     id: "surface-root",
     type: "chain_operation",
     status: "success",
-    children: [makeSpan({ id: "surface-child", status: "error", raw: "{}" })],
+    children: [makeSpan({ id: "surface-child", status: "error", raw: ["{}"] })],
   });
 
   it("is true for a root whose subtree contains an error", () => {
@@ -332,7 +349,7 @@ describe("spanHasErrorSurface", () => {
   });
 
   it("is true for a non-root error span even without the trace", () => {
-    const leaf = makeSpan({ id: "leaf", status: "error", raw: "{}" });
+    const leaf = makeSpan({ id: "leaf", status: "error", raw: ["{}"] });
     expect(spanHasErrorSurface(leaf, [])).toBe(true);
   });
 
@@ -382,7 +399,7 @@ describe("format helpers", () => {
           id: "first-fail",
           title: "First failure",
           status: "error",
-          raw: JSON.stringify({ status: { message: "first boom" } }),
+          raw: [JSON.stringify({ status: { message: "first boom" } })],
           attributes: [
             {
               key: "exception.stacktrace",
@@ -394,7 +411,7 @@ describe("format helpers", () => {
           id: "second-fail",
           title: "Second failure",
           status: "error",
-          raw: JSON.stringify({ status: { message: "second boom" } }),
+          raw: [JSON.stringify({ status: { message: "second boom" } })],
         }),
       ],
     });

@@ -5,6 +5,22 @@ export { flattenSpans } from "./common/flatten-spans.js";
 export { findTimeRange } from "./common/find-time-range.js";
 export { filterSpansRecursively } from "./common/filter-spans-recursively.js";
 export {
+  hasContextContent,
+  hasThinkingContent,
+  hasTodos,
+} from "./common/details-tabs.js";
+export {
+  getTokenUsageEntries,
+  getTotalCost,
+  getTotalTokens,
+  hasReportedCost,
+  type TokenUsageRow,
+} from "./common/token-usage.js";
+export {
+  isTraceSpanLike,
+  reviveTraceSpan,
+} from "./common/revive-trace-span.js";
+export {
   extractSpanError,
   collectErrorSpans,
   traceRunHasErrors,

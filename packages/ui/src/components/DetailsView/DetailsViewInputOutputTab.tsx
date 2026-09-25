@@ -1,7 +1,7 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
-import { spanHasErrorSurface } from "@evilmartians/agent-prism-data";
+import { hasTodos, spanHasErrorSurface } from "@evilmartians/agent-prism-data";
 import { useState, useEffect, useMemo } from "react";
 
 import type { TabItem } from "../Tabs";
@@ -13,6 +13,7 @@ import {
   type DetailsViewContentViewMode,
 } from "./DetailsViewContentViewer";
 import { DetailsViewErrorBlocks } from "./DetailsViewErrorBlocks";
+import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
 
 interface DetailsViewInputOutputTabProps {
   data: TraceSpan;
@@ -46,7 +47,7 @@ export const DetailsViewInputOutputTab = ({
     [data, resolvedSpans],
   );
 
-  if (!hasInput && !hasOutput) {
+  if (!hasInput && !hasOutput && !hasTodos(data)) {
     return (
       <div className="space-y-4">
         {errorBlocks}
@@ -85,6 +86,7 @@ export const DetailsViewInputOutputTab = ({
     <div className="space-y-4">
       {errorBlocks}
 
+      <DetailsViewTodosSection data={data} />
       {typeof data.input === "string" && (
         <IOSection
           section="Input"

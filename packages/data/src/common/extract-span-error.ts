@@ -58,32 +58,52 @@ const readAttribute = (
   return undefined;
 };
 
+const parseRawRecords = (raw: string[]): Record<string, unknown>[] =>
+  raw.flatMap((entry) => {
+    try {
+      const parsed: unknown = JSON.parse(entry);
+
+      return isRecord(parsed) ? [parsed] : [];
+    } catch {
+      return [];
+    }
+  });
+
+// First value found across the span's source records, in their order.
+const findInRecords = (
+  records: Record<string, unknown>[],
+  read: (record: Record<string, unknown>) => string | undefined,
+): string | undefined => {
+  for (const record of records) {
+    const value = read(record);
+
+    if (value) return value;
+  }
+
+  return undefined;
+};
+
 /**
- * Extracts a human-readable error from a span, reading first from the
- * normalized `raw` payload and falling back to well-known attribute keys.
+ * Extracts a human-readable error from a span, reading first from its `raw`
+ * source records and falling back to well-known attribute keys.
  * Returns `null` for spans that are not in the `error` state.
  */
 export const extractSpanError = (span: TraceSpan): SpanErrorDetails | null => {
   if (span.status !== "error") return null;
 
-  let raw: unknown;
+  const records = parseRawRecords(span.raw);
 
-  try {
-    raw = JSON.parse(span.raw);
-  } catch {
-    raw = undefined;
-  }
-
-  const rawStatus = isRecord(raw) ? raw.status : undefined;
-  const rawMessage = isRecord(rawStatus)
-    ? nonEmptyString(rawStatus.message)
-    : undefined;
+  const rawMessage = findInRecords(records, (record) =>
+    isRecord(record.status) ? nonEmptyString(record.status.message) : undefined,
+  );
   // Langfuse observations carry the error text on a top-level `statusMessage`
   // rather than a nested `status.message`.
-  const rawStatusMessage = isRecord(raw)
-    ? nonEmptyString(raw.statusMessage)
-    : undefined;
-  const rawName = isRecord(raw) ? nonEmptyString(raw.name) : undefined;
+  const rawStatusMessage = findInRecords(records, (record) =>
+    nonEmptyString(record.statusMessage),
+  );
+  const rawName = findInRecords(records, (record) =>
+    nonEmptyString(record.name),
+  );
 
   const message =
     rawMessage ??
