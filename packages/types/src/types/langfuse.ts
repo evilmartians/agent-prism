@@ -75,7 +75,7 @@ export type LangfuseObservation = {
   environment: string;
   parentObservationId: string | null;
   startTime: string; // ISO date string
-  endTime: string; // ISO date string
+  endTime: string | null; // ISO date string; null while the observation runs
   name: string;
   metadata?: unknown | null;
   type?: LangfuseObservationType;
@@ -93,9 +93,16 @@ export type LangfuseObservation = {
   internalModelId?: string | null;
   promptName?: string | null;
   promptVersion?: number | null;
-  usageDetails?: LangfuseUsageDetails;
-  costDetails?: LangfuseCostDetails;
+  usageDetails?: LangfuseUsageDetails | null;
+  costDetails?: LangfuseCostDetails | null;
   providedCostDetails?: Record<string, unknown>;
+  // Aggregates Langfuse derives from usageDetails / costDetails
+  inputUsage?: number | null;
+  outputUsage?: number | null;
+  totalUsage?: number | null;
+  inputCost?: number | null;
+  outputCost?: number | null;
+  totalCost?: number | null;
 };
 
 export type LangfuseUsageDetails = {

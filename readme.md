@@ -12,6 +12,12 @@ Try AgentPrism live at [agent-prism.evilmartians.io](https://agent-prism.evilmar
 
 https://github.com/user-attachments/assets/69e592e2-b67c-4ebc-b301-2d8b73492e0d
 
+---
+
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="Evil Martians logo" width="22" height="16" /> <b>AgentPrism</b> is built by <b><a href="https://evilmartians.com/">Evil Martians</a></b>, an American design and engineering consultancy for <b>developer tools, AI, and cybersecurity startups</b>.
+
+---
+
 ## Storybook
 
 [storybook.agent-prism.evilmartians.io](https://storybook.agent-prism.evilmartians.io/?utm_source=github&utm_medium=social)
@@ -172,11 +178,35 @@ openTelemetrySpanAdapter.convertRawSpansToSpanTree(otlpData);
 
 // get some data for a particular observation/span (e.g. when you loaded one record)
 langfuseSpanAdapter.getSpanCategory(observationData);
-langfuseSpanAdapter.getSpanCost(observationData);
-langfuseSpanAdapter.getSpanDuration(observationData);
 langfuseSpanAdapter.getSpanInputOutput(observationData);
 langfuseSpanAdapter.getSpanStatus(observationData);
-langfuseSpanAdapter.getSpanTokensCount(observationData);
+langfuseSpanAdapter.getTokenUsage(observationData);
+langfuseSpanAdapter.getTraceReasoning(observationData);
+langfuseSpanAdapter.getTraceTodos(observationData);
+```
+
+A converted span is a plain `TraceSpan` object. Values derived from its fields are computed by functions from `@evilmartians/agent-prism-data`:
+
+```tsx
+import {
+  getDurationMs,
+  getTokenUsageEntries,
+  getTotalCost,
+  getTotalTokens,
+  reviveTraceSpan,
+} from "@evilmartians/agent-prism-data";
+
+getDurationMs(span); // milliseconds, from startTime/endTime
+getTotalTokens(span.tokenUsage); // summed across token types
+getTotalCost(span.tokenUsage);
+getTokenUsageEntries(span.tokenUsage); // [{ type: "input", tokens, cost }, ...]
+
+span.tokenUsage; // { input: { tokens, cost }, output: {...}, ... }, or undefined
+span.reasoning; // { content, tokens?, level?, triggers? } for the Thinking tab
+span.todos; // [{ title, status }] for the Todos section
+span.raw; // the source records, each as JSON text
+
+reviveTraceSpan(JSON.parse(text)); // restores Date timestamps on parsed spans
 ```
 
 ### OTLP Format
