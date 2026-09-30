@@ -4,6 +4,7 @@ import React, { FC, ReactNode, useEffect, useState } from "react";
 
 import { TraceContext, TraceState } from "@/context/TraceContext";
 import { extractSpans } from "@/services/extract-spans";
+import { parseTraceFilesText } from "@/services/parse-trace-file";
 
 import testData from "../data/test.json";
 
@@ -41,14 +42,19 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   const uploadTraces = async (files: FileList) => {
-    const text = await files[0].text();
-    const jsonData = JSON.parse(text);
+    try {
+      const texts = await Promise.all(
+        Array.from(files).map((file) => file.text()),
+      );
 
-    if (typeof jsonData !== "object" || jsonData === null) {
-      throw new Error("Invalid JSON: expected an object");
+      await loadSpans(parseTraceFilesText(texts));
+    } catch (error) {
+      setTraceState({
+        spans: [],
+        isLoading: false,
+        error: error instanceof Error ? error.message : "Failed to load",
+      });
     }
-
-    await loadSpans(jsonData);
   };
 
   const clearTraces = () =>

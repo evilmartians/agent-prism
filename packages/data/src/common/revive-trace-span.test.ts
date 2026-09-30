@@ -58,6 +58,15 @@ describe("reviveTraceSpan", () => {
       tokenUsage: { input: { tokens: 300, cost: 0.003 } },
       reasoning: { content: "thinking", tokens: 10 },
       todos: [{ title: "Plan", status: "in_progress" }],
+      context: [
+        {
+          type: "hook_success",
+          title: "Hook succeeded",
+          content: "ready",
+          timestamp: new Date("2024-01-01T00:00:00.500Z"),
+          metadata: { exitCode: 0 },
+        },
+      ],
       children: [createTestSpan({ id: "child-1" })],
     });
 
@@ -66,6 +75,7 @@ describe("reviveTraceSpan", () => {
     expect(revived).toEqual(span);
     expect(revived.startTime).toBeInstanceOf(Date);
     expect(revived.children?.[0].endTime).toBeInstanceOf(Date);
+    expect(revived.context?.[0].timestamp).toBeInstanceOf(Date);
   });
 
   it("throws on a value that is not span-shaped", () => {
@@ -140,6 +150,33 @@ describe("reviveTraceSpan", () => {
     it("drops token usage with no valid entries", () => {
       expect(
         reviveTraceSpan({ ...baseJSON, tokenUsage: "none" }).tokenUsage,
+      ).toBeUndefined();
+    });
+
+    it("keeps only well-formed context items, and their well-formed parts", () => {
+      const span = reviveTraceSpan({
+        ...baseJSON,
+        context: [
+          {
+            type: "skill_listing",
+            title: "Skill listing",
+            content: 42,
+            timestamp: "yesterday",
+            metadata: ["not", "a", "record"],
+          },
+          { type: "no title" },
+          "not an item",
+        ],
+      });
+
+      expect(span.context).toEqual([
+        { type: "skill_listing", title: "Skill listing" },
+      ]);
+    });
+
+    it("drops context that is not a list", () => {
+      expect(
+        reviveTraceSpan({ ...baseJSON, context: "bad" }).context,
       ).toBeUndefined();
     });
   });

@@ -1,10 +1,13 @@
 import type {
+  ClaudeCodeDocument,
   LangfuseDocument,
   OpenTelemetryDocument,
   TraceSpan,
 } from "@evilmartians/agent-prism-types";
 
 import {
+  claudeCodeSpanAdapter,
+  isClaudeCodeTranscript,
   isTraceSpanLike,
   langfuseSpanAdapter,
   openTelemetrySpanAdapter,
@@ -45,6 +48,12 @@ export const extractSpans = (data: object): TraceSpan[] => {
     ]);
   }
 
+  if (isClaudeCodeTranscript(data)) {
+    return claudeCodeSpanAdapter.convertRawDocumentsToSpans(
+      data as ClaudeCodeDocument | ClaudeCodeDocument[],
+    );
+  }
+
   if (Array.isArray(data) && data.length > 0 && isTraceSpanList(data)) {
     return data.map(reviveTraceSpan);
   }
@@ -61,5 +70,7 @@ export const extractSpans = (data: object): TraceSpan[] => {
     return [reviveTraceSpan(data)];
   }
 
-  throw new Error("Invalid trace format. Expected OpenTelemetry or Langfuse.");
+  throw new Error(
+    "Invalid trace format. Expected OpenTelemetry, Langfuse or Claude Code.",
+  );
 };

@@ -33,10 +33,11 @@ import {
 ## What's Included
 
 - **Core Types**: `TraceSpan`, `TraceSpanAttribute` - UI-ready span representations
-- **Trace Metadata**: `TokenUsage` (tokens and cost per token type), `TraceReasoning`, `TraceTodo`
+- **Trace Metadata**: `TokenUsage` (tokens and cost per token type), `TraceReasoning`, `TraceTodo`, `TraceSpanContextItem`
 - **Categories**: `TraceSpanCategory` - span categorization (LLM, Tool, Agent, etc.)
 - **OpenTelemetry Types**: `OpenTelemetrySpan`, `OpenTelemetryDocument` - raw OpenTelemetry data structures
 - **Langfuse Types**: `LangfuseObservation`, `LangfuseDocument` - raw Langfuse data structures
+- **Claude Code Types**: `ClaudeCodeLogEntry`, `ClaudeCodeDocument` - records of a Claude Code session transcript
 - **Semantic Convention Mappings**: Constants for OpenInference, GenAI, and standard OpenTelemetry attributes
 
 ## Related Packages
