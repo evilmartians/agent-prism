@@ -2,6 +2,11 @@
   "name": "@evilmartians/agent-prism-data",
   "private": false,
   "version": "0.0.9",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evilmartians/agent-prism.git",
+    "directory": "packages/data"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
