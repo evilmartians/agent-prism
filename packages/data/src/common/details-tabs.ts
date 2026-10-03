@@ -5,7 +5,10 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
  * Narrowed to the fields they read; DetailsView passes a full TraceSpan. Each is
  * a presence guard, so a span without that content shows no tab for it.
  */
-type SpanTabData = Pick<TraceSpan, "attributes" | "reasoning" | "todos">;
+type SpanTabData = Pick<
+  TraceSpan,
+  "attributes" | "context" | "reasoning" | "todos"
+>;
 
 export function hasThinkingContent(
   data: Pick<SpanTabData, "reasoning">,
@@ -18,16 +21,19 @@ export function hasThinkingContent(
  * fired on `gen_ai.usage.input_tokens`, which would grow a Context tab on any plain
  * OTLP/Langfuse LLM span. We key on the Claude context attributes the transcoder
  * emits (cumulative_tokens / context_fill_percent) so it stays vendor-safe.
+ * A span that lists what was injected into its context gets the tab as well.
  */
 export function hasContextContent(
-  data: Pick<SpanTabData, "attributes">,
+  data: Pick<SpanTabData, "attributes" | "context">,
 ): boolean {
   return (
-    data.attributes?.some(
+    (data.context?.length ?? 0) > 0 ||
+    (data.attributes?.some(
       (attr) =>
         attr.key === "claude_code.cumulative_tokens" ||
         attr.key === "claude_code.context_fill_percent",
-    ) ?? false
+    ) ??
+      false)
   );
 }
 

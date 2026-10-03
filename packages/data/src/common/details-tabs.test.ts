@@ -50,6 +50,17 @@ describe("agent-prism / details-tabs — tab decisions", () => {
     expect(hasContextContent(createTestSpan())).toBe(false);
   });
 
+  it("hasContextContent is true for a span that lists context items", () => {
+    expect(
+      hasContextContent(
+        createTestSpan({
+          context: [{ type: "hook_success", title: "Hook succeeded" }],
+        }),
+      ),
+    ).toBe(true);
+    expect(hasContextContent(createTestSpan({ context: [] }))).toBe(false);
+  });
+
   it("hasTodos is true only for a non-empty task list", () => {
     expect(
       hasTodos(

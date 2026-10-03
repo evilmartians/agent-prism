@@ -1,6 +1,6 @@
 # @evilmartians/agent-prism-data
 
-Data transformation utilities for [AgentPrism](https://github.com/evilmartians/agent-prism) - converting OpenTelemetry and Langfuse traces to UI-ready formats for AI agent trace visualization.
+Data transformation utilities for [AgentPrism](https://github.com/evilmartians/agent-prism) - converting OpenTelemetry, Langfuse and Claude Code traces to UI-ready formats for AI agent trace visualization.
 
 Part of the [AgentPrism](https://github.com/evilmartians/agent-prism) project for visualizing AI agent traces, LLM calls, and tool executions.
 
@@ -21,6 +21,7 @@ import {
   getTotalTokens,
   openTelemetrySpanAdapter,
   langfuseSpanAdapter,
+  claudeCodeSpanAdapter,
 } from "@evilmartians/agent-prism-data";
 
 // Convert OTLP document to UI-ready spans
@@ -30,6 +31,10 @@ const otlpSpans =
 // Convert Langfuse observations to UI-ready spans
 const langfuseSpans =
   langfuseSpanAdapter.convertRawDocumentsToSpans(langfuseDocument);
+
+// Convert a Claude Code session transcript (JSONL text or parsed records)
+const claudeCodeSpans =
+  claudeCodeSpanAdapter.convertRawDocumentsToSpans(transcriptText);
 
 // Build hierarchical tree structure from spans
 const tree = openTelemetrySpanAdapter.convertRawSpansToSpanTree(otlpSpans);
@@ -53,7 +58,7 @@ const totalCost = getTotalCost(usage);
 
 ## Features
 
-- **Multiple format support**: Transform OpenTelemetry (OTLP) and Langfuse traces into visualization-ready format
+- **Multiple format support**: Transform OpenTelemetry (OTLP) and Langfuse traces, and Claude Code session transcripts, into visualization-ready format
 - **Semantic convention support**: Handles OpenInference, GenAI, and standard OpenTelemetry attributes
 - **Hierarchical structure**: Build parent-child relationships for tree visualization
 - **Timeline calculations**: Calculate durations, offsets, and time ranges

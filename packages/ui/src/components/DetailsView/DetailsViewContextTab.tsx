@@ -1,6 +1,7 @@
 import type {
   TraceSpan,
   TraceSpanAttribute,
+  TraceSpanContextItem,
 } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
@@ -10,6 +11,11 @@ import {
   getTotalTokens,
   hasReportedCost,
 } from "@evilmartians/agent-prism-data";
+import { useId } from "react";
+
+import { Badge } from "../Badge";
+import { CollapsibleSection } from "../CollapsibleSection";
+import { DetailsViewContentViewer } from "./DetailsViewContentViewer";
 
 interface DetailsViewContextTabProps {
   data: TraceSpan;
@@ -104,6 +110,123 @@ function StatGrid({ rows }: { rows: StatRowData[] }): ReactElement {
   );
 }
 
+const contextTimeFormat = new Intl.DateTimeFormat("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false,
+});
+
+interface ContextItemSectionProps {
+  item: TraceSpanContextItem;
+  id: string;
+  defaultOpen: boolean;
+}
+
+/**
+ * One thing that was injected into the span's context. `content` is the text
+ * that was injected; `metadata` is whatever else the source recorded about it.
+ */
+function ContextItemSection({
+  item,
+  id,
+  defaultOpen,
+}: ContextItemSectionProps): ReactElement {
+  const metadata =
+    item.metadata && Object.keys(item.metadata).length > 0
+      ? JSON.stringify(item.metadata)
+      : null;
+  const time =
+    item.timestamp instanceof Date && !Number.isNaN(item.timestamp.getTime())
+      ? item.timestamp
+      : undefined;
+
+  return (
+    <CollapsibleSection
+      title={item.title}
+      defaultOpen={defaultOpen}
+      contentClassName="space-y-2 pb-2.5"
+      rightContent={
+        time && (
+          <time
+            dateTime={time.toISOString()}
+            className="text-agentprism-muted-foreground text-[10px] tabular-nums"
+          >
+            {contextTimeFormat.format(time)}
+          </time>
+        )
+      }
+    >
+      <Badge label={item.type} />
+
+      {item.content && (
+        // Injected text can run to hundreds of lines, so it scrolls in place;
+        // the region is focusable to be scrollable from the keyboard.
+        <div
+          tabIndex={0}
+          role="group"
+          aria-label={`${item.title} content`}
+          className="max-h-80 overflow-y-auto rounded-lg"
+        >
+          <DetailsViewContentViewer
+            content={item.content}
+            parsedContent={null}
+            mode="plain"
+            label={`${item.title} content`}
+            id={`${id}-content`}
+          />
+        </div>
+      )}
+
+      {metadata && (
+        <DetailsViewContentViewer
+          content={metadata}
+          parsedContent={metadata}
+          mode="json"
+          label={`${item.title} metadata`}
+          id={`${id}-metadata`}
+        />
+      )}
+    </CollapsibleSection>
+  );
+}
+
+interface ContextItemsProps {
+  items: TraceSpanContextItem[];
+  spanId: string;
+}
+
+function ContextItems({ items, spanId }: ContextItemsProps): ReactElement {
+  const headingId = useId();
+
+  return (
+    <section
+      aria-labelledby={headingId}
+      className="border-agentprism-border rounded-md border p-3"
+    >
+      <h4
+        id={headingId}
+        className="text-agentprism-muted-foreground mb-2 text-xs font-medium"
+      >
+        Context Injections ({items.length})
+      </h4>
+      <ul className="divide-agentprism-border divide-y">
+        {items.map((item, index) => (
+          // Keyed by span as well, so a section opened on one span does not
+          // stay open on the next one.
+          <li key={`${spanId}-${index}`} className="pt-2.5 first:pt-0">
+            <ContextItemSection
+              item={item}
+              id={`${spanId}-context-${index}`}
+              defaultOpen={items.length === 1}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export function DetailsViewContextTab({
   data,
 }: DetailsViewContextTabProps): ReactElement {
@@ -124,12 +247,13 @@ export function DetailsViewContextTab({
   const speed = getStringAttr(data.attributes, "claude_code.usage.speed");
 
   const usage = data.tokenUsage;
+  const contextItems = data.context ?? [];
 
   const hasContextData =
     cumulativeTokens !== undefined || fillPercent !== undefined;
   const hasTokenBreakdown = usage !== undefined;
 
-  if (!hasContextData && !hasTokenBreakdown) {
+  if (!hasContextData && !hasTokenBreakdown && contextItems.length === 0) {
     return (
       <div className="border-agentprism-border rounded-md border p-4">
         <p className="text-agentprism-muted-foreground text-sm">
@@ -268,6 +392,10 @@ export function DetailsViewContextTab({
             rows={[{ label: "Cost", value: formatCost(getTotalCost(usage)) }]}
           />
         </div>
+      )}
+
+      {contextItems.length > 0 && (
+        <ContextItems items={contextItems} spanId={data.id} />
       )}
     </div>
   );

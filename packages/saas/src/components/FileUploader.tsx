@@ -24,17 +24,9 @@ const FileUploader: FC = () => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const file = files[0];
     setIsProcessing(true);
 
     try {
-      const text = await file.text();
-      const jsonData = JSON.parse(text);
-
-      if (typeof jsonData !== "object" || jsonData === null) {
-        throw new Error("Invalid JSON: expected an object");
-      }
-
       await traceContext?.uploadTraces(files);
     } catch (err) {
       console.error("Upload error:", err);
@@ -51,7 +43,8 @@ const FileUploader: FC = () => {
         ref={fileInputRef}
         type="file"
         className="hidden"
-        accept=".json"
+        accept=".json,.jsonl"
+        multiple
         onChange={handleFilesChange}
         aria-label="Upload trace or log files"
         disabled={isProcessing}

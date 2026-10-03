@@ -4,6 +4,7 @@ import type {
   TraceReasoningLevel,
   TraceSpan,
   TraceSpanCategory,
+  TraceSpanContextItem,
   TraceSpanStatus,
   TraceTodo,
   TraceTodoStatus,
@@ -131,10 +132,35 @@ const reviveTodos = (value: unknown): TraceTodo[] | undefined =>
       )
     : undefined;
 
+const reviveContext = (value: unknown): TraceSpanContextItem[] | undefined =>
+  Array.isArray(value)
+    ? value.flatMap((item: unknown) =>
+        isRecord(item) &&
+        typeof item.type === "string" &&
+        typeof item.title === "string"
+          ? [
+              {
+                type: item.type,
+                title: item.title,
+                content:
+                  typeof item.content === "string" ? item.content : undefined,
+                timestamp: isTimestamp(item.timestamp)
+                  ? new Date(item.timestamp)
+                  : undefined,
+                metadata:
+                  isRecord(item.metadata) && !Array.isArray(item.metadata)
+                    ? item.metadata
+                    : undefined,
+              },
+            ]
+          : [],
+      )
+    : undefined;
+
 /**
  * Turns a parsed-JSON span tree back into `TraceSpan`s: JSON has no dates, so
  * the timestamps arrive as strings and are converted back, and malformed token
- * usage, reasoning or todos are dropped.
+ * usage, reasoning, todos or context items are dropped.
  */
 export const reviveTraceSpan = (value: unknown): TraceSpan => {
   if (!isTraceSpanLike(value)) {
@@ -153,5 +179,6 @@ export const reviveTraceSpan = (value: unknown): TraceSpan => {
     tokenUsage: reviveTokenUsage(value.tokenUsage),
     reasoning: reviveReasoning(value.reasoning),
     todos: reviveTodos(value.todos),
+    context: reviveContext(value.context),
   };
 };

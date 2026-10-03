@@ -41,3 +41,6 @@ export {
 
 export { openTelemetrySpanAdapter } from "./open-telemetry/adapter.js";
 export { langfuseSpanAdapter } from "./langfuse/adapter.js";
+export { claudeCodeSpanAdapter } from "./claude-code/adapter.js";
+export { parseClaudeCodeJSONL } from "./claude-code/utils/parse-claude-code-jsonl.js";
+export { isClaudeCodeTranscript } from "./claude-code/utils/is-claude-code-transcript.js";

@@ -159,12 +159,13 @@ export function App() {
 
 AgentPrism uses a normalized data format optimized for UI rendering. Transform your trace data using the provided adapters.
 
-All adapters implement the same interface and offer some helpful methods for transforming raw data (Open Telemetry, Langfuse, and so on) and getting some info out of it.
+All adapters implement the same interface and offer some helpful methods for transforming raw data (Open Telemetry, Langfuse, Claude Code, and so on) and getting some info out of it.
 
 ```tsx
 import {
   openTelemetrySpanAdapter,
   langfuseSpanAdapter,
+  claudeCodeSpanAdapter,
 } from "@evilmartians/agent-prism-data";
 
 // convert whole documents to TraceSpans (normalized view)
@@ -204,6 +205,7 @@ getTokenUsageEntries(span.tokenUsage); // [{ type: "input", tokens, cost }, ...]
 span.tokenUsage; // { input: { tokens, cost }, output: {...}, ... }, or undefined
 span.reasoning; // { content, tokens?, level?, triggers? } for the Thinking tab
 span.todos; // [{ title, status }] for the Todos section
+span.context; // [{ type, title, content?, timestamp?, metadata? }] for the Context tab
 span.raw; // the source records, each as JSON text
 
 reviveTraceSpan(JSON.parse(text)); // restores Date timestamps on parsed spans
@@ -229,6 +231,30 @@ import { langfuseSpanAdapter } from "@evilmartians/agent-prism-data";
 const spans = langfuseSpanAdapter.convertRawDocumentsToSpans(langfuseDocument);
 ```
 
+### Claude Code Format
+
+For Claude Code session transcripts (the `.jsonl` files under `~/.claude/projects/`), use the Claude Code adapter. It takes the text of a transcript, or its parsed records:
+
+```tsx
+import { claudeCodeSpanAdapter } from "@evilmartians/agent-prism-data";
+
+const spans = claudeCodeSpanAdapter.convertRawDocumentsToSpans(transcriptText);
+```
+
+The tree follows the shape of Claude Code's own OpenTelemetry traces: every prompt is a top-level span, with the LLM responses and tool calls of that turn as its children. What Claude Code injected along the way (hook output, reminders, tool and skill listings) is not a span; it is listed in the `context` of the span it followed.
+
+A session's subagents are written to files of their own (`<session>/subagents/agent-<id>.jsonl`, each with an `agent-<id>.meta.json`). Pass them along with the main transcript, in any order, and each subagent nests under the tool call that ran it:
+
+```tsx
+const spans = claudeCodeSpanAdapter.convertRawDocumentsToSpans([
+  transcriptText,
+  subagentTranscriptText,
+  subagentMetaText,
+]);
+```
+
+A transcript does not record costs, so the spans carry token counts only.
+
 ### Expected Data Structure
 
 The UI components expect this data shape:
@@ -248,6 +274,7 @@ AgentPrism recognizes standard semantic conventions:
 - **OpenTelemetry GenAI**: `gen_ai.*` (model, tokens, costs)
 - **OpenInference**: `llm.*`, `retrieval.*`
 - **Standard OTEL**: HTTP, database spans
+- **Claude Code**: `claude_code.*` (context window usage, transcript fields)
 - **Custom**: Add your own attributes like `gen_ai.usage.cost`
 
 ### Sample OTLP Input

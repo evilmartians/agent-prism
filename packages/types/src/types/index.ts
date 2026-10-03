@@ -31,7 +31,26 @@ export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
   tokenUsage?: TokenUsage;
   reasoning?: TraceReasoning;
   todos?: TraceTodo[];
+  /** What was injected into the span's context, as listed on the Context tab. */
+  context?: TraceSpanContextItem[];
   metadata?: TMetadata;
+};
+
+/**
+ * Something that reached a span out of band rather than as a span of its own:
+ * content injected into the model's context (hook output, reminders, tool and
+ * skill listings) or a notice about the run (an interrupt, a retried API
+ * error).
+ */
+export type TraceSpanContextItem = {
+  /** The source's name for the kind of item, e.g. `hook_success`. */
+  type: string;
+  title: string;
+  /** The injected text, when the item carries any. */
+  content?: string;
+  timestamp?: Date;
+  /** Whatever else the source recorded about the item. */
+  metadata?: Record<string, unknown>;
 };
 
 /**
