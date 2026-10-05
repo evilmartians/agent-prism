@@ -38,6 +38,16 @@ export {
   formatSpanErrorForAgent,
   formatRunErrorsForAgent,
 } from "./common/format-errors-for-agent.js";
+export {
+  resolveSpanRaw,
+  selectSliceForSpan,
+} from "./common/span-raw-view.js";
+export type { ResolvedSpanSlice } from "./common/span-raw-view.js";
+export {
+  formatBytes,
+  interpretTraceRawResponse,
+} from "./common/trace-raw-view.js";
+export type { TraceRawView } from "./common/trace-raw-view.js";
 
 export { openTelemetrySpanAdapter } from "./open-telemetry/adapter.js";
 export { langfuseSpanAdapter } from "./langfuse/adapter.js";
