@@ -7,7 +7,7 @@ import {
   Controls,
   Stories,
   Source,
-} from "@storybook/blocks";
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
   title: "Atoms/TokensBadge",

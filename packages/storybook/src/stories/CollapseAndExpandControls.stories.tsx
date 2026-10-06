@@ -11,7 +11,7 @@ import {
   Controls,
   Stories,
   Source,
-} from "@storybook/blocks";
+} from "@storybook/addon-docs/blocks";
 
 // Create a wrapper component for the meta since we have two related components
 const ControlsWrapper = () => null;

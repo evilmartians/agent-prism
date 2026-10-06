@@ -4,3 +4,11 @@ packages:
 # Wait 3 days before installing a newly published dependency version:
 # most malicious releases are caught and removed within that window.
 minimumReleaseAge: 4320
+
+engineStrict: true
+strictPeerDependencies: true
+strictDepBuilds: true
+onlyBuiltDependencies:
+  - esbuild
+ignoredBuiltDependencies:
+  - sharp

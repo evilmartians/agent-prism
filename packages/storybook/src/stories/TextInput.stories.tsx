@@ -11,7 +11,7 @@ import {
   Controls,
   Stories,
   Source,
-} from "@storybook/blocks";
+} from "@storybook/addon-docs/blocks";
 import { useState } from "react";
 
 const meta = {

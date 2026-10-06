@@ -5,7 +5,12 @@ import {
   DetailsViewTodosSection,
   DetailsViewTodosSectionSource,
 } from "@evilmartians/agent-prism-ui";
-import { Description, Primary, Source, Stories } from "@storybook/blocks";
+import {
+  Description,
+  Primary,
+  Source,
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const baseSpan: TraceSpan = {
   id: "span-todos-001",

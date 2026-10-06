@@ -8,7 +8,7 @@ import {
   Controls,
   Stories,
   Source,
-} from "@storybook/blocks";
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
   title: "Main Components/DetailsView",

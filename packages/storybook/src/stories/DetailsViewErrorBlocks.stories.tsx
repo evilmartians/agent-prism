@@ -11,7 +11,7 @@ import {
   Controls,
   Stories,
   Source,
-} from "@storybook/blocks";
+} from "@storybook/addon-docs/blocks";
 
 const baseSpan = (
   span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
