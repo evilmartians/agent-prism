@@ -26,8 +26,6 @@ export const agentPrismTheme: Theme = {
         { dark: "gray.100", light: "gray.900", name: "foreground" },
         { dark: "gray.100", light: "gray.900", name: "primary" },
         { dark: "gray.950", light: "gray.50", name: "primary-foreground" },
-        { dark: "gray.100", light: "gray.900", name: "primary" },
-        { dark: "gray.950", light: "gray.50", name: "primary-foreground" },
         { dark: "gray.800", light: "gray.100", name: "secondary" },
         { dark: "gray.500", light: "gray.500", name: "secondary-foreground" },
         { dark: "gray.900", light: "gray.50", name: "muted" },

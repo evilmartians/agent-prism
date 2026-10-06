@@ -23,6 +23,7 @@
     "test": "pnpm run --parallel test",
     "test:storybook": "pnpm --filter @evilmartians/agent-prism-storybook test:storybook",
     "theme:generate": "pnpm --filter @evilmartians/agent-prism-ui generate-theme-files",
+    "theme:check": "pnpm theme:generate && git diff --exit-code packages/ui/src/components/theme",
     "dist:rm": "pnpm -r exec rm -rf dist out"
   },
   "devDependencies": {
