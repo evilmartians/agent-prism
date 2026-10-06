@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  commands:
+    oxlint:
+      glob: "*.{js,jsx,mjs,cjs,ts,tsx}"
+      run: pnpm exec oxlint --deny-warnings --ignore-pattern '**/lint-fixtures' {staged_files}
+    prettier:
+      file_types:
+        - not symlink
+      run: pnpm exec prettier --check --ignore-unknown {staged_files}
+
+pre-push:
+  commands:
+    tsc:
+      run: pnpm tsc

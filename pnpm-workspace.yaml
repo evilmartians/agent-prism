@@ -10,5 +10,6 @@ strictPeerDependencies: true
 strictDepBuilds: true
 onlyBuiltDependencies:
   - esbuild
+  - lefthook
 ignoredBuiltDependencies:
   - sharp

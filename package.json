@@ -38,6 +38,7 @@
     "eslint-plugin-tailwindcss": "^3.18.2",
     "jscpd": "^5.4.0",
     "knip": "^6.39.0",
+    "lefthook": "^2.1.16",
     "oxlint": "^1.86.0",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
