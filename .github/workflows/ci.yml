@@ -142,9 +142,69 @@ jobs:
       - name: Run stories with interaction and accessibility checks
         run: pnpm test:storybook
 
+  mutation:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup
+        uses: $/.github/actions/setup
+
+      - name: Find changed data sources
+        id: changed
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: |
+          files=$(git diff --name-only --diff-filter=d "$BASE_REF...HEAD" -- 'packages/data/src/*.ts' \
+            | { grep -Ev '\.test\.ts$|/test-utils/|/create-mock-' || true; } \
+            | sed 's|^packages/data/||' \
+            | paste -sd, -)
+          echo "files=$files" >> "$GITHUB_OUTPUT"
+          echo "Mutating: ${files:-no changed data sources}"
+
+      - name: Mutate changed data sources
+        id: mutate
+        if: steps.changed.outputs.files != ''
+        continue-on-error: true
+        env:
+          FILES: ${{ steps.changed.outputs.files }}
+        run: pnpm mutate --mutate "$FILES"
+
+      - name: Write the mutation report to the job summary
+        if: steps.mutate.outcome == 'success'
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: |
+          pnpm --silent mutation:report "$BASE_REF" > "$RUNNER_TEMP/mutation.md"
+          cat "$RUNNER_TEMP/mutation.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comment the mutation report on the pull request
+        if: steps.mutate.outcome == 'success' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          existing=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq 'map(select(.body | startswith("<!-- mutation-report -->"))) | first | .id // empty')
+          if [ -n "$existing" ]; then
+            gh api "repos/$REPO/issues/comments/$existing" -X PATCH -F body=@"$RUNNER_TEMP/mutation.md" >/dev/null
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -F body=@"$RUNNER_TEMP/mutation.md" >/dev/null
+          fi
+
   main:
     if: always()
-    needs: [lint, typecheck, test, build, knip, jscpd, storybook-test]
+    needs: [lint, typecheck, test, build, knip, jscpd, storybook-test, mutation]
     runs-on: ubuntu-latest
     permissions: {}
     steps:
