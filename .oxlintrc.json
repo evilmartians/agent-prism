@@ -127,6 +127,7 @@
     "typescript/prefer-function-type": "error",
     "no-shadow": "error",
     "no-use-before-define": ["error", { "functions": false }],
+    "max-depth": ["error", { "max": 3 }],
     "react/display-name": "error",
     "react/jsx-key": "error",
     "react/jsx-no-comment-textnodes": "error",
@@ -487,6 +488,23 @@
       ],
       "rules": {
         "typescript/explicit-module-boundary-types": "error"
+      }
+    },
+    {
+      "files": ["packages/types/**", "packages/data/**"],
+      "rules": {
+        "complexity": ["error", { "max": 12, "variant": "modified" }]
+      }
+    },
+    {
+      "files": [
+        "packages/ui/**",
+        "packages/demo-app/**",
+        "packages/storybook/**",
+        "packages/saas/**"
+      ],
+      "rules": {
+        "complexity": ["error", { "max": 20, "variant": "modified" }]
       }
     },
     {

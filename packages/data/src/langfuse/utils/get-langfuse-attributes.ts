@@ -3,6 +3,11 @@ import type {
   TraceSpanAttribute,
 } from "@evilmartians/agent-prism-types";
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const ATTRIBUTE_SECTIONS = ["attributes", "resourceAttributes"] as const;
+
 export function getLangfuseAttributes(
   span: LangfuseObservation,
 ): TraceSpanAttribute[] {
@@ -10,35 +15,23 @@ export function getLangfuseAttributes(
     return [];
   }
 
-  const result: TraceSpanAttribute[] = [];
+  let record: unknown;
 
   try {
-    const record = JSON.parse(span.metadata) as unknown;
-
-    if (
-      typeof record === "object" &&
-      record !== null &&
-      "attributes" in record &&
-      typeof record.attributes === "object" &&
-      record.attributes !== null
-    ) {
-      result.push(...getAttributeValues(record.attributes));
-    }
-
-    if (
-      typeof record === "object" &&
-      record !== null &&
-      "resourceAttributes" in record &&
-      typeof record.resourceAttributes === "object" &&
-      record.resourceAttributes !== null
-    ) {
-      result.push(...getAttributeValues(record.resourceAttributes));
-    }
+    record = JSON.parse(span.metadata);
   } catch {
-    return result;
+    return [];
   }
 
-  return result;
+  if (!isRecord(record)) {
+    return [];
+  }
+
+  return ATTRIBUTE_SECTIONS.flatMap((section) => {
+    const attributes = record[section];
+
+    return isRecord(attributes) ? getAttributeValues(attributes) : [];
+  });
 }
 
 function getAttributeValues(attributes: object): TraceSpanAttribute[] {

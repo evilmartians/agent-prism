@@ -260,6 +260,13 @@ const getAriaSelected = (
   return hasSelection ? false : undefined;
 };
 
+const resolveViewOptions = (
+  viewOptions: SpanCardViewOptions,
+): { withStatus: boolean; expandButton: ExpandButtonPlacement } => ({
+  withStatus: viewOptions.withStatus ?? DEFAULT_VIEW_OPTIONS.withStatus,
+  expandButton: viewOptions.expandButton || DEFAULT_VIEW_OPTIONS.expandButton,
+});
+
 const getContentIndentClass = (
   level: number,
   hasExpandButtonAsFirstChild: boolean,
@@ -285,9 +292,7 @@ export const SpanCard: FC<SpanCardProps> = ({
 }) => {
   const isExpanded = expandedSpansIds.includes(data.id);
 
-  const withStatus = viewOptions.withStatus ?? DEFAULT_VIEW_OPTIONS.withStatus;
-  const expandButton =
-    viewOptions.expandButton || DEFAULT_VIEW_OPTIONS.expandButton;
+  const { withStatus, expandButton } = resolveViewOptions(viewOptions);
 
   const handleToggleClick = useCallback(
     (expanded: boolean) => {
