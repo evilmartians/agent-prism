@@ -31,13 +31,12 @@ function resolveColorToken(token: TailwindColorToken): string {
  * This will allow for tailwind's opacity syntax bg-tokenName/50
  */
 function extractOklchValues(colorString: string): string {
-  const match = colorString.match(/oklch\(([^)]+)\)/);
-  if (!match) {
+  const values = colorString.match(/oklch\(([^)]+)\)/)?.[1];
+  if (!values) {
     throw new Error(`Invalid OKLCH color format: ${colorString}`);
   }
 
-  const values = match[1].trim();
-  const parts = values.split(/\s+/);
+  const parts = values.trim().split(/\s+/);
 
   // Convert 100% to 1 and 0% to 0 for lightness, keep percentages otherwise
   if (parts[0] === "100%") {

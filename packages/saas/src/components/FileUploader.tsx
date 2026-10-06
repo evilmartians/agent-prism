@@ -22,9 +22,9 @@ const FileUploader: FC = () => {
 
   const handleFilesChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0) return;
+    const file = files?.[0];
+    if (!files || !file) return;
 
-    const file = files[0];
     setIsProcessing(true);
 
     try {

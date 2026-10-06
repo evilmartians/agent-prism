@@ -41,7 +41,12 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
   }, []);
 
   const uploadTraces = async (files: FileList) => {
-    const text = await files[0].text();
+    const file = files[0];
+    if (!file) {
+      throw new Error("No file selected");
+    }
+
+    const text = await file.text();
     const jsonData = JSON.parse(text);
 
     if (typeof jsonData !== "object" || jsonData === null) {

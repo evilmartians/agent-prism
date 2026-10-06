@@ -27,8 +27,8 @@ export const createMockOpenTelemetrySpan = (
     kind = "SPAN_KIND_INTERNAL",
   } = options;
 
-  const startTime = [1640995200, 0];
-  const endTime = [startTime[0] + duration[0], duration[1]];
+  const startTime: [number, number] = [1640995200, 0];
+  const endTime: [number, number] = [startTime[0] + duration[0], duration[1]];
 
   // Convert to nanosecond strings
   const startTimeNano = (

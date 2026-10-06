@@ -109,7 +109,7 @@ export const EmptyList: Story = {
 
 export const SingleTrace: Story = {
   args: {
-    traces: [mockTraces[0]],
+    traces: mockTraces.slice(0, 1),
     expanded: true,
     onExpandStateChange: () => {},
   },

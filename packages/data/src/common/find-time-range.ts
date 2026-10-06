@@ -13,9 +13,6 @@ export function findTimeRange(cards: TraceSpan[]): {
         maxEnd: Math.max(acc.maxEnd, end),
       };
     },
-    {
-      minStart: cards.length > 0 ? +new Date(cards[0].startTime) : Infinity,
-      maxEnd: cards.length > 0 ? +new Date(cards[0].endTime) : -Infinity,
-    },
+    { minStart: Infinity, maxEnd: -Infinity },
   );
 }

@@ -5,49 +5,52 @@ import { describe, expect, it } from "vitest";
 import { filterSpansRecursively } from "./filter-spans-recursively";
 
 describe("filterSpansRecursively", () => {
+  const childSpanA: TraceSpan = {
+    id: "1.1",
+    title: "Child Span A",
+    startTime: new Date(),
+    endTime: new Date(),
+    type: "embedding",
+    raw: [],
+    status: "success",
+    children: [],
+  };
+
+  const nestedSpan: TraceSpan = {
+    id: "1.2.1",
+    title: "Nested Span",
+    startTime: new Date(),
+    endTime: new Date(),
+    type: "guardrail",
+    raw: [],
+    status: "success",
+    children: [],
+  };
+
+  const childSpanB: TraceSpan = {
+    id: "1.2",
+    title: "Child Span B",
+    startTime: new Date(),
+    endTime: new Date(),
+    type: "embedding",
+    raw: [],
+    status: "success",
+    children: [nestedSpan],
+  };
+
+  const parentSpan: TraceSpan = {
+    id: "1",
+    title: "Parent Span",
+    startTime: new Date(),
+    endTime: new Date(),
+    type: "guardrail",
+    raw: [],
+    status: "success",
+    children: [childSpanA, childSpanB],
+  };
+
   const sampleSpans: TraceSpan[] = [
-    {
-      id: "1",
-      title: "Parent Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "guardrail",
-      raw: [],
-      status: "success",
-      children: [
-        {
-          id: "1.1",
-          title: "Child Span A",
-          startTime: new Date(),
-          endTime: new Date(),
-          type: "embedding",
-          raw: [],
-          status: "success",
-          children: [],
-        },
-        {
-          id: "1.2",
-          title: "Child Span B",
-          startTime: new Date(),
-          endTime: new Date(),
-          type: "embedding",
-          raw: [],
-          status: "success",
-          children: [
-            {
-              id: "1.2.1",
-              title: "Nested Span",
-              startTime: new Date(),
-              endTime: new Date(),
-              type: "guardrail",
-              raw: [],
-              status: "success",
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
+    parentSpan,
     {
       id: "2",
       title: "Another Parent Span",
@@ -69,10 +72,10 @@ describe("filterSpansRecursively", () => {
     const result = filterSpansRecursively(sampleSpans, "Child Span A");
     expect(result).toEqual([
       {
-        ...sampleSpans[0],
+        ...parentSpan,
         children: [
           {
-            ...sampleSpans[0].children![0],
+            ...childSpanA,
             children: [],
           },
         ],
@@ -84,13 +87,13 @@ describe("filterSpansRecursively", () => {
     const result = filterSpansRecursively(sampleSpans, "Nested Span");
     expect(result).toEqual([
       {
-        ...sampleSpans[0],
+        ...parentSpan,
         children: [
           {
-            ...sampleSpans[0].children![1],
+            ...childSpanB,
             children: [
               {
-                ...sampleSpans[0].children![1].children![0],
+                ...nestedSpan,
                 children: [],
               },
             ],
@@ -109,10 +112,10 @@ describe("filterSpansRecursively", () => {
     const result = filterSpansRecursively(sampleSpans, "child span b");
     expect(result).toEqual([
       {
-        ...sampleSpans[0],
+        ...parentSpan,
         children: [
           {
-            ...sampleSpans[0].children![1],
+            ...childSpanB,
             children: [],
           },
         ],

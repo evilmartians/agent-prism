@@ -54,6 +54,31 @@ const meta = {
   },
 } satisfies Meta<typeof TreeView>;
 
+const llmProcessingSpan: TraceSpan = {
+  id: "span-child-002",
+  title: "LLM Processing",
+  startTime: new Date("2024-01-15T10:30:02Z"),
+  endTime: new Date("2024-01-15T10:30:04Z"),
+  tokenUsage: { total: { tokens: 800, cost: 0.08 } },
+  type: "llm_call",
+  raw: [JSON.stringify({ model: "gpt-4", tokens: 800 })],
+  attributes: [{ key: "llm.model", value: { stringValue: "gpt-4" } }],
+  status: "success",
+  children: [
+    {
+      id: "span-grandchild-001",
+      title: "Token Generation",
+      startTime: new Date("2024-01-15T10:30:02.5Z"),
+      endTime: new Date("2024-01-15T10:30:03.5Z"),
+      tokenUsage: { total: { tokens: 400, cost: 0.05 } },
+      type: "tool_execution",
+      raw: [JSON.stringify({ tool: "tokenizer" })],
+      attributes: [],
+      status: "success",
+    },
+  ],
+};
+
 const mockSpans: TraceSpan[] = [
   {
     id: "span-root-001",
@@ -80,30 +105,7 @@ const mockSpans: TraceSpan[] = [
         attributes: [{ key: "db.operation", value: { stringValue: "SELECT" } }],
         status: "success",
       },
-      {
-        id: "span-child-002",
-        title: "LLM Processing",
-        startTime: new Date("2024-01-15T10:30:02Z"),
-        endTime: new Date("2024-01-15T10:30:04Z"),
-        tokenUsage: { total: { tokens: 800, cost: 0.08 } },
-        type: "llm_call",
-        raw: [JSON.stringify({ model: "gpt-4", tokens: 800 })],
-        attributes: [{ key: "llm.model", value: { stringValue: "gpt-4" } }],
-        status: "success",
-        children: [
-          {
-            id: "span-grandchild-001",
-            title: "Token Generation",
-            startTime: new Date("2024-01-15T10:30:02.5Z"),
-            endTime: new Date("2024-01-15T10:30:03.5Z"),
-            tokenUsage: { total: { tokens: 400, cost: 0.05 } },
-            type: "tool_execution",
-            raw: [JSON.stringify({ tool: "tokenizer" })],
-            attributes: [],
-            status: "success",
-          },
-        ],
-      },
+      llmProcessingSpan,
     ],
   },
   {
@@ -158,7 +160,7 @@ export const ExpandedSpans: Story = {
 export const SelectedSpan: Story = {
   args: {
     spans: mockSpans,
-    selectedSpan: mockSpans[0].children![1],
+    selectedSpan: llmProcessingSpan,
     spanCardViewOptions: {
       expandButton: "outside",
     },

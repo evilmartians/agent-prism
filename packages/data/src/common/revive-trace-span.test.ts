@@ -65,7 +65,7 @@ describe("reviveTraceSpan", () => {
 
     expect(revived).toEqual(span);
     expect(revived.startTime).toBeInstanceOf(Date);
-    expect(revived.children?.[0].endTime).toBeInstanceOf(Date);
+    expect(revived.children?.[0]?.endTime).toBeInstanceOf(Date);
   });
 
   it("throws on a value that is not span-shaped", () => {
