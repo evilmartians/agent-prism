@@ -20,6 +20,7 @@
 | `types` and `data` never import React, `ui` or an app; `types` never imports `data`; `ui` never imports an app | `pnpm lint:check` (`boundaries/dependencies`)                 |
 | No `//` comments; JSDoc only in `types`, `data`, `ui`                                                          | `pnpm lint:check` (`comments/no-comments`)                    |
 | Strict TypeScript, no `any`, no unchecked index access                                                         | `pnpm tsc`, `pnpm lint:check`                                 |
+| Type-aware rules in `.ts`/`.tsx`: no floating promises, no unsafe `any`, strict boolean conditions             | `pnpm lint:check` (`--type-aware`, tsgolint)                  |
 | Prettier formatting                                                                                            | `pnpm format:check`                                           |
 | `data` tests run in UTC and keep coverage above the thresholds in `packages/data/vitest.config.ts`             | `pnpm test --coverage`                                        |
 | No unused files, exports or dependencies                                                                       | `pnpm knip`                                                   |
