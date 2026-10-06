@@ -1,134 +1,40 @@
+import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
+
 import { OPENINFERENCE_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
 import { categorizeOpenInference } from "../utils/categorize-open-inference.js";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
+import {
+  createMockOpenTelemetrySpan,
+  type MockAttributeValue,
+} from "../utils/create-mock-open-telemetry-span.js";
 
 describe("categorizeOpenInference", () => {
-  describe("OpenInference span kind mappings", () => {
-    it("should return 'llm_call' for LLM span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM" },
-        name: "llm operation",
-      });
-      expect(categorizeOpenInference(span)).toBe("llm_call");
+  it.each<[MockAttributeValue, TraceSpanCategory]>([
+    ["LLM", "llm_call"],
+    ["TOOL", "tool_execution"],
+    ["CHAIN", "chain_operation"],
+    ["AGENT", "agent_invocation"],
+    ["RETRIEVER", "retrieval"],
+    ["EMBEDDING", "embedding"],
+    [123, "unknown"],
+    [true, "unknown"],
+    ["CUSTOM_TYPE", "unknown"],
+    ["", "unknown"],
+    [null, "unknown"],
+    ["llm", "unknown"],
+    ["Llm", "unknown"],
+  ])("maps span kind %j to %s", (spanKind, category) => {
+    const span = createMockOpenTelemetrySpan({
+      attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: spanKind },
     });
-
-    it("should return 'tool_execution' for TOOL span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "TOOL" },
-        name: "tool operation",
-      });
-      expect(categorizeOpenInference(span)).toBe("tool_execution");
-    });
-
-    it("should return 'chain_operation' for CHAIN span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CHAIN" },
-        name: "chain operation",
-      });
-      expect(categorizeOpenInference(span)).toBe("chain_operation");
-    });
-
-    it("should return 'agent_invocation' for AGENT span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "AGENT" },
-        name: "agent operation",
-      });
-      expect(categorizeOpenInference(span)).toBe("agent_invocation");
-    });
-
-    it("should return 'retrieval' for RETRIEVER span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "RETRIEVER" },
-        name: "retriever operation",
-      });
-      expect(categorizeOpenInference(span)).toBe("retrieval");
-    });
-
-    it("should return 'embedding' for EMBEDDING span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "EMBEDDING" },
-        name: "embedding operation",
-      });
-      expect(categorizeOpenInference(span)).toBe("embedding");
-    });
+    expect(categorizeOpenInference(span)).toBe(category);
   });
 
-  describe("edge cases", () => {
-    it("should return 'unknown' when span kind is not a string", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: 123 },
-        name: "numeric span kind",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' when span kind is a boolean", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: true },
-        name: "boolean span kind",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' when span kind attribute is missing", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {},
-        name: "missing span kind",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' for unrecognized span kind values", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CUSTOM_TYPE" },
-        name: "custom span kind",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' for empty string span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "" },
-        name: "empty span kind",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' for null span kind", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: null },
-        name: "null span kind",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-  });
-
-  describe("case sensitivity", () => {
-    it("should handle exact case matches", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM" },
-        name: "uppercase llm",
-      });
-      expect(categorizeOpenInference(span)).toBe("llm_call");
-    });
-
-    it("should not match lowercase span kinds (case sensitive)", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "llm" },
-        name: "lowercase llm",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
-
-    it("should not match mixed case span kinds", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "Llm" },
-        name: "mixed case llm",
-      });
-      expect(categorizeOpenInference(span)).toBe("unknown");
-    });
+  it("should return 'unknown' when span kind attribute is missing", () => {
+    expect(categorizeOpenInference(createMockOpenTelemetrySpan())).toBe(
+      "unknown",
+    );
   });
 
   describe("real-world OpenInference scenarios", () => {

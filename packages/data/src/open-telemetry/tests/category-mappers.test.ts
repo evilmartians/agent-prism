@@ -584,26 +584,11 @@ describe("openTelemetryCategoryMappers", () => {
   });
 
   describe("edge cases", () => {
-    it("should handle empty span names", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {},
-        name: "",
-      });
-
-      expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
-      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);
-      expect(openTelemetryCategoryMappers.isChainOperation(span)).toBe(false);
-      expect(openTelemetryCategoryMappers.isAgentOperation(span)).toBe(false);
-      expect(openTelemetryCategoryMappers.isRetrievalOperation(span)).toBe(
-        false,
-      );
-    });
-
-    it("should handle spans with only whitespace in names", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {},
-        name: "   ",
-      });
+    it.each([
+      ["empty span names", ""],
+      ["spans with only whitespace in names", "   "],
+    ])("should handle %s", (_label, name) => {
+      const span = createMockOpenTelemetrySpan({ attributes: {}, name });
 
       expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
       expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);

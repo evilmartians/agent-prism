@@ -10,6 +10,8 @@ import {
   Stories,
 } from "@storybook/addon-docs/blocks";
 
+import { llmSpan } from "../mocks/llm-span";
+
 const meta = {
   argTypes: {
     avatar: {
@@ -50,15 +52,9 @@ const meta = {
 } satisfies Meta<typeof DetailsView>;
 
 const mockSpanData: TraceSpan = {
+  ...llmSpan,
   attributes: [
-    {
-      key: "llm.model",
-      value: { stringValue: "gpt-4" },
-    },
-    {
-      key: "llm.temperature",
-      value: { intValue: "0.7" },
-    },
+    ...(llmSpan.attributes ?? []),
     {
       key: "llm.max_tokens",
       value: { intValue: "1000" },
@@ -68,24 +64,6 @@ const mockSpanData: TraceSpan = {
       value: { stringValue: "openai" },
     },
   ],
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  id: "span-llm-001",
-  raw: [
-    JSON.stringify({
-      max_tokens: 1000,
-      model: "gpt-4",
-      prompt: "Generate a creative story about AI",
-      temperature: 0.7,
-    }),
-  ],
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  status: "success",
-  title: "GPT-4 Text Generation",
-  tokenUsage: {
-    input: { cost: 0.018, tokens: 600 },
-    output: { cost: 0.027, tokens: 250 },
-  },
-  type: "llm_call",
 };
 
 export default meta;

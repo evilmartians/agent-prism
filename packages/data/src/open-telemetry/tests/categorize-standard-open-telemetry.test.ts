@@ -1,3 +1,5 @@
+import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
+
 import { STANDARD_OPENTELEMETRY_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
@@ -59,153 +61,48 @@ describe("categorizeStandardOpenTelemetry", () => {
     });
   });
 
-  describe("LLM call detection", () => {
-    it("should detect OpenAI spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "openai completion" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
-    });
-
-    it("should detect Anthropic spans", () => {
-      const span = createMockOpenTelemetrySpan({
-        name: "anthropic claude call",
-      });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
-    });
-
-    it("should detect GPT spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "gpt-4 generation" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
-    });
-
-    it("should detect Claude spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "claude-3 sonnet" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
-    });
-
-    it("should be case insensitive for LLM detection", () => {
-      const spans = [
-        createMockOpenTelemetrySpan({ name: "OpenAI Call" }),
-        createMockOpenTelemetrySpan({ name: "ANTHROPIC Generation" }),
-        createMockOpenTelemetrySpan({ name: "GPT-4 Response" }),
-      ];
-
-      spans.forEach((span) => {
-        expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
-      });
-    });
+  it.each<[string, TraceSpanCategory]>([
+    ["openai completion", "llm_call"],
+    ["anthropic claude call", "llm_call"],
+    ["gpt-4 generation", "llm_call"],
+    ["claude-3 sonnet", "llm_call"],
+    ["OpenAI Call", "llm_call"],
+    ["ANTHROPIC Generation", "llm_call"],
+    ["GPT-4 Response", "llm_call"],
+    ["agent execution", "agent_invocation"],
+    ["Agent Runner", "agent_invocation"],
+    ["chain execution", "chain_operation"],
+    ["workflow runner", "chain_operation"],
+    ["langchain qa", "chain_operation"],
+    ["Chain Operation", "chain_operation"],
+    ["WORKFLOW Execution", "chain_operation"],
+    ["LangChain QA", "chain_operation"],
+    ["pinecone query", "retrieval"],
+    ["chroma search", "retrieval"],
+    ["retrieval operation", "retrieval"],
+    ["vector database", "retrieval"],
+    ["search documents", "retrieval"],
+    ["PINECONE Query", "retrieval"],
+    ["Chroma Search", "retrieval"],
+    ["VECTOR Database", "retrieval"],
+    ["tool execution", "tool_execution"],
+    ["function call", "tool_execution"],
+    ["TOOL Execution", "tool_execution"],
+    ["Function Call", "tool_execution"],
+  ])("categorizes a span named %j as %s", (name, category) => {
+    expect(
+      categorizeStandardOpenTelemetry(createMockOpenTelemetrySpan({ name })),
+    ).toBe(category);
   });
 
-  describe("agent operation detection", () => {
-    it("should detect agent spans by name", () => {
-      const span = createMockOpenTelemetrySpan({ name: "agent execution" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("agent_invocation");
+  it("should detect spans with function.name attribute", () => {
+    const span = createMockOpenTelemetrySpan({
+      attributes: {
+        [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "my_function",
+      },
+      name: "custom operation",
     });
-
-    it("should be case insensitive for agent detection", () => {
-      const span = createMockOpenTelemetrySpan({ name: "Agent Runner" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("agent_invocation");
-    });
-  });
-
-  describe("chain operation detection", () => {
-    it("should detect chain spans by name", () => {
-      const span = createMockOpenTelemetrySpan({ name: "chain execution" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
-    });
-
-    it("should detect workflow spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "workflow runner" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
-    });
-
-    it("should detect langchain spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "langchain qa" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
-    });
-
-    it("should be case insensitive for chain detection", () => {
-      const spans = [
-        createMockOpenTelemetrySpan({ name: "Chain Operation" }),
-        createMockOpenTelemetrySpan({ name: "WORKFLOW Execution" }),
-        createMockOpenTelemetrySpan({ name: "LangChain QA" }),
-      ];
-
-      spans.forEach((span) => {
-        expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
-      });
-    });
-  });
-
-  describe("retrieval operation detection", () => {
-    it("should detect pinecone spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "pinecone query" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
-    });
-
-    it("should detect chroma spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "chroma search" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
-    });
-
-    it("should detect retrieval spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "retrieval operation" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
-    });
-
-    it("should detect vector spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "vector database" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
-    });
-
-    it("should detect search spans", () => {
-      const span = createMockOpenTelemetrySpan({ name: "search documents" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
-    });
-
-    it("should be case insensitive for retrieval detection", () => {
-      const spans = [
-        createMockOpenTelemetrySpan({ name: "PINECONE Query" }),
-        createMockOpenTelemetrySpan({ name: "Chroma Search" }),
-        createMockOpenTelemetrySpan({ name: "VECTOR Database" }),
-      ];
-
-      spans.forEach((span) => {
-        expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
-      });
-    });
-  });
-
-  describe("function call detection", () => {
-    it("should detect spans with tool in name", () => {
-      const span = createMockOpenTelemetrySpan({ name: "tool execution" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
-    });
-
-    it("should detect spans with function in name", () => {
-      const span = createMockOpenTelemetrySpan({ name: "function call" });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
-    });
-
-    it("should detect spans with function.name attribute", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "my_function",
-        },
-        name: "custom operation",
-      });
-      expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
-    });
-
-    it("should be case insensitive for function detection", () => {
-      const spans = [
-        createMockOpenTelemetrySpan({ name: "TOOL Execution" }),
-        createMockOpenTelemetrySpan({ name: "Function Call" }),
-      ];
-
-      spans.forEach((span) => {
-        expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
-      });
-    });
+    expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
   });
 
   describe("HTTP call detection", () => {

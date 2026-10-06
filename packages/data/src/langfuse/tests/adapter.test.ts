@@ -5,6 +5,10 @@ import type {
 
 import { describe, expect, it } from "vitest";
 
+import {
+  ROOT_WITH_CHILD,
+  toIdTree,
+} from "../../common/test-utils/to-id-tree.js";
 import { langfuseSpanAdapter } from "../adapter.js";
 
 const makeObservation = (
@@ -60,7 +64,6 @@ describe("langfuseSpanAdapter.convertRawSpansToSpanTree", () => {
       makeObservation({ id: "orphan", parentObservationId: "missing" }),
     ]);
 
-    expect(tree.map((span) => span.id)).toStrictEqual(["root"]);
-    expect(tree[0]?.children?.map((span) => span.id)).toStrictEqual(["child"]);
+    expect(toIdTree(tree)).toStrictEqual(ROOT_WITH_CHILD);
   });
 });
