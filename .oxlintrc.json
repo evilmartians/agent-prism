@@ -621,6 +621,63 @@
       }
     },
     {
+      "files": ["packages/data/src/**/*.test.ts"],
+      "plugins": ["vitest"],
+      "rules": {
+        "vitest/consistent-each-for": "error",
+        "vitest/consistent-test-it": "error",
+        "vitest/expect-expect": "error",
+        "vitest/hoisted-apis-on-top": "error",
+        "vitest/max-nested-describe": "error",
+        "vitest/no-alias-methods": "error",
+        "vitest/no-commented-out-tests": "error",
+        "vitest/no-conditional-expect": "error",
+        "vitest/no-conditional-tests": "error",
+        "vitest/no-disabled-tests": "error",
+        "vitest/no-duplicate-hooks": "error",
+        "vitest/no-focused-tests": "error",
+        "vitest/no-identical-title": "error",
+        "vitest/no-interpolation-in-snapshots": "error",
+        "vitest/no-large-snapshots": "error",
+        "vitest/no-mocks-import": "error",
+        "vitest/no-standalone-expect": "error",
+        "vitest/no-test-prefixes": "error",
+        "vitest/no-test-return-statement": "error",
+        "vitest/no-unneeded-async-expect-function": "error",
+        "vitest/prefer-called-with": "error",
+        "vitest/prefer-comparison-matcher": "error",
+        "vitest/prefer-each": "error",
+        "vitest/prefer-equality-matcher": "error",
+        "vitest/prefer-expect-resolves": "error",
+        "vitest/prefer-hooks-in-order": "error",
+        "vitest/prefer-hooks-on-top": "error",
+        "vitest/prefer-mock-promise-shorthand": "error",
+        "vitest/prefer-mock-return-shorthand": "error",
+        "vitest/prefer-spy-on": "error",
+        "vitest/prefer-to-be": "error",
+        "vitest/prefer-to-contain": "error",
+        "vitest/prefer-to-have-been-called-times": "error",
+        "vitest/prefer-to-have-length": "error",
+        "vitest/require-awaited-expect-poll": "error",
+        "vitest/require-local-test-context-for-concurrent-snapshots": "error",
+        "vitest/require-to-throw-message": "error",
+        "vitest/valid-describe-callback": "error",
+        "vitest/valid-expect": "error",
+        "vitest/valid-title": "error",
+        "vitest/no-conditional-in-test": "off",
+        "vitest/prefer-lowercase-title": "off",
+        "vitest/prefer-strict-equal": "error",
+        "vitest/require-mock-type-parameters": "off",
+        "vitest/no-restricted-matchers": [
+          "error",
+          {
+            "toBeDefined": "Assert the value itself, not only that it exists.",
+            "toBeTruthy": "Assert the exact value with toBe(true) or a matcher on the value."
+          }
+        ]
+      }
+    },
+    {
       "files": ["**/*.d.ts", "packages/data/src/common/extract-span-error.ts"],
       "rules": {
         "typescript/consistent-type-definitions": "off"

@@ -13,22 +13,22 @@ describe("getLangfuseAttributes", () => {
   describe("metadata guards", () => {
     it("returns empty array when metadata is missing", () => {
       const span = createObservation();
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
 
     it("returns empty array when metadata is null", () => {
       const span = createObservation(null);
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
 
     it("returns empty array when metadata is not a string", () => {
       const span = createObservation({ some: "object" });
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
 
     it("returns empty array when metadata is invalid JSON", () => {
       const span = createObservation("{ invalid json");
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
   });
 

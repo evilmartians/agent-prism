@@ -64,13 +64,15 @@ describe("filterSpansRecursively", () => {
   ];
 
   it("should return all spans when searchValue is an empty string or whitespace", () => {
-    expect(filterSpansRecursively(sampleSpans, "")).toEqual(sampleSpans);
-    expect(filterSpansRecursively(sampleSpans, "   ")).toEqual(sampleSpans);
+    expect(filterSpansRecursively(sampleSpans, "")).toStrictEqual(sampleSpans);
+    expect(filterSpansRecursively(sampleSpans, "   ")).toStrictEqual(
+      sampleSpans,
+    );
   });
 
   it("should return spans that match the searchValue in their title", () => {
     const result = filterSpansRecursively(sampleSpans, "Child Span A");
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
         ...parentSpan,
         children: [
@@ -85,7 +87,7 @@ describe("filterSpansRecursively", () => {
 
   it("should return spans that have matching children recursively", () => {
     const result = filterSpansRecursively(sampleSpans, "Nested Span");
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
         ...parentSpan,
         children: [
@@ -105,12 +107,12 @@ describe("filterSpansRecursively", () => {
 
   it("should return an empty array if no spans match the searchValue", () => {
     const result = filterSpansRecursively(sampleSpans, "Nonexistent Span");
-    expect(result).toEqual([]);
+    expect(result).toStrictEqual([]);
   });
 
   it("should be case insensitive when filtering spans", () => {
     const result = filterSpansRecursively(sampleSpans, "child span b");
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
         ...parentSpan,
         children: [

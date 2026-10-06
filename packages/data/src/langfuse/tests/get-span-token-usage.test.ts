@@ -27,7 +27,7 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
       }),
     );
 
-    expect(getTokenUsageEntries(usage)).toEqual([
+    expect(getTokenUsageEntries(usage)).toStrictEqual([
       { type: "input", tokens: 1115, cost: 0.00139375 },
       { type: "output", tokens: 101, cost: 0.00101 },
     ]);
@@ -61,7 +61,7 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
       }),
     );
 
-    expect(getTokenUsageEntries(usage)).toEqual([
+    expect(getTokenUsageEntries(usage)).toStrictEqual([
       { type: "total", tokens: 300, cost: 0.01 },
     ]);
   });
@@ -79,7 +79,7 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
       }),
     );
 
-    expect(getTokenUsageEntries(usage)).toEqual([
+    expect(getTokenUsageEntries(usage)).toStrictEqual([
       { type: "input", tokens: 100, cost: 0.001 },
       { type: "output", tokens: 20, cost: 0.002 },
     ]);
@@ -90,7 +90,7 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
       observation({ costDetails: null, totalCost: 0.05 }),
     );
 
-    expect(getTokenUsageEntries(usage)).toEqual([
+    expect(getTokenUsageEntries(usage)).toStrictEqual([
       { type: "total", tokens: 0, cost: 0.05 },
     ]);
   });
@@ -138,7 +138,7 @@ describe("langfuseSpanAdapter.convertRawSpanToTraceSpan", () => {
       observation({ startTime: "2024-01-01T00:00:00.000Z", endTime: null }),
     );
 
-    expect(span.endTime).toEqual(new Date("2024-01-01T00:00:00.000Z"));
+    expect(span.endTime).toStrictEqual(new Date("2024-01-01T00:00:00.000Z"));
     expect(getDurationMs(span)).toBe(0);
   });
 });
@@ -151,7 +151,7 @@ describe("langfuseSpanAdapter.getTraceReasoning", () => {
           usageDetails: { output: 100, output_reasoning_tokens: 64 },
         }),
       ),
-    ).toEqual({ content: "", tokens: 64 });
+    ).toStrictEqual({ content: "", tokens: 64 });
   });
 
   it("is undefined when no reasoning tokens were spent", () => {

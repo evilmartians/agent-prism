@@ -331,7 +331,7 @@ describe("collectRunErrorEntries", () => {
   it("returns every error span in the tree", () => {
     const entries = collectRunErrorEntries(failedRunSpans);
 
-    expect(entries.map((entry) => entry.span.title)).toEqual([
+    expect(entries.map((entry) => entry.span.title)).toStrictEqual([
       "Relevancy scoring workflow",
       "AI Agent",
       "Structured Output Parser",

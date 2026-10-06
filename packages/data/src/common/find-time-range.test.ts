@@ -47,7 +47,7 @@ describe("findTimeRange", () => {
 
     const result = findTimeRange(cards);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       minStart: +new Date("2023-10-01T10:00:00.000Z"),
       maxEnd: +new Date("2023-10-01T12:00:00.000Z"),
     });
@@ -167,7 +167,7 @@ describe("findTimeRange", () => {
 
     const result = findTimeRange(cards);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       minStart: +new Date("2023-10-01T09:00:00.000Z"),
       maxEnd: +new Date("2023-10-01T13:00:00.000Z"),
     });
@@ -178,7 +178,7 @@ describe("findTimeRange", () => {
 
     const result = findTimeRange(cards);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       minStart: Infinity,
       maxEnd: -Infinity,
     });

@@ -53,17 +53,35 @@ describe("isTraceSpanLike", () => {
 
 describe("reviveTraceSpan", () => {
   it("survives a JSON round-trip", () => {
+    const child = createTestSpan({ id: "child-1" });
     const span: TraceSpan = createTestSpan({
       raw: ["{}", "[]"],
       tokenUsage: { input: { tokens: 300, cost: 0.003 } },
       reasoning: { content: "thinking", tokens: 10 },
       todos: [{ title: "Plan", status: "in_progress" }],
-      children: [createTestSpan({ id: "child-1" })],
+      children: [child],
     });
 
     const revived = reviveTraceSpan(JSON.parse(JSON.stringify(span)));
 
-    expect(revived).toEqual(span);
+    expect(revived).toStrictEqual({
+      ...span,
+      reasoning: {
+        content: "thinking",
+        tokens: 10,
+        level: undefined,
+        triggers: undefined,
+      },
+      children: [
+        {
+          ...child,
+          children: undefined,
+          reasoning: undefined,
+          todos: undefined,
+          tokenUsage: undefined,
+        },
+      ],
+    });
     expect(revived.startTime).toBeInstanceOf(Date);
     expect(revived.children?.[0]?.endTime).toBeInstanceOf(Date);
   });
@@ -85,13 +103,13 @@ describe("reviveTraceSpan", () => {
         ],
       });
 
-      expect(span.todos).toEqual([{ title: "Plan", status: "pending" }]);
+      expect(span.todos).toStrictEqual([{ title: "Plan", status: "pending" }]);
     });
 
     it("drops todos that are not a list", () => {
-      expect(reviveTraceSpan({ ...baseJSON, todos: "bad" }).todos).toBe(
-        undefined,
-      );
+      expect(
+        reviveTraceSpan({ ...baseJSON, todos: "bad" }).todos,
+      ).toBeUndefined();
     });
 
     it("keeps only the well-formed parts of reasoning", () => {
@@ -105,8 +123,10 @@ describe("reviveTraceSpan", () => {
         },
       });
 
-      expect(span.reasoning).toEqual({
+      expect(span.reasoning).toStrictEqual({
         content: "weighing options",
+        tokens: undefined,
+        level: undefined,
         triggers: ["think hard"],
       });
     });
@@ -131,7 +151,7 @@ describe("reviveTraceSpan", () => {
         },
       });
 
-      expect(span.tokenUsage).toEqual({
+      expect(span.tokenUsage).toStrictEqual({
         input: { tokens: 100, cost: 0.001 },
         output: { tokens: 50 },
       });

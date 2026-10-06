@@ -60,7 +60,6 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
         [GENAI.USAGE_OUTPUT_TOKENS]: 0,
       });
 
-      expect(usage).toBeDefined();
       expect(usage?.input?.tokens).toBe(0);
       expect(getTotalTokens(usage)).toBe(0);
     });
@@ -81,7 +80,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
     it("records total_tokens as `total` when nothing is broken down", () => {
       const usage = usageOf({ [GENAI.USAGE_TOTAL_TOKENS]: 5000 });
 
-      expect(getTokenUsageEntries(usage)).toEqual([
+      expect(getTokenUsageEntries(usage)).toStrictEqual([
         { type: "total", tokens: 5000, cost: 0 },
       ]);
     });
@@ -148,7 +147,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
         [GENAI.USAGE_COST]: 0.0245,
       });
 
-      expect(usage?.total).toEqual({ tokens: 0, cost: 0.0245 });
+      expect(usage?.total).toStrictEqual({ tokens: 0, cost: 0.0245 });
       expect(getTotalTokens(usage)).toBe(1630);
       expect(getTotalCost(usage)).toBe(0.0245);
     });
@@ -244,9 +243,9 @@ describe("openTelemetrySpanAdapter.getTraceReasoning", () => {
   });
 
   it("reads reasoning tokens reported without the text", () => {
-    expect(reasoningOf({ [GENAI.USAGE_REASONING_OUTPUT_TOKENS]: 512 })).toEqual(
-      { content: "", tokens: 512 },
-    );
+    expect(
+      reasoningOf({ [GENAI.USAGE_REASONING_OUTPUT_TOKENS]: 512 }),
+    ).toStrictEqual({ content: "", tokens: 512 });
   });
 });
 
@@ -267,8 +266,8 @@ describe("openTelemetrySpanAdapter.convertRawSpanToTraceSpan", () => {
     expect(getDurationMs(span)).toBe(2500);
     expect(getTotalTokens(span.tokenUsage)).toBe(140);
     expect(getTotalCost(span.tokenUsage)).toBe(0.002);
-    expect(span.reasoning).toEqual({ content: "", tokens: 30 });
+    expect(span.reasoning).toStrictEqual({ content: "", tokens: 30 });
     expect(span.todos).toBeUndefined();
-    expect(span.raw).toEqual([JSON.stringify(source, null, 2)]);
+    expect(span.raw).toStrictEqual([JSON.stringify(source, null, 2)]);
   });
 });

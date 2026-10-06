@@ -8,7 +8,7 @@ describe("flattenSpans", () => {
   it("should return an empty array when input is an empty array", () => {
     const input: TraceSpan[] = [];
     const result = flattenSpans(input);
-    expect(result).toEqual([]);
+    expect(result).toStrictEqual([]);
   });
 
   it("should return the same array if there are no children", () => {
@@ -24,7 +24,7 @@ describe("flattenSpans", () => {
       },
     ];
     const result = flattenSpans(input);
-    expect(result).toEqual(input);
+    expect(result).toStrictEqual(input);
   });
 
   it("should flatten spans with one level of children", () => {
@@ -50,7 +50,7 @@ describe("flattenSpans", () => {
       },
     ];
     const result = flattenSpans(input);
-    expect(result).toEqual([input[0], childSpan]);
+    expect(result).toStrictEqual([input[0], childSpan]);
   });
 
   it("should flatten spans with multiple levels of children", () => {
@@ -86,7 +86,7 @@ describe("flattenSpans", () => {
       },
     ];
     const result = flattenSpans(input);
-    expect(result).toEqual([input[0], childSpan, grandChildSpan]);
+    expect(result).toStrictEqual([input[0], childSpan, grandChildSpan]);
   });
 
   it("should handle spans where some children arrays are empty or undefined", () => {
@@ -113,7 +113,7 @@ describe("flattenSpans", () => {
       },
     ];
     const result = flattenSpans(input);
-    expect(result).toEqual(input);
+    expect(result).toStrictEqual(input);
   });
 
   it("should handle nested spans with mixed empty and non-empty children", () => {
@@ -147,6 +147,6 @@ describe("flattenSpans", () => {
       children: [childSpan, grandChildSpan],
     };
     const result = flattenSpans([parentSpan]);
-    expect(result).toEqual([parentSpan, childSpan, grandChildSpan]);
+    expect(result).toStrictEqual([parentSpan, childSpan, grandChildSpan]);
   });
 });
