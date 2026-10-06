@@ -64,7 +64,7 @@ jobs:
         uses: $/.github/actions/setup
 
       - name: Run tests
-        run: pnpm test
+        run: pnpm test --coverage
 
   build:
     runs-on: ubuntu-latest

@@ -55,6 +55,9 @@ importers:
         specifier: workspace:^
         version: link:../types
     devDependencies:
+      '@vitest/coverage-v8':
+        specifier: ^3.2.4
+        version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -6000,7 +6003,7 @@ snapshots:
 
   make-dir@4.0.0:
     dependencies:
-      semver: 7.7.3
+      semver: 7.7.4
 
   marked-terminal@7.3.0(marked@9.1.6):
     dependencies:
