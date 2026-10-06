@@ -24,8 +24,8 @@
 | Prettier formatting                                                                                            | `pnpm format:check`                                           |
 | `data` tests run in UTC and keep coverage above the thresholds in `packages/data/vitest.config.ts`             | `pnpm test --coverage`                                        |
 | No unused files, exports or dependencies                                                                       | `pnpm knip`                                                   |
-| No copy-pasted code in `types`, `data`, `ui`                                                                   | `pnpm jscpd`                                                  |
-| No type that spells out one from `packages/types`, no two identical object shapes                              | `pnpm dup:types`                                              |
+| No copy-pasted code anywhere (10 lines); in `types` and `data` (tests included) not even 6 lines               | `pnpm jscpd`                                                  |
+| No type in any package that spells out one from `packages/types`, no two identical object shapes               | `pnpm dup:types`                                              |
 | Stories render and pass axe; `color-contrast` is off until #107                                                | `pnpm test:storybook`                                         |
 | `packages/ui/src/components/theme` is generated from `packages/ui/src/theming/theme.ts`                        | `pnpm theme:check`                                            |
 | Published `types` and `data` resolve for consumers                                                             | `pnpm lint:packages` (publint, attw)                          |

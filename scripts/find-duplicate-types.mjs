@@ -1,5 +1,5 @@
 import { globSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import ts from "typescript";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -22,7 +22,21 @@ const namedOnly = args.includes("--named-only");
 const grep = flagValue("--grep")?.toLowerCase() ?? null;
 const top = Number(flagValue("--top") ?? DEFAULT_TOP);
 
-const files = globSync("packages/*/src/**/*.{ts,tsx}", { cwd: ROOT })
+const BUILD_OUTPUT = new Set([
+  ".next",
+  "dist",
+  "node_modules",
+  "out",
+  "storybook-static",
+]);
+
+const files = globSync(
+  ["packages/*/**/*.{ts,tsx}", "packages/*/.storybook/**/*.{ts,tsx}"],
+  {
+    cwd: ROOT,
+    exclude: (path) => BUILD_OUTPUT.has(basename(path)),
+  },
+)
   .map((file) => (typeof file === "string" ? file : file.toString()))
   .filter((file) => !file.endsWith(".d.ts"))
   .sort();
