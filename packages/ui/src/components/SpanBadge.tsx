@@ -1,19 +1,82 @@
 import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
+import type { LucideIcon } from "lucide-react";
 import type { ReactElement } from "react";
 
 import cn from "classnames";
+import {
+  BarChart2,
+  Bot,
+  CircleDot,
+  HelpCircle,
+  Link,
+  MoveHorizontal,
+  Plus,
+  Search,
+  ShieldCheck,
+  Wrench,
+  Zap,
+} from "lucide-react";
 
 import { Badge, type BadgeProps } from "./Badge";
-import {
-  getSpanCategoryIcon,
-  getSpanCategoryLabel,
-} from "./spanCategoryConfig";
 
 export type SpanBadgeProps = Omit<
   BadgeProps,
   "iconEnd" | "iconStart" | "label"
 > & {
   category: TraceSpanCategory;
+};
+
+const categoryContent: Record<
+  TraceSpanCategory,
+  {
+    icon: LucideIcon;
+    label: string;
+  }
+> = {
+  agent_invocation: {
+    icon: Bot,
+    label: "AGENT INVOCATION",
+  },
+  chain_operation: {
+    icon: Link,
+    label: "CHAIN",
+  },
+  create_agent: {
+    icon: Plus,
+    label: "CREATE AGENT",
+  },
+  embedding: {
+    icon: BarChart2,
+    label: "EMBEDDING",
+  },
+  event: {
+    icon: CircleDot,
+    label: "EVENT",
+  },
+  guardrail: {
+    icon: ShieldCheck,
+    label: "GUARDRAIL",
+  },
+  llm_call: {
+    icon: Zap,
+    label: "LLM",
+  },
+  retrieval: {
+    icon: Search,
+    label: "RETRIEVAL",
+  },
+  span: {
+    icon: MoveHorizontal,
+    label: "SPAN",
+  },
+  tool_execution: {
+    icon: Wrench,
+    label: "TOOL",
+  },
+  unknown: {
+    icon: HelpCircle,
+    label: "UNKNOWN",
+  },
 };
 
 const badgeClasses: Record<TraceSpanCategory, string> = {
@@ -43,8 +106,7 @@ export const SpanBadge = ({
   className,
   ...props
 }: SpanBadgeProps): ReactElement => {
-  const Icon = getSpanCategoryIcon(category);
-  const label = getSpanCategoryLabel(category);
+  const { icon: Icon, label } = categoryContent[category];
 
   return (
     <Badge

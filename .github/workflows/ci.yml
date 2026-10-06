@@ -85,9 +85,25 @@ jobs:
       - name: Check published packages
         run: pnpm lint:packages
 
+  knip:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup
+        uses: $/.github/actions/setup
+
+      - name: Find unused files, exports and dependencies
+        run: pnpm knip
+
   main:
     if: always()
-    needs: [lint, typecheck, test, build]
+    needs: [lint, typecheck, test, build, knip]
     runs-on: ubuntu-latest
     permissions: {}
     steps:
