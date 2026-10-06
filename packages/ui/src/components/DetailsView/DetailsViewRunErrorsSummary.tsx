@@ -34,13 +34,7 @@ export const DetailsViewRunErrorsSummary = ({
       title="Run errors"
       defaultOpen
       rightContent={
-        // The trigger toggles on click/Enter/Space; stop propagation so the
-        // copy button acts (mouse and keyboard) without collapsing the section.
-        <div
-          className="flex items-center gap-1"
-          onClick={(event) => event.stopPropagation()}
-          onKeyDown={(event) => event.stopPropagation()}
-        >
+        <div className="flex items-center gap-1">
           <CopyButton label="all errors for agent" content={agentContent} />
           <ErrorCountBadge count={entries.length} />
         </div>

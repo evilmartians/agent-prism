@@ -42,7 +42,6 @@ export const DetailsViewAttributeSection = ({
           value={tab}
           onValueChange={setTab}
           theme="pill"
-          onClick={(event) => event.stopPropagation()}
         />
       }
     >

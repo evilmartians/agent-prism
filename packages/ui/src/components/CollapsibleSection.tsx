@@ -82,19 +82,21 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       onOpenChange={handleOpenChange}
       className={cn("rounded-lg", className)}
     >
-      <Collapsible.Trigger asChild>
-        <div
-          tabIndex={0}
-          role="button"
-          className={cn(
-            "text-agentprism-muted-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
-            triggerClassName,
-          )}
-          onKeyDown={handleKeyDown}
-          aria-expanded={open}
-          aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
-        >
-          <div className="text-agentprism-muted-foreground flex min-w-0 flex-1 items-center gap-2">
+      <div
+        className={cn(
+          "text-agentprism-muted-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
+          triggerClassName,
+        )}
+      >
+        <Collapsible.Trigger asChild>
+          <div
+            tabIndex={0}
+            role="button"
+            className="text-agentprism-muted-foreground flex min-w-0 flex-1 items-center gap-2"
+            onKeyDown={handleKeyDown}
+            aria-expanded={open}
+            aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
+          >
             <ChevronDown
               className={cn("size-3 shrink-0 -rotate-90", open && "rotate-0")}
             />
@@ -105,10 +107,10 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
               {title}
             </span>
           </div>
+        </Collapsible.Trigger>
 
-          <div className="shrink-0">{rightContent}</div>
-        </div>
-      </Collapsible.Trigger>
+        <div className="shrink-0">{rightContent}</div>
+      </div>
 
       <Collapsible.Content
         className={cn("text-agentprism-muted-foreground", contentClassName)}

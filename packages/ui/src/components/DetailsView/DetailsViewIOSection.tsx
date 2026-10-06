@@ -46,7 +46,6 @@ export const DetailsViewIOSection = ({
           value={tab}
           onValueChange={setTab}
           theme="pill"
-          onClick={(event) => event.stopPropagation()}
         />
       }
     >
