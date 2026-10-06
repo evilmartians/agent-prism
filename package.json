@@ -12,7 +12,7 @@
     "deploy:saas": "pnpm --filter saas build && firebase deploy --only hosting:ai-trace-explorer",
     "format": "pnpm exec prettier . --write",
     "format:check": "pnpm exec prettier . --check",
-    "lint:check": "oxlint",
+    "lint:check": "oxlint --deny-warnings --report-unused-disable-directives-severity=error",
     "lint:fix": "oxlint --fix",
     "lint:packages": "pnpm --filter './packages/{types,data}' exec publint && pnpm --filter './packages/{types,data}' exec attw --pack --profile esm-only",
     "tsc": "pnpm run --parallel tsc",

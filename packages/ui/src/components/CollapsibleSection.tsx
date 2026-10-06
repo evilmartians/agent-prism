@@ -96,7 +96,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
         >
           <div className="text-agentprism-muted-foreground flex min-w-0 flex-1 items-center gap-2">
             <ChevronDown
-              className={cn("h-3 w-3 shrink-0 -rotate-90", open && "rotate-0")}
+              className={cn("size-3 shrink-0 -rotate-90", open && "rotate-0")}
             />
             <span
               className="min-w-0 truncate text-sm font-medium"
@@ -111,11 +111,7 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
       </Collapsible.Trigger>
 
       <Collapsible.Content
-        className={cn(
-          "data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
-          "text-agentprism-muted-foreground",
-          contentClassName,
-        )}
+        className={cn("text-agentprism-muted-foreground", contentClassName)}
       >
         {children}
       </Collapsible.Content>

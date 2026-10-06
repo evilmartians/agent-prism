@@ -83,7 +83,7 @@ export const Badge = ({
       <span
         className={cn(
           textSizes[size],
-          "min-w-0 max-w-full flex-shrink-0 truncate font-medium tracking-normal",
+          "min-w-0 max-w-full shrink-0 truncate font-medium tracking-normal",
         )}
       >
         {label}

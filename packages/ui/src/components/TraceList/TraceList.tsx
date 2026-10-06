@@ -34,7 +34,7 @@ export const TraceList = ({
     <div
       className={cn(
         "flex min-w-0 flex-col",
-        expanded ? "h-full w-full gap-3" : "h-auto w-fit gap-1",
+        expanded ? "size-full gap-3" : "h-auto w-fit gap-1",
         className,
       )}
     >

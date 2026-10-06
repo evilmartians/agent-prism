@@ -16,6 +16,12 @@
     "packages/saas/next-env.d.ts"
   ],
   "jsPlugins": ["eslint-plugin-perfectionist", "eslint-plugin-tailwindcss"],
+  "settings": {
+    "tailwindcss": {
+      "config": "packages/ui/tailwind.config.ts",
+      "callees": ["cn", "classNames", "clsx"]
+    }
+  },
   "rules": {
     "constructor-super": "error",
     "for-direction": "error",
@@ -107,13 +113,13 @@
     "react/no-unescaped-entities": "error",
     "react/no-unknown-property": "error",
     "react/require-render-return": "error",
-    "tailwindcss/classnames-order": "warn",
-    "tailwindcss/enforces-negative-arbitrary-values": "warn",
-    "tailwindcss/enforces-shorthand": "warn",
-    "tailwindcss/migration-from-tailwind-2": "warn",
-    "tailwindcss/no-custom-classname": "warn",
+    "tailwindcss/classnames-order": "off",
+    "tailwindcss/enforces-negative-arbitrary-values": "error",
+    "tailwindcss/enforces-shorthand": "error",
+    "tailwindcss/migration-from-tailwind-2": "error",
+    "tailwindcss/no-custom-classname": "error",
     "tailwindcss/no-contradicting-classname": "error",
-    "tailwindcss/no-unnecessary-arbitrary-value": "warn",
+    "tailwindcss/no-unnecessary-arbitrary-value": "error",
     "perfectionist/sort-imports": [
       "error",
       {

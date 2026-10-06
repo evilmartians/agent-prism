@@ -131,7 +131,7 @@ export const Avatar = ({
           ) : (
             <div
               className={cn(
-                "flex h-full w-full items-center justify-center",
+                "flex size-full items-center justify-center",
                 "text-agentprism-accent font-medium",
                 bgColorClasses[category],
               )}
