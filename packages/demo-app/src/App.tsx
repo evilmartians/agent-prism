@@ -1,10 +1,9 @@
-import type {
-  OpenTelemetryDocument,
-  TraceRecord,
-  TraceSpan,
-} from "@evilmartians/agent-prism-types";
+import type { TraceRecord } from "@evilmartians/agent-prism-types";
 
-import { openTelemetrySpanAdapter } from "@evilmartians/agent-prism-data";
+import {
+  isOpenTelemetryDocument,
+  openTelemetrySpanAdapter,
+} from "@evilmartians/agent-prism-data";
 import { TraceViewer } from "@evilmartians/agent-prism-ui";
 
 import quoTavAgentDataRaw from "./data/quo_tav_agent.json";
@@ -12,25 +11,12 @@ import ragEarningsAgentDataRaw from "./data/rag_earnings_agent.json";
 import smolDeepResearchAgentDataRaw from "./data/smol_deep_research_agent.json";
 import { Layout } from "./Layout";
 
-const isOpenTelemetryDocument = (
-  value: unknown,
-): value is OpenTelemetryDocument =>
-  typeof value === "object" &&
-  value !== null &&
-  "resourceSpans" in value &&
-  Array.isArray(value.resourceSpans);
-
-const openTelemetrySpans = (document: unknown): TraceSpan[] =>
-  openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-    [document].filter(isOpenTelemetryDocument),
-  );
-
-const TRACES: {
-  spans: TraceSpan[];
+const EXPORTS: {
+  documents: unknown[];
   traceRecord: TraceRecord;
 }[] = [
   {
-    spans: openTelemetrySpans(quoTavAgentDataRaw),
+    documents: quoTavAgentDataRaw,
     traceRecord: {
       agentDescription: "research-agent",
       durationMs: 3200,
@@ -40,7 +26,7 @@ const TRACES: {
     },
   },
   {
-    spans: openTelemetrySpans(ragEarningsAgentDataRaw),
+    documents: ragEarningsAgentDataRaw,
     traceRecord: {
       agentDescription: "data-analysis-bot",
       durationMs: 45670,
@@ -50,7 +36,7 @@ const TRACES: {
     },
   },
   {
-    spans: openTelemetrySpans(smolDeepResearchAgentDataRaw),
+    documents: smolDeepResearchAgentDataRaw,
     traceRecord: {
       agentDescription: "customer-support-ai",
       durationMs: 2500,
@@ -60,6 +46,13 @@ const TRACES: {
     },
   },
 ];
+
+const TRACES = EXPORTS.map(({ documents, traceRecord }) => ({
+  spans: openTelemetrySpanAdapter.convertRawDocumentsToSpans(
+    documents.filter(isOpenTelemetryDocument),
+  ),
+  traceRecord,
+}));
 
 export const App = () => (
   <Layout>

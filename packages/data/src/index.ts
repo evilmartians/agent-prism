@@ -28,6 +28,10 @@ export {
 export { getDurationMs } from "./common/get-duration-ms.js";
 export { getTimelineData } from "./common/get-timeline-data.js";
 export {
+  isLangfuseDocument,
+  isOpenTelemetryDocument,
+} from "./common/is-trace-document.js";
+export {
   isTraceSpanLike,
   reviveTraceSpan,
 } from "./common/revive-trace-span.js";

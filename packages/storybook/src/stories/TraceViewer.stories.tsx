@@ -1,11 +1,9 @@
-import type {
-  LangfuseDocument,
-  OpenTelemetryDocument,
-  TraceSpan,
-} from "@evilmartians/agent-prism-types";
+import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
+  isLangfuseDocument,
+  isOpenTelemetryDocument,
   langfuseSpanAdapter,
   openTelemetrySpanAdapter,
 } from "@evilmartians/agent-prism-data";
@@ -26,21 +24,6 @@ const meta: Meta<typeof TraceViewer> = {
   parameters: {},
   title: "Demo/TraceViewer",
 };
-
-const isOpenTelemetryDocument = (
-  value: unknown,
-): value is OpenTelemetryDocument =>
-  typeof value === "object" &&
-  value !== null &&
-  "resourceSpans" in value &&
-  Array.isArray(value.resourceSpans);
-
-const isLangfuseDocument = (value: unknown): value is LangfuseDocument =>
-  typeof value === "object" &&
-  value !== null &&
-  "trace" in value &&
-  "observations" in value &&
-  Array.isArray(value.observations);
 
 const openTelemetrySpans = (documents: unknown[]): TraceSpan[] =>
   openTelemetrySpanAdapter.convertRawDocumentsToSpans(
