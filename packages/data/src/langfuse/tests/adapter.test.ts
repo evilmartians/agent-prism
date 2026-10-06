@@ -51,3 +51,16 @@ describe("langfuseSpanAdapter.getSpanStatus", () => {
     ).toBe("success");
   });
 });
+
+describe("langfuseSpanAdapter.convertRawSpansToSpanTree", () => {
+  it("nests children under their parent and drops orphans", () => {
+    const tree = langfuseSpanAdapter.convertRawSpansToSpanTree([
+      makeObservation({ id: "child", parentObservationId: "root" }),
+      makeObservation({ id: "root" }),
+      makeObservation({ id: "orphan", parentObservationId: "missing" }),
+    ]);
+
+    expect(tree.map((span) => span.id)).toStrictEqual(["root"]);
+    expect(tree[0]?.children?.map((span) => span.id)).toStrictEqual(["child"]);
+  });
+});

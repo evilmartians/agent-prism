@@ -17,6 +17,7 @@ import {
 
 import type { SpanAdapter } from "../types.js";
 
+import { buildSpanTree } from "../common/build-span-tree.js";
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { categorizeOpenInference } from "./utils/categorize-open-inference.js";
 import { categorizeOpenTelemetryGenAI } from "./utils/categorize-open-telemetry-gen-ai.js";
@@ -60,33 +61,11 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   },
 
   convertRawSpansToSpanTree(spans: OpenTelemetrySpan[]): TraceSpan[] {
-    const spanMap = new Map<string, TraceSpan>();
-    const rootSpans: TraceSpan[] = [];
-
-    spans.forEach((span) => {
-      const convertedSpan = this.convertRawSpanToTraceSpan(span);
-      spanMap.set(convertedSpan.id, convertedSpan);
+    return buildSpanTree(spans, {
+      convert: (span) => this.convertRawSpanToTraceSpan(span),
+      getId: (span) => span.spanId,
+      getParentId: (span) => span.parentSpanId,
     });
-
-    spans.forEach((span) => {
-      const convertedSpan = spanMap.get(span.spanId);
-      if (!convertedSpan) return;
-      const parentSpanId = span.parentSpanId;
-
-      if (parentSpanId) {
-        const parent = spanMap.get(parentSpanId);
-        if (parent) {
-          if (!parent.children) {
-            parent.children = [];
-          }
-          parent.children.push(convertedSpan);
-        }
-      } else {
-        rootSpans.push(convertedSpan);
-      }
-    });
-
-    return rootSpans;
   },
 
   convertRawSpanToTraceSpan(

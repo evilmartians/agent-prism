@@ -13,6 +13,7 @@ import type {
 
 import type { SpanAdapter } from "../types.js";
 
+import { buildSpanTree } from "../common/build-span-tree.js";
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { getLangfuseAttributes } from "./utils/get-langfuse-attributes.js";
 
@@ -50,33 +51,11 @@ export const langfuseSpanAdapter: SpanAdapter<
     return this.convertRawSpansToSpanTree(allObservations);
   },
   convertRawSpansToSpanTree(spans: LangfuseObservation[]): TraceSpan[] {
-    const spanMap = new Map<string, TraceSpan>();
-    const rootSpans: TraceSpan[] = [];
-
-    spans.forEach((span) => {
-      const convertedSpan = this.convertRawSpanToTraceSpan(span);
-      spanMap.set(convertedSpan.id, convertedSpan);
+    return buildSpanTree(spans, {
+      convert: (span) => this.convertRawSpanToTraceSpan(span),
+      getId: (span) => span.id,
+      getParentId: (span) => span.parentObservationId,
     });
-
-    spans.forEach((span) => {
-      const convertedSpan = spanMap.get(span.id);
-      if (!convertedSpan) return;
-      const parentSpanId = span.parentObservationId;
-
-      if (parentSpanId) {
-        const parent = spanMap.get(parentSpanId);
-        if (parent) {
-          if (!parent.children) {
-            parent.children = [];
-          }
-          parent.children.push(convertedSpan);
-        }
-      } else {
-        rootSpans.push(convertedSpan);
-      }
-    });
-
-    return rootSpans;
   },
   convertRawSpanToTraceSpan(
     span: LangfuseObservation,

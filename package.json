@@ -16,7 +16,7 @@
     "lint:fix": "oxlint --fix --ignore-pattern '**/lint-fixtures'",
     "lint:packages": "publint packages/types && publint packages/data && attw --pack packages/types --profile esm-only && attw --pack packages/data --profile esm-only",
     "knip": "knip",
-    "jscpd": "jscpd -l 6 -k 40 -t 1.56 -i '**/*.test.ts,**/tests/**,**/test-utils/**,**/create-mock-*' packages/data/src packages/types/src && jscpd -l 10 -k 70 -t 0 packages/ui/src",
+    "jscpd": "jscpd -l 6 -k 40 -t 0 -i '**/*.test.ts,**/tests/**,**/test-utils/**,**/create-mock-*' packages/data/src packages/types/src && jscpd -l 10 -k 70 -t 0 packages/ui/src",
     "dup": "jscpd -l 2 -k 12 -m weak -t 100 -s -a -r json -o reports/jscpd packages/*/src && node scripts/jscpd-top.mjs; pnpm dup:types",
     "dup:types": "node scripts/find-duplicate-types.mjs",
     "tsc": "pnpm run --parallel tsc",
