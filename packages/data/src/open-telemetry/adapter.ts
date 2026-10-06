@@ -18,6 +18,7 @@ import {
 
 import type { SpanAdapter } from "../types.js";
 
+import { reviveAttribute } from "../common/attribute-value.js";
 import { buildSpanTree } from "../common/build-span-tree.js";
 import { toList } from "../common/to-list.js";
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
@@ -78,7 +79,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     const ioData = this.getSpanInputOutput(span);
 
     return {
-      attributes: [...span.attributes],
+      attributes: span.attributes.flatMap(reviveAttribute),
       children: [],
       endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
       id: span.spanId,

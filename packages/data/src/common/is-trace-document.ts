@@ -18,10 +18,9 @@ import type {
   OpenTelemetrySpanKind,
   OpenTelemetryStatus,
   OpenTelemetryStatusCode,
-  TraceSpanAttribute,
-  TraceSpanAttributeValue,
 } from "@evilmartians/agent-prism-types";
 
+import { isAttribute } from "./attribute-value.js";
 import {
   hasShape,
   isArrayOf,
@@ -41,16 +40,7 @@ const isNullableString = isNullable(isString);
 const isOptionalNullableNumber = isOptional(isNullable(isNumber));
 const isOptionalNullableString = isOptional(isNullableString);
 
-const isAttributes = isArrayOf(
-  hasShape<TraceSpanAttribute>({
-    key: isString,
-    value: hasShape<TraceSpanAttributeValue>({
-      boolValue: isOptional(isBoolean),
-      intValue: isOptionalString,
-      stringValue: isOptionalString,
-    }),
-  }),
-);
+const isAttributes = isArrayOf(isAttribute);
 
 const isOptionalAttributes = isOptional(isAttributes);
 

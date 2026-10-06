@@ -149,8 +149,8 @@ describe("reviveTraceSpan", () => {
             key: "mixed",
             value: {
               boolValue: "true",
-              doubleValue: 1.5,
-              intValue: 3,
+              doubleValue: "1.5",
+              intValue: 3.5,
               stringValue: "kept",
             },
           },
@@ -158,13 +158,41 @@ describe("reviveTraceSpan", () => {
             key: "typed",
             value: { boolValue: true, intValue: "3", stringValue: 7 },
           },
+          {
+            key: "nested",
+            value: {
+              arrayValue: { values: [{ doubleValue: 0.5 }, "not a value"] },
+              kvlistValue: {
+                values: [{ key: "k", value: { intValue: 2 } }, { value: {} }],
+              },
+            },
+          },
         ],
       });
 
       expect(span.attributes).toStrictEqual([
         { key: "mixed", value: { stringValue: "kept" } },
         { key: "typed", value: { boolValue: true, intValue: "3" } },
+        {
+          key: "nested",
+          value: {
+            arrayValue: { values: [{ doubleValue: 0.5 }] },
+            kvlistValue: { values: [{ key: "k", value: { intValue: 2 } }] },
+          },
+        },
       ]);
+    });
+
+    it("keeps every OTLP/JSON attribute value form", () => {
+      const attributes = [
+        { key: "double", value: { doubleValue: 0.7 } },
+        { key: "int", value: { intValue: 42 } },
+        { key: "bytes", value: { bytesValue: "AAE=" } },
+      ];
+
+      expect(
+        reviveTraceSpan({ ...baseJSON, attributes }).attributes,
+      ).toStrictEqual(attributes);
     });
 
     it("keeps only well-formed todos", () => {

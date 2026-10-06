@@ -4,6 +4,18 @@ import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry
 import { getOpenTelemetryAttributeValue } from "../utils/get-open-telemetry-attribute-value.js";
 
 describe("getOpenTelemetryAttributeValue", () => {
+  it("reads doubleValue and numeric intValue as numbers", () => {
+    const span = {
+      attributes: [
+        { key: "temperature", value: { doubleValue: 0.7 } },
+        { key: "tokens", value: { intValue: 42 } },
+      ],
+    };
+
+    expect(getOpenTelemetryAttributeValue(span, "temperature")).toBe(0.7);
+    expect(getOpenTelemetryAttributeValue(span, "tokens")).toBe(42);
+  });
+
   describe("string values", () => {
     it("should return string values directly", () => {
       const span = createMockOpenTelemetrySpan({

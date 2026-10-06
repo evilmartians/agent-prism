@@ -119,9 +119,17 @@ export type TraceSpanAttribute = {
   value: TraceSpanAttributeValue;
 };
 
+/**
+ * An OpenTelemetry `AnyValue` in OTLP/JSON form. `intValue` is an int64, which
+ * OTLP/JSON writes as a decimal string but parsers also accept as a number.
+ */
 export type TraceSpanAttributeValue = {
+  arrayValue?: { values: TraceSpanAttributeValue[] };
   boolValue?: boolean;
-  intValue?: string;
+  bytesValue?: string;
+  doubleValue?: number;
+  intValue?: number | string;
+  kvlistValue?: { values: TraceSpanAttribute[] };
   stringValue?: string;
 };
 

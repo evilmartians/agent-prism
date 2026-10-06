@@ -6,6 +6,7 @@ import type {
 import type { ReactElement } from "react";
 
 import {
+  getAttributeNumber,
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
@@ -29,18 +30,11 @@ function formatTokens(tokens: number): string {
   return String(tokens);
 }
 
-function getFloatAttr(attributes: Attributes, key: string): number | undefined {
-  const attr = attributes?.find((a) => a.key === key);
-  if (attr?.value.stringValue === undefined) return undefined;
-  const v = Number.parseFloat(attr.value.stringValue);
-  return Number.isNaN(v) ? undefined : v;
-}
-
-function getIntAttr(attributes: Attributes, key: string): number | undefined {
-  const attr = attributes?.find((a) => a.key === key);
-  if (attr?.value.intValue === undefined) return undefined;
-  const v = Number.parseInt(attr.value.intValue, 10);
-  return Number.isNaN(v) ? undefined : v;
+function getNumberAttr(
+  attributes: Attributes,
+  key: string,
+): number | undefined {
+  return getAttributeNumber(attributes?.find((a) => a.key === key)?.value);
 }
 
 function getStringAttr(
@@ -134,16 +128,19 @@ const getContextRows = ({
 export function DetailsViewContextTab({
   data,
 }: ReadonlyProps<DetailsViewContextTabProps>): ReactElement {
-  const cumulativeTokens = getIntAttr(
+  const cumulativeTokens = getNumberAttr(
     data.attributes,
     "claude_code.cumulative_tokens",
   );
-  const contextLimit = getIntAttr(data.attributes, "claude_code.context_limit");
-  const fillPercent = getFloatAttr(
+  const contextLimit = getNumberAttr(
+    data.attributes,
+    "claude_code.context_limit",
+  );
+  const fillPercent = getNumberAttr(
     data.attributes,
     "claude_code.context_fill_percent",
   );
-  const cacheHitRatio = getFloatAttr(
+  const cacheHitRatio = getNumberAttr(
     data.attributes,
     "claude_code.cache_hit_ratio",
   );

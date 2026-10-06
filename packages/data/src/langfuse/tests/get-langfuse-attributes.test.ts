@@ -105,32 +105,42 @@ describe("getLangfuseAttributes", () => {
       expect(result).toHaveLength(2);
     });
 
-    it("ignores non-primitive attribute values", () => {
+    it("converts every JSON value except null to an attribute value", () => {
       const metadata = JSON.stringify({
         attributes: {
-          arr: [1, 2, 3],
+          arr: [1, null, "a"],
           bool: true,
           nil: null,
           num: 10,
           obj: { nested: true },
           ok: "yes",
+          temperature: 0.7,
           undef: undefined,
         },
       });
 
       const span = createObservation(metadata);
-      const result = getLangfuseAttributes(span);
 
-      expect(result).toContainEqual({
-        key: "ok",
-        value: { stringValue: "yes" },
-      });
-      expect(result).toContainEqual({ key: "num", value: { intValue: "10" } });
-      expect(result).toContainEqual({
-        key: "bool",
-        value: { boolValue: true },
-      });
-      expect(result).toHaveLength(3);
+      expect(getLangfuseAttributes(span)).toStrictEqual([
+        {
+          key: "arr",
+          value: {
+            arrayValue: { values: [{ intValue: "1" }, { stringValue: "a" }] },
+          },
+        },
+        { key: "bool", value: { boolValue: true } },
+        { key: "num", value: { intValue: "10" } },
+        {
+          key: "obj",
+          value: {
+            kvlistValue: {
+              values: [{ key: "nested", value: { boolValue: true } }],
+            },
+          },
+        },
+        { key: "ok", value: { stringValue: "yes" } },
+        { key: "temperature", value: { doubleValue: 0.7 } },
+      ]);
     });
   });
 });

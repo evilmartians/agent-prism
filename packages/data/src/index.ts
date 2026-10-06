@@ -1,4 +1,8 @@
 export {
+  getAttributeNumber,
+  toPlainAttributeValue,
+} from "./common/attribute-value.js";
+export {
   hasContextContent,
   hasThinkingContent,
   hasTodos,

@@ -1,5 +1,11 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type {
+  DeepReadonly,
+  TraceSpan,
+  TraceSpanAttributeValue,
+} from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
+
+import { toPlainAttributeValue } from "@evilmartians/agent-prism-data";
 
 import type { ReadonlyProps } from "../ReadonlyProps";
 
@@ -8,6 +14,39 @@ import { DetailsViewAttributeSection } from "./DetailsViewAttributeSection";
 type AttributesTabProps = {
   data: TraceSpan;
 };
+
+const parseJson = (text: string): unknown => {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+};
+
+const getJsonContent = (
+  value: DeepReadonly<TraceSpanAttributeValue>,
+  plainValue: unknown,
+): undefined | { content: string; parsed: unknown } => {
+  if (value.arrayValue !== undefined || value.kvlistValue !== undefined) {
+    return { content: JSON.stringify(plainValue, null, 2), parsed: plainValue };
+  }
+
+  if (value.stringValue === undefined) return undefined;
+
+  const parsed = parseJson(value.stringValue);
+
+  const isEmpty =
+    parsed === null || parsed === false || parsed === 0 || parsed === "";
+
+  return isEmpty ? undefined : { content: value.stringValue, parsed };
+};
+
+const toDisplayText = (plainValue: unknown): string =>
+  (typeof plainValue === "string" && plainValue !== "") ||
+  typeof plainValue === "number" ||
+  typeof plainValue === "boolean"
+    ? String(plainValue)
+    : "N/A";
 
 export const DetailsViewAttributesTab = ({
   data,
@@ -25,32 +64,18 @@ export const DetailsViewAttributesTab = ({
   return (
     <div className="space-y-4">
       {data.attributes.map((attribute, index) => {
-        const stringValue = attribute.value.stringValue;
-        const intValue = attribute.value.intValue;
-        const simpleValue =
-          stringValue !== undefined && stringValue !== ""
-            ? stringValue
-            : intValue !== undefined && intValue !== ""
-              ? intValue
-              : (attribute.value.boolValue?.toString() ?? "N/A");
+        const plainValue = toPlainAttributeValue(attribute.value);
+        const simpleValue = toDisplayText(plainValue);
+        const json = getJsonContent(attribute.value, plainValue);
 
-        let parsedJson: unknown = null;
-        if (typeof stringValue === "string") {
-          try {
-            parsedJson = JSON.parse(stringValue);
-          } catch {
-            parsedJson = null;
-          }
-        }
-
-        if (stringValue !== undefined && Boolean(parsedJson)) {
+        if (json) {
           return (
             <DetailsViewAttributeSection
               attributeKey={attribute.key}
-              content={stringValue}
+              content={json.content}
               id={`${data.id}-${attribute.key}-${index}`}
               key={`${attribute.key}-${index}`}
-              parsedContent={parsedJson}
+              parsedContent={json.parsed}
             />
           );
         }

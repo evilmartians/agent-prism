@@ -3,16 +3,15 @@ import type {
   TraceReasoning,
   TraceReasoningLevel,
   TraceSpan,
-  TraceSpanAttribute,
   TraceSpanCategory,
   TraceSpanStatus,
   TraceTodo,
   TraceTodoStatus,
 } from "@evilmartians/agent-prism-types";
 
+import { reviveAttribute } from "./attribute-value.js";
 import {
   isArrayOf,
-  isBoolean,
   isFiniteNumber,
   isOneOf,
   isPlainRecord,
@@ -133,32 +132,6 @@ const reviveTodos = (value: unknown): TraceTodo[] | undefined =>
           : [],
       )
     : undefined;
-
-const reviveAttribute = (item: unknown): TraceSpanAttribute[] => {
-  if (
-    !isRecord(item) ||
-    !isString(item["key"]) ||
-    !isPlainRecord(item["value"])
-  )
-    return [];
-
-  const value = item["value"];
-
-  return [
-    {
-      key: item["key"],
-      value: {
-        ...(isBoolean(value["boolValue"])
-          ? { boolValue: value["boolValue"] }
-          : {}),
-        ...(isString(value["intValue"]) ? { intValue: value["intValue"] } : {}),
-        ...(isString(value["stringValue"])
-          ? { stringValue: value["stringValue"] }
-          : {}),
-      },
-    },
-  ];
-};
 
 const reviveOptionalFields = (
   value: Readonly<Record<string, unknown>>,

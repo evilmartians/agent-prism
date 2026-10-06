@@ -55,6 +55,27 @@ describe("isOpenTelemetryDocument", () => {
     ).toBe(true);
   });
 
+  it("accepts every OTLP/JSON attribute value form", () => {
+    const attributes = [
+      { key: "double", value: { doubleValue: 0.7 } },
+      { key: "int-number", value: { intValue: 42 } },
+      { key: "int-string", value: { intValue: "42" } },
+      { key: "bytes", value: { bytesValue: "AAE=" } },
+      {
+        key: "array",
+        value: { arrayValue: { values: [{ stringValue: "a" }] } },
+      },
+      {
+        key: "kvlist",
+        value: {
+          kvlistValue: { values: [{ key: "k", value: { boolValue: true } }] },
+        },
+      },
+    ];
+
+    expect(isOpenTelemetryDocument(otelDocument({ attributes }))).toBe(true);
+  });
+
   it("accepts a document with no resource spans", () => {
     expect(isOpenTelemetryDocument({ resourceSpans: [] })).toBe(true);
   });
@@ -93,8 +114,20 @@ describe("isOpenTelemetryDocument", () => {
       { attributes: [{ key: 1, value: {} }] },
     ],
     [
-      "an attribute with a numeric intValue",
-      { attributes: [{ key: "n", value: { intValue: 1 } }] },
+      "an attribute with a fractional intValue",
+      { attributes: [{ key: "n", value: { intValue: 1.5 } }] },
+    ],
+    [
+      "an attribute with a non-numeric doubleValue",
+      { attributes: [{ key: "n", value: { doubleValue: "0.7" } }] },
+    ],
+    [
+      "an attribute with a malformed nested arrayValue",
+      {
+        attributes: [
+          { key: "n", value: { arrayValue: { values: [{ boolValue: 1 }] } } },
+        ],
+      },
     ],
     ["an event without a name", { events: [{ timeUnixNano: "1" }] }],
     ["a link without a spanId", { links: [{ traceId: "other-trace" }] }],
