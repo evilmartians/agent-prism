@@ -12,8 +12,8 @@
     "deploy:saas": "pnpm --filter saas build && firebase deploy --only hosting:ai-trace-explorer",
     "format": "pnpm exec prettier . --write",
     "format:check": "pnpm exec prettier . --check",
-    "lint": "eslint . --fix",
-    "lint:check": "eslint .",
+    "lint:check": "oxlint",
+    "lint:fix": "oxlint --fix",
     "lint:packages": "pnpm --filter './packages/{types,data}' exec publint && pnpm --filter './packages/{types,data}' exec attw --pack --profile esm-only",
     "tsc": "pnpm run --parallel tsc",
     "test": "pnpm run --parallel test",
@@ -22,16 +22,12 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@eslint/js": "^9.31.0",
-    "eslint": "^9.31.0",
     "eslint-plugin-perfectionist": "^4.15.0",
-    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-tailwindcss": "^3.18.2",
-    "globals": "^16.3.0",
+    "oxlint": "^1.86.0",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "publint": "^0.3.25",
-    "typescript-eslint": "^8.38.0"
+    "publint": "^0.3.25"
   },
   "dependencies": {
     "classnames": "2.5.1"
