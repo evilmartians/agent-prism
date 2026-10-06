@@ -3,10 +3,7 @@ import type { OpenTelemetrySpan } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
 import { createMockLangfuseObservation } from "../langfuse/utils/create-mock-langfuse-observation.js";
-import {
-  createMockLangfuseTrace,
-  mockLangfuseScore,
-} from "../langfuse/utils/create-mock-langfuse-trace.js";
+import { createMockLangfuseTrace } from "../langfuse/utils/create-mock-langfuse-trace.js";
 import { createMockOpenTelemetrySpan } from "../open-telemetry/utils/create-mock-open-telemetry-span.js";
 import {
   isLangfuseDocument,
@@ -81,24 +78,63 @@ describe("isOpenTelemetryDocument", () => {
   });
 
   it.each<ValueRow>([
+    [
+      "no resource and no scope",
+      { resourceSpans: [{ scopeSpans: [{ spans: [span] }] }] },
+    ],
+    [
+      "an empty resource and an empty scope",
+      {
+        resourceSpans: [
+          { resource: {}, scopeSpans: [{ scope: {}, spans: [span] }] },
+        ],
+      },
+    ],
+    [
+      "a null resource and a null scope",
+      {
+        resourceSpans: [
+          { resource: null, scopeSpans: [{ scope: null, spans: [span] }] },
+        ],
+      },
+    ],
+  ])("accepts a document with %s", (_label, value) => {
+    expect(isOpenTelemetryDocument(value)).toBe(true);
+  });
+
+  it.each<OverrideRow>([
+    ["no flags", { flags: undefined }],
+    ["no kind", { kind: undefined }],
+    ["a numeric kind", { kind: 1 }],
+    ["no status", { status: undefined }],
+    ["a null status", { status: null }],
+    ["a numeric status code", { status: { code: 2 } }],
+    ["no attributes", { attributes: undefined }],
+    [
+      "an attribute with a null value",
+      { attributes: [{ key: "k", value: null }] },
+    ],
+    ["a null parentSpanId", { parentSpanId: null }],
+    ["null events", { events: null }],
+    [
+      "times given as numbers",
+      {
+        endTimeUnixNano: 1_700_000_001_000_000_000,
+        startTimeUnixNano: 1_700_000_000_000_000_000,
+      },
+    ],
+  ])("accepts a span with %s", (_label, spanOverride) => {
+    expect(isOpenTelemetryDocument(otelDocument(spanOverride))).toBe(true);
+  });
+
+  it.each<ValueRow>([
     ["null", null],
     ["a list of documents", [otelDocument()]],
     ["a document without resourceSpans", { spans: [] }],
     ["resourceSpans that are not a list", { resourceSpans: {} }],
     [
-      "a resource without attributes",
-      { resourceSpans: [{ resource: {}, scopeSpans: [] }] },
-    ],
-    [
-      "a scope without a name",
-      {
-        resourceSpans: [
-          {
-            resource: { attributes: [] },
-            scopeSpans: [{ scope: {}, spans: [] }],
-          },
-        ],
-      },
+      "a scope with a numeric name",
+      { resourceSpans: [{ scopeSpans: [{ scope: { name: 1 }, spans: [] }] }] },
     ],
   ])("rejects %s", (_label, value) => {
     expect(isOpenTelemetryDocument(value)).toBe(false);
@@ -106,7 +142,9 @@ describe("isOpenTelemetryDocument", () => {
 
   it.each<OverrideRow>([
     ["an unknown kind", { kind: "SPAN_KIND_BATCH" }],
-    ["a missing flags", { flags: undefined }],
+    ["a fractional kind", { kind: 1.5 }],
+    ["a fractional time", { startTimeUnixNano: 1.5 }],
+    ["a time that is not a number", { startTimeUnixNano: "soon" }],
     ["a numeric spanId", { spanId: 1 }],
     ["an unknown status code", { status: { code: "STATUS_CODE_FAILED" } }],
     [
@@ -140,76 +178,24 @@ const trace = createMockLangfuseTrace();
 
 const observation = createMockLangfuseObservation();
 
-const langfuseDocument = (
-  traceOverride: Override = {},
-  observationOverride: Override = {},
-) => ({
-  observations: [{ ...observation, ...observationOverride }],
-  trace: { ...trace, ...traceOverride },
-});
-
 describe("isLangfuseDocument", () => {
-  it("accepts a Langfuse trace export", () => {
-    expect(isLangfuseDocument(langfuseDocument())).toBe(true);
-  });
-
   it.each<ValueRow>([
-    ["a string", "trace=1"],
-    ["a record", { team: "search" }],
-    ["null", null],
-  ])("accepts trace metadata given as %s", (_label, metadata) => {
-    expect(isLangfuseDocument(langfuseDocument({ metadata }))).toBe(true);
-  });
-
-  it("accepts observations with optional details", () => {
-    expect(
-      isLangfuseDocument(
-        langfuseDocument(
-          { observations: [observation] },
-          {
-            costDetails: { input: 0.001, total: 0.002 },
-            level: "ERROR",
-            metadata: ["anything"],
-            type: "GENERATION",
-            usageDetails: null,
-          },
-        ),
-      ),
-    ).toBe(true);
-  });
-
-  it.each<ValueRow>([
+    ["a Langfuse trace export", { observations: [observation], trace }],
     ["a document without a trace", { observations: [] }],
+    [
+      "a trace without the fields the adapter does not read",
+      { observations: [observation], trace: { id: trace.id } },
+    ],
+  ])("accepts %s", (_label, value) => {
+    expect(isLangfuseDocument(value)).toBe(true);
+  });
+
+  it.each<ValueRow>([
+    ["null", null],
     ["a document without observations", { trace }],
-    ["a list of documents", [langfuseDocument()]],
+    ["observations that are not a list", { observations: {}, trace }],
+    ["a list of documents", [{ observations: [observation], trace }]],
   ])("rejects %s", (_label, value) => {
     expect(isLangfuseDocument(value)).toBe(false);
-  });
-
-  it.each<OverrideRow>([
-    ["a numeric id", { id: 1 }],
-    ["a non-boolean bookmarked", { bookmarked: "no" }],
-    ["tags that are not strings", { tags: [1] }],
-    ["metadata given as a number", { metadata: 1 }],
-    [
-      "a score with an unknown source",
-      { scores: [{ ...mockLangfuseScore, source: "X" }] },
-    ],
-    ["malformed nested observations", { observations: [{ id: "x" }] }],
-  ])("rejects a trace with %s", (_label, traceOverride) => {
-    expect(isLangfuseDocument(langfuseDocument(traceOverride))).toBe(false);
-  });
-
-  it.each<OverrideRow>([
-    ["an unknown type", { type: "STEP" }],
-    ["an unknown level", { level: "FATAL" }],
-    ["a numeric endTime", { endTime: 1 }],
-    ["a missing parentObservationId", { parentObservationId: undefined }],
-    ["cost details with a string cost", { costDetails: { input: "free" } }],
-    ["provided cost details given as a list", { providedCostDetails: [] }],
-  ])("rejects an observation with %s", (_label, observationOverride) => {
-    expect(isLangfuseDocument(langfuseDocument({}, observationOverride))).toBe(
-      false,
-    );
   });
 });

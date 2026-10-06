@@ -20,11 +20,17 @@ const isIntValue = (value: unknown): value is number | string =>
   (isString(value) && value.trim() !== "" && Number.isFinite(Number(value))) ||
   (isFiniteNumber(value) && Number.isInteger(value));
 
-/** Strict check: the value is an attribute and nothing in it is malformed. */
-export function isAttribute(value: unknown): value is TraceSpanAttribute {
-  return hasShape<TraceSpanAttribute>({
-    key: isString,
-    value: isAttributeValue,
+export function isAttributeValue(
+  value: unknown,
+): value is TraceSpanAttributeValue {
+  return hasShape<TraceSpanAttributeValue>({
+    arrayValue: isOptional(isArrayValue),
+    boolValue: isOptional(isBoolean),
+    bytesValue: isOptional(isString),
+    doubleValue: isOptional(isFiniteNumber),
+    intValue: isOptional(isIntValue),
+    kvlistValue: isOptional(isKvlistValue),
+    stringValue: isOptional(isString),
   })(value);
 }
 
@@ -34,15 +40,11 @@ function isArrayValue(
   return isPlainRecord(value) && isArrayOf(isAttributeValue)(value["values"]);
 }
 
-function isAttributeValue(value: unknown): value is TraceSpanAttributeValue {
-  return hasShape<TraceSpanAttributeValue>({
-    arrayValue: isOptional(isArrayValue),
-    boolValue: isOptional(isBoolean),
-    bytesValue: isOptional(isString),
-    doubleValue: isOptional(isFiniteNumber),
-    intValue: isOptional(isIntValue),
-    kvlistValue: isOptional(isKvlistValue),
-    stringValue: isOptional(isString),
+/** Strict check: the value is an attribute and nothing in it is malformed. */
+function isAttribute(value: unknown): value is TraceSpanAttribute {
+  return hasShape<TraceSpanAttribute>({
+    key: isString,
+    value: isAttributeValue,
   })(value);
 }
 

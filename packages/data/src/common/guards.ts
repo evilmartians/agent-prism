@@ -21,8 +21,6 @@ export const isBoolean = (value: unknown): value is boolean =>
 export const isFiniteNumber = (value: unknown): value is number =>
   isNumber(value) && Number.isFinite(value);
 
-export const isUnknown = (_value: unknown): _value is unknown => true;
-
 export const isOneOf =
   <T extends string>(values: Readonly<Record<T, true>>): Guard<T> =>
   (value): value is T =>

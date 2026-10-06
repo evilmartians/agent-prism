@@ -79,7 +79,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     const ioData = this.getSpanInputOutput(span);
 
     return {
-      attributes: span.attributes.flatMap(reviveAttribute),
+      attributes: (span.attributes ?? []).flatMap(reviveAttribute),
       children: [],
       endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
       id: span.spanId,
@@ -133,11 +133,15 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   },
 
   getSpanStatus(span: ReadonlyOpenTelemetrySpan): TraceSpanStatus {
-    switch (span.status.code) {
-      case "STATUS_CODE_ERROR":
-        return "error";
+    switch (span.status?.code) {
+      case 1:
       case "STATUS_CODE_OK":
         return "success";
+      case 2:
+      case "STATUS_CODE_ERROR":
+        return "error";
+      case 0:
+      case null:
       case "STATUS_CODE_UNSET":
       case undefined:
       default:

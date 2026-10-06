@@ -9,13 +9,11 @@ export function getOpenTelemetryAttributeValue(
   span: DeepReadonly<Pick<OpenTelemetrySpan, "attributes">>,
   key: string,
 ): boolean | number | string | undefined {
-  const attr = span.attributes.find((a) => a.key === key);
+  const value = span.attributes?.find((a) => a.key === key)?.value;
 
-  if (!attr) {
+  if (value === undefined || value === null) {
     return undefined;
   }
-
-  const { value } = attr;
 
   if (value.stringValue !== undefined) {
     return value.stringValue;

@@ -3,11 +3,7 @@ import type {
   LangfuseTrace,
 } from "@evilmartians/agent-prism-types";
 
-/**
- * A Langfuse score for testing, attached to the trace `createMockLangfuseTrace`
- * returns.
- */
-export const mockLangfuseScore: LangfuseScore = {
+const mockLangfuseScore: LangfuseScore = {
   authorUserId: null,
   comment: null,
   configId: null,

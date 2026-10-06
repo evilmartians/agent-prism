@@ -1,16 +1,10 @@
 import type {
-  LangfuseCostDetails,
   LangfuseDocument,
-  LangfuseObservation,
-  LangfuseObservationLevel,
-  LangfuseObservationType,
-  LangfuseScore,
-  LangfuseScoreDataType,
-  LangfuseScoreSource,
-  LangfuseTrace,
+  OpenTelemetryAttribute,
   OpenTelemetryDocument,
   OpenTelemetryEvent,
   OpenTelemetryLink,
+  OpenTelemetryResource,
   OpenTelemetryResourceSpan,
   OpenTelemetryScope,
   OpenTelemetryScopeSpan,
@@ -18,31 +12,47 @@ import type {
   OpenTelemetrySpanKind,
   OpenTelemetryStatus,
   OpenTelemetryStatusCode,
+  OpenTelemetryUnixNano,
 } from "@evilmartians/agent-prism-types";
 
-import { isAttribute } from "./attribute-value.js";
+import { isAttributeValue } from "./attribute-value.js";
 import {
   hasShape,
   isArrayOf,
-  isBoolean,
+  isFiniteNumber,
   isNullable,
   isNumber,
   isOneOf,
   isOptional,
   isPlainRecord,
   isString,
-  isUnknown,
 } from "./guards.js";
 
-const isOptionalNumber = isOptional(isNumber);
-const isOptionalString = isOptional(isString);
-const isNullableString = isNullable(isString);
-const isOptionalNullableNumber = isOptional(isNullable(isNumber));
-const isOptionalNullableString = isOptional(isNullableString);
+const isOptionalNullable = <T>(guard: (value: unknown) => value is T) =>
+  isOptional(isNullable(guard));
 
-const isAttributes = isArrayOf(isAttribute);
+const isOptionalNullableNumber = isOptionalNullable(isNumber);
+const isOptionalNullableString = isOptionalNullable(isString);
 
-const isOptionalAttributes = isOptional(isAttributes);
+const isInteger = (value: unknown): value is number =>
+  isFiniteNumber(value) && Number.isInteger(value);
+
+const isUnixNano = (value: unknown): value is OpenTelemetryUnixNano =>
+  (isString(value) && /^\d+$/.test(value)) || (isInteger(value) && value >= 0);
+
+const isEnum =
+  <T extends string>(names: Readonly<Record<T, true>>) =>
+  (value: unknown): value is number | T =>
+    isInteger(value) || isOneOf(names)(value);
+
+const isAttributes = isOptionalNullable(
+  isArrayOf(
+    hasShape<OpenTelemetryAttribute>({
+      key: isString,
+      value: isOptionalNullable(isAttributeValue),
+    }),
+  ),
+);
 
 const SPAN_KINDS: Record<OpenTelemetrySpanKind, true> = {
   SPAN_KIND_CLIENT: true,
@@ -50,6 +60,7 @@ const SPAN_KINDS: Record<OpenTelemetrySpanKind, true> = {
   SPAN_KIND_INTERNAL: true,
   SPAN_KIND_PRODUCER: true,
   SPAN_KIND_SERVER: true,
+  SPAN_KIND_UNSPECIFIED: true,
 };
 
 const STATUS_CODES: Record<OpenTelemetryStatusCode, true> = {
@@ -60,55 +71,61 @@ const STATUS_CODES: Record<OpenTelemetryStatusCode, true> = {
 
 const isOpenTelemetrySpan = hasShape<OpenTelemetrySpan>({
   attributes: isAttributes,
-  droppedAttributesCount: isOptionalNumber,
-  droppedEventsCount: isOptionalNumber,
-  droppedLinksCount: isOptionalNumber,
-  endTimeUnixNano: isString,
-  events: isOptional(
+  droppedAttributesCount: isOptionalNullableNumber,
+  droppedEventsCount: isOptionalNullableNumber,
+  droppedLinksCount: isOptionalNullableNumber,
+  endTimeUnixNano: isUnixNano,
+  events: isOptionalNullable(
     isArrayOf(
       hasShape<OpenTelemetryEvent>({
-        attributes: isOptionalAttributes,
-        droppedAttributesCount: isOptionalNumber,
+        attributes: isAttributes,
+        droppedAttributesCount: isOptionalNullableNumber,
         name: isString,
-        timeUnixNano: isString,
+        timeUnixNano: isUnixNano,
       }),
     ),
   ),
-  flags: isNumber,
-  kind: isOneOf(SPAN_KINDS),
-  links: isOptional(
+  flags: isOptionalNullableNumber,
+  kind: isOptionalNullable(isEnum(SPAN_KINDS)),
+  links: isOptionalNullable(
     isArrayOf(
       hasShape<OpenTelemetryLink>({
-        attributes: isOptionalAttributes,
-        droppedAttributesCount: isOptionalNumber,
+        attributes: isAttributes,
+        droppedAttributesCount: isOptionalNullableNumber,
         spanId: isString,
         traceId: isString,
-        traceState: isOptionalString,
+        traceState: isOptionalNullableString,
       }),
     ),
   ),
   name: isString,
-  parentSpanId: isOptionalString,
+  parentSpanId: isOptionalNullableString,
   spanId: isString,
-  startTimeUnixNano: isString,
-  status: hasShape<OpenTelemetryStatus>({
-    code: isOptional(isOneOf(STATUS_CODES)),
-    message: isOptionalString,
-  }),
+  startTimeUnixNano: isUnixNano,
+  status: isOptionalNullable(
+    hasShape<OpenTelemetryStatus>({
+      code: isOptionalNullable(isEnum(STATUS_CODES)),
+      message: isOptionalNullableString,
+    }),
+  ),
   traceId: isString,
-  traceState: isOptionalString,
+  traceState: isOptionalNullableString,
 });
 
 const isResourceSpan = hasShape<OpenTelemetryResourceSpan>({
-  resource: hasShape({ attributes: isAttributes }),
-  schemaUrl: isOptionalString,
+  resource: isOptionalNullable(
+    hasShape<OpenTelemetryResource>({ attributes: isAttributes }),
+  ),
+  schemaUrl: isOptionalNullableString,
   scopeSpans: isArrayOf(
     hasShape<OpenTelemetryScopeSpan>({
-      schemaUrl: isOptionalString,
-      scope: hasShape<OpenTelemetryScope>({
-        name: isString,
-        version: isOptionalString,
-      }),
+      schemaUrl: isOptionalNullableString,
+      scope: isOptionalNullable(
+        hasShape<OpenTelemetryScope>({
+          name: isOptionalNullableString,
+          version: isOptionalNullableString,
+        }),
+      ),
       spans: isArrayOf(isOpenTelemetrySpan),
     }),
   ),
@@ -117,147 +134,15 @@ const isResourceSpan = hasShape<OpenTelemetryResourceSpan>({
 /**
  * Checks that a value, typically parsed JSON, is an OTLP/JSON export:
  * resource spans, their scope spans and spans, with every field
- * `OpenTelemetryDocument` declares of the declared type.
+ * `OpenTelemetryDocument` declares in a form the OTLP specification allows.
  */
 export const isOpenTelemetryDocument = hasShape<OpenTelemetryDocument>({
   resourceSpans: isArrayOf(isResourceSpan),
 });
 
-const OBSERVATION_LEVELS: Record<LangfuseObservationLevel, true> = {
-  DEBUG: true,
-  DEFAULT: true,
-  ERROR: true,
-  WARNING: true,
-};
-
-const OBSERVATION_TYPES: Record<LangfuseObservationType, true> = {
-  AGENT: true,
-  CHAIN: true,
-  EMBEDDING: true,
-  EVALUATOR: true,
-  EVENT: true,
-  GENERATION: true,
-  GUARDRAIL: true,
-  RETRIEVER: true,
-  SPAN: true,
-  TOOL: true,
-  UNKNOWN: true,
-};
-
-const SCORE_DATA_TYPES: Record<LangfuseScoreDataType, true> = {
-  BOOLEAN: true,
-  CATEGORICAL: true,
-  NUMERIC: true,
-};
-
-const SCORE_SOURCES: Record<LangfuseScoreSource, true> = {
-  ANNOTATION: true,
-  API: true,
-  EVAL: true,
-  USER: true,
-};
-
-const isDetails = isOptional(
-  isNullable(
-    hasShape<LangfuseCostDetails>({
-      input: isOptionalNumber,
-      input_cached_tokens: isOptionalNumber,
-      output: isOptionalNumber,
-      output_reasoning_tokens: isOptionalNumber,
-      total: isOptionalNumber,
-    }),
-  ),
-);
-
-const isObservation = hasShape<LangfuseObservation>({
-  costDetails: isDetails,
-  createdAt: isString,
-  endTime: isNullableString,
-  environment: isString,
-  id: isString,
-  input: isOptionalNullableString,
-  inputCost: isOptionalNullableNumber,
-  inputUsage: isOptionalNullableNumber,
-  internalModelId: isOptionalNullableString,
-  latency: isOptionalNumber,
-  level: isOptional(isOneOf(OBSERVATION_LEVELS)),
-  metadata: isUnknown,
-  model: isOptionalNullableString,
-  name: isString,
-  output: isOptionalNullableString,
-  outputCost: isOptionalNullableNumber,
-  outputUsage: isOptionalNullableNumber,
-  parentObservationId: isNullableString,
-  projectId: isString,
-  promptId: isOptionalNullableString,
-  promptName: isOptionalNullableString,
-  promptVersion: isOptionalNullableNumber,
-  providedCostDetails: isOptional(isPlainRecord),
-  startTime: isString,
-  statusMessage: isOptionalNullableString,
-  timeToFirstToken: isOptionalNullableNumber,
-  totalCost: isOptionalNullableNumber,
-  totalUsage: isOptionalNullableNumber,
-  traceId: isString,
-  type: isOptional(isOneOf(OBSERVATION_TYPES)),
-  updatedAt: isString,
-  usageDetails: isDetails,
-  version: isOptionalNullableString,
-});
-
-const isScore = hasShape<LangfuseScore>({
-  authorUserId: isNullableString,
-  comment: isNullableString,
-  configId: isNullableString,
-  createdAt: isString,
-  dataType: isOneOf(SCORE_DATA_TYPES),
-  id: isString,
-  name: isString,
-  observationId: isNullableString,
-  projectId: isString,
-  queueId: isNullableString,
-  source: isOneOf(SCORE_SOURCES),
-  stringValue: isNullableString,
-  timestamp: isString,
-  traceId: isString,
-  updatedAt: isString,
-  value: isNullable(isNumber),
-});
-
-const isTraceMetadata = (
-  value: unknown,
-): value is Record<string, unknown> | string =>
-  isPlainRecord(value) || isString(value);
-
-const isTrace = hasShape<LangfuseTrace>({
-  bookmarked: isBoolean,
-  createdAt: isString,
-  environment: isString,
-  id: isString,
-  input: isOptionalNullableString,
-  latency: isOptionalNumber,
-  metadata: isOptional(isNullable(isTraceMetadata)),
-  name: isString,
-  observations: isOptional(isArrayOf(isObservation)),
-  output: isOptionalNullableString,
-  projectId: isString,
-  public: isBoolean,
-  release: isNullableString,
-  scores: isArrayOf(isScore),
-  sessionId: isOptionalNullableString,
-  tags: isArrayOf(isString),
-  timestamp: isString,
-  updatedAt: isString,
-  userId: isOptionalNullableString,
-  version: isNullableString,
-});
-
 /**
- * Checks that a value, typically parsed JSON, is a Langfuse trace export: the
- * trace and its observations, with every field `LangfuseDocument` declares of
- * the declared type.
+ * Tells a Langfuse trace export by its `observations` list, the only part the
+ * adapter reads. Observation fields are not checked.
  */
-export const isLangfuseDocument = hasShape<LangfuseDocument>({
-  observations: isArrayOf(isObservation),
-  trace: isTrace,
-});
+export const isLangfuseDocument = (value: unknown): value is LangfuseDocument =>
+  isPlainRecord(value) && Array.isArray(value["observations"]);

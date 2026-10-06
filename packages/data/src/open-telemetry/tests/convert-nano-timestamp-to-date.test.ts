@@ -12,6 +12,12 @@ describe("convertNanoTimestampToDate", () => {
     expect(date.getTime()).toBe(1697097600500);
   });
 
+  it("should convert a nanosecond timestamp given as a number", () => {
+    const date = convertNanoTimestampToDate(1_697_097_600_500_000_000);
+
+    expect(date.getTime()).toBe(1697097600500);
+  });
+
   it("should handle timestamps with only seconds (no nanoseconds)", () => {
     const nanoString = "1697097600000000000";
 
