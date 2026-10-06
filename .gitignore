@@ -5,6 +5,7 @@
 
 # Testing
 coverage
+reports
 
 # Production
 /build
