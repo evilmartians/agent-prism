@@ -34,7 +34,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-you-might-not-need-an-effect": "^0.9.3",
     "eslint-plugin-sonarjs": "^3.0.7",
-    "eslint-plugin-storybook": "^9.1.20",
+    "eslint-plugin-storybook": "^9.1.16",
     "eslint-plugin-tailwindcss": "^3.18.2",
     "jscpd": "^5.4.0",
     "knip": "^6.39.0",

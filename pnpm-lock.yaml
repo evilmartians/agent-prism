@@ -30,8 +30,8 @@ importers:
         specifier: ^3.0.7
         version: 3.0.7(eslint@9.39.1(jiti@2.7.0))
       eslint-plugin-storybook:
-        specifier: ^9.1.20
-        version: 9.1.20(eslint@9.39.1(jiti@2.7.0))(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@20.19.25)(jiti@2.7.0)(tsx@4.20.6)(yaml@2.9.1)))(typescript@5.8.3)
+        specifier: ^9.1.16
+        version: 9.1.16(eslint@9.39.1(jiti@2.7.0))(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@20.19.25)(jiti@2.7.0)(tsx@4.20.6)(yaml@2.9.1)))(typescript@5.8.3)
       eslint-plugin-tailwindcss:
         specifier: ^3.18.2
         version: 3.18.2(tailwindcss@3.4.17)
@@ -2347,12 +2347,12 @@ packages:
     peerDependencies:
       eslint: ^8.0.0 || ^9.0.0
 
-  eslint-plugin-storybook@9.1.20:
-    resolution: {integrity: sha512-T7uqlzZABlOm0n36UQyyP0u7r+6/Bz5CTAvFK5n+FQPkAhba01mGovYVG61gcDeC06I0AlbZCZ0MP7MFxXAEVg==}
+  eslint-plugin-storybook@9.1.16:
+    resolution: {integrity: sha512-I8f3DXniPxFbcptVgOjtIHNvW6sDu1O2d1zNsxLKmeAvEaRLus1ij8iFHCgkNzMthrU5U2F4Wdo/aaSpz5kHjA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       eslint: '>=8'
-      storybook: ^9.1.20
+      storybook: ^9.1.16
 
   eslint-plugin-tailwindcss@3.18.2:
     resolution: {integrity: sha512-QbkMLDC/OkkjFQ1iz/5jkMdHfiMu/uwujUHLAJK5iwNHD8RTxVTlsUezE0toTZ6VhybNBsk+gYGPDq2agfeRNA==}
@@ -6000,7 +6000,7 @@ snapshots:
       semver: 7.7.4
       typescript: 5.8.3
 
-  eslint-plugin-storybook@9.1.20(eslint@9.39.1(jiti@2.7.0))(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@20.19.25)(jiti@2.7.0)(tsx@4.20.6)(yaml@2.9.1)))(typescript@5.8.3):
+  eslint-plugin-storybook@9.1.16(eslint@9.39.1(jiti@2.7.0))(storybook@9.1.16(@testing-library/dom@10.4.1)(prettier@3.6.2)(vite@7.2.2(@types/node@20.19.25)(jiti@2.7.0)(tsx@4.20.6)(yaml@2.9.1)))(typescript@5.8.3):
     dependencies:
       '@typescript-eslint/utils': 8.46.4(eslint@9.39.1(jiti@2.7.0))(typescript@5.8.3)
       eslint: 9.39.1(jiti@2.7.0)
