@@ -138,8 +138,8 @@ export const langfuseSpanAdapter: SpanAdapter<
 
     usage = addReportedTotal(
       usage,
-      usageDetails.total ?? undefined,
-      costDetails.total ?? undefined,
+      usageDetails["total"] ?? undefined,
+      costDetails["total"] ?? undefined,
     );
 
     return Object.keys(usage).length > 0 ? usage : undefined;

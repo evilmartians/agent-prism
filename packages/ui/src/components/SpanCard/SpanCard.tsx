@@ -233,7 +233,9 @@ const SpanCardChildren: FC<{
       <Collapsible.Content>
         <ul role="group">
           {data.children.map((child, idx) => {
-            const brand = child.metadata?.brand as { type: string } | undefined;
+            const brand = child.metadata?.["brand"] as
+              | { type: string }
+              | undefined;
 
             return (
               <SpanCard

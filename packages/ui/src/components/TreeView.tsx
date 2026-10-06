@@ -39,7 +39,9 @@ export const TreeView: FC<TreeViewProps> = ({
         aria-label="Hierarchical card list"
       >
         {spans.map((span, idx) => {
-          const brand = span.metadata?.brand as { type: string } | undefined;
+          const brand = span.metadata?.["brand"] as
+            | { type: string }
+            | undefined;
 
           return (
             <SpanCard

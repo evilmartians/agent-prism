@@ -94,15 +94,17 @@ export const extractSpanError = (span: TraceSpan): SpanErrorDetails | null => {
   const records = parseRawRecords(span.raw);
 
   const rawMessage = findInRecords(records, (record) =>
-    isRecord(record.status) ? nonEmptyString(record.status.message) : undefined,
+    isRecord(record["status"])
+      ? nonEmptyString(record["status"]["message"])
+      : undefined,
   );
   // Langfuse observations carry the error text on a top-level `statusMessage`
   // rather than a nested `status.message`.
   const rawStatusMessage = findInRecords(records, (record) =>
-    nonEmptyString(record.statusMessage),
+    nonEmptyString(record["statusMessage"]),
   );
   const rawName = findInRecords(records, (record) =>
-    nonEmptyString(record.name),
+    nonEmptyString(record["name"]),
   );
 
   const message =

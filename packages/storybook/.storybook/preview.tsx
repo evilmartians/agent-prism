@@ -6,7 +6,7 @@ import "@evilmartians/agent-prism-ui/theme.css";
 import "./styles.css";
 
 const withTheme: Decorator = (StoryFn, context) => {
-  const theme = context.globals.theme || "system";
+  const theme = context.globals["theme"] || "system";
   let mode = theme;
 
   if (theme === "system") {

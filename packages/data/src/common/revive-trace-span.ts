@@ -72,14 +72,14 @@ export const isTraceSpanLike = (
   endTime: string | number | Date;
 } =>
   isRecord(value) &&
-  typeof value.id === "string" &&
-  typeof value.title === "string" &&
-  isSpanCategory(value.type) &&
-  isSpanStatus(value.status) &&
-  Array.isArray(value.raw) &&
-  value.raw.every((entry) => typeof entry === "string") &&
-  isTimestamp(value.startTime) &&
-  isTimestamp(value.endTime);
+  typeof value["id"] === "string" &&
+  typeof value["title"] === "string" &&
+  isSpanCategory(value["type"]) &&
+  isSpanStatus(value["status"]) &&
+  Array.isArray(value["raw"]) &&
+  value["raw"].every((entry) => typeof entry === "string") &&
+  isTimestamp(value["startTime"]) &&
+  isTimestamp(value["endTime"]);
 
 // The optional structures below come from an untrusted file. Malformed parts
 // are dropped here rather than handed to views that would crash on them.
@@ -90,10 +90,10 @@ const reviveTokenUsage = (value: unknown): TokenUsage | undefined => {
   const usage: TokenUsage = {};
 
   Object.entries(value).forEach(([type, entry]) => {
-    if (isRecord(entry) && isFiniteNumber(entry.tokens)) {
-      usage[type] = isFiniteNumber(entry.cost)
-        ? { tokens: entry.tokens, cost: entry.cost }
-        : { tokens: entry.tokens };
+    if (isRecord(entry) && isFiniteNumber(entry["tokens"])) {
+      usage[type] = isFiniteNumber(entry["cost"])
+        ? { tokens: entry["tokens"], cost: entry["cost"] }
+        : { tokens: entry["tokens"] };
     }
   });
 
@@ -103,17 +103,17 @@ const reviveTokenUsage = (value: unknown): TokenUsage | undefined => {
 const reviveReasoning = (value: unknown): TraceReasoning | undefined => {
   if (!isRecord(value)) return undefined;
 
-  const content = typeof value.content === "string" ? value.content : "";
-  const tokens = isFiniteNumber(value.tokens) ? value.tokens : undefined;
+  const content = typeof value["content"] === "string" ? value["content"] : "";
+  const tokens = isFiniteNumber(value["tokens"]) ? value["tokens"] : undefined;
 
   if (!content && tokens === undefined) return undefined;
 
   return {
     content,
     tokens,
-    level: isReasoningLevel(value.level) ? value.level : undefined,
-    triggers: Array.isArray(value.triggers)
-      ? value.triggers.filter(
+    level: isReasoningLevel(value["level"]) ? value["level"] : undefined,
+    triggers: Array.isArray(value["triggers"])
+      ? value["triggers"].filter(
           (trigger): trigger is string => typeof trigger === "string",
         )
       : undefined,
@@ -124,9 +124,9 @@ const reviveTodos = (value: unknown): TraceTodo[] | undefined =>
   Array.isArray(value)
     ? value.flatMap((item: unknown) =>
         isRecord(item) &&
-        typeof item.title === "string" &&
-        isTodoStatus(item.status)
-          ? [{ title: item.title, status: item.status }]
+        typeof item["title"] === "string" &&
+        isTodoStatus(item["status"])
+          ? [{ title: item["title"], status: item["status"] }]
           : [],
       )
     : undefined;
@@ -147,11 +147,11 @@ export const reviveTraceSpan = (value: unknown): TraceSpan => {
     ...(value as unknown as TraceSpan),
     startTime: new Date(value.startTime),
     endTime: new Date(value.endTime),
-    children: Array.isArray(value.children)
-      ? value.children.map(reviveTraceSpan)
+    children: Array.isArray(value["children"])
+      ? value["children"].map(reviveTraceSpan)
       : undefined,
-    tokenUsage: reviveTokenUsage(value.tokenUsage),
-    reasoning: reviveReasoning(value.reasoning),
-    todos: reviveTodos(value.todos),
+    tokenUsage: reviveTokenUsage(value["tokenUsage"]),
+    reasoning: reviveReasoning(value["reasoning"]),
+    todos: reviveTodos(value["todos"]),
   };
 };
