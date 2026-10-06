@@ -8,7 +8,7 @@
     "build-ui-lib": "cd ../ui && pnpm build",
     "build-storybook": "storybook build",
     "build": "pnpm run build-ui-lib && pnpm run build-storybook",
-    "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck"
+    "tsc": "tsc -b"
   },
   "dependencies": {
     "@evilmartians/agent-prism-data": "workspace:^",

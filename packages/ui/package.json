@@ -23,7 +23,7 @@
     "dist/styles.css"
   ],
   "scripts": {
-    "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck",
+    "tsc": "tsc -b",
     "build": "tailwind -i ./src/index.css -o ./dist/styles.css --minify",
     "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch",
     "generate-theme-files": "tsx ./src/theming/scripts/generate-theme-files.ts && prettier --write ./src/components/theme"

@@ -22,6 +22,6 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build",
-    "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck"
+    "tsc": "tsc -b"
   }
 }

@@ -28,5 +28,10 @@
       "@evilmartians/agent-prism-ui": ["../ui/src"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    ".storybook/preview.tsx",
+    ".storybook/vitest.setup.ts",
+    "vitest.shims.d.ts"
+  ]
 }

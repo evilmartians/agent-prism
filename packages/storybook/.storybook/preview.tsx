@@ -1,11 +1,11 @@
-import type { Preview } from "@storybook/react-vite";
+import type { Decorator, Preview } from "@storybook/react-vite";
 
 import "@evilmartians/agent-prism-ui/styles.css";
 import "@evilmartians/agent-prism-ui/theme.css";
 
 import "./styles.css";
 
-const withTheme = (StoryFn, context) => {
+const withTheme: Decorator = (StoryFn, context) => {
   const theme = context.globals.theme || "system";
   let mode = theme;
 
