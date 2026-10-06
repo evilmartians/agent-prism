@@ -11,7 +11,7 @@
     "deploy:storybook": "pnpm --filter @evilmartians/agent-prism-storybook build && firebase deploy --only hosting",
     "deploy:saas": "pnpm --filter saas build && firebase deploy --only hosting:ai-trace-explorer",
     "format": "pnpm exec prettier . --write",
-    "format:check": "pnpm exec prettier .",
+    "format:check": "pnpm exec prettier . --check",
     "eslint": "eslint . --fix",
     "eslint:check": "eslint .",
     "tsc": "pnpm run --parallel tsc",
@@ -22,9 +22,7 @@
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "eslint": "^9.31.0",
-    "eslint-config-prettier": "10.1.8",
     "eslint-plugin-perfectionist": "^4.15.0",
-    "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-tailwindcss": "^3.18.2",
     "globals": "^16.3.0",

@@ -57,7 +57,7 @@ jobs:
         run: pnpm --filter "./packages/types" --filter "./packages/data" build
 
       - name: Run format check
-        run: pnpm format
+        run: pnpm format:check
 
       - name: Run linting
         run: pnpm eslint

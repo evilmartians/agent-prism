@@ -18,7 +18,9 @@ import {
   formatSpanErrorForAgent,
 } from "./format-errors-for-agent";
 
-const makeSpan = (span: Partial<TraceSpan> & Pick<TraceSpan, "id">): TraceSpan => ({
+const makeSpan = (
+  span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
+): TraceSpan => ({
   title: span.id,
   startTime: new Date("2026-06-05T10:00:00.000Z"),
   endTime: new Date("2026-06-05T10:00:01.000Z"),
@@ -33,10 +35,15 @@ const rawStatusMessageSpan = makeSpan({
   id: "parser",
   title: "Structured Output Parser",
   status: "error",
-  raw: [JSON.stringify({
-    status: { code: "ERROR", message: "Model output doesn't fit required format" },
-    name: "Structured Output Parser",
-  })],
+  raw: [
+    JSON.stringify({
+      status: {
+        code: "ERROR",
+        message: "Model output doesn't fit required format",
+      },
+      name: "Structured Output Parser",
+    }),
+  ],
 });
 
 // No message in `raw` — falls back to the `error.message` attribute.
@@ -46,7 +53,10 @@ const errorMessageAttributeSpan = makeSpan({
   status: "error",
   raw: ["{}"],
   attributes: [
-    { key: "error.message", value: { stringValue: "Tool timed out after 30s" } },
+    {
+      key: "error.message",
+      value: { stringValue: "Tool timed out after 30s" },
+    },
   ],
 });
 
@@ -57,7 +67,10 @@ const otlpExceptionSpan = makeSpan({
   status: "error",
   raw: ["{}"],
   attributes: [
-    { key: "exception.message", value: { stringValue: "Connection refused: redis:6379" } },
+    {
+      key: "exception.message",
+      value: { stringValue: "Connection refused: redis:6379" },
+    },
     {
       key: "exception.stacktrace",
       value: { stringValue: "Error\n    at RedisClient.connect (redis.ts:42)" },
@@ -72,7 +85,10 @@ const statusMessageAttributeSpan = makeSpan({
   status: "error",
   raw: ["{}"],
   attributes: [
-    { key: "status.message", value: { stringValue: "Rate limit exceeded (429)" } },
+    {
+      key: "status.message",
+      value: { stringValue: "Rate limit exceeded (429)" },
+    },
   ],
 });
 
@@ -91,14 +107,24 @@ const failedRunSpans: TraceSpan[] = [
     title: "Relevancy scoring workflow",
     type: "chain_operation",
     status: "error",
-    raw: [JSON.stringify({ status: { message: "Run failed" }, name: "Relevancy scoring workflow" })],
+    raw: [
+      JSON.stringify({
+        status: { message: "Run failed" },
+        name: "Relevancy scoring workflow",
+      }),
+    ],
     children: [
       makeSpan({
         id: "agent",
         title: "AI Agent",
         type: "agent_invocation",
         status: "error",
-        raw: [JSON.stringify({ status: { message: "Child node failed" }, name: "AI Agent" })],
+        raw: [
+          JSON.stringify({
+            status: { message: "Child node failed" },
+            name: "AI Agent",
+          }),
+        ],
         children: [rawStatusMessageSpan],
       }),
     ],
@@ -138,10 +164,12 @@ describe("extractSpanError", () => {
       id: "renamed",
       title: "renamed", // matches id; distinct from raw.name below
       status: "error",
-      raw: [JSON.stringify({
-        status: { message: "boom" },
-        name: "Human-readable node name",
-      })],
+      raw: [
+        JSON.stringify({
+          status: { message: "boom" },
+          name: "Human-readable node name",
+        }),
+      ],
     });
 
     expect(extractSpanError(span)?.nodeName).toBe("Human-readable node name");
@@ -186,7 +214,9 @@ describe("extractSpanError", () => {
       status: "error",
       // Langfuse observations expose the error text on `statusMessage`, not a
       // nested `status.message`.
-      raw: [JSON.stringify({ statusMessage: "Observation failed", name: "Obs" })],
+      raw: [
+        JSON.stringify({ statusMessage: "Observation failed", name: "Obs" }),
+      ],
     });
 
     const error = extractSpanError(span);
@@ -383,7 +413,9 @@ describe("format helpers", () => {
   });
 
   it("formatRunErrorsForAgent lists every failed span", () => {
-    const text = formatRunErrorsForAgent(collectRunErrorEntries(failedRunSpans));
+    const text = formatRunErrorsForAgent(
+      collectRunErrorEntries(failedRunSpans),
+    );
 
     expect(text).toMatch(/Failed spans: 3/);
     expect(text).toMatch(/Structured Output Parser/);

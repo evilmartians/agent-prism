@@ -4,9 +4,7 @@ import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error";
  * Formats a single span error as Markdown suitable for pasting into an AI
  * agent — a title heading followed by the error message.
  */
-export const formatSpanErrorForAgent = (
-  details: SpanErrorDetails,
-): string => {
+export const formatSpanErrorForAgent = (details: SpanErrorDetails): string => {
   const title = details.nodeName;
   const lines = [`# ${title}`, "", details.message];
 

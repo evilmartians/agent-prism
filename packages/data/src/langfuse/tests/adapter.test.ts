@@ -39,12 +39,13 @@ describe("langfuseSpanAdapter.getSpanStatus", () => {
     ).toBe("warning");
   });
 
-  it.each<LangfuseObservationLevel | undefined>(["DEFAULT", "DEBUG", undefined])(
-    "treats level %s as success",
-    (level) => {
-      expect(
-        langfuseSpanAdapter.getSpanStatus(makeObservation({ id: "c", level })),
-      ).toBe("success");
-    },
-  );
+  it.each<LangfuseObservationLevel | undefined>([
+    "DEFAULT",
+    "DEBUG",
+    undefined,
+  ])("treats level %s as success", (level) => {
+    expect(
+      langfuseSpanAdapter.getSpanStatus(makeObservation({ id: "c", level })),
+    ).toBe("success");
+  });
 });

@@ -64,10 +64,7 @@ const RunErrorsSummary = ({
           onClick={(event) => event.stopPropagation()}
           onKeyDown={(event) => event.stopPropagation()}
         >
-          <CopyButton
-            label="all errors for agent"
-            content={agentContent}
-          />
+          <CopyButton label="all errors for agent" content={agentContent} />
           <ErrorCountBadge count={entries.length} />
         </div>
       }
@@ -108,7 +105,8 @@ export const DetailsViewErrorBlocks = ({
   // whole forest, so sibling roots' errors don't leak in. Memoized so
   // unrelated parent re-renders don't re-walk/parse the tree.
   const runEntries = useMemo(
-    () => (isRootTraceSpan(span, allSpans) ? collectRunErrorEntries([span]) : []),
+    () =>
+      isRootTraceSpan(span, allSpans) ? collectRunErrorEntries([span]) : [],
     [span, allSpans],
   );
   const showRunErrors = runEntries.length > 0;

@@ -145,7 +145,9 @@ export const collectRunErrorEntries = (spans: TraceSpan[]): RunErrorEntry[] =>
  * Collects the error entry for a single span (children excluded), or `null`
  * when the span has no error.
  */
-export const collectSpanErrorEntry = (span: TraceSpan): RunErrorEntry | null => {
+export const collectSpanErrorEntry = (
+  span: TraceSpan,
+): RunErrorEntry | null => {
   const details = extractSpanError(span);
 
   return details ? { span, details } : null;
