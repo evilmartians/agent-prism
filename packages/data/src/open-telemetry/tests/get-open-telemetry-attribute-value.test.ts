@@ -1,3 +1,5 @@
+import type { OpenTelemetrySpan } from "@evilmartians/agent-prism-types";
+
 import { describe, expect, it } from "vitest";
 
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
@@ -14,6 +16,20 @@ describe("getOpenTelemetryAttributeValue", () => {
 
     expect(getOpenTelemetryAttributeValue(span, "temperature")).toBe(0.7);
     expect(getOpenTelemetryAttributeValue(span, "tokens")).toBe(42);
+  });
+
+  it("reads the doubles OTLP/JSON writes as strings as numbers", () => {
+    const span: Pick<OpenTelemetrySpan, "attributes"> = {
+      attributes: [
+        { key: "nan", value: { doubleValue: "NaN" } },
+        { key: "-inf", value: { doubleValue: "-Infinity" } },
+      ],
+    };
+
+    expect(getOpenTelemetryAttributeValue(span, "nan")).toBe(Number.NaN);
+    expect(getOpenTelemetryAttributeValue(span, "-inf")).toBe(
+      Number.NEGATIVE_INFINITY,
+    );
   });
 
   describe("string values", () => {
@@ -118,21 +134,11 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle special number values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "infinity.value": Infinity,
           "max.value": Number.MAX_VALUE,
           "min.value": Number.MIN_VALUE,
-          "nan.value": NaN,
-          "negative.infinity": -Infinity,
         },
       });
 
-      expect(getOpenTelemetryAttributeValue(span, "nan.value")).toBeNaN();
-      expect(getOpenTelemetryAttributeValue(span, "infinity.value")).toBe(
-        Infinity,
-      );
-      expect(getOpenTelemetryAttributeValue(span, "negative.infinity")).toBe(
-        -Infinity,
-      );
       expect(getOpenTelemetryAttributeValue(span, "min.value")).toBe(
         Number.MIN_VALUE,
       );

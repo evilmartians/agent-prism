@@ -31,10 +31,14 @@ export const isOptional =
   (value): value is T | undefined =>
     value === undefined || guard(value);
 
-export const isNullable =
+const isNullable =
   <T>(guard: Guard<T>): Guard<null | T> =>
   (value): value is null | T =>
     value === null || guard(value);
+
+export const isOptionalNullable = <T>(
+  guard: Guard<T>,
+): Guard<null | T | undefined> => isOptional(isNullable(guard));
 
 export const isArrayOf =
   <T>(guard: Guard<T>): Guard<T[]> =>

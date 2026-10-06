@@ -49,4 +49,17 @@ describe("openTelemetrySpanAdapter.convertRawDocumentsToSpans", () => {
     expect(toIdTree(fromOne)).toStrictEqual(ROOT_WITH_CHILD);
     expect(fromList).toStrictEqual(fromOne);
   });
+
+  it("reads the fields OTLP/JSON omits as their default values", () => {
+    const converted = openTelemetrySpanAdapter.convertRawDocumentsToSpans({
+      resourceSpans: [
+        {},
+        { scopeSpans: [{}, { spans: [{ spanId: "a", traceId: "t" }] }] },
+      ],
+    });
+
+    expect(converted).toMatchObject([
+      { endTime: new Date(0), id: "a", startTime: new Date(0), title: "" },
+    ]);
+  });
 });

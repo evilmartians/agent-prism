@@ -10,7 +10,7 @@ import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-v
 export function generateOpenTelemetrySpanTitle(
   span: DeepReadonly<OpenTelemetrySpan>,
 ): string {
-  const { name } = span;
+  const name = span.name ?? "";
 
   const model = getOpenTelemetryAttributeValue(
     span,

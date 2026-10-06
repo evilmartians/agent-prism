@@ -56,8 +56,8 @@ export const openTelemetrySpanAdapter: SpanAdapter<
 
     toList(documents).forEach((document) => {
       document.resourceSpans.forEach((resourceSpan) => {
-        resourceSpan.scopeSpans.forEach((scopeSpan) => {
-          allSpans.push(...scopeSpan.spans);
+        (resourceSpan.scopeSpans ?? []).forEach((scopeSpan) => {
+          allSpans.push(...(scopeSpan.spans ?? []));
         });
       });
     });
@@ -81,13 +81,13 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     return {
       attributes: (span.attributes ?? []).flatMap(reviveAttribute),
       children: [],
-      endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
+      endTime: convertNanoTimestampToDate(span.endTimeUnixNano ?? 0),
       id: span.spanId,
       input: ioData.input,
       output: ioData.output,
       raw: [JSON.stringify(span, null, 2)],
       reasoning: this.getTraceReasoning(span),
-      startTime: convertNanoTimestampToDate(span.startTimeUnixNano),
+      startTime: convertNanoTimestampToDate(span.startTimeUnixNano ?? 0),
       status: this.getSpanStatus(span),
       title: generateOpenTelemetrySpanTitle(span),
       todos: this.getTraceTodos(span),

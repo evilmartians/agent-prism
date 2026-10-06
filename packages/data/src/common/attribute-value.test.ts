@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   getAttributeNumber,
+  reviveAttribute,
   toAttributeValue,
   toPlainAttributeValue,
 } from "./attribute-value.js";
@@ -58,6 +59,24 @@ describe("toPlainAttributeValue", () => {
 
   it("returns undefined for an empty value", () => {
     expect(toPlainAttributeValue({})).toBeUndefined();
+  });
+
+  it("keeps an int64 beyond Number precision as its decimal string", () => {
+    expect(toPlainAttributeValue({ intValue: "1234567890123456789" })).toBe(
+      "1234567890123456789",
+    );
+  });
+});
+
+describe("reviveAttribute", () => {
+  it("reads an empty list written without values as an empty list", () => {
+    expect([
+      ...reviveAttribute({ key: "tags", value: { arrayValue: {} } }),
+      ...reviveAttribute({ key: "extra", value: { kvlistValue: {} } }),
+    ]).toStrictEqual([
+      { key: "tags", value: { arrayValue: { values: [] } } },
+      { key: "extra", value: { kvlistValue: { values: [] } } },
+    ]);
   });
 });
 

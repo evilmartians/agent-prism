@@ -163,7 +163,10 @@ describe("reviveTraceSpan", () => {
             value: {
               arrayValue: { values: [{ doubleValue: 0.5 }, "not a value"] },
               kvlistValue: {
-                values: [{ key: "k", value: { intValue: 2 } }, { value: {} }],
+                values: [
+                  { key: "k", value: { intValue: 2 } },
+                  { key: 1, value: {} },
+                ],
               },
             },
           },

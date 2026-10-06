@@ -1,6 +1,5 @@
 import type {
   LangfuseDocument,
-  OpenTelemetryAttribute,
   OpenTelemetryDocument,
   OpenTelemetryEvent,
   OpenTelemetryLink,
@@ -15,21 +14,17 @@ import type {
   OpenTelemetryUnixNano,
 } from "@evilmartians/agent-prism-types";
 
-import { isAttributeValue } from "./attribute-value.js";
+import { isOpenTelemetryAttribute } from "./attribute-value.js";
 import {
   hasShape,
   isArrayOf,
   isFiniteNumber,
-  isNullable,
   isNumber,
   isOneOf,
-  isOptional,
+  isOptionalNullable,
   isPlainRecord,
   isString,
 } from "./guards.js";
-
-const isOptionalNullable = <T>(guard: (value: unknown) => value is T) =>
-  isOptional(isNullable(guard));
 
 const isOptionalNullableNumber = isOptionalNullable(isNumber);
 const isOptionalNullableString = isOptionalNullable(isString);
@@ -37,22 +32,18 @@ const isOptionalNullableString = isOptionalNullable(isString);
 const isInteger = (value: unknown): value is number =>
   isFiniteNumber(value) && Number.isInteger(value);
 
-const isUnixNano = (value: unknown): value is OpenTelemetryUnixNano =>
-  (isString(value) && /^\d+$/.test(value)) || (isInteger(value) && value >= 0);
+const isUnixNano = isOptionalNullable(
+  (value: unknown): value is OpenTelemetryUnixNano =>
+    (isString(value) && /^\d+$/.test(value)) ||
+    (isInteger(value) && value >= 0),
+);
 
 const isEnum =
   <T extends string>(names: Readonly<Record<T, true>>) =>
   (value: unknown): value is number | T =>
     isInteger(value) || isOneOf(names)(value);
 
-const isAttributes = isOptionalNullable(
-  isArrayOf(
-    hasShape<OpenTelemetryAttribute>({
-      key: isString,
-      value: isOptionalNullable(isAttributeValue),
-    }),
-  ),
-);
+const isAttributes = isOptionalNullable(isArrayOf(isOpenTelemetryAttribute));
 
 const SPAN_KINDS: Record<OpenTelemetrySpanKind, true> = {
   SPAN_KIND_CLIENT: true,
@@ -80,7 +71,7 @@ const isOpenTelemetrySpan = hasShape<OpenTelemetrySpan>({
       hasShape<OpenTelemetryEvent>({
         attributes: isAttributes,
         droppedAttributesCount: isOptionalNullableNumber,
-        name: isString,
+        name: isOptionalNullableString,
         timeUnixNano: isUnixNano,
       }),
     ),
@@ -92,13 +83,13 @@ const isOpenTelemetrySpan = hasShape<OpenTelemetrySpan>({
       hasShape<OpenTelemetryLink>({
         attributes: isAttributes,
         droppedAttributesCount: isOptionalNullableNumber,
-        spanId: isString,
-        traceId: isString,
+        spanId: isOptionalNullableString,
+        traceId: isOptionalNullableString,
         traceState: isOptionalNullableString,
       }),
     ),
   ),
-  name: isString,
+  name: isOptionalNullableString,
   parentSpanId: isOptionalNullableString,
   spanId: isString,
   startTimeUnixNano: isUnixNano,
@@ -117,17 +108,19 @@ const isResourceSpan = hasShape<OpenTelemetryResourceSpan>({
     hasShape<OpenTelemetryResource>({ attributes: isAttributes }),
   ),
   schemaUrl: isOptionalNullableString,
-  scopeSpans: isArrayOf(
-    hasShape<OpenTelemetryScopeSpan>({
-      schemaUrl: isOptionalNullableString,
-      scope: isOptionalNullable(
-        hasShape<OpenTelemetryScope>({
-          name: isOptionalNullableString,
-          version: isOptionalNullableString,
-        }),
-      ),
-      spans: isArrayOf(isOpenTelemetrySpan),
-    }),
+  scopeSpans: isOptionalNullable(
+    isArrayOf(
+      hasShape<OpenTelemetryScopeSpan>({
+        schemaUrl: isOptionalNullableString,
+        scope: isOptionalNullable(
+          hasShape<OpenTelemetryScope>({
+            name: isOptionalNullableString,
+            version: isOptionalNullableString,
+          }),
+        ),
+        spans: isOptionalNullable(isArrayOf(isOpenTelemetrySpan)),
+      }),
+    ),
   ),
 });
 

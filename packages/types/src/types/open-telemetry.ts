@@ -1,8 +1,21 @@
 import type { TraceSpanAttributeValue } from "./index.js";
 
+/**
+ * An `AnyValue` in OTLP/JSON: an empty list has no `values`, and a double
+ * that is not finite is written as a string.
+ */
+export type OpenTelemetryAnyValue = Omit<
+  TraceSpanAttributeValue,
+  "arrayValue" | "doubleValue" | "kvlistValue"
+> & {
+  arrayValue?: { values?: null | OpenTelemetryAnyValue[] };
+  doubleValue?: "-Infinity" | "Infinity" | "NaN" | number;
+  kvlistValue?: { values?: null | OpenTelemetryAttribute[] };
+};
+
 export type OpenTelemetryAttribute = {
-  key: string;
-  value?: null | TraceSpanAttributeValue;
+  key?: null | string;
+  value?: null | OpenTelemetryAnyValue;
 };
 
 /**
@@ -17,15 +30,15 @@ export type OpenTelemetryDocument = {
 export type OpenTelemetryEvent = {
   attributes?: null | OpenTelemetryAttribute[];
   droppedAttributesCount?: null | number;
-  name: string;
-  timeUnixNano: OpenTelemetryUnixNano;
+  name?: null | string;
+  timeUnixNano?: null | OpenTelemetryUnixNano;
 };
 
 export type OpenTelemetryLink = {
   attributes?: null | OpenTelemetryAttribute[];
   droppedAttributesCount?: null | number;
-  spanId: string;
-  traceId: string;
+  spanId?: null | string;
+  traceId?: null | string;
   traceState?: null | string;
 };
 
@@ -36,7 +49,7 @@ export type OpenTelemetryResource = {
 export type OpenTelemetryResourceSpan = {
   resource?: null | OpenTelemetryResource;
   schemaUrl?: null | string;
-  scopeSpans: OpenTelemetryScopeSpan[];
+  scopeSpans?: null | OpenTelemetryScopeSpan[];
 };
 
 export type OpenTelemetryScope = {
@@ -47,7 +60,7 @@ export type OpenTelemetryScope = {
 export type OpenTelemetryScopeSpan = {
   schemaUrl?: null | string;
   scope?: null | OpenTelemetryScope;
-  spans: OpenTelemetrySpan[];
+  spans?: null | OpenTelemetrySpan[];
 };
 
 export type OpenTelemetrySpan = {
@@ -55,16 +68,16 @@ export type OpenTelemetrySpan = {
   droppedAttributesCount?: null | number;
   droppedEventsCount?: null | number;
   droppedLinksCount?: null | number;
-  endTimeUnixNano: OpenTelemetryUnixNano;
+  endTimeUnixNano?: null | OpenTelemetryUnixNano;
   events?: null | OpenTelemetryEvent[];
   flags?: null | number;
   kind?: null | number | OpenTelemetrySpanKind;
   links?: null | OpenTelemetryLink[];
-  name: string;
+  name?: null | string;
   parentSpanId?: null | string;
 
   spanId: string;
-  startTimeUnixNano: OpenTelemetryUnixNano;
+  startTimeUnixNano?: null | OpenTelemetryUnixNano;
   status?: null | OpenTelemetryStatus;
   traceId: string;
   traceState?: null | string;

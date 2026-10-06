@@ -1,5 +1,7 @@
 import type {
   DeepReadonly,
+  OpenTelemetryAnyValue,
+  OpenTelemetryAttribute,
   TraceSpanAttribute,
   TraceSpanAttributeValue,
 } from "@evilmartians/agent-prism-types";
@@ -9,7 +11,10 @@ import {
   isArrayOf,
   isBoolean,
   isFiniteNumber,
+  isNumber,
+  isOneOf,
   isOptional,
+  isOptionalNullable,
   isPlainRecord,
   isString,
 } from "./guards.js";
@@ -20,46 +25,60 @@ const isIntValue = (value: unknown): value is number | string =>
   (isString(value) && value.trim() !== "" && Number.isFinite(Number(value))) ||
   (isFiniteNumber(value) && Number.isInteger(value));
 
-export function isAttributeValue(
+const isNonFiniteDouble = isOneOf({
+  "-Infinity": true,
+  Infinity: true,
+  NaN: true,
+});
+
+const isDoubleValue = (
   value: unknown,
-): value is TraceSpanAttributeValue {
-  return hasShape<TraceSpanAttributeValue>({
-    arrayValue: isOptional(isArrayValue),
+): value is "-Infinity" | "Infinity" | "NaN" | number =>
+  isNumber(value) || isNonFiniteDouble(value);
+
+/**
+ * Checks an attribute in OTLP/JSON form, where any field may be omitted or
+ * `null` when it holds its default value.
+ */
+export function isOpenTelemetryAttribute(
+  value: unknown,
+): value is OpenTelemetryAttribute {
+  return hasShape<OpenTelemetryAttribute>({
+    key: isOptionalNullable(isString),
+    value: isOptionalNullable(isAnyValue),
+  })(value);
+}
+
+function isAnyValue(value: unknown): value is OpenTelemetryAnyValue {
+  return hasShape<OpenTelemetryAnyValue>({
+    arrayValue: isOptional(
+      hasShape<NonNullable<OpenTelemetryAnyValue["arrayValue"]>>({
+        values: isOptionalNullable(isArrayOf(isAnyValue)),
+      }),
+    ),
     boolValue: isOptional(isBoolean),
     bytesValue: isOptional(isString),
-    doubleValue: isOptional(isFiniteNumber),
+    doubleValue: isOptional(isDoubleValue),
     intValue: isOptional(isIntValue),
-    kvlistValue: isOptional(isKvlistValue),
+    kvlistValue: isOptional(
+      hasShape<NonNullable<OpenTelemetryAnyValue["kvlistValue"]>>({
+        values: isOptionalNullable(isArrayOf(isOpenTelemetryAttribute)),
+      }),
+    ),
     stringValue: isOptional(isString),
   })(value);
-}
-
-function isArrayValue(
-  value: unknown,
-): value is { values: TraceSpanAttributeValue[] } {
-  return isPlainRecord(value) && isArrayOf(isAttributeValue)(value["values"]);
-}
-
-/** Strict check: the value is an attribute and nothing in it is malformed. */
-function isAttribute(value: unknown): value is TraceSpanAttribute {
-  return hasShape<TraceSpanAttribute>({
-    key: isString,
-    value: isAttributeValue,
-  })(value);
-}
-
-function isKvlistValue(
-  value: unknown,
-): value is { values: TraceSpanAttribute[] } {
-  return isPlainRecord(value) && isArrayOf(isAttribute)(value["values"]);
 }
 
 const reviveValues = <T>(
   value: unknown,
   revive: (item: unknown) => T[],
 ): undefined | { values: T[] } =>
-  isPlainRecord(value) && Array.isArray(value["values"])
-    ? { values: value["values"].flatMap(revive) }
+  isPlainRecord(value)
+    ? {
+        values: Array.isArray(value["values"])
+          ? value["values"].flatMap(revive)
+          : [],
+      }
     : undefined;
 
 const reviveValueEntry = (item: unknown): TraceSpanAttributeValue[] => {
@@ -67,16 +86,24 @@ const reviveValueEntry = (item: unknown): TraceSpanAttributeValue[] => {
   return revived ? [revived] : [];
 };
 
-/** Rebuilds an attribute from untrusted JSON; a malformed one is dropped. */
+/**
+ * Rebuilds an attribute from untrusted JSON; a malformed one is dropped. A
+ * missing key is the empty key OTLP/JSON omits.
+ */
 export function reviveAttribute(item: unknown): TraceSpanAttribute[] {
-  if (!isPlainRecord(item) || !isString(item["key"])) return [];
+  if (!isPlainRecord(item)) return [];
 
+  const key = item["key"] ?? "";
   const value = reviveAttributeValue(item["value"]);
 
-  return value ? [{ key: item["key"], value }] : [];
+  return isString(key) && value ? [{ key, value }] : [];
 }
 
-function reviveAttributeValue(
+/**
+ * Rebuilds an attribute value from untrusted JSON, OTLP/JSON forms included,
+ * keeping only the well-formed fields.
+ */
+export function reviveAttributeValue(
   value: unknown,
 ): TraceSpanAttributeValue | undefined {
   if (!isPlainRecord(value)) return undefined;
@@ -95,7 +122,7 @@ function reviveAttributeValue(
     ...(arrayValue ? { arrayValue } : {}),
     ...(isBoolean(boolValue) ? { boolValue } : {}),
     ...(isString(bytesValue) ? { bytesValue } : {}),
-    ...(isFiniteNumber(doubleValue) ? { doubleValue } : {}),
+    ...(isDoubleValue(doubleValue) ? { doubleValue: Number(doubleValue) } : {}),
     ...(isIntValue(intValue) ? { intValue } : {}),
     ...(kvlistValue ? { kvlistValue } : {}),
     ...(isString(stringValue) ? { stringValue } : {}),
@@ -128,7 +155,10 @@ export const toPlainAttributeValue = (
   if (value.stringValue !== undefined) return value.stringValue;
   if (value.boolValue !== undefined) return value.boolValue;
   if (value.doubleValue !== undefined) return value.doubleValue;
-  if (value.intValue !== undefined) return Number(value.intValue);
+  if (value.intValue !== undefined) {
+    const number = Number(value.intValue);
+    return Number.isSafeInteger(number) ? number : value.intValue;
+  }
   if (value.bytesValue !== undefined) return value.bytesValue;
   if (value.arrayValue !== undefined) {
     return value.arrayValue.values.map(toPlainAttributeValue);

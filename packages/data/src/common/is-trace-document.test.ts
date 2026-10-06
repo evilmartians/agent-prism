@@ -91,6 +91,10 @@ describe("isOpenTelemetryDocument", () => {
       },
     ],
     [
+      "a resource without scope spans and a scope without spans",
+      { resourceSpans: [{}, { scopeSpans: [{}] }] },
+    ],
+    [
       "a null resource and a null scope",
       {
         resourceSpans: [
@@ -113,6 +117,37 @@ describe("isOpenTelemetryDocument", () => {
     [
       "an attribute with a null value",
       { attributes: [{ key: "k", value: null }] },
+    ],
+    [
+      "empty lists, which OTLP/JSON writes without values",
+      {
+        attributes: [
+          { key: "tags", value: { arrayValue: {} } },
+          { key: "extra", value: { kvlistValue: {} } },
+        ],
+      },
+    ],
+    [
+      "no name and no times, which OTLP/JSON omits when empty or 0",
+      {
+        endTimeUnixNano: undefined,
+        name: undefined,
+        startTimeUnixNano: undefined,
+      },
+    ],
+    [
+      "an attribute, an event and a link with every field omitted",
+      { attributes: [{}], events: [{}], links: [{}] },
+    ],
+    [
+      "doubles OTLP/JSON writes as strings",
+      {
+        attributes: [
+          { key: "nan", value: { doubleValue: "NaN" } },
+          { key: "inf", value: { doubleValue: "Infinity" } },
+          { key: "-inf", value: { doubleValue: "-Infinity" } },
+        ],
+      },
     ],
     ["a null parentSpanId", { parentSpanId: null }],
     ["null events", { events: null }],
@@ -167,8 +202,8 @@ describe("isOpenTelemetryDocument", () => {
         ],
       },
     ],
-    ["an event without a name", { events: [{ timeUnixNano: "1" }] }],
-    ["a link without a spanId", { links: [{ traceId: "other-trace" }] }],
+    ["an event with a numeric name", { events: [{ name: 1 }] }],
+    ["a link with a numeric spanId", { links: [{ spanId: 1 }] }],
   ])("rejects a span with %s", (_label, spanOverride) => {
     expect(isOpenTelemetryDocument(otelDocument(spanOverride))).toBe(false);
   });

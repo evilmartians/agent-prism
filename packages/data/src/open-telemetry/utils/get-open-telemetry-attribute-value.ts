@@ -3,15 +3,20 @@ import type {
   OpenTelemetrySpan,
 } from "@evilmartians/agent-prism-types";
 
-import { getAttributeNumber } from "../../common/attribute-value.js";
+import {
+  getAttributeNumber,
+  reviveAttributeValue,
+} from "../../common/attribute-value.js";
 
 export function getOpenTelemetryAttributeValue(
   span: DeepReadonly<Pick<OpenTelemetrySpan, "attributes">>,
   key: string,
 ): boolean | number | string | undefined {
-  const value = span.attributes?.find((a) => a.key === key)?.value;
+  const value = reviveAttributeValue(
+    span.attributes?.find((a) => a.key === key)?.value,
+  );
 
-  if (value === undefined || value === null) {
+  if (value === undefined) {
     return undefined;
   }
 
