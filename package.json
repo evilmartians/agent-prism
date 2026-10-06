@@ -14,12 +14,14 @@
     "format:check": "pnpm exec prettier . --check",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
+    "lint:packages": "pnpm --filter './packages/{types,data}' exec publint && pnpm --filter './packages/{types,data}' exec attw --pack --profile esm-only",
     "tsc": "pnpm run --parallel tsc",
     "test": "pnpm run --parallel test",
     "theme:generate": "pnpm --filter @evilmartians/agent-prism-ui generate-theme-files",
     "dist:rm": "pnpm -r exec rm -rf dist out"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@eslint/js": "^9.31.0",
     "eslint": "^9.31.0",
     "eslint-plugin-perfectionist": "^4.15.0",
@@ -28,6 +30,7 @@
     "globals": "^16.3.0",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "publint": "^0.3.25",
     "typescript-eslint": "^8.38.0"
   },
   "dependencies": {

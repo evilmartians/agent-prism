@@ -15,7 +15,7 @@ import {
   type TraceSpanStatus,
 } from "@evilmartians/agent-prism-types";
 
-import type { SpanAdapter } from "../types";
+import type { SpanAdapter } from "../types.js";
 
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { categorizeOpenInference } from "./utils/categorize-open-inference.js";

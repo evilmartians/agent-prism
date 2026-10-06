@@ -1,4 +1,4 @@
-import type { TraceSpanAttribute } from ".";
+import type { TraceSpanAttribute } from "./index.js";
 
 export type OpenTelemetryDocument = {
   resourceSpans: OpenTelemetryResourceSpan[];

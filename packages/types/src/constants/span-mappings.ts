@@ -1,4 +1,4 @@
-import type { TraceSpanCategory } from "../types";
+import type { TraceSpanCategory } from "../types/index.js";
 
 // OpenTelemetry GenAI attribute constants
 export const OPENTELEMETRY_GENAI_ATTRIBUTES = {

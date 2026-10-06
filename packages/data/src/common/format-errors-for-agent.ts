@@ -1,4 +1,4 @@
-import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error";
+import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error.js";
 
 /**
  * Formats a single span error as Markdown suitable for pasting into an AI

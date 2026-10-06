@@ -82,6 +82,9 @@ jobs:
       - name: Run build
         run: pnpm build
 
+      - name: Check published packages
+        run: pnpm lint:packages
+
   main:
     if: always()
     needs: [lint, typecheck, test, build]
