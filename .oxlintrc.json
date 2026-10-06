@@ -20,13 +20,24 @@
     "eslint-plugin-tailwindcss",
     "eslint-plugin-react-you-might-not-need-an-effect",
     "eslint-plugin-sonarjs",
+    "eslint-plugin-boundaries",
     { "name": "react-js", "specifier": "eslint-plugin-react" }
   ],
   "settings": {
     "tailwindcss": {
       "config": "packages/ui/tailwind.config.ts",
       "callees": ["cn", "classNames", "clsx"]
-    }
+    },
+    "boundaries/elements": [
+      { "type": "types", "pattern": "packages/types", "partialMatch": true },
+      { "type": "data", "pattern": "packages/data", "partialMatch": true },
+      { "type": "ui", "pattern": "packages/ui", "partialMatch": true },
+      {
+        "type": "app",
+        "pattern": "packages/(demo-app|storybook|saas)",
+        "partialMatch": true
+      }
+    ]
   },
   "rules": {
     "constructor-super": "error",
@@ -132,6 +143,64 @@
     "import/no-self-import": "error",
     "import/no-default-export": "error",
     "oxc/no-barrel-file": ["error", { "threshold": 0 }],
+    "boundaries/dependencies": [
+      "error",
+      {
+        "default": "allow",
+        "checkAllOrigins": true,
+        "policies": [
+          {
+            "from": { "element": { "types": { "anyOf": ["types", "data"] } } },
+            "disallow": {
+              "to": { "element": { "types": { "anyOf": ["ui", "app"] } } }
+            },
+            "message": "types and data are framework-free npm packages: they must not import ui or an app."
+          },
+          {
+            "from": { "element": { "types": { "anyOf": ["types", "data"] } } },
+            "disallow": {
+              "to": {
+                "module": {
+                  "source": [
+                    "@evilmartians/agent-prism-ui",
+                    "@evilmartians/agent-prism-ui/*"
+                  ]
+                }
+              }
+            },
+            "message": "types and data are framework-free npm packages: they must not import ui or an app."
+          },
+          {
+            "from": { "element": { "types": { "anyOf": ["types", "data"] } } },
+            "disallow": {
+              "to": {
+                "module": {
+                  "source": ["react", "react-dom", "react/*", "react-dom/*"]
+                }
+              }
+            },
+            "message": "types and data are framework-free npm packages: they must not import React."
+          },
+          {
+            "from": { "element": { "type": "types" } },
+            "disallow": [
+              { "to": { "element": { "type": "data" } } },
+              {
+                "to": {
+                  "module": { "source": ["@evilmartians/agent-prism-data"] }
+                }
+              }
+            ],
+            "message": "types is the bottom layer: data depends on types, never the other way."
+          },
+          {
+            "from": { "element": { "type": "ui" } },
+            "disallow": { "to": { "element": { "type": "app" } } },
+            "message": "ui is copied into other projects: it must not import demo-app, storybook or saas."
+          }
+        ]
+      }
+    ],
     "react/display-name": "error",
     "react/jsx-key": "error",
     "react/jsx-no-comment-textnodes": "error",
