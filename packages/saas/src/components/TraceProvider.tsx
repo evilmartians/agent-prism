@@ -2,7 +2,7 @@
 
 import type { FC, ReactNode } from "react";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import type { TraceState } from "@/context/TraceContext";
 
@@ -11,38 +11,28 @@ import { extractSpans } from "@/services/extract-spans";
 
 import testData from "../data/test.json";
 
+const toTraceState = (data: object): TraceState => {
+  try {
+    const spans = extractSpans(data);
+
+    if (spans.length === 0) {
+      throw new Error("No spans found");
+    }
+
+    return { spans, isLoading: false, error: null };
+  } catch (error) {
+    return {
+      spans: [],
+      isLoading: false,
+      error: error instanceof Error ? error.message : "Failed to load",
+    };
+  }
+};
+
 export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [traceState, setTraceState] = useState<TraceState>({
-    spans: [],
-    isLoading: false,
-    error: null,
-  });
-
-  const loadSpans = async (data: object) => {
-    setTraceState((prev) => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      const spans = extractSpans(data);
-
-      if (spans.length === 0) {
-        throw new Error("No spans found");
-      }
-
-      setTraceState({ spans, isLoading: false, error: null });
-    } catch (error) {
-      setTraceState({
-        spans: [],
-        isLoading: false,
-        error: error instanceof Error ? error.message : "Failed to load",
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (typeof testData === "object" && testData !== null) {
-      loadSpans(testData);
-    }
-  }, []);
+  const [traceState, setTraceState] = useState<TraceState>(() =>
+    toTraceState(testData),
+  );
 
   const uploadTraces = async (files: FileList) => {
     const file = files[0];
@@ -57,7 +47,7 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
       throw new Error("Invalid JSON: expected an object");
     }
 
-    await loadSpans(jsonData);
+    setTraceState(toTraceState(jsonData));
   };
 
   const clearTraces = () =>

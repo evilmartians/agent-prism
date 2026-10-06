@@ -11,7 +11,7 @@ import {
   useIsMounted,
   type TraceRecordWithDisplayData,
 } from "@evilmartians/agent-prism-ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import type { SimpleTraceViewerLayoutProps } from "@/types";
 
@@ -36,19 +36,17 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
     return flattenSpans(spans).map((span) => span.id);
   }, [spans]);
 
-  const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>([]);
+  const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>(allIds);
+  const [expandedSourceIds, setExpandedSourceIds] = useState(allIds);
 
-  useEffect(() => {
+  if (expandedSourceIds !== allIds) {
+    setExpandedSourceIds(allIds);
     setExpandedSpansIds(allIds);
-  }, [allIds]);
+  }
 
-  useEffect(() => {
-    if (!isMounted || isMobile) return;
-
-    if (spans.length > 0 && !selectedSpan) {
-      setSelectedSpan(spans[0]);
-    }
-  }, [spans, selectedSpan, isMobile, isMounted]);
+  if (isMounted && !isMobile && !selectedSpan && spans[0]) {
+    setSelectedSpan(spans[0]);
+  }
 
   const handleExpandAll = useCallback(() => {
     setExpandedSpansIds(allIds);

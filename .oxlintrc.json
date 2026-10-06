@@ -18,6 +18,7 @@
   "jsPlugins": [
     "eslint-plugin-perfectionist",
     "eslint-plugin-tailwindcss",
+    "eslint-plugin-react-you-might-not-need-an-effect",
     { "name": "react-js", "specifier": "eslint-plugin-react" }
   ],
   "settings": {
@@ -147,6 +148,15 @@
     "react/button-has-type": "error",
     "react/no-multi-comp": "error",
     "react-js/jsx-no-leaked-render": "error",
+    "react-you-might-not-need-an-effect/no-empty-effect": "error",
+    "react-you-might-not-need-an-effect/no-adjust-state-on-prop-change": "error",
+    "react-you-might-not-need-an-effect/no-reset-all-state-on-prop-change": "error",
+    "react-you-might-not-need-an-effect/no-event-handler": "error",
+    "react-you-might-not-need-an-effect/no-pass-live-state-to-parent": "error",
+    "react-you-might-not-need-an-effect/no-pass-data-to-parent": "error",
+    "react-you-might-not-need-an-effect/no-initialize-state": "error",
+    "react-you-might-not-need-an-effect/no-chain-state-updates": "error",
+    "react-you-might-not-need-an-effect/no-derived-state": "error",
     "tailwindcss/classnames-order": "off",
     "tailwindcss/enforces-negative-arbitrary-values": "error",
     "tailwindcss/enforces-shorthand": "error",
@@ -186,6 +196,15 @@
           "error",
           { "allowConstantExport": true, "allowExportNames": ["metadata"] }
         ]
+      }
+    },
+    {
+      "files": ["packages/ui/src/components/DetailsView/DetailsView.tsx"],
+      "rules": {
+        "react-you-might-not-need-an-effect/no-chain-state-updates": "off",
+        "react-you-might-not-need-an-effect/no-derived-state": "off",
+        "react-you-might-not-need-an-effect/no-event-handler": "off",
+        "react-you-might-not-need-an-effect/no-pass-data-to-parent": "off"
       }
     }
   ]

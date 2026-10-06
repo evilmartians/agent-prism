@@ -5,7 +5,7 @@ import {
   filterSpansRecursively,
   flattenSpans,
 } from "@evilmartians/agent-prism-data";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { type BadgeProps } from "../Badge";
 import { useIsMobile, useIsMounted } from "../shared";
@@ -71,18 +71,16 @@ export const TraceViewer = ({
   }, [selectedTraceSpans]);
 
   const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>(allIds);
+  const [expandedSourceIds, setExpandedSourceIds] = useState(allIds);
 
-  useEffect(() => {
+  if (expandedSourceIds !== allIds) {
+    setExpandedSourceIds(allIds);
     setExpandedSpansIds(allIds);
-  }, [allIds]);
+  }
 
-  useEffect(() => {
-    if (!isMounted || isMobile) return;
-
-    if (selectedTraceSpans.length > 0 && !selectedSpan) {
-      setSelectedSpan(selectedTraceSpans[0]);
-    }
-  }, [selectedTraceSpans, isMobile, isMounted, selectedSpan]);
+  if (isMounted && !isMobile && !selectedSpan && selectedTraceSpans[0]) {
+    setSelectedSpan(selectedTraceSpans[0]);
+  }
 
   const handleExpandAll = useCallback(() => {
     setExpandedSpansIds(allIds);

@@ -14,7 +14,7 @@ import {
   CircleDot,
   ShieldCheck,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 // TYPES
 
@@ -136,35 +136,33 @@ export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
   return SPAN_CATEGORY_CONFIG[category].icon;
 }
 
-export const useIsMounted = (): boolean => {
-  const [isMounted, setIsMounted] = useState(false);
+const MOBILE_MEDIA_QUERY = "(max-width: 1023px)";
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+const subscribeToNothing = (): (() => void) => () => undefined;
 
-  return isMounted;
+const subscribeToMobileMediaQuery = (onChange: () => void): (() => void) => {
+  const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
+
+  mediaQuery.addEventListener("change", onChange);
+
+  return () => mediaQuery.removeEventListener("change", onChange);
 };
+
+export const useIsMounted = (): boolean =>
+  useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
 
 export const useIsMobile = (): boolean => {
   const isMounted = useIsMounted();
 
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    // TODO: replace with something more beautiful and correct (tailwind screens?)
-    const mediaQuery = window.matchMedia("(max-width: 1023px)");
-
-    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      setIsMobile(e.matches);
-    };
-
-    handleChange(mediaQuery);
-
-    mediaQuery.addEventListener("change", handleChange);
-
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+  const isMobile = useSyncExternalStore(
+    subscribeToMobileMediaQuery,
+    () => window.matchMedia(MOBILE_MEDIA_QUERY).matches,
+    () => false,
+  );
 
   return isMounted ? isMobile : false;
 };

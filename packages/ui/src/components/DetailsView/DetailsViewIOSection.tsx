@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type { TabItem } from "../Tabs";
 
@@ -26,11 +26,9 @@ export const DetailsViewIOSection = ({
     parsedContent ? "json" : "plain",
   );
 
-  useEffect(() => {
-    if (tab === "json" && !parsedContent) {
-      setTab("plain");
-    }
-  }, [tab, parsedContent]);
+  if (tab === "json" && !parsedContent) {
+    setTab("plain");
+  }
 
   const tabItems: TabItem<DetailsViewContentViewMode>[] = [
     { value: "json", label: "JSON", disabled: !parsedContent },
