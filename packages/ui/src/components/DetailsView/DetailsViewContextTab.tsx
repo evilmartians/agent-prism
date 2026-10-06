@@ -11,6 +11,7 @@ import {
   hasReportedCost,
 } from "@evilmartians/agent-prism-data";
 
+import { DetailsViewContextWindowBar } from "./DetailsViewContextWindowBar";
 import { DetailsViewStatGrid, type StatRowData } from "./DetailsViewStatGrid";
 
 type DetailsViewContextTabProps = {
@@ -71,6 +72,56 @@ const TOKEN_TYPE_LABELS: Record<string, string> = {
   cache_write: "Cache write",
 };
 
+const clampPercent = (value: number): number =>
+  Math.min(Math.max(value, 0), 100);
+
+const getBarFill = (
+  cappedFill: number | undefined,
+  cumulativeTokens: number | undefined,
+  limit: number | undefined,
+): number | undefined => {
+  if (cappedFill !== undefined) return cappedFill;
+  if (cumulativeTokens === undefined || limit === undefined) return undefined;
+
+  return clampPercent((cumulativeTokens / limit) * 100);
+};
+
+const getContextRows = ({
+  cumulativeTokens,
+  limit,
+  cappedFill,
+  cacheHitRatio,
+}: {
+  cumulativeTokens: number | undefined;
+  limit: number | undefined;
+  cappedFill: number | undefined;
+  cacheHitRatio: number | undefined;
+}): StatRowData[] => {
+  const contextRows: StatRowData[] = [];
+  if (cumulativeTokens !== undefined) {
+    contextRows.push({
+      label: "Cumulative tokens",
+      value: formatTokens(cumulativeTokens),
+      sub: limit !== undefined ? `of ${formatTokens(limit)}` : undefined,
+    });
+  }
+  if (cappedFill !== undefined) {
+    contextRows.push({
+      label: "Context fill",
+      value: `${cappedFill.toFixed(1)}%`,
+    });
+  }
+  if (cacheHitRatio !== undefined) {
+    contextRows.push({
+      label: "Cache hit ratio",
+      value: `${(cacheHitRatio * 100).toFixed(0)}%`,
+      sub: cacheHitRatio > 0.9 ? "mostly cached" : undefined,
+    });
+  }
+
+  return contextRows;
+};
+
 export function DetailsViewContextTab({
   data,
 }: DetailsViewContextTabProps): ReactElement {
@@ -111,40 +162,19 @@ export function DetailsViewContextTab({
   }
 
   const cappedFill =
-    fillPercent !== undefined
-      ? Math.min(Math.max(fillPercent, 0), 100)
-      : undefined;
+    fillPercent !== undefined ? clampPercent(fillPercent) : undefined;
   // Context windows differ by model, so only a reported, positive limit is used.
   // Without one, the limit stays unknown rather than defaulting to a guess.
   const limit =
     contextLimit !== undefined && contextLimit > 0 ? contextLimit : undefined;
-  const barFill =
-    cappedFill ??
-    (cumulativeTokens !== undefined && limit !== undefined
-      ? Math.min(Math.max((cumulativeTokens / limit) * 100, 0), 100)
-      : undefined);
+  const barFill = getBarFill(cappedFill, cumulativeTokens, limit);
 
-  const contextRows: StatRowData[] = [];
-  if (cumulativeTokens !== undefined) {
-    contextRows.push({
-      label: "Cumulative tokens",
-      value: formatTokens(cumulativeTokens),
-      sub: limit !== undefined ? `of ${formatTokens(limit)}` : undefined,
-    });
-  }
-  if (cappedFill !== undefined) {
-    contextRows.push({
-      label: "Context fill",
-      value: `${cappedFill.toFixed(1)}%`,
-    });
-  }
-  if (cacheHitRatio !== undefined) {
-    contextRows.push({
-      label: "Cache hit ratio",
-      value: `${(cacheHitRatio * 100).toFixed(0)}%`,
-      sub: cacheHitRatio > 0.9 ? "mostly cached" : undefined,
-    });
-  }
+  const contextRows = getContextRows({
+    cumulativeTokens,
+    limit,
+    cappedFill,
+    cacheHitRatio,
+  });
 
   // The `total` entry holds whatever the source did not break down by type, so
   // it has no row of its own: it is already part of the Total row.
@@ -184,34 +214,11 @@ export function DetailsViewContextTab({
             Context Window Position
           </h4>
 
-          {barFill !== undefined && (
-            <>
-              <div
-                role="progressbar"
-                aria-label="Context window fill"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Number(barFill.toFixed(1))}
-                aria-valuetext={`${barFill.toFixed(1)}%`}
-                className="bg-agentprism-secondary relative h-4 overflow-hidden rounded-md"
-              >
-                <div
-                  className="bg-agentprism-context-source-conversation absolute left-0 top-0 h-full transition-all"
-                  style={{ width: `${barFill}%` }}
-                />
-                <div
-                  className="bg-agentprism-warning absolute top-0 h-full w-px"
-                  style={{ left: "78%" }}
-                  title="Compaction threshold"
-                />
-              </div>
-              {limit !== undefined && (
-                <div className="text-agentprism-muted-foreground mt-1 flex justify-between text-[10px]">
-                  <span>0</span>
-                  <span>{formatTokens(limit)}</span>
-                </div>
-              )}
-            </>
+          {barFill === undefined ? null : (
+            <DetailsViewContextWindowBar
+              fill={barFill}
+              limitLabel={limit === undefined ? undefined : formatTokens(limit)}
+            />
           )}
 
           <div className="mt-2">

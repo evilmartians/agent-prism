@@ -13,8 +13,8 @@ import type { AvatarProps } from "../Avatar";
 import type { SpanCardConnectorType } from "./SpanCardConnector";
 
 import { Avatar } from "../Avatar";
-import { BrandLogo } from "../BrandLogo";
 import { SpanStatus } from "../SpanStatus";
+import { getSpanBrandAvatar } from "./getSpanBrandAvatar";
 import { SpanCardBadges } from "./SpanCardBadges";
 import { SpanCardConnector } from "./SpanCardConnector";
 import { SpanCardTimeline } from "./SpanCardTimeline";
@@ -203,6 +203,72 @@ const useSpanCardEventHandlers = (
   };
 };
 
+const getSpanCardLayout = ({
+  level,
+  hasChildren,
+  isLastChild,
+  prevConnectors,
+  expandButton,
+}: {
+  level: number;
+  hasChildren: boolean;
+  isLastChild: boolean;
+  prevConnectors: SpanCardConnectorType[];
+  expandButton: ExpandButtonPlacement;
+}) => {
+  const hasExpandButtonAsFirstChild = expandButton === "inside" && hasChildren;
+
+  const contentPadding = getContentPadding({
+    level,
+    hasExpandButton: hasExpandButtonAsFirstChild,
+  });
+
+  const contentWidth = getContentWidth({
+    level,
+    hasExpandButton: hasExpandButtonAsFirstChild,
+    contentPadding,
+    expandButton,
+  });
+
+  const { connectors, connectorsColumnWidth } = getConnectorsLayout({
+    level,
+    hasExpandButton: hasExpandButtonAsFirstChild,
+    isLastChild,
+    prevConnectors,
+    expandButton,
+  });
+
+  const gridTemplateColumns = getGridTemplateColumns({
+    connectorsColumnWidth,
+    expandButton,
+  });
+
+  return {
+    hasExpandButtonAsFirstChild,
+    contentWidth,
+    connectors,
+    gridTemplateColumns,
+  };
+};
+
+const getAriaSelected = (
+  isSelected: boolean,
+  hasSelection: boolean,
+): boolean | undefined => {
+  if (isSelected) return true;
+
+  return hasSelection ? false : undefined;
+};
+
+const getContentIndentClass = (
+  level: number,
+  hasExpandButtonAsFirstChild: boolean,
+): string | undefined => {
+  if (level === 0) return undefined;
+
+  return hasExpandButtonAsFirstChild ? "pl-1" : "pl-2";
+};
+
 export const SpanCard: FC<SpanCardProps> = ({
   data,
   level = 0,
@@ -252,39 +318,58 @@ export const SpanCard: FC<SpanCardProps> = ({
     maxEnd,
   });
 
-  const hasExpandButtonAsFirstChild =
-    expandButton === "inside" && state.hasChildren;
-
-  const contentPadding = getContentPadding({
+  const {
+    hasExpandButtonAsFirstChild,
+    contentWidth,
+    connectors,
+    gridTemplateColumns,
+  } = getSpanCardLayout({
     level,
-    hasExpandButton: hasExpandButtonAsFirstChild,
-  });
-
-  const contentWidth = getContentWidth({
-    level,
-    hasExpandButton: hasExpandButtonAsFirstChild,
-    contentPadding,
-    expandButton,
-  });
-
-  const { connectors, connectorsColumnWidth } = getConnectorsLayout({
-    level,
-    hasExpandButton: hasExpandButtonAsFirstChild,
+    hasChildren: state.hasChildren,
     isLastChild,
     prevConnectors: prevLevelConnectors,
     expandButton,
   });
 
-  const gridTemplateColumns = getGridTemplateColumns({
-    connectorsColumnWidth,
-    expandButton,
-  });
+  const ariaExpanded = state.hasChildren ? state.isExpanded : undefined;
+  const statusBadge = withStatus ? (
+    <div>
+      <SpanStatus status={data.status} />
+    </div>
+  ) : null;
+  const outsideToggle = state.hasChildren ? (
+    <SpanCardToggle
+      isExpanded={state.isExpanded}
+      title={data.title}
+      onToggleClick={eventHandlers.handleToggleClick}
+    />
+  ) : (
+    <div />
+  );
+
+  const childCards = (data.children ?? []).map((child, idx, siblings) => (
+    <SpanCard
+      viewOptions={viewOptions}
+      key={child.id}
+      data={child}
+      minStart={minStart}
+      maxEnd={maxEnd}
+      level={level + 1}
+      selectedSpan={selectedSpan}
+      onSpanSelect={onSpanSelect}
+      isLastChild={idx === siblings.length - 1}
+      prevLevelConnectors={connectors}
+      expandedSpansIds={expandedSpansIds}
+      onExpandSpansIdsChange={onExpandSpansIdsChange}
+      avatar={getSpanBrandAvatar(child)}
+    />
+  ));
 
   return (
     <li
       role="treeitem"
-      aria-selected={state.isSelected ? true : selectedSpan ? false : undefined}
-      aria-expanded={state.hasChildren ? state.isExpanded : undefined}
+      aria-selected={getAriaSelected(state.isSelected, Boolean(selectedSpan))}
+      aria-expanded={ariaExpanded}
       className="list-none"
     >
       <Collapsible.Root
@@ -311,7 +396,7 @@ export const SpanCard: FC<SpanCardProps> = ({
           role="button"
           aria-pressed={state.isSelected}
           aria-describedby={`span-card-desc-${data.id}`}
-          aria-expanded={state.hasChildren ? state.isExpanded : undefined}
+          aria-expanded={ariaExpanded}
           aria-label={`${state.isSelected ? "Selected" : "Not selected"} span card for ${data.title} at level ${level}`}
         >
           <div className="flex flex-nowrap">
@@ -337,8 +422,7 @@ export const SpanCard: FC<SpanCardProps> = ({
             className={cn(
               "flex flex-wrap items-start gap-x-2 gap-y-1",
               "mb-3 min-h-5 w-full cursor-pointer",
-              level !== 0 && !hasExpandButtonAsFirstChild && "pl-2",
-              level !== 0 && hasExpandButtonAsFirstChild && "pl-1",
+              getContentIndentClass(level, hasExpandButtonAsFirstChild),
             )}
           >
             <div
@@ -361,11 +445,7 @@ export const SpanCard: FC<SpanCardProps> = ({
             </div>
 
             <div className="flex grow flex-wrap items-center justify-end gap-1">
-              {expandButton === "outside" && withStatus ? (
-                <div>
-                  <SpanStatus status={data.status} />
-                </div>
-              ) : null}
+              {expandButton === "outside" ? statusBadge : null}
 
               <SpanCardTimeline
                 minStart={minStart}
@@ -378,64 +458,18 @@ export const SpanCard: FC<SpanCardProps> = ({
                   {formatDuration(durationMs)}
                 </span>
 
-                {expandButton === "inside" && withStatus ? (
-                  <div>
-                    <SpanStatus status={data.status} />
-                  </div>
-                ) : null}
+                {expandButton === "inside" ? statusBadge : null}
               </div>
             </div>
           </div>
 
-          {expandButton === "outside" &&
-            (state.hasChildren ? (
-              <SpanCardToggle
-                isExpanded={state.isExpanded}
-                title={data.title}
-                onToggleClick={eventHandlers.handleToggleClick}
-              />
-            ) : (
-              <div />
-            ))}
+          {expandButton === "outside" ? outsideToggle : null}
         </div>
 
-        {data.children?.length ? (
+        {childCards.length > 0 ? (
           <div className="relative">
             <Collapsible.Content>
-              <ul role="group">
-                {data.children.map((child, idx, siblings) => {
-                  const brand = child.metadata?.["brand"] as
-                    | { type: string }
-                    | undefined;
-
-                  return (
-                    <SpanCard
-                      viewOptions={viewOptions}
-                      key={child.id}
-                      data={child}
-                      minStart={minStart}
-                      maxEnd={maxEnd}
-                      level={level + 1}
-                      selectedSpan={selectedSpan}
-                      onSpanSelect={onSpanSelect}
-                      isLastChild={idx === siblings.length - 1}
-                      prevLevelConnectors={connectors}
-                      expandedSpansIds={expandedSpansIds}
-                      onExpandSpansIdsChange={onExpandSpansIdsChange}
-                      avatar={
-                        brand
-                          ? {
-                              children: <BrandLogo brand={brand.type} />,
-                              size: "4",
-                              rounded: "sm",
-                              category: child.type,
-                            }
-                          : undefined
-                      }
-                    />
-                  );
-                })}
-              </ul>
+              <ul role="group">{childCards}</ul>
             </Collapsible.Content>
           </div>
         ) : null}

@@ -50,7 +50,9 @@ const isSpanStatus = (value: unknown): value is TraceSpanStatus =>
 const isSpanCategory = (value: unknown): value is TraceSpanCategory =>
   typeof value === "string" && Object.hasOwn(SPAN_CATEGORIES, value);
 
-const isTimestamp = (value: unknown): value is string | number | Date =>
+type TimestampInput = string | number | Date;
+
+const isTimestamp = (value: unknown): value is TimestampInput =>
   (typeof value === "string" ||
     typeof value === "number" ||
     value instanceof Date) &&

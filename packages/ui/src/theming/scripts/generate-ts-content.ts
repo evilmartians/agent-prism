@@ -5,14 +5,6 @@ const tokenNames = agentPrismTheme.tokenGroups.flatMap((group) =>
 );
 
 export function generateTsContent(): string {
-  const lines: string[] = [];
-
-  lines.push("");
-  for (const tokenName of tokenNames) {
-    lines.push(`  "${tokenName}",`);
-  }
-  lines.push("] as const;");
-
   return `
     export const agentPrismPrefix = "${AGENT_PRISM_PREFIX}";
 

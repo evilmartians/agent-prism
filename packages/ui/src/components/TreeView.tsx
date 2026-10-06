@@ -6,7 +6,7 @@ import { type FC } from "react";
 
 import type { SpanCardViewOptions } from "./SpanCard/SpanCard";
 
-import { BrandLogo } from "./BrandLogo";
+import { getSpanBrandAvatar } from "./SpanCard/getSpanBrandAvatar";
 import { SpanCard } from "./SpanCard/SpanCard";
 
 type TreeViewProps = {
@@ -38,37 +38,22 @@ export const TreeView: FC<TreeViewProps> = ({
         role="tree"
         aria-label="Hierarchical card list"
       >
-        {spans.map((span, idx) => {
-          const brand = span.metadata?.["brand"] as
-            | { type: string }
-            | undefined;
-
-          return (
-            <SpanCard
-              key={span.id}
-              data={span}
-              level={0}
-              selectedSpan={selectedSpan}
-              onSpanSelect={onSpanSelect}
-              minStart={minStart}
-              maxEnd={maxEnd}
-              isLastChild={idx === spans.length - 1}
-              expandedSpansIds={expandedSpansIds}
-              onExpandSpansIdsChange={onExpandSpansIdsChange}
-              viewOptions={spanCardViewOptions}
-              avatar={
-                brand
-                  ? {
-                      children: <BrandLogo brand={brand.type} />,
-                      size: "4",
-                      rounded: "sm",
-                      category: span.type,
-                    }
-                  : undefined
-              }
-            />
-          );
-        })}
+        {spans.map((span, idx) => (
+          <SpanCard
+            key={span.id}
+            data={span}
+            level={0}
+            selectedSpan={selectedSpan}
+            onSpanSelect={onSpanSelect}
+            minStart={minStart}
+            maxEnd={maxEnd}
+            isLastChild={idx === spans.length - 1}
+            expandedSpansIds={expandedSpansIds}
+            onExpandSpansIdsChange={onExpandSpansIdsChange}
+            viewOptions={spanCardViewOptions}
+            avatar={getSpanBrandAvatar(span)}
+          />
+        ))}
       </ul>
     </div>
   );

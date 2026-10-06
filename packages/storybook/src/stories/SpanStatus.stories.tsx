@@ -58,7 +58,8 @@ export const Variant: Story = {
   },
 };
 
-export const Error: Story = {
+export const ErrorStatus: Story = {
+  name: "Error",
   args: {
     status: "error",
   },
