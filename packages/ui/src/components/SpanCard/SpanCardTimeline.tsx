@@ -7,6 +7,8 @@ import type { ReactElement } from "react";
 import { getTimelineData } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 type SpanCardTimelineProps = {
   className?: string | undefined;
   maxEnd: number;
@@ -33,7 +35,7 @@ export const SpanCardTimeline = ({
   maxEnd,
   minStart,
   spanCard,
-}: SpanCardTimelineProps): ReactElement => {
+}: ReadonlyProps<SpanCardTimelineProps>): ReactElement => {
   const { startPercent, widthPercent } = getTimelineData({
     maxEnd,
     minStart,

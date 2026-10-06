@@ -1,9 +1,10 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { findTimeRange, flattenSpans } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import { type FC } from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
 import type { SpanCardViewOptions } from "./SpanCard/SpanCard";
 
 import { getSpanBrandAvatar } from "./SpanCard/getSpanBrandAvatar";
@@ -12,14 +13,14 @@ import { SpanCard } from "./SpanCard/SpanCard";
 type TreeViewProps = {
   className?: string | undefined;
   expandedSpansIds: string[];
-  onExpandSpansIdsChange: (ids: string[]) => void;
-  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
+  onExpandSpansIdsChange: (ids: readonly string[]) => void;
+  onSpanSelect?: ((span: DeepReadonly<TraceSpan>) => void) | undefined;
   selectedSpan?: TraceSpan | undefined;
   spanCardViewOptions?: SpanCardViewOptions | undefined;
   spans: TraceSpan[];
 };
 
-export const TreeView: FC<TreeViewProps> = ({
+export const TreeView: FC<ReadonlyProps<TreeViewProps>> = ({
   className = "",
   expandedSpansIds,
   onExpandSpansIdsChange,

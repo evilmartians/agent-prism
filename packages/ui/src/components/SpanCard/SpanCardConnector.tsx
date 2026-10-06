@@ -13,7 +13,7 @@ type SpanCardConnectorProps = {
 
 export const SpanCardConnector = ({
   type,
-}: SpanCardConnectorProps): ReactElement => {
+}: Readonly<SpanCardConnectorProps>): ReactElement => {
   if (type === "empty") return <div className="w-5 shrink-0 grow" />;
 
   return (

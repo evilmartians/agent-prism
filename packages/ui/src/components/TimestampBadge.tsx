@@ -1,6 +1,7 @@
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import type { BadgeProps } from "./Badge";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 import { Badge } from "./Badge";
 
@@ -13,7 +14,7 @@ export const TimestampBadge = ({
   size,
   timestamp,
   ...rest
-}: TimestampBadgeProps): ReactElement => {
+}: ReadonlyProps<TimestampBadgeProps>): ReactElement => {
   return <Badge size={size} {...rest} label={formatTimestamp(timestamp)} />;
 };
 

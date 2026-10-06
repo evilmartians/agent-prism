@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { SpanCard, SpanCardSource } from "@evilmartians/agent-prism-ui";
@@ -102,7 +102,7 @@ export const Default: Story = {
     isLastChild: false,
     maxEnd: llmSpan.endTime.getTime(),
     minStart: llmSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -117,7 +117,7 @@ export const Level: Story = {
     level: 2,
     maxEnd: llmSpan.endTime.getTime(),
     minStart: llmSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -131,7 +131,7 @@ export const ExpandButton: Story = {
     isLastChild: false,
     maxEnd: llmSpan.endTime.getTime(),
     minStart: llmSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     viewOptions: {
       expandButton: "inside",
     },
@@ -151,7 +151,7 @@ export const Avatar: Story = {
     isLastChild: false,
     maxEnd: llmSpan.endTime.getTime(),
     minStart: llmSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -165,7 +165,7 @@ export const SelectedSpan: Story = {
     isLastChild: false,
     maxEnd: llmSpan.endTime.getTime(),
     minStart: llmSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     selectedSpan: llmSpan,
     viewOptions: {
       expandButton: "outside",
@@ -180,7 +180,7 @@ export const WithChildren: Story = {
     isLastChild: false,
     maxEnd: llmSpan.endTime.getTime(),
     minStart: llmSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -190,7 +190,7 @@ export const WithChildren: Story = {
 export const SelectsTheSpanThatWasActivated: Story = {
   args: {
     ...WithChildren.args,
-    onSpanSelect: fn<(span: TraceSpan) => void>(),
+    onSpanSelect: fn<(span: DeepReadonly<TraceSpan>) => void>(),
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

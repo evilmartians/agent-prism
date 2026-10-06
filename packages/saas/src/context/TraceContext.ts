@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { createContext } from "react";
 
@@ -6,14 +6,14 @@ export type TraceContextType = {
   clearError: () => void;
   clearTraces: () => void;
   traceState: TraceState;
-  uploadTraces: (files: FileList) => Promise<void>;
+  uploadTraces: (file: File) => Promise<void>;
 };
 
-export type TraceState = {
+export type TraceState = DeepReadonly<{
   error: null | string;
   isLoading: boolean;
   spans: TraceSpan[];
-};
+}>;
 
 export const TraceContext = createContext<TraceContextType | undefined>(
   undefined,

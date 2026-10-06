@@ -2,19 +2,20 @@ import type { TraceRecord } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
 import type { AvatarProps } from "../Avatar";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Avatar } from "../Avatar";
 import { Badge } from "../Badge";
 
 type TraceListItemHeaderProps = {
-  avatar?: AvatarProps | undefined;
+  avatar?: Omit<AvatarProps, "ref"> | undefined;
   trace: TraceRecord;
 };
 
 export const TraceListItemHeader = ({
   avatar,
   trace,
-}: TraceListItemHeaderProps): ReactElement => {
+}: ReadonlyProps<TraceListItemHeaderProps>): ReactElement => {
   return (
     <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2">
       <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">

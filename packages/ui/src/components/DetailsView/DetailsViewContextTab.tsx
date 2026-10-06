@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   TraceSpan,
   TraceSpanAttribute,
 } from "@evilmartians/agent-prism-types";
@@ -11,8 +12,12 @@ import {
   hasReportedCost,
 } from "@evilmartians/agent-prism-data";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewContextWindowBar } from "./DetailsViewContextWindowBar";
 import { DetailsViewStatGrid, type StatRowData } from "./DetailsViewStatGrid";
+
+type Attributes = DeepReadonly<TraceSpanAttribute[]> | undefined;
 
 type DetailsViewContextTabProps = {
   data: TraceSpan;
@@ -24,20 +29,14 @@ function formatTokens(tokens: number): string {
   return String(tokens);
 }
 
-function getFloatAttr(
-  attributes: TraceSpanAttribute[] | undefined,
-  key: string,
-): number | undefined {
+function getFloatAttr(attributes: Attributes, key: string): number | undefined {
   const attr = attributes?.find((a) => a.key === key);
   if (attr?.value.stringValue === undefined) return undefined;
   const v = Number.parseFloat(attr.value.stringValue);
   return Number.isNaN(v) ? undefined : v;
 }
 
-function getIntAttr(
-  attributes: TraceSpanAttribute[] | undefined,
-  key: string,
-): number | undefined {
+function getIntAttr(attributes: Attributes, key: string): number | undefined {
   const attr = attributes?.find((a) => a.key === key);
   if (attr?.value.intValue === undefined) return undefined;
   const v = Number.parseInt(attr.value.intValue, 10);
@@ -45,7 +44,7 @@ function getIntAttr(
 }
 
 function getStringAttr(
-  attributes: TraceSpanAttribute[] | undefined,
+  attributes: Attributes,
   key: string,
 ): string | undefined {
   const value = attributes?.find((a) => a.key === key)?.value.stringValue;
@@ -91,12 +90,12 @@ const getContextRows = ({
   cappedFill,
   cumulativeTokens,
   limit,
-}: {
+}: Readonly<{
   cacheHitRatio: number | undefined;
   cappedFill: number | undefined;
   cumulativeTokens: number | undefined;
   limit: number | undefined;
-}): StatRowData[] => {
+}>): StatRowData[] => {
   const contextRows: StatRowData[] = [];
   if (cumulativeTokens !== undefined) {
     contextRows.push({
@@ -134,7 +133,7 @@ const getContextRows = ({
  */
 export function DetailsViewContextTab({
   data,
-}: DetailsViewContextTabProps): ReactElement {
+}: ReadonlyProps<DetailsViewContextTabProps>): ReactElement {
   const cumulativeTokens = getIntAttr(
     data.attributes,
     "claude_code.cumulative_tokens",

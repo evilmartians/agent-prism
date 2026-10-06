@@ -13,7 +13,7 @@ export const SpanCardToggle = ({
   isExpanded,
   onToggleClick,
   title,
-}: SpanCardToggleProps): ReactElement => (
+}: Readonly<SpanCardToggleProps>): ReactElement => (
   <Collapsible.Trigger asChild>
     <button
       aria-expanded={isExpanded}

@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement, ReactNode } from "react";
 
 import {
@@ -12,6 +12,7 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Avatar } from "../Avatar";
 import { IconButton } from "../IconButton";
@@ -26,7 +27,7 @@ export type DetailsViewHeaderProps = {
    * Custom actions to render in the header
    */
   actions?: ReactNode | undefined;
-  avatar?: AvatarProps | undefined;
+  avatar?: Omit<AvatarProps, "ref"> | undefined;
   /**
    * Optional className for the header container
    */
@@ -35,7 +36,7 @@ export type DetailsViewHeaderProps = {
     | undefined
     | {
         isEnabled?: boolean | undefined;
-        onCopy?: ((data: TraceSpan) => void) | undefined;
+        onCopy?: ((data: DeepReadonly<TraceSpan>) => void) | undefined;
       };
   data: TraceSpan;
 };
@@ -46,7 +47,7 @@ export const DetailsViewHeader = ({
   className,
   copyButton,
   data,
-}: DetailsViewHeaderProps): ReactElement => {
+}: ReadonlyProps<DetailsViewHeaderProps>): ReactElement => {
   const [hasCopied, setHasCopied] = useState(false);
   const durationMs = getDurationMs(data);
 

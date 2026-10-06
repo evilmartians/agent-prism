@@ -5,9 +5,9 @@ import { CheckCircle2, Circle, CircleDot } from "lucide-react";
 
 export function DetailsViewTodoStatusIcon({
   status,
-}: {
+}: Readonly<{
   status: TraceTodoStatus;
-}): ReactElement {
+}>): ReactElement {
   switch (status) {
     case "completed":
       return (

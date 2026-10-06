@@ -9,6 +9,8 @@ import {
   useRef,
 } from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 export type TextInputProps = ComponentPropsWithRef<"input"> & {
   /**
    * Whether to visually hide the label while keeping it for screen readers
@@ -68,7 +70,7 @@ export const TextInput = ({
   ref,
   startIcon,
   ...rest
-}: TextInputProps): ReactElement => {
+}: ReadonlyProps<TextInputProps>): ReactElement => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

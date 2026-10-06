@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement, ReactNode } from "react";
 
 import {
@@ -16,6 +16,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
+import type { ReadonlyProps } from "../ReadonlyProps";
 import type { TabItem } from "../Tabs";
 import type { DetailsViewHeaderProps } from "./DetailsViewHeader";
 
@@ -38,7 +39,7 @@ export type DetailsViewProps = {
   /**
    * Optional avatar configuration for the header
    */
-  avatar?: AvatarProps | undefined;
+  avatar?: Omit<AvatarProps, "ref"> | undefined;
 
   /**
    * Optional className for the root container
@@ -54,7 +55,7 @@ export type DetailsViewProps = {
    * Optional custom header component to replace the default
    */
   customHeader?:
-    | ((props: { data: TraceSpan }) => ReactNode)
+    | ((props: Readonly<{ data: ReadonlySpan }>) => ReactNode)
     | ReactNode
     | undefined;
 
@@ -72,7 +73,7 @@ export type DetailsViewProps = {
    * Custom header actions to render
    * Can be a ReactNode or a render function that receives the data
    */
-  headerActions?: ((data: TraceSpan) => ReactNode) | ReactNode | undefined;
+  headerActions?: ((data: ReadonlySpan) => ReactNode) | ReactNode | undefined;
 
   /**
    * Callback fired when the active tab changes, including when the current tab
@@ -88,12 +89,14 @@ type DetailsViewTab =
   | "raw"
   | "thinking";
 
+type ReadonlySpan = DeepReadonly<TraceSpan>;
+
 /**
  * Tabs are content-aware. Thinking is offered for any span that reports
  * reasoning, whatever the vendor, even when only a reasoning-token count is
  * known.
  */
-const getTabItems = (data: TraceSpan): TabItem<DetailsViewTab>[] => [
+const getTabItems = (data: ReadonlySpan): TabItem<DetailsViewTab>[] => [
   {
     icon: <ArrowRightLeft className="size-4" />,
     label: "In/Out",
@@ -139,7 +142,7 @@ export const DetailsView = ({
   defaultTab = "input-output",
   headerActions,
   onTabChange,
-}: DetailsViewProps): ReactElement => {
+}: ReadonlyProps<DetailsViewProps>): ReactElement => {
   const [tab, setTab] = useState<DetailsViewTab>(defaultTab);
 
   const tabItems = useMemo(() => getTabItems(data), [data]);

@@ -1,18 +1,18 @@
 import type { TailwindColorToken } from "./tailwindColors";
 
 type Theme = {
-  tokenGroups: TokenGroup[];
+  readonly tokenGroups: readonly TokenGroup[];
 };
 
 type TokenGroup = {
-  title: string;
-  tokens: TokenValue[];
+  readonly title: string;
+  readonly tokens: readonly TokenValue[];
 };
 
 type TokenValue = {
-  dark: TailwindColorToken;
-  light: TailwindColorToken;
-  name: string;
+  readonly dark: TailwindColorToken;
+  readonly light: TailwindColorToken;
+  readonly name: string;
 };
 
 export const AGENT_PRISM_PREFIX = "agentprism";

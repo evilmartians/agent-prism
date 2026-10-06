@@ -4,6 +4,8 @@ import type { ReactElement } from "react";
 import { hasTodos, spanHasErrorSurface } from "@evilmartians/agent-prism-data";
 import { useMemo } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewErrorBlocks } from "./DetailsViewErrorBlocks";
 import { DetailsViewIOSection } from "./DetailsViewIOSection";
 import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
@@ -22,7 +24,7 @@ const STABLE_EMPTY_SPANS: TraceSpan[] = [];
 export const DetailsViewInputOutputTab = ({
   allSpans,
   data,
-}: DetailsViewInputOutputTabProps): ReactElement => {
+}: ReadonlyProps<DetailsViewInputOutputTabProps>): ReactElement => {
   const hasInput = Boolean(data.input);
   const hasOutput = Boolean(data.output);
 

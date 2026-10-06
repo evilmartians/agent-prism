@@ -52,6 +52,8 @@ export { default as IconButtonSource } from "./components/IconButton.tsx?raw";
 export { PriceBadge } from "./components/PriceBadge";
 export { default as PriceBadgeSource } from "./components/PriceBadge.tsx?raw";
 
+export type { ReadonlyProps } from "./components/ReadonlyProps";
+
 export { SearchInput } from "./components/SearchInput";
 export { default as SearchInputSource } from "./components/SearchInput.tsx?raw";
 

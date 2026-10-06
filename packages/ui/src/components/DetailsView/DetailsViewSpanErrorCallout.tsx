@@ -3,6 +3,8 @@ import type { ReactElement } from "react";
 
 import { collectSpanErrorEntry } from "@evilmartians/agent-prism-data";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewErrorEntryList } from "./DetailsViewErrorEntryList";
 
 type DetailsViewSpanErrorCalloutProps = {
@@ -14,7 +16,7 @@ type DetailsViewSpanErrorCalloutProps = {
  */
 export const DetailsViewSpanErrorCallout = ({
   span,
-}: DetailsViewSpanErrorCalloutProps): null | ReactElement => {
+}: ReadonlyProps<DetailsViewSpanErrorCalloutProps>): null | ReactElement => {
   const entry = collectSpanErrorEntry(span);
 
   if (!entry) return null;

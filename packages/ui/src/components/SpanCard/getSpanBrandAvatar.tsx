@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 import type { AvatarProps } from "../Avatar";
 
@@ -13,7 +13,7 @@ const readBrandType = (brand: unknown): string =>
     : "";
 
 export const getSpanBrandAvatar = (
-  span: TraceSpan,
+  span: DeepReadonly<Pick<TraceSpan, "metadata" | "type">>,
 ): AvatarProps | undefined => {
   const brand = span.metadata?.["brand"];
   const hasBrand = Boolean(brand);

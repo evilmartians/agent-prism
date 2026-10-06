@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 import type { FC, KeyboardEvent, MouseEvent } from "react";
 
 import {
@@ -10,6 +10,7 @@ import cn from "classnames";
 import { useCallback } from "react";
 
 import type { AvatarProps } from "../Avatar";
+import type { ReadonlyProps } from "../ReadonlyProps";
 import type { SpanCardConnectorType } from "./SpanCardConnector";
 
 import { Avatar } from "../Avatar";
@@ -32,21 +33,23 @@ export type SpanCardViewOptions = {
 
 type ExpandButtonPlacement = "inside" | "outside";
 
+type ReadonlySpan = DeepReadonly<TraceSpan>;
+
 const DEFAULT_VIEW_OPTIONS = {
   expandButton: "inside",
   withStatus: true,
 } satisfies Required<SpanCardViewOptions>;
 
 type SpanCardProps = {
-  avatar?: AvatarProps | undefined;
+  avatar?: Omit<AvatarProps, "ref"> | undefined;
   data: TraceSpan;
   expandedSpansIds: string[];
   isLastChild: boolean;
   level?: number | undefined;
   maxEnd: number;
   minStart: number;
-  onExpandSpansIdsChange: (ids: string[]) => void;
-  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
+  onExpandSpansIdsChange: (ids: readonly string[]) => void;
+  onSpanSelect?: ((span: ReadonlySpan) => void) | undefined;
   prevLevelConnectors?: SpanCardConnectorType[] | undefined;
   selectedSpan?: TraceSpan | undefined;
   viewOptions?: SpanCardViewOptions | undefined;
@@ -63,12 +66,12 @@ const getContentWidth = ({
   expandButton,
   hasExpandButton,
   level,
-}: {
+}: Readonly<{
   contentPadding: number;
   expandButton: ExpandButtonPlacement;
   hasExpandButton: boolean;
   level: number;
-}) => {
+}>) => {
   let width =
     LAYOUT_CONSTANTS.CONTENT_BASE_WIDTH -
     level * LAYOUT_CONSTANTS.CONNECTOR_WIDTH;
@@ -87,10 +90,10 @@ const getContentWidth = ({
 const getGridTemplateColumns = ({
   connectorsColumnWidth,
   expandButton,
-}: {
+}: Readonly<{
   connectorsColumnWidth: number;
   expandButton: ExpandButtonPlacement;
-}) => {
+}>) => {
   if (expandButton === "inside") {
     return `${connectorsColumnWidth}px 1fr`;
   }
@@ -101,10 +104,10 @@ const getGridTemplateColumns = ({
 const getContentPadding = ({
   hasExpandButton,
   level,
-}: {
+}: Readonly<{
   hasExpandButton: boolean;
   level: number;
-}) => {
+}>) => {
   if (level === 0) return 0;
 
   if (hasExpandButton) return 4;
@@ -118,13 +121,13 @@ const getConnectorsLayout = ({
   isLastChild,
   level,
   prevConnectors,
-}: {
+}: Readonly<{
   expandButton: ExpandButtonPlacement;
   hasExpandButton: boolean;
   isLastChild: boolean;
   level: number;
-  prevConnectors: SpanCardConnectorType[];
-}): {
+  prevConnectors: readonly SpanCardConnectorType[];
+}>): {
   connectors: SpanCardConnectorType[];
   connectorsColumnWidth: number;
 } => {
@@ -172,8 +175,8 @@ const getConnectorsLayout = ({
 };
 
 const useSpanCardEventHandlers = (
-  data: TraceSpan,
-  onSpanSelect?: (span: TraceSpan) => void,
+  data: ReadonlySpan,
+  onSpanSelect?: (span: ReadonlySpan) => void,
 ) => {
   const handleCardClick = useCallback(
     (e: MouseEvent): void => {
@@ -219,13 +222,13 @@ const getSpanCardLayout = ({
   isLastChild,
   level,
   prevConnectors,
-}: {
+}: Readonly<{
   expandButton: ExpandButtonPlacement;
   hasChildren: boolean;
   isLastChild: boolean;
   level: number;
-  prevConnectors: SpanCardConnectorType[];
-}) => {
+  prevConnectors: readonly SpanCardConnectorType[];
+}>) => {
   const hasExpandButtonAsFirstChild = expandButton === "inside" && hasChildren;
 
   const contentPadding = getContentPadding({
@@ -271,7 +274,7 @@ const getAriaSelected = (
 };
 
 const resolveViewOptions = (
-  viewOptions: SpanCardViewOptions,
+  viewOptions: Readonly<SpanCardViewOptions>,
 ): { expandButton: ExpandButtonPlacement; withStatus: boolean } => ({
   expandButton: viewOptions.expandButton ?? DEFAULT_VIEW_OPTIONS.expandButton,
   withStatus: viewOptions.withStatus ?? DEFAULT_VIEW_OPTIONS.withStatus,
@@ -286,7 +289,7 @@ const getContentIndentClass = (
   return hasExpandButtonAsFirstChild ? "pl-1" : "pl-2";
 };
 
-export const SpanCard: FC<SpanCardProps> = ({
+export const SpanCard: FC<ReadonlyProps<SpanCardProps>> = ({
   avatar,
   data,
   expandedSpansIds,

@@ -1,6 +1,6 @@
 "use client";
 
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 import {
   filterSpansRecursively,
@@ -18,14 +18,16 @@ import type { SimpleTraceViewerLayoutProps } from "@/types";
 import { SimpleTraceViewerDesktopLayout } from "./SimpleTraceViewerDesktopLayout";
 import { SimpleTraceViewerMobileLayout } from "./SimpleTraceViewerMobileLayout";
 
+type ReadonlySpan = DeepReadonly<TraceSpan>;
+
 type SimpleTraceViewerProps = {
-  spans: TraceSpan[];
+  readonly spans: readonly ReadonlySpan[];
 };
 
 export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
-  const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
+  const [selectedSpan, setSelectedSpan] = useState<ReadonlySpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
 
   const filteredSpans = useMemo(() => {
@@ -36,7 +38,8 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
     return flattenSpans(spans).map((span) => span.id);
   }, [spans]);
 
-  const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>(allIds);
+  const [expandedSpansIds, setExpandedSpansIds] =
+    useState<readonly string[]>(allIds);
   const [expandedSourceIds, setExpandedSourceIds] = useState(allIds);
 
   if (expandedSourceIds !== allIds) {

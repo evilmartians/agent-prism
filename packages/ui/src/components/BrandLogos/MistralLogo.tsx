@@ -1,10 +1,8 @@
 import type { ReactElement } from "react";
 
-export const MistralLogo = ({
-  className,
-}: {
-  className?: string | undefined;
-}): ReactElement => (
+import type { LogoProps } from "./LogoProps";
+
+export const MistralLogo = ({ className }: LogoProps): ReactElement => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
     <rect height="4" width="4" x="0" y="0" />
     <rect height="4" width="4" x="5" y="0" />

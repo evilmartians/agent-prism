@@ -1,5 +1,7 @@
 import { type FC } from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { AnthropicLogo } from "./BrandLogos/AnthropicLogo";
 import { GoogleLogo } from "./BrandLogos/GoogleLogo";
 import { MetaLogo } from "./BrandLogos/MetaLogo";
@@ -24,7 +26,7 @@ type BrandLogoProps = {
   fallback?: React.ReactNode | undefined;
 };
 
-export const BrandLogo: FC<BrandLogoProps> = ({
+export const BrandLogo: FC<ReadonlyProps<BrandLogoProps>> = ({
   brand,
   className = "size-4",
   fallback = null,

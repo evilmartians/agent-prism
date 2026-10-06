@@ -17,6 +17,8 @@ import {
   Zap,
 } from "lucide-react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { Badge, type BadgeProps } from "./Badge";
 
 export type SpanBadgeProps = Omit<
@@ -105,7 +107,7 @@ export const SpanBadge = ({
   category,
   className,
   ...props
-}: SpanBadgeProps): ReactElement => {
+}: ReadonlyProps<SpanBadgeProps>): ReactElement => {
   const { icon: Icon, label } = categoryContent[category];
 
   return (

@@ -2,6 +2,8 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import { ChevronsDownUp } from "lucide-react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { IconButton } from "./IconButton";
 
 export type SpanCardCollapseAllButtonProps = ComponentPropsWithRef<"button"> & {
@@ -12,7 +14,7 @@ export const CollapseAllButton = ({
   "aria-label": ariaLabel = "Collapse all",
   onCollapseAll,
   ...rest
-}: SpanCardCollapseAllButtonProps): ReactElement => {
+}: ReadonlyProps<SpanCardCollapseAllButtonProps>): ReactElement => {
   return (
     <IconButton
       aria-label={ariaLabel}

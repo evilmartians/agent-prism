@@ -3,18 +3,19 @@ import type { ReactElement } from "react";
 import { CollapseAllButton } from "../CollapseAllButton";
 import { ExpandAllButton } from "../ExpandAllButton";
 import { SearchInput } from "../SearchInput";
+import { type TraceViewerLayoutProps } from "./TraceViewer";
 
 export const TraceViewerSearchAndControls = ({
   handleCollapseAll,
   handleExpandAll,
   searchValue,
   setSearchValue,
-}: {
-  handleCollapseAll: () => void;
-  handleExpandAll: () => void;
-  searchValue: string;
-  setSearchValue: (value: string) => void;
-}): ReactElement => (
+}: Readonly<
+  Pick<
+    TraceViewerLayoutProps,
+    "handleCollapseAll" | "handleExpandAll" | "searchValue" | "setSearchValue"
+  >
+>): ReactElement => (
   <div className="flex shrink-0 items-center justify-between gap-3 px-4 pb-2 pt-1">
     <SearchInput
       id="trace-span-search"

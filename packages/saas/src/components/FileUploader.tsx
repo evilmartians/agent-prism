@@ -24,9 +24,8 @@ export const FileUploader: FC = () => {
   };
 
   const handleFilesChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    const file = files?.[0];
-    if (!files || !file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     setIsProcessing(true);
 
@@ -38,7 +37,7 @@ export const FileUploader: FC = () => {
         throw new Error("Invalid JSON: expected an object");
       }
 
-      await traceContext?.uploadTraces(files);
+      await traceContext?.uploadTraces(file);
     } catch (err) {
       console.error("Upload error:", err);
     } finally {

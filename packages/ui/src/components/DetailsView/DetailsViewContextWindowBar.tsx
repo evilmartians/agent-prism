@@ -8,7 +8,7 @@ type DetailsViewContextWindowBarProps = {
 export const DetailsViewContextWindowBar = ({
   fill,
   limitLabel,
-}: DetailsViewContextWindowBarProps): ReactElement => (
+}: Readonly<DetailsViewContextWindowBarProps>): ReactElement => (
   <>
     <div
       aria-label="Context window fill"

@@ -1,6 +1,8 @@
 import type { TraceSpanStatus } from "@evilmartians/agent-prism-types";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { SpanStatusBadge } from "./SpanStatusBadge";
 import { SpanStatusDot } from "./SpanStatusDot";
 
@@ -15,7 +17,7 @@ export const SpanStatus = ({
   status,
   variant = "dot",
   ...rest
-}: StatusProps): ReactElement => {
+}: ReadonlyProps<StatusProps>): ReactElement => {
   const title = `Status: ${status}`;
 
   return (

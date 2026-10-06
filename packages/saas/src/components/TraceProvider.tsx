@@ -29,17 +29,14 @@ const toTraceState = (data: object): TraceState => {
   }
 };
 
-export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const TraceProvider: FC<Readonly<{ children: ReactNode }>> = ({
+  children,
+}) => {
   const [traceState, setTraceState] = useState<TraceState>(() =>
     toTraceState(testData),
   );
 
-  const uploadTraces = async (files: FileList) => {
-    const file = files[0];
-    if (!file) {
-      throw new Error("No file selected");
-    }
-
+  const uploadTraces = async (file: File) => {
     const text = await file.text();
     const jsonData: unknown = JSON.parse(text);
 

@@ -1,5 +1,7 @@
 import { type ReactElement } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { CopyButton } from "../CopyButton";
 import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
@@ -21,7 +23,7 @@ export const DetailsViewContentViewer = ({
   label,
   mode,
   parsedContent,
-}: DetailsViewContentViewerProps): ReactElement => {
+}: ReadonlyProps<DetailsViewContentViewerProps>): ReactElement => {
   if (!content) {
     return (
       <p className="text-agentprism-muted-foreground p-3 text-sm italic">

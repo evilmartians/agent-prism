@@ -1,6 +1,6 @@
 import type {
+  DeepReadonly,
   TraceReasoning,
-  TraceSpan,
 } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -15,20 +15,16 @@ import {
   Stories,
 } from "@storybook/addon-docs/blocks";
 
-const baseSpan: TraceSpan = {
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  id: "span-thinking-001",
-  raw: [],
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  status: "success",
-  title: "Assistant message",
-  type: "llm_call",
-};
+import { mockSpan } from "../mocks/span";
 
-const withReasoning = (reasoning?: TraceReasoning): TraceSpan => ({
-  ...baseSpan,
-  reasoning,
-});
+const withReasoning = (reasoning?: DeepReadonly<TraceReasoning>) =>
+  mockSpan({
+    id: "span-thinking-001",
+    raw: [],
+    reasoning,
+    title: "Assistant message",
+    type: "llm_call",
+  });
 
 const meta = {
   component: DetailsViewThinkingTab,

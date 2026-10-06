@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
+  type ReadonlyProps,
   TextInput,
   type TextInputProps,
   TextInputSource,
@@ -14,7 +15,7 @@ import {
 } from "@storybook/addon-docs/blocks";
 import { useState } from "react";
 
-const ClearableTextInput = (args: TextInputProps) => {
+const ClearableTextInput = (args: ReadonlyProps<TextInputProps>) => {
   const [value, setValue] = useState(args.defaultValue);
 
   return (
@@ -111,7 +112,9 @@ export const Clearable: Story = {
     label: "Email",
     placeholder: "Enter email...",
   },
-  render: (args: TextInputProps) => <ClearableTextInput {...args} />,
+  render: (args: ReadonlyProps<TextInputProps>) => (
+    <ClearableTextInput {...args} />
+  ),
 };
 
 export const StartIcon: Story = {

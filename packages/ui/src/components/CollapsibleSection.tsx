@@ -3,6 +3,8 @@ import cn from "classnames";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 export type CollapsibleSectionProps = {
   /**
    * The content to display when the section is expanded
@@ -46,7 +48,9 @@ export type CollapsibleSectionProps = {
   triggerClassName?: string | undefined;
 };
 
-export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
+export const CollapsibleSection: React.FC<
+  ReadonlyProps<CollapsibleSectionProps>
+> = ({
   children,
   className = "",
   contentClassName = "",

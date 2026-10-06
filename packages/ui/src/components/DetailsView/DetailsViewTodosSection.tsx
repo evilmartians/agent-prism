@@ -4,6 +4,8 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 import { CheckCircle2, Circle, CircleDot, ListTodo } from "lucide-react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewTodoItemRow } from "./DetailsViewTodoItemRow";
 
 type DetailsViewTodosSectionProps = {
@@ -14,7 +16,7 @@ type DetailsViewTodosSectionProps = {
 export const DetailsViewTodosSection = ({
   className,
   data,
-}: DetailsViewTodosSectionProps): null | ReactElement => {
+}: ReadonlyProps<DetailsViewTodosSectionProps>): null | ReactElement => {
   const { todos } = data;
 
   if (!todos || todos.length === 0) {

@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 
 import { useState } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
 import type { TabItem } from "../Tabs";
 
 import { CollapsibleSection } from "../CollapsibleSection";
@@ -28,7 +29,7 @@ export const DetailsViewAttributeSection = ({
   content,
   id,
   parsedContent,
-}: DetailsViewAttributeSectionProps): ReactElement => {
+}: ReadonlyProps<DetailsViewAttributeSectionProps>): ReactElement => {
   const [tab, setTab] = useState<DetailsViewContentViewMode>("json");
 
   return (

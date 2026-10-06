@@ -3,6 +3,7 @@ import type { ReactElement } from "react";
 
 import cn from "classnames";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
 import type { SpanStatusIndicatorProps } from "./SpanStatusIndicatorProps";
 
 const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {
@@ -15,7 +16,7 @@ const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {
 export const SpanStatusDot = ({
   status,
   title,
-}: SpanStatusIndicatorProps): ReactElement => {
+}: ReadonlyProps<SpanStatusIndicatorProps>): ReactElement => {
   return (
     <span
       aria-label={title}

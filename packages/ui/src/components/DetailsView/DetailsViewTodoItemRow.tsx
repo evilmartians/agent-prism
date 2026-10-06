@@ -20,9 +20,9 @@ const SCREEN_READER_STATUS_LABELS: Record<TraceTodoStatus, string> = {
  */
 export function DetailsViewTodoItemRow({
   todo,
-}: {
-  todo: TraceTodo;
-}): ReactElement {
+}: Readonly<{
+  todo: Readonly<TraceTodo>;
+}>): ReactElement {
   const isCompleted = todo.status === "completed";
   const isInProgress = todo.status === "in_progress";
 

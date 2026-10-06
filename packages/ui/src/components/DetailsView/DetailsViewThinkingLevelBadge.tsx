@@ -25,9 +25,9 @@ const LEVEL_CONFIG: Record<
 
 export function DetailsViewThinkingLevelBadge({
   level,
-}: {
+}: Readonly<{
   level: TraceReasoningLevel;
-}): ReactElement {
+}>): ReactElement {
   const config = LEVEL_CONFIG[level];
 
   return (

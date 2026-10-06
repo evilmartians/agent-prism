@@ -2,6 +2,8 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { type ReactElement } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { CopyButton } from "../CopyButton";
 import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
@@ -16,7 +18,7 @@ type RawDataTabProps = {
  */
 export const DetailsViewRawDataTab = ({
   data,
-}: RawDataTabProps): ReactElement => {
+}: ReadonlyProps<RawDataTabProps>): ReactElement => {
   if (data.raw.length === 0) {
     return (
       <div className="border-agentprism-border rounded-md border p-4">

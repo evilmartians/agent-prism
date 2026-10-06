@@ -1,4 +1,4 @@
-import type { TraceSpan, TraceTodo } from "@evilmartians/agent-prism-types";
+import type { TraceTodo } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
@@ -12,20 +12,16 @@ import {
   Stories,
 } from "@storybook/addon-docs/blocks";
 
-const baseSpan: TraceSpan = {
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  id: "span-todos-001",
-  raw: [],
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  status: "success",
-  title: "Agent turn",
-  type: "agent_invocation",
-};
+import { mockSpan } from "../mocks/span";
 
-const withTodos = (todos: TraceTodo[]): TraceSpan => ({
-  ...baseSpan,
-  todos,
-});
+const withTodos = (todos: readonly Readonly<TraceTodo>[]) =>
+  mockSpan({
+    id: "span-todos-001",
+    raw: [],
+    title: "Agent turn",
+    todos,
+    type: "agent_invocation",
+  });
 
 const meta = {
   component: DetailsViewTodosSection,

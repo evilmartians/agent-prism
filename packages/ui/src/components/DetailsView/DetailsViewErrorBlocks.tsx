@@ -7,6 +7,8 @@ import {
 } from "@evilmartians/agent-prism-data";
 import { useMemo } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewRunErrorsSummary } from "./DetailsViewRunErrorsSummary";
 import { DetailsViewSpanErrorCallout } from "./DetailsViewSpanErrorCallout";
 
@@ -35,7 +37,7 @@ export type DetailsViewErrorBlocksProps = {
 export const DetailsViewErrorBlocks = ({
   allSpans,
   span,
-}: DetailsViewErrorBlocksProps): null | ReactElement => {
+}: ReadonlyProps<DetailsViewErrorBlocksProps>): null | ReactElement => {
   const runEntries = useMemo(
     () =>
       isRootTraceSpan(span, allSpans) ? collectRunErrorEntries([span]) : [],

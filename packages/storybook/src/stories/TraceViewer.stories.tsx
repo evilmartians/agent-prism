@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
@@ -18,6 +18,8 @@ import langfuseData3 from "../data/langfuse-3.json";
 import testData1 from "../data/test_data_1.json";
 import testData2 from "../data/test_data_2.json";
 import testData3 from "../data/test_data_3.json";
+import { failedRunRootSpan } from "../mocks/failed-run";
+import { mockSpan } from "../mocks/span";
 
 const meta: Meta<typeof TraceViewer> = {
   component: TraceViewer,
@@ -25,7 +27,7 @@ const meta: Meta<typeof TraceViewer> = {
   title: "Demo/TraceViewer",
 };
 
-const openTelemetrySpans = (documents: unknown[]): TraceSpan[] =>
+const openTelemetrySpans = (documents: readonly unknown[]): TraceSpan[] =>
   openTelemetrySpanAdapter.convertRawDocumentsToSpans(
     documents.filter(isOpenTelemetryDocument),
   );
@@ -44,73 +46,15 @@ const langfuse1 = langfuseSpans(langfuseData1);
 const langfuse2 = langfuseSpans(langfuseData2);
 const langfuse3 = langfuseSpans(langfuseData3);
 
-const errorSpan = (
-  span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
-): TraceSpan => ({
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  raw: ["{}"],
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  status: "success",
-  title: span.id,
-  type: "span",
-  ...span,
-});
-
-const failedRunSpans: TraceSpan[] = [
-  errorSpan({
+const partialFailureSpans = [
+  mockSpan({
     children: [
-      errorSpan({
-        children: [
-          errorSpan({
-            id: "failed-parser",
-            raw: [
-              JSON.stringify({
-                name: "Structured Output Parser",
-                status: {
-                  code: "ERROR",
-                  message: "Model output doesn't fit required format",
-                },
-              }),
-            ],
-            status: "error",
-            title: "Structured Output Parser",
-            type: "tool_execution",
-          }),
-        ],
-        id: "failed-agent",
-        raw: [
-          JSON.stringify({
-            name: "AI Agent",
-            status: { message: "Child node failed" },
-          }),
-        ],
-        status: "error",
-        title: "AI Agent",
-        type: "agent_invocation",
-      }),
-    ],
-    id: "failed-root",
-    raw: [
-      JSON.stringify({
-        name: "Relevancy scoring workflow",
-        status: { message: "Run failed" },
-      }),
-    ],
-    status: "error",
-    title: "Relevancy scoring workflow",
-    type: "chain_operation",
-  }),
-];
-
-const partialFailureSpans: TraceSpan[] = [
-  errorSpan({
-    children: [
-      errorSpan({
+      mockSpan({
         id: "partial-ok-1",
         title: "Fetch conversation",
         type: "tool_execution",
       }),
-      errorSpan({
+      mockSpan({
         attributes: [
           {
             key: "exception.message",
@@ -132,7 +76,7 @@ const partialFailureSpans: TraceSpan[] = [
         title: "Redis connection",
         type: "tool_execution",
       }),
-      errorSpan({
+      mockSpan({
         id: "partial-ok-2",
         title: "Draft reply",
         type: "llm_call",
@@ -144,14 +88,14 @@ const partialFailureSpans: TraceSpan[] = [
   }),
 ];
 
-const data: TraceViewerData[] = [
+const data: DeepReadonly<TraceViewerData[]> = [
   {
     badges: [
       {
         label: "app: prod-scorer",
       },
     ],
-    spans: failedRunSpans,
+    spans: [failedRunRootSpan],
     traceRecord: {
       agentDescription: "relevancy-scoring-agent",
       durationMs: 3000,

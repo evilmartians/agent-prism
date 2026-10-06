@@ -14,7 +14,7 @@ type ThemePaletteTokenProps = {
 export function ThemePaletteToken({
   bg,
   name,
-}: ThemePaletteTokenProps): ReactElement {
+}: Readonly<ThemePaletteTokenProps>): ReactElement {
   const tokenName = bg.replace(`bg-${AGENT_PRISM_PREFIX}-`, "");
   const token = tokensFlat.find((candidate) => candidate.name === tokenName);
 

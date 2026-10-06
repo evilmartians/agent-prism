@@ -5,7 +5,7 @@ import { type TabItem, Tabs } from "./Tabs";
 export type TabSelectorProps<T extends string> = {
   className?: string | undefined;
   defaultValue?: T | undefined;
-  items: TabItem<T>[];
+  items: readonly TabItem<T>[];
   onClick?: ((event: React.MouseEvent) => void) | undefined;
   onValueChange: (value: T) => void;
   theme?: "pill" | "underline" | undefined;
@@ -20,7 +20,7 @@ export const TabSelector = <T extends string>({
   onValueChange,
   theme = "underline",
   value,
-}: TabSelectorProps<T>): ReactElement => {
+}: Readonly<TabSelectorProps<T>>): ReactElement => {
   return (
     <Tabs<T>
       className={className}

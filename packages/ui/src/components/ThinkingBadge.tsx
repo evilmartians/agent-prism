@@ -3,6 +3,8 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 import { Brain } from "lucide-react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { Badge } from "./Badge";
 
 export type ThinkingBadgeProps = {
@@ -15,7 +17,7 @@ export type ThinkingBadgeProps = {
  */
 export const ThinkingBadge = ({
   className,
-}: ThinkingBadgeProps): ReactElement => {
+}: ReadonlyProps<ThinkingBadgeProps>): ReactElement => {
   return (
     <Badge
       className={cn(

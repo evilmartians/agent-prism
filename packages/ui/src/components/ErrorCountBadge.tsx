@@ -2,6 +2,8 @@ import type { ReactElement } from "react";
 
 import { errorCountLabel } from "@evilmartians/agent-prism-data";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { Badge } from "./Badge";
 import { ErrorStatusCircle } from "./ErrorStatusCircle";
 
@@ -20,7 +22,7 @@ export type ErrorCountBadgeProps = {
  */
 export const ErrorCountBadge = ({
   count,
-}: ErrorCountBadgeProps): null | ReactElement => {
+}: ReadonlyProps<ErrorCountBadgeProps>): null | ReactElement => {
   if (count <= 0) return null;
 
   return (

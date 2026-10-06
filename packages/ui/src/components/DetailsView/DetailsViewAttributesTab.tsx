@@ -1,6 +1,8 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewAttributeSection } from "./DetailsViewAttributeSection";
 
 type AttributesTabProps = {
@@ -9,7 +11,7 @@ type AttributesTabProps = {
 
 export const DetailsViewAttributesTab = ({
   data,
-}: AttributesTabProps): ReactElement => {
+}: ReadonlyProps<AttributesTabProps>): ReactElement => {
   if (!data.attributes || data.attributes.length === 0) {
     return (
       <div className="p-6 text-center">

@@ -129,7 +129,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     expandedSpansIds: [],
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     spanCardViewOptions: {
       expandButton: "outside",
     },
@@ -140,7 +140,7 @@ export const Default: Story = {
 export const ExpandButton: Story = {
   args: {
     expandedSpansIds: [],
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     spanCardViewOptions: {
       expandButton: "inside",
     },
@@ -151,7 +151,7 @@ export const ExpandButton: Story = {
 export const ExpandedSpans: Story = {
   args: {
     expandedSpansIds: ["span-root-001", "span-child-002"],
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     spanCardViewOptions: {
       expandButton: "outside",
     },
@@ -162,7 +162,7 @@ export const ExpandedSpans: Story = {
 export const SelectedSpan: Story = {
   args: {
     expandedSpansIds: ["span-root-001"],
-    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onExpandSpansIdsChange: fn<(ids: readonly string[]) => void>(),
     onSpanSelect: (span) => {
       console.log("Selected span:", span);
     },

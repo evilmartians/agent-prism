@@ -82,7 +82,7 @@ function resolveColorToken(token: TailwindColorToken): string {
 
   const [colorName, shade] = token.split(".");
   const colorGroup = Object.entries(tailwindColors).find(
-    ([name]) => name === colorName,
+    ([name]: readonly [string, unknown]) => name === colorName,
   )?.[1];
 
   if (typeof colorGroup !== "object") {
@@ -90,7 +90,7 @@ function resolveColorToken(token: TailwindColorToken): string {
   }
 
   const colorValue = Object.entries(colorGroup).find(
-    ([key]) => key === shade,
+    ([key]: readonly [string, unknown]) => key === shade,
   )?.[1];
   if (colorValue === undefined) {
     throw new Error(`Invalid color shade: ${token}`);

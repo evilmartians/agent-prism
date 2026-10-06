@@ -2,6 +2,8 @@ import type { ReactElement } from "react";
 
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsView } from "../DetailsView/DetailsView";
 import { TraceList } from "../TraceList/TraceList";
 import { type TraceViewerLayoutProps } from "./TraceViewer";
@@ -26,7 +28,7 @@ export const TraceViewerDesktopLayout = ({
   spanCardViewOptions,
   traceListExpanded,
   traceRecords,
-}: TraceViewerLayoutProps): ReactElement => {
+}: ReadonlyProps<TraceViewerLayoutProps>): ReactElement => {
   const actualSelectedTrace =
     traceRecords.find((t) => t.id === selectedTraceId) ?? selectedTrace;
 

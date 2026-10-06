@@ -4,11 +4,13 @@ import * as RadixTabs from "@radix-ui/react-tabs";
 import cn from "classnames";
 import * as React from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 export type TabItem<T extends string = string> = {
-  disabled?: boolean | undefined;
-  icon?: React.ReactNode | undefined;
-  label: string;
-  value: T;
+  readonly disabled?: boolean | undefined;
+  readonly icon?: React.ReactNode | undefined;
+  readonly label: string;
+  readonly value: T;
 };
 
 export type TabTheme = "pill" | "underline";
@@ -35,34 +37,19 @@ const THEMES = {
   },
 } as const;
 
-export type TabsProps<T extends string = string> = Omit<
-  ComponentPropsWithRef<"div">,
-  "dir"
-> & {
+export type TabsProps<T extends string = string> =
+  ReadonlyProps<TabsLayoutProps> & TabsValueProps<T>;
+
+type TabsLayoutProps = Omit<ComponentPropsWithRef<"div">, "dir"> & {
   /**
    * Optional className for the root container
    */
   className?: string | undefined;
 
   /**
-   * The initially selected tab value (uncontrolled)
-   */
-  defaultValue?: T | undefined;
-
-  /**
    * The direction of the content of the tabs
    */
   dir?: "ltr" | "rtl" | undefined;
-
-  /**
-   * Array of tab items to display
-   */
-  items: TabItem<T>[];
-
-  /**
-   * Callback fired when the selected tab changes
-   */
-  onValueChange?: ((value: T) => void) | undefined;
 
   /**
    * Optional className for the tabs list container
@@ -79,11 +66,28 @@ export type TabsProps<T extends string = string> = Omit<
    * Optional className for individual tab triggers
    */
   triggerClassName?: string | undefined;
+};
+
+type TabsValueProps<T extends string> = {
+  /**
+   * The initially selected tab value (uncontrolled)
+   */
+  readonly defaultValue?: T | undefined;
+
+  /**
+   * Array of tab items to display
+   */
+  readonly items: readonly TabItem<T>[];
+
+  /**
+   * Callback fired when the selected tab changes
+   */
+  readonly onValueChange?: ((value: T) => void) | undefined;
 
   /**
    * The currently selected tab value (controlled)
    */
-  value?: T | undefined;
+  readonly value?: T | undefined;
 };
 
 export const Tabs = <T extends string = string>({
@@ -122,7 +126,7 @@ export const Tabs = <T extends string = string>({
         aria-label="Navigation tabs"
         className={cn(currentTheme.list, tabsListClassName)}
       >
-        {items.map((item: TabItem) => (
+        {items.map((item) => (
           <RadixTabs.Trigger
             aria-controls={undefined}
             className={cn(

@@ -2,6 +2,8 @@ import type { ReactElement } from "react";
 
 import cn from "classnames";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 export type ErrorStatusCircleProps = {
   className?: string | undefined;
 };
@@ -11,7 +13,7 @@ export type ErrorStatusCircleProps = {
  */
 export const ErrorStatusCircle = ({
   className,
-}: ErrorStatusCircleProps): ReactElement => (
+}: ReadonlyProps<ErrorStatusCircleProps>): ReactElement => (
   <span
     aria-hidden
     className={cn(

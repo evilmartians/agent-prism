@@ -1,4 +1,7 @@
-import type { TraceRecord } from "@evilmartians/agent-prism-types";
+import type {
+  DeepReadonly,
+  TraceRecord,
+} from "@evilmartians/agent-prism-types";
 
 import {
   isOpenTelemetryDocument,
@@ -11,10 +14,12 @@ import ragEarningsAgentDataRaw from "./data/rag_earnings_agent.json";
 import smolDeepResearchAgentDataRaw from "./data/smol_deep_research_agent.json";
 import { Layout } from "./Layout";
 
-const EXPORTS: {
-  documents: unknown[];
-  traceRecord: TraceRecord;
-}[] = [
+const EXPORTS: DeepReadonly<
+  {
+    documents: unknown[];
+    traceRecord: TraceRecord;
+  }[]
+> = [
   {
     documents: quoTavAgentDataRaw,
     traceRecord: {

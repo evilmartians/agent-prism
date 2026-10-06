@@ -3,6 +3,7 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 import { Coins } from "lucide-react";
 
 import type { BadgeProps } from "./Badge";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 import { Badge } from "./Badge";
 
@@ -15,7 +16,7 @@ export const TokensBadge = ({
   size,
   tokensCount,
   ...rest
-}: TokensBadgeProps): ReactElement => {
+}: ReadonlyProps<TokensBadgeProps>): ReactElement => {
   return (
     <Badge
       iconStart={<Coins className="size-2.5" />}

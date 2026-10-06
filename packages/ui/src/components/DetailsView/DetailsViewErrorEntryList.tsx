@@ -1,6 +1,8 @@
 import type { RunErrorEntry } from "@evilmartians/agent-prism-data";
 import type { ReactElement } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewErrorRunRow } from "./DetailsViewErrorRunRow";
 
 type DetailsViewErrorEntryListProps = {
@@ -12,7 +14,7 @@ type DetailsViewErrorEntryListProps = {
  */
 export const DetailsViewErrorEntryList = ({
   entries,
-}: DetailsViewErrorEntryListProps): null | ReactElement => {
+}: ReadonlyProps<DetailsViewErrorEntryListProps>): null | ReactElement => {
   if (entries.length === 0) return null;
 
   return (

@@ -2,6 +2,8 @@ import { type FC } from "react";
 import JSONPretty from "react-json-pretty";
 import colors from "tailwindcss/colors";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { agentPrismPrefix } from "../theme";
 
 export type JsonViewerProps = {
@@ -10,7 +12,7 @@ export type JsonViewerProps = {
   id: string;
 };
 
-export const DetailsViewJsonOutput: FC<JsonViewerProps> = ({
+export const DetailsViewJsonOutput: FC<ReadonlyProps<JsonViewerProps>> = ({
   className = "",
   content,
   id,

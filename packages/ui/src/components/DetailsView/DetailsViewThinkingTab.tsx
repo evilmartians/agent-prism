@@ -3,6 +3,8 @@ import type { ReactElement } from "react";
 
 import { Brain } from "lucide-react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { DetailsViewThinkingLevelBadge } from "./DetailsViewThinkingLevelBadge";
 
 type DetailsViewThinkingTabProps = {
@@ -11,7 +13,7 @@ type DetailsViewThinkingTabProps = {
 
 export const DetailsViewThinkingTab = ({
   data,
-}: DetailsViewThinkingTabProps): ReactElement => {
+}: ReadonlyProps<DetailsViewThinkingTabProps>): ReactElement => {
   const { reasoning } = data;
 
   if (!reasoning) {

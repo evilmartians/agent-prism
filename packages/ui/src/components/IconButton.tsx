@@ -3,6 +3,7 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 import cn from "classnames";
 
 import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 export type IconButtonProps = ComponentPropsWithRef<"button"> & {
   /**
@@ -52,7 +53,7 @@ export const IconButton = ({
   type = "button",
   variant = "default",
   ...rest
-}: IconButtonProps): ReactElement => {
+}: ReadonlyProps<IconButtonProps>): ReactElement => {
   return (
     <button
       aria-label={ariaLabel}

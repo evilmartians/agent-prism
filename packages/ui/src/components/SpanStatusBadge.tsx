@@ -4,6 +4,7 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 import { Check, Ellipsis, Info, TriangleAlert } from "lucide-react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
 import type { SpanStatusIndicatorProps } from "./SpanStatusIndicatorProps";
 
 const STATUS_COLORS_BADGE: Record<TraceSpanStatus, string> = {
@@ -19,7 +20,7 @@ const STATUS_COLORS_BADGE: Record<TraceSpanStatus, string> = {
 export const SpanStatusBadge = ({
   status,
   title,
-}: SpanStatusIndicatorProps): ReactElement => {
+}: ReadonlyProps<SpanStatusIndicatorProps>): ReactElement => {
   return (
     <span
       aria-label={title}

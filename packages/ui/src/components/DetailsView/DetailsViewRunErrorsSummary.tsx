@@ -4,6 +4,8 @@ import type { ReactElement } from "react";
 import { formatRunErrorsForAgent } from "@evilmartians/agent-prism-data";
 import { useMemo } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { CollapsibleSection } from "../CollapsibleSection";
 import { CopyButton } from "../CopyButton";
 import { ErrorCountBadge } from "../ErrorCountBadge";
@@ -19,7 +21,7 @@ type DetailsViewRunErrorsSummaryProps = {
  */
 export const DetailsViewRunErrorsSummary = ({
   entries,
-}: DetailsViewRunErrorsSummaryProps): null | ReactElement => {
+}: ReadonlyProps<DetailsViewRunErrorsSummaryProps>): null | ReactElement => {
   const agentContent = useMemo(
     () => formatRunErrorsForAgent(entries),
     [entries],

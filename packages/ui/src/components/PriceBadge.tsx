@@ -1,6 +1,7 @@
 import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import type { BadgeProps } from "./Badge";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 import { Badge } from "./Badge";
 
@@ -13,6 +14,6 @@ export const PriceBadge = ({
   cost,
   size,
   ...rest
-}: PriceBadgeProps): ReactElement => {
+}: ReadonlyProps<PriceBadgeProps>): ReactElement => {
   return <Badge size={size} {...rest} label={`$ ${cost}`} />;
 };

@@ -1,12 +1,14 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
-import type { SpanCardViewOptions } from "../SpanCard/SpanCard";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Badge } from "../Badge";
 import { TraceListItemHeader } from "../TraceList/TraceListItemHeader";
 import { TreeView } from "../TreeView";
-import { type TraceRecordWithDisplayData } from "./TraceViewer";
+import {
+  type TraceRecordWithDisplayData,
+  type TraceViewerLayoutProps,
+} from "./TraceViewer";
 import { TraceViewerSearchAndControls } from "./TraceViewerSearchAndControls";
 
 export const TraceViewerTreeViewContainer = ({
@@ -22,20 +24,24 @@ export const TraceViewerTreeViewContainer = ({
   setSelectedSpan,
   showHeader = true,
   spanCardViewOptions,
-}: {
-  expandedSpansIds: string[];
-  filteredSpans: TraceSpan[];
-  handleCollapseAll: () => void;
-  handleExpandAll: () => void;
-  searchValue: string;
-  selectedSpan: TraceSpan | undefined;
-  selectedTrace?: TraceRecordWithDisplayData | undefined;
-  setExpandedSpansIds: (ids: string[]) => void;
-  setSearchValue: (value: string) => void;
-  setSelectedSpan: (span: TraceSpan | undefined) => void;
-  showHeader?: boolean | undefined;
-  spanCardViewOptions?: SpanCardViewOptions | undefined;
-}): ReactElement => (
+}: ReadonlyProps<
+  Pick<
+    TraceViewerLayoutProps,
+    | "expandedSpansIds"
+    | "filteredSpans"
+    | "handleCollapseAll"
+    | "handleExpandAll"
+    | "searchValue"
+    | "selectedSpan"
+    | "setExpandedSpansIds"
+    | "setSearchValue"
+    | "setSelectedSpan"
+    | "spanCardViewOptions"
+  > & {
+    selectedTrace?: TraceRecordWithDisplayData | undefined;
+    showHeader?: boolean | undefined;
+  }
+>): ReactElement => (
   <>
     {showHeader && selectedTrace ? (
       <div className="flex shrink-0 gap-2 px-4">

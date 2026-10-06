@@ -3,6 +3,7 @@ import type { ComponentPropsWithRef, ReactElement, ReactNode } from "react";
 import cn from "classnames";
 
 import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 type BadgeSize = Extract<ComponentSize, "4" | "5" | "6" | "7">;
 
@@ -65,7 +66,7 @@ export const Badge = ({
   size = "4",
   unstyled = false,
   ...rest
-}: BadgeProps): ReactElement => {
+}: ReadonlyProps<BadgeProps>): ReactElement => {
   return (
     <span
       className={cn(

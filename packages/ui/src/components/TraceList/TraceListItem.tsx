@@ -6,6 +6,7 @@ import { useCallback } from "react";
 
 import type { AvatarProps } from "../Avatar";
 import type { BadgeProps } from "../Badge";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Badge } from "../Badge";
 import { PriceBadge } from "../PriceBadge";
@@ -14,8 +15,8 @@ import { TokensBadge } from "../TokensBadge";
 import { TraceListItemHeader } from "./TraceListItemHeader";
 
 type TraceListItemProps = {
-  avatar?: AvatarProps | undefined;
-  badges?: BadgeProps[] | undefined;
+  avatar?: Omit<AvatarProps, "ref"> | undefined;
+  badges?: Omit<BadgeProps, "ref">[] | undefined;
   isSelected?: boolean | undefined;
   onClick?: (() => void) | undefined;
   showDescription?: boolean | undefined;
@@ -29,7 +30,7 @@ export const TraceListItem = ({
   onClick,
   showDescription = true,
   trace,
-}: TraceListItemProps): ReactElement => {
+}: ReadonlyProps<TraceListItemProps>): ReactElement => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
       if (e.key === "Enter" || e.key === " ") {

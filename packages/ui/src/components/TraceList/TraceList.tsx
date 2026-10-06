@@ -5,6 +5,7 @@ import cn from "classnames";
 import { ArrowLeft } from "lucide-react";
 
 import type { BadgeProps } from "../Badge";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Badge } from "../Badge";
 import { IconButton } from "../IconButton";
@@ -14,13 +15,13 @@ type TraceListProps = {
   className?: string | undefined;
   expanded: boolean;
   onExpandStateChange: (expanded: boolean) => void;
-  onTraceSelect?: ((trace: TraceRecord) => void) | undefined;
+  onTraceSelect?: ((trace: Readonly<TraceRecord>) => void) | undefined;
   selectedTrace?: TraceRecord | undefined;
   traces: TraceRecordWithBadges[];
 };
 
 type TraceRecordWithBadges = TraceRecord & {
-  badges?: BadgeProps[] | undefined;
+  badges?: Omit<BadgeProps, "ref">[] | undefined;
 };
 
 export const TraceList = ({
@@ -30,7 +31,7 @@ export const TraceList = ({
   onTraceSelect,
   selectedTrace,
   traces,
-}: TraceListProps): ReactElement => {
+}: ReadonlyProps<TraceListProps>): ReactElement => {
   return (
     <div
       className={cn(

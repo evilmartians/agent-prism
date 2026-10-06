@@ -2,6 +2,8 @@ import type { ReactElement } from "react";
 
 import { ArrowLeft } from "lucide-react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { Button } from "../Button";
 import { DetailsView } from "../DetailsView/DetailsView";
 import { TraceList } from "../TraceList/TraceList";
@@ -27,7 +29,7 @@ export const TraceViewerMobileLayout = ({
   spanCardViewOptions,
   traceListExpanded,
   traceRecords,
-}: TraceViewerLayoutProps): ReactElement => {
+}: ReadonlyProps<TraceViewerLayoutProps>): ReactElement => {
   const hasTraceId = selectedTraceId !== undefined && selectedTraceId !== "";
 
   if (selectedTrace && hasTraceId && filteredSpans.length > 0 && selectedSpan) {

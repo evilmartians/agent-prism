@@ -1,7 +1,7 @@
 import { Activity, Info, Layers, Search, Settings } from "lucide-react";
 import { type FC, type PropsWithChildren } from "react";
 
-export const Layout: FC<PropsWithChildren> = ({ children }) => {
+export const Layout: FC<Readonly<PropsWithChildren>> = ({ children }) => {
   return (
     <div className="flex h-screen flex-col bg-white text-gray-900">
       <div className="flex flex-1 overflow-hidden">

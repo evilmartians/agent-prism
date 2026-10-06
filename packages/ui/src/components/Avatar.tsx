@@ -6,6 +6,7 @@ import { User } from "lucide-react";
 import { useState } from "react";
 
 import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 import { ROUNDED_CLASSES } from "./roundedClasses";
 
@@ -93,7 +94,7 @@ export const Avatar = ({
   size = "10",
   src,
   ...rest
-}: AvatarProps): ReactElement => {
+}: ReadonlyProps<AvatarProps>): ReactElement => {
   const [error, setError] = useState(false);
 
   const displayLetter =

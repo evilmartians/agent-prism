@@ -1,4 +1,8 @@
-import type { TraceRecord, TraceSpan } from "@evilmartians/agent-prism-types";
+import type {
+  DeepReadonly,
+  TraceRecord,
+  TraceSpan,
+} from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
 import {
@@ -7,6 +11,8 @@ import {
 } from "@evilmartians/agent-prism-data";
 import { useCallback, useMemo, useState } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { type BadgeProps } from "../Badge";
 import { type SpanCardViewOptions } from "../SpanCard/SpanCard";
 import { useIsMobile } from "../useIsMobile";
@@ -14,9 +20,7 @@ import { useIsMounted } from "../useIsMounted";
 import { TraceViewerDesktopLayout } from "./TraceViewerDesktopLayout";
 import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
 
-export type TraceViewerData = {
-  badges?: BadgeProps[] | undefined;
-  spanCardViewOptions?: SpanCardViewOptions | undefined;
+export type TraceViewerData = TraceDisplayData & {
   spans: TraceSpan[];
   traceRecord: TraceRecord;
 };
@@ -26,19 +30,28 @@ export type TraceViewerProps = {
   spanCardViewOptions?: SpanCardViewOptions | undefined;
 };
 
+type ReadonlySpan = DeepReadonly<TraceSpan>;
+
+type ReadonlyTraceRecord = DeepReadonly<TraceRecordWithDisplayData>;
+
+type TraceDisplayData = {
+  badges?: Omit<BadgeProps, "ref">[] | undefined;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
+};
+
 export const TraceViewer = ({
   data,
   spanCardViewOptions,
-}: TraceViewerProps): ReactElement => {
+}: ReadonlyProps<TraceViewerProps>): ReactElement => {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
 
-  const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
+  const [selectedSpan, setSelectedSpan] = useState<ReadonlySpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
   const [traceListExpanded, setTraceListExpanded] = useState(true);
 
   const [selectedTrace, setSelectedTrace] = useState<
-    TraceRecordWithDisplayData | undefined
+    ReadonlyTraceRecord | undefined
   >(
     data[0]
       ? {
@@ -48,11 +61,11 @@ export const TraceViewer = ({
         }
       : undefined,
   );
-  const [selectedTraceSpans, setSelectedTraceSpans] = useState<TraceSpan[]>(
-    data[0]?.spans ?? [],
-  );
+  const [selectedTraceSpans, setSelectedTraceSpans] = useState<
+    readonly ReadonlySpan[]
+  >(data[0]?.spans ?? []);
 
-  const traceRecords: TraceRecordWithDisplayData[] = useMemo(() => {
+  const traceRecords: readonly ReadonlyTraceRecord[] = useMemo(() => {
     return data.map((item) => ({
       ...item.traceRecord,
       badges: item.badges,
@@ -71,7 +84,8 @@ export const TraceViewer = ({
     return flattenSpans(selectedTraceSpans).map((span) => span.id);
   }, [selectedTraceSpans]);
 
-  const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>(allIds);
+  const [expandedSpansIds, setExpandedSpansIds] =
+    useState<readonly string[]>(allIds);
   const [expandedSourceIds, setExpandedSourceIds] = useState(allIds);
 
   if (expandedSourceIds !== allIds) {
@@ -92,7 +106,7 @@ export const TraceViewer = ({
   }, []);
 
   const handleTraceSelect = useCallback(
-    (trace: TraceRecord) => {
+    (trace: Readonly<TraceRecord>) => {
       setSelectedSpan(undefined);
       setExpandedSpansIds([]);
       setSelectedTrace(trace);
@@ -110,7 +124,7 @@ export const TraceViewer = ({
     setExpandedSpansIds([]);
   }, []);
 
-  const props: TraceViewerLayoutProps = {
+  const props: ReadonlyProps<TraceViewerLayoutProps> = {
     expandedSpansIds,
     filteredSpans,
     handleCollapseAll,
@@ -144,26 +158,23 @@ export const TraceViewer = ({
   );
 };
 
-export type TraceRecordWithDisplayData = TraceRecord & {
-  badges?: BadgeProps[] | undefined;
-  spanCardViewOptions?: SpanCardViewOptions | undefined;
-};
+export type TraceRecordWithDisplayData = TraceDisplayData & TraceRecord;
 
 export type TraceViewerLayoutProps = {
   expandedSpansIds: string[];
   filteredSpans: TraceSpan[];
   handleCollapseAll: () => void;
   handleExpandAll: () => void;
-  handleTraceSelect: (trace: TraceRecord) => void;
+  handleTraceSelect: (trace: Readonly<TraceRecord>) => void;
   onClearTraceSelection: () => void;
   searchValue: string;
   selectedSpan: TraceSpan | undefined;
   selectedTrace: TraceRecordWithDisplayData | undefined;
   selectedTraceId?: string | undefined;
   selectedTraceSpans?: TraceSpan[] | undefined;
-  setExpandedSpansIds: (ids: string[]) => void;
+  setExpandedSpansIds: (ids: readonly string[]) => void;
   setSearchValue: (value: string) => void;
-  setSelectedSpan: (span: TraceSpan | undefined) => void;
+  setSelectedSpan: (span: ReadonlySpan | undefined) => void;
   setTraceListExpanded: (expanded: boolean) => void;
   spanCardViewOptions?: SpanCardViewOptions | undefined;
   traceListExpanded: boolean;

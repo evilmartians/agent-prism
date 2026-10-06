@@ -4,6 +4,8 @@ import type { ReactElement } from "react";
 import { formatSpanErrorForAgent } from "@evilmartians/agent-prism-data";
 import { useMemo } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { CopyButton } from "../CopyButton";
 import { ErrorStatusCircle } from "../ErrorStatusCircle";
 
@@ -19,7 +21,7 @@ type DetailsViewErrorRunRowProps = {
  */
 export const DetailsViewErrorRunRow = ({
   entry,
-}: DetailsViewErrorRunRowProps): ReactElement => {
+}: ReadonlyProps<DetailsViewErrorRunRowProps>): ReactElement => {
   const { details } = entry;
   const title = details.nodeName;
   const agentContent = useMemo(

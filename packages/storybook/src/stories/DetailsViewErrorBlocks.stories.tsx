@@ -1,4 +1,3 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
@@ -13,72 +12,19 @@ import {
   Stories,
 } from "@storybook/addon-docs/blocks";
 
-const baseSpan = (
-  span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
-): TraceSpan => ({
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  raw: ["{}"],
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  status: "success",
-  title: span.id,
-  type: "span",
-  ...span,
-});
+import { failedParserSpan, failedRunRootSpan } from "../mocks/failed-run";
+import { mockSpan } from "../mocks/span";
 
-const parserSpan = baseSpan({
-  id: "span-parser",
-  raw: [
-    JSON.stringify({
-      name: "Structured Output Parser",
-      status: {
-        code: "ERROR",
-        message: "Model output doesn't fit required format",
-      },
-    }),
-  ],
-  status: "error",
-  title: "Structured Output Parser",
-  type: "tool_execution",
-});
+const failedRunSpans = [failedRunRootSpan];
 
-const agentSpan = baseSpan({
-  children: [parserSpan],
-  id: "span-agent",
-  raw: [
-    JSON.stringify({
-      name: "AI Agent",
-      status: { message: "Child node failed" },
-    }),
-  ],
-  status: "error",
-  title: "AI Agent",
-  type: "agent_invocation",
-});
-
-const rootSpan = baseSpan({
-  children: [agentSpan],
-  id: "span-root",
-  raw: [
-    JSON.stringify({
-      name: "Relevancy scoring workflow",
-      status: { message: "Run failed" },
-    }),
-  ],
-  status: "error",
-  title: "Relevancy scoring workflow",
-  type: "chain_operation",
-});
-
-const failedRunSpans: TraceSpan[] = [rootSpan];
-
-const successRootSpan = baseSpan({
-  children: [baseSpan({ id: "span-ok-child", title: "Fetch data" })],
+const successRootSpan = mockSpan({
+  children: [mockSpan({ id: "span-ok-child", title: "Fetch data" })],
   id: "span-ok-root",
   title: "Healthy workflow",
   type: "chain_operation",
 });
 
-const exceptionSpan = baseSpan({
+const exceptionSpan = mockSpan({
   attributes: [
     {
       key: "exception.message",
@@ -129,7 +75,7 @@ type Story = StoryObj<typeof meta>;
 export const RunErrors: Story = {
   args: {
     allSpans: failedRunSpans,
-    span: rootSpan,
+    span: failedRunRootSpan,
   },
   parameters: {
     docs: {
@@ -144,7 +90,7 @@ export const RunErrors: Story = {
 export const SingleSpanError: Story = {
   args: {
     allSpans: failedRunSpans,
-    span: parserSpan,
+    span: failedParserSpan,
   },
   parameters: {
     docs: {

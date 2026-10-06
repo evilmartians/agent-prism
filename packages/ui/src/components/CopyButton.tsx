@@ -3,6 +3,8 @@ import type { ReactElement } from "react";
 import { Check, Copy, X } from "lucide-react";
 import { useState } from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
+
 import { IconButton } from "./IconButton";
 
 type CopyButtonProps = {
@@ -21,7 +23,7 @@ const ICONS: Record<CopyState, ReactElement> = {
 export const CopyButton = ({
   content,
   label,
-}: CopyButtonProps): ReactElement => {
+}: ReadonlyProps<CopyButtonProps>): ReactElement => {
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
   const copy = async () => {

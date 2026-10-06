@@ -14,9 +14,9 @@ export type StatRowData = {
  */
 export function DetailsViewStatGrid({
   rows,
-}: {
-  rows: StatRowData[];
-}): ReactElement {
+}: Readonly<{
+  rows: readonly Readonly<StatRowData>[];
+}>): ReactElement {
   return (
     <div className="divide-agentprism-border grid grid-cols-[1fr_auto_auto] divide-y">
       {rows.map((row) => (

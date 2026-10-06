@@ -3,6 +3,7 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 import cn from "classnames";
 
 import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 import { ROUNDED_CLASSES } from "./roundedClasses";
 
@@ -94,7 +95,7 @@ export const Button = ({
   type = "button",
   variant = "primary",
   ...rest
-}: ButtonProps): ReactElement => {
+}: ReadonlyProps<ButtonProps>): ReactElement => {
   const widthClass = fullWidth ? "w-full" : "";
   const stateClasses = disabled
     ? "cursor-not-allowed opacity-50"
