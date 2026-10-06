@@ -641,6 +641,30 @@
         "typescript/prefer-optional-chain": "error",
         "typescript/prefer-promise-reject-errors": "error",
         "typescript/prefer-readonly": "error",
+        "typescript/prefer-readonly-parameter-types": [
+          "error",
+          {
+            "allow": [
+              {
+                "from": "package",
+                "package": "react",
+                "name": [
+                  "ReactNode",
+                  "RefObject",
+                  "ChangeEvent",
+                  "KeyboardEvent",
+                  "MouseEvent"
+                ]
+              },
+              {
+                "from": "package",
+                "package": "storybook",
+                "name": ["PlayFunctionContext", "StoryContext"]
+              }
+            ],
+            "treatMethodsAsReadonly": true
+          }
+        ],
         "typescript/prefer-reduce-type-parameter": "error",
         "typescript/prefer-regexp-exec": "error",
         "typescript/prefer-return-this-type": "error",
