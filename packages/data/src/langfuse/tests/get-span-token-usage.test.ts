@@ -6,6 +6,7 @@ import type {
 import { describe, expect, it } from "vitest";
 
 import { getDurationMs } from "../../common/get-duration-ms.js";
+import { isLangfuseDocument } from "../../common/is-trace-document.js";
 import {
   getTokenUsageEntries,
   getTotalCost,
@@ -161,6 +162,23 @@ describe("langfuseSpanAdapter.getTraceReasoning", () => {
       langfuseSpanAdapter.getTraceReasoning(
         observation({ usageDetails: { output: 100 } }),
       ),
+    ).toBeUndefined();
+  });
+
+  it("is undefined when an uploaded export has null reasoning tokens", () => {
+    const upload: unknown = {
+      observations: [
+        {
+          ...observation({}),
+          usageDetails: { output: 100, output_reasoning_tokens: null },
+        },
+      ],
+    };
+
+    if (!isLangfuseDocument(upload)) throw new TypeError("not Langfuse");
+
+    expect(
+      langfuseSpanAdapter.convertRawDocumentsToSpans(upload)[0]?.reasoning,
     ).toBeUndefined();
   });
 });

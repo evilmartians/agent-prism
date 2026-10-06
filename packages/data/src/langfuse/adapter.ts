@@ -172,7 +172,7 @@ export const langfuseSpanAdapter: SpanAdapter<
   getTraceReasoning(span: ReadonlyObservation): TraceReasoning | undefined {
     const tokens = span.usageDetails?.output_reasoning_tokens;
 
-    return tokens !== undefined && tokens !== 0
+    return typeof tokens === "number" && tokens !== 0
       ? { content: "", tokens }
       : undefined;
   },
