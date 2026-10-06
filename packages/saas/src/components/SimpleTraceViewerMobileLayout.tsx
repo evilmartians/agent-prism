@@ -2,10 +2,11 @@ import {
   Button,
   DetailsView,
   TraceViewerTreeViewContainer,
-  type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+
+import type { SimpleTraceViewerLayoutProps } from "@/types";
 
 export const SimpleTraceViewerMobileLayout = ({
   selectedTrace,
@@ -19,7 +20,7 @@ export const SimpleTraceViewerMobileLayout = ({
   setExpandedSpansIds,
   handleExpandAll,
   handleCollapseAll,
-}: Partial<TraceViewerLayoutProps>) => {
+}: SimpleTraceViewerLayoutProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
   // Details view

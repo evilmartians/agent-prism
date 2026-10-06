@@ -2,9 +2,10 @@ import {
   DetailsView,
   TraceViewerPlaceholder,
   TraceViewerTreeViewContainer,
-  type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+
+import type { SimpleTraceViewerLayoutProps } from "@/types";
 
 export const SimpleTraceViewerDesktopLayout = ({
   selectedTrace,
@@ -18,7 +19,7 @@ export const SimpleTraceViewerDesktopLayout = ({
   setExpandedSpansIds,
   handleExpandAll,
   handleCollapseAll,
-}: Partial<TraceViewerLayoutProps>) => {
+}: SimpleTraceViewerLayoutProps) => {
   return (
     <PanelGroup direction="horizontal" className="h-full">
       <Panel

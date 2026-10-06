@@ -10,9 +10,10 @@ import {
   useIsMobile,
   useIsMounted,
   type TraceRecordWithDisplayData,
-  type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
 import { useCallback, useEffect, useMemo, useState } from "react";
+
+import type { SimpleTraceViewerLayoutProps } from "@/types";
 
 import { SimpleTraceViewerDesktopLayout } from "./SimpleTraceViewerDesktopLayout";
 import { SimpleTraceViewerMobileLayout } from "./SimpleTraceViewerMobileLayout";
@@ -65,7 +66,7 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
     agentDescription: "",
   };
 
-  const layoutProps: Partial<TraceViewerLayoutProps> = {
+  const layoutProps: SimpleTraceViewerLayoutProps = {
     selectedTrace: fakeTrace,
     selectedSpan,
     setSelectedSpan,
