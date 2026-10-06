@@ -29,6 +29,7 @@
 | Stories render and pass axe; `color-contrast` is off until #107                                                | `pnpm test:storybook`                                         |
 | `packages/ui/src/components/theme` is generated from `packages/ui/src/theming/theme.ts`                        | `pnpm theme:check`                                            |
 | Published `types` and `data` resolve for consumers                                                             | `pnpm lint:packages` (publint, attw)                          |
+| `ui` compiles against `types` and `data` as published on npm: release new API before `ui` uses it              | `pnpm ui:npm`                                                 |
 | Workflows pass zizmor                                                                                          | `check-workflows.yaml`                                        |
 
 Every check above runs in `.github/workflows/ci.yml`; the `main` job gates merges.

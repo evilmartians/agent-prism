@@ -19,6 +19,7 @@
     "jscpd": "jscpd -l 10 -k 70 -t 0 -i '.git/**,pnpm-lock.yaml,**/src/data/*.json,packages/ui/src/components/theme/**' . && jscpd -l 6 -k 40 -t 0 packages/data/src packages/types/src",
     "dup": "jscpd -l 2 -k 12 -m weak -t 100 -s -a -r json -o reports/jscpd packages/*/src && node scripts/jscpd-top.mjs; pnpm dup:types",
     "dup:types": "node scripts/find-duplicate-types.mjs",
+    "ui:npm": "node scripts/check-ui-against-npm.mjs",
     "tsc": "pnpm run --parallel tsc",
     "test": "pnpm run --parallel test",
     "test:storybook": "pnpm --filter @evilmartians/agent-prism-storybook test:storybook",

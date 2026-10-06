@@ -123,6 +123,22 @@ jobs:
       - name: Find types that repeat the types package
         run: pnpm dup:types
 
+  ui-against-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup
+        uses: $/.github/actions/setup
+
+      - name: Typecheck ui against types and data published on npm
+        run: pnpm ui:npm
+
   storybook-test:
     runs-on: ubuntu-latest
     permissions:
@@ -204,7 +220,18 @@ jobs:
 
   main:
     if: always()
-    needs: [lint, typecheck, test, build, knip, jscpd, storybook-test, mutation]
+    needs:
+      [
+        lint,
+        typecheck,
+        test,
+        build,
+        knip,
+        jscpd,
+        ui-against-npm,
+        storybook-test,
+        mutation,
+      ]
     runs-on: ubuntu-latest
     permissions: {}
     steps:
