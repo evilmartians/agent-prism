@@ -8,8 +8,9 @@ import {
 import { useCallback, useMemo, useState } from "react";
 
 import { type BadgeProps } from "../Badge";
-import { useIsMobile, useIsMounted } from "../shared";
 import { type SpanCardViewOptions } from "../SpanCard/SpanCard";
+import { useIsMobile } from "../useIsMobile";
+import { useIsMounted } from "../useIsMounted";
 import { TraceViewerDesktopLayout } from "./TraceViewerDesktopLayout";
 import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
 

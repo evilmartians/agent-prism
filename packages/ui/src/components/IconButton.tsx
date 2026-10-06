@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
-import type { ComponentSize } from "./shared";
+import type { ComponentSize } from "./ComponentSize";
 
 type IconButtonSize = Extract<
   ComponentSize,

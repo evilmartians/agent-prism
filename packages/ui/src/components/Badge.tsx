@@ -2,7 +2,7 @@ import type { ComponentPropsWithRef, ReactElement, ReactNode } from "react";
 
 import cn from "classnames";
 
-import type { ComponentSize } from "./shared";
+import type { ComponentSize } from "./ComponentSize";
 
 type BadgeSize = Extract<ComponentSize, "4" | "5" | "6" | "7">;
 

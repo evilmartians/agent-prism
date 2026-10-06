@@ -14,9 +14,6 @@ import {
   CircleDot,
   ShieldCheck,
 } from "lucide-react";
-import { useSyncExternalStore } from "react";
-
-// TYPES
 
 export type ColorVariant =
   | "purple"
@@ -29,28 +26,6 @@ export type ColorVariant =
   | "emerald"
   | "red"
   | "gray";
-
-export type ComponentSize =
-  | "4"
-  | "5"
-  | "6"
-  | "7"
-  | "8"
-  | "9"
-  | "10"
-  | "11"
-  | "12"
-  | "16";
-
-// CONSTANTS
-
-export const ROUNDED_CLASSES = {
-  none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
-  full: "rounded-full",
-};
 
 /**
  * Shared configuration for span categories containing label, theme, and icon
@@ -120,8 +95,6 @@ export const SPAN_CATEGORY_CONFIG: Record<
   },
 };
 
-// UTILS
-
 export function getSpanCategoryTheme(
   category: TraceSpanCategory,
 ): ColorVariant {
@@ -135,34 +108,3 @@ export function getSpanCategoryLabel(category: TraceSpanCategory): string {
 export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
   return SPAN_CATEGORY_CONFIG[category].icon;
 }
-
-const MOBILE_MEDIA_QUERY = "(max-width: 1023px)";
-
-const subscribeToNothing = (): (() => void) => () => undefined;
-
-const subscribeToMobileMediaQuery = (onChange: () => void): (() => void) => {
-  const mediaQuery = window.matchMedia(MOBILE_MEDIA_QUERY);
-
-  mediaQuery.addEventListener("change", onChange);
-
-  return () => mediaQuery.removeEventListener("change", onChange);
-};
-
-export const useIsMounted = (): boolean =>
-  useSyncExternalStore(
-    subscribeToNothing,
-    () => true,
-    () => false,
-  );
-
-export const useIsMobile = (): boolean => {
-  const isMounted = useIsMounted();
-
-  const isMobile = useSyncExternalStore(
-    subscribeToMobileMediaQuery,
-    () => window.matchMedia(MOBILE_MEDIA_QUERY).matches,
-    () => false,
-  );
-
-  return isMounted ? isMobile : false;
-};

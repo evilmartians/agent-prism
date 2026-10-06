@@ -545,6 +545,13 @@
       }
     },
     {
+      "files": ["packages/ui/src/components/**/*.{ts,tsx}"],
+      "jsPlugins": ["eslint-plugin-filename-export"],
+      "rules": {
+        "filename-export/match-named-export": ["error", { "stripextra": true }]
+      }
+    },
+    {
       "files": ["**/*.d.ts", "packages/data/src/common/extract-span-error.ts"],
       "rules": {
         "typescript/consistent-type-definitions": "off"

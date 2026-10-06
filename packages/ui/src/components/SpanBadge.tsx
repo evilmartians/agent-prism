@@ -4,7 +4,10 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 
 import { Badge, type BadgeProps } from "./Badge";
-import { getSpanCategoryIcon, getSpanCategoryLabel } from "./shared";
+import {
+  getSpanCategoryIcon,
+  getSpanCategoryLabel,
+} from "./spanCategoryConfig";
 
 export type SpanBadgeProps = {
   category: TraceSpanCategory;

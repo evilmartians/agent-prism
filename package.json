@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "eslint-plugin-filename-export": "^2.0.0",
     "eslint-plugin-perfectionist": "^4.15.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-you-might-not-need-an-effect": "^0.9.3",

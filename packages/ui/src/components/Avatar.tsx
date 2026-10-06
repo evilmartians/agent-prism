@@ -5,9 +5,9 @@ import cn from "classnames";
 import { User } from "lucide-react";
 import { useState } from "react";
 
-import type { ComponentSize } from "./shared";
+import type { ComponentSize } from "./ComponentSize";
 
-import { ROUNDED_CLASSES } from "./shared";
+import { ROUNDED_CLASSES } from "./roundedClasses";
 
 export type AvatarSize = Extract<
   ComponentSize,
