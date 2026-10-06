@@ -126,44 +126,59 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * Root span selected in a failed run → a collapsible summary listing every
- * failed span in the run.
- */
 export const RunErrors: Story = {
   args: {
     allSpans: failedRunSpans,
     span: rootSpan,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Root span selected in a failed run → a collapsible summary listing every failed span in the run.",
+      },
+    },
+  },
 };
 
-/**
- * A non-root failed span selected → only that span's own error is shown.
- */
 export const SingleSpanError: Story = {
   args: {
     allSpans: failedRunSpans,
     span: parserSpan,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A non-root failed span selected → only that span's own error is shown.",
+      },
+    },
+  },
 };
 
-/**
- * A successful run renders nothing.
- */
 export const NoErrors: Story = {
   args: {
     allSpans: [successRootSpan],
     span: successRootSpan,
   },
+  parameters: {
+    docs: {
+      description: { story: "A successful run renders nothing." },
+    },
+  },
 };
 
-/**
- * A failed span carrying an exception stack trace — the stack is rendered
- * verbatim in a scrollable block below the message.
- */
 export const SpanErrorWithStack: Story = {
   args: {
     allSpans: [],
     span: exceptionSpan,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A failed span carrying an exception stack trace — the stack is rendered verbatim in a scrollable block below the message.",
+      },
+    },
   },
 };

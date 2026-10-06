@@ -13,15 +13,15 @@ type DetailsViewErrorRunRowProps = {
 
 /**
  * A single failed-span card: error dot + node title + message (+ stack when
- * present), with a button to copy the error formatted for an AI agent.
+ * present), with a button to copy the error formatted for an AI agent. The
+ * title carries a visually hidden "Error:" prefix, since the red color and the
+ * decorative dot are the only other error signals.
  */
 export const DetailsViewErrorRunRow = ({
   entry,
 }: DetailsViewErrorRunRowProps): ReactElement => {
   const { details } = entry;
   const title = details.nodeName;
-  // Built lazily-ish: only read on copy click, so avoid rebuilding the Markdown
-  // on unrelated re-renders.
   const agentContent = useMemo(
     () => formatSpanErrorForAgent(details),
     [details],
@@ -37,8 +37,6 @@ export const DetailsViewErrorRunRow = ({
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-start justify-between gap-2">
             <h4 className="text-agentprism-error line-clamp-3 min-w-0 flex-1 text-sm font-medium leading-5">
-              {/* Convey "error" to assistive tech / colorblind users; the red
-                  title and decorative dot are the only other error signals. */}
               <span className="sr-only">Error: </span>
               {title}
             </h4>

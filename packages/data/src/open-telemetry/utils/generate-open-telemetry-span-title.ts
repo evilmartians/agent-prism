@@ -11,7 +11,6 @@ export function generateOpenTelemetrySpanTitle(
 ): string {
   const { name } = span;
 
-  // For LLM operations, use model name
   const model = getOpenTelemetryAttributeValue(
     span,
     OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL,
@@ -21,7 +20,6 @@ export function generateOpenTelemetrySpanTitle(
     return `${model} - ${name}`;
   }
 
-  // For vector DB operations, use collection name
   const collection = getOpenTelemetryAttributeValue(
     span,
     STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION,
@@ -35,7 +33,6 @@ export function generateOpenTelemetrySpanTitle(
     return `${collection} - ${operation}`;
   }
 
-  // For HTTP operations, use method and URL
   const method = getOpenTelemetryAttributeValue(
     span,
     STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD,

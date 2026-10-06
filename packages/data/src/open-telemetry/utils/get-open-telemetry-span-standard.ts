@@ -10,7 +10,6 @@ import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-v
 export function getOpenTelemetrySpanStandard(
   span: OpenTelemetrySpan,
 ): OpenTelemetryStandard {
-  // Check for OpenTelemetry GenAI attributes
   if (
     getOpenTelemetryAttributeValue(
       span,
@@ -21,7 +20,6 @@ export function getOpenTelemetrySpanStandard(
     return "opentelemetry_genai";
   }
 
-  // Check for OpenInference attributes
   if (
     getOpenTelemetryAttributeValue(span, OPENINFERENCE_ATTRIBUTES.SPAN_KIND) ||
     getOpenTelemetryAttributeValue(span, OPENINFERENCE_ATTRIBUTES.LLM_MODEL)
@@ -29,6 +27,5 @@ export function getOpenTelemetrySpanStandard(
     return "openinference";
   }
 
-  // Default to standard OpenTelemetry
   return "standard";
 }

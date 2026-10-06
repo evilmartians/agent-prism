@@ -21,6 +21,7 @@
     "eslint-plugin-react-you-might-not-need-an-effect",
     "eslint-plugin-sonarjs",
     "eslint-plugin-boundaries",
+    "./scripts/oxlint-plugin-comments.cjs",
     { "name": "react-js", "specifier": "eslint-plugin-react" }
   ],
   "settings": {
@@ -617,7 +618,8 @@
       { "type": "natural", "order": "asc" }
     ],
     "perfectionist/sort-sets": ["error", { "type": "natural", "order": "asc" }],
-    "perfectionist/sort-maps": ["error", { "type": "natural", "order": "asc" }]
+    "perfectionist/sort-maps": ["error", { "type": "natural", "order": "asc" }],
+    "comments/no-comments": "error"
   },
   "overrides": [
     {
@@ -627,7 +629,8 @@
         "packages/ui/src/**"
       ],
       "rules": {
-        "typescript/explicit-module-boundary-types": "error"
+        "typescript/explicit-module-boundary-types": "error",
+        "comments/no-comments": ["error", { "allowJsdoc": true }]
       }
     },
     {

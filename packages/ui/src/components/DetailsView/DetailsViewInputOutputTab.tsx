@@ -13,9 +13,12 @@ type DetailsViewInputOutputTabProps = {
   data: TraceSpan;
 };
 
-// Stable reference so memo deps don't change when allSpans is omitted.
-const EMPTY_SPANS: TraceSpan[] = [];
+const STABLE_EMPTY_SPANS: TraceSpan[] = [];
 
+/**
+ * Input, output and todos of a span. Its own error is shown even when the full
+ * trace isn't supplied, and replaces the "no data" placeholder.
+ */
 export const DetailsViewInputOutputTab = ({
   allSpans,
   data,
@@ -23,17 +26,13 @@ export const DetailsViewInputOutputTab = ({
   const hasInput = Boolean(data.input);
   const hasOutput = Boolean(data.output);
 
-  const resolvedSpans = allSpans ?? EMPTY_SPANS;
+  const resolvedSpans = allSpans ?? STABLE_EMPTY_SPANS;
 
-  // Always rendered: shows the selected span's own error even when the full
-  // trace isn't supplied. Renders nothing when there is no error to show.
   const errorBlocks = (
     <DetailsViewErrorBlocks allSpans={resolvedSpans} span={data} />
   );
 
-  // Whether errorBlocks will render content — used to hide the redundant
-  // "no data" placeholder when an error is already shown.
-  const hasErrorContent = useMemo(
+  const errorBlocksRenderContent = useMemo(
     () => spanHasErrorSurface(data, resolvedSpans),
     [data, resolvedSpans],
   );
@@ -43,7 +42,7 @@ export const DetailsViewInputOutputTab = ({
       <div className="space-y-4">
         {errorBlocks}
 
-        {!hasErrorContent && (
+        {!errorBlocksRenderContent && (
           <div className="border-agentprism-border rounded-md border p-4">
             <p className="text-agentprism-muted-foreground text-sm">
               No input or output data available for this span

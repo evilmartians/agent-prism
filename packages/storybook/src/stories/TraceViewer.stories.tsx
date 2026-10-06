@@ -60,8 +60,6 @@ const errorSpan = (
   ...span,
 });
 
-// A run that failed end-to-end: the error propagates from a leaf tool call up
-// through the agent to the root chain, so every span on the path is failed.
 const failedRunSpans: TraceSpan[] = [
   errorSpan({
     children: [
@@ -108,8 +106,6 @@ const failedRunSpans: TraceSpan[] = [
   }),
 ];
 
-// A run that mostly succeeded but has one failed tool call among healthy
-// siblings — the partial-failure case.
 const partialFailureSpans: TraceSpan[] = [
   errorSpan({
     children: [

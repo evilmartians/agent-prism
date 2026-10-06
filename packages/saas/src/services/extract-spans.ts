@@ -11,8 +11,6 @@ import {
   reviveTraceSpan,
 } from "@evilmartians/agent-prism-data";
 
-// Parsed JSON carries timestamps as strings; reviving turns them back into
-// Dates.
 const isTraceSpanList = (value: unknown): value is unknown[] =>
   Array.isArray(value) && value.every(isTraceSpanLike);
 

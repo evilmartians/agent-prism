@@ -11,33 +11,29 @@ describe("categorizeStandardOpenTelemetry", () => {
         attributes: {
           "function.name": "some_function",
         },
-        name: "openai function call", // Contains both 'openai' and 'function'
+        name: "openai function call",
       });
-      // Should return llm_call due to 'openai' in name, not tool_execution for function
       expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
     });
 
     it("should prioritize agent operation over chain operation", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "agent chain workflow", // Contains 'agent', 'chain', and 'workflow'
+        name: "agent chain workflow",
       });
-      // Should return agent_invocation due to priority order
       expect(categorizeStandardOpenTelemetry(span)).toBe("agent_invocation");
     });
 
     it("should prioritize chain operation over retrieval operation", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "langchain vector search", // Contains 'langchain' and 'search'
+        name: "langchain vector search",
       });
-      // Should return chain_operation due to priority order
       expect(categorizeStandardOpenTelemetry(span)).toBe("chain_operation");
     });
 
     it("should prioritize retrieval over function calls", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "pinecone function call", // Contains 'pinecone' and 'function'
+        name: "pinecone function call",
       });
-      // Should return retrieval due to priority order
       expect(categorizeStandardOpenTelemetry(span)).toBe("retrieval");
     });
 
@@ -49,7 +45,6 @@ describe("categorizeStandardOpenTelemetry", () => {
         },
         name: "tool operation",
       });
-      // Should return tool_execution due to function call priority
       expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
 
@@ -60,7 +55,6 @@ describe("categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
       });
-      // Should return tool_execution due to HTTP priority
       expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
   });
@@ -345,11 +339,9 @@ describe("categorizeStandardOpenTelemetry", () => {
 
   describe("edge cases and complex scenarios", () => {
     it("should handle spans with mixed keywords correctly based on priority", () => {
-      // This span contains keywords for multiple categories
       const mixedSpan = createMockOpenTelemetrySpan({
-        name: "openai agent tool function", // openai (llm) + agent + tool + function
+        name: "openai agent tool function",
       });
-      // Should prioritize llm_call (highest priority)
       expect(categorizeStandardOpenTelemetry(mixedSpan)).toBe("llm_call");
     });
 
@@ -359,15 +351,14 @@ describe("categorizeStandardOpenTelemetry", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "mysql",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
-        name: "tool http database", // tool + http + database (all tool_execution)
+        name: "tool http database",
       });
-      // Should return tool_execution (function call has higher priority than http/db)
       expect(categorizeStandardOpenTelemetry(toolSpan)).toBe("tool_execution");
     });
 
     it("should handle partial keyword matches", () => {
       const partialSpan = createMockOpenTelemetrySpan({
-        name: "openai-like-service", // Contains 'openai' substring
+        name: "openai-like-service",
       });
       expect(categorizeStandardOpenTelemetry(partialSpan)).toBe("llm_call");
     });

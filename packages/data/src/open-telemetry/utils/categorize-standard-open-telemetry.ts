@@ -8,7 +8,6 @@ import { openTelemetryCategoryMappers } from "./open-telemetry-category-mappers.
 export function categorizeStandardOpenTelemetry(
   span: OpenTelemetrySpan,
 ): TraceSpanCategory {
-  // Priority order for detection
   if (openTelemetryCategoryMappers.isLLMCall(span)) return "llm_call";
   if (openTelemetryCategoryMappers.isAgentOperation(span))
     return "agent_invocation";

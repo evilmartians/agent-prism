@@ -113,8 +113,7 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
     expect(getTotalCost(usage)).toBe(0.00240375);
   });
 
-  it("is undefined for an observation without usage", () => {
-    // Langfuse fills the flat fields with 0 or null when the details are empty.
+  it("is undefined when Langfuse fills the flat fields with 0 or null", () => {
     expect(
       langfuseSpanAdapter.getTokenUsage(
         observation({

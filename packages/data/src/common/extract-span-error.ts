@@ -26,9 +26,7 @@ const nonEmptyString = (value: unknown): string | undefined => {
   return trimmed.length > 0 ? trimmed : undefined;
 };
 
-// Like nonEmptyString but returns the original value unchanged when it has
-// content — used for stack traces, where leading/trailing whitespace matters.
-const nonBlankString = (value: unknown): string | undefined =>
+const nonBlankUntrimmedString = (value: unknown): string | undefined =>
   typeof value === "string" && value.trim().length > 0 ? value : undefined;
 
 const ERROR_MESSAGE_KEYS = [
@@ -69,8 +67,7 @@ const parseRawRecords = (raw: string[]): Record<string, unknown>[] =>
     }
   });
 
-// First value found across the span's source records, in their order.
-const findInRecords = (
+const findFirstInRecords = (
   records: Record<string, unknown>[],
   read: (record: Record<string, unknown>) => string | undefined,
 ): string | undefined => {
@@ -93,30 +90,28 @@ export const extractSpanError = (span: TraceSpan): null | SpanErrorDetails => {
 
   const records = parseRawRecords(span.raw);
 
-  const rawMessage = findInRecords(records, (record) =>
+  const rawMessage = findFirstInRecords(records, (record) =>
     isRecord(record["status"])
       ? nonEmptyString(record["status"]["message"])
       : undefined,
   );
-  // Langfuse observations carry the error text on a top-level `statusMessage`
-  // rather than a nested `status.message`.
-  const rawStatusMessage = findInRecords(records, (record) =>
+  const langfuseStatusMessage = findFirstInRecords(records, (record) =>
     nonEmptyString(record["statusMessage"]),
   );
-  const rawName = findInRecords(records, (record) =>
+  const rawName = findFirstInRecords(records, (record) =>
     nonEmptyString(record["name"]),
   );
 
   const message =
     rawMessage ??
-    rawStatusMessage ??
+    langfuseStatusMessage ??
     readAttribute(span, ERROR_MESSAGE_KEYS) ??
     "Error (no message in span payload)";
 
   return {
     message,
     nodeName: rawName ?? span.title,
-    stack: readAttribute(span, ERROR_STACK_KEYS, nonBlankString),
+    stack: readAttribute(span, ERROR_STACK_KEYS, nonBlankUntrimmedString),
   };
 };
 

@@ -46,7 +46,6 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   ): TraceSpan[] {
     const docArray = Array.isArray(documents) ? documents : [documents];
 
-    // Extract all spans from all documents, resource spans and scope spans
     const allSpans: OpenTelemetrySpan[] = [];
 
     docArray.forEach((document) => {
@@ -57,7 +56,6 @@ export const openTelemetrySpanAdapter: SpanAdapter<
       });
     });
 
-    // Convert the flat array of spans to a tree structure
     return this.convertRawSpansToSpanTree(allSpans);
   },
 
@@ -65,13 +63,11 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     const spanMap = new Map<string, TraceSpan>();
     const rootSpans: TraceSpan[] = [];
 
-    // First pass: create all span objects
     spans.forEach((span) => {
       const convertedSpan = this.convertRawSpanToTraceSpan(span);
       spanMap.set(convertedSpan.id, convertedSpan);
     });
 
-    // Second pass: build parent-child relationships
     spans.forEach((span) => {
       const convertedSpan = spanMap.get(span.spanId);
       if (!convertedSpan) return;
@@ -169,6 +165,11 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     }
   },
 
+  /**
+   * Per the GenAI semantic conventions, cache counts are part of input_tokens;
+   * they are taken out of it so no token is counted twice. Reasoning tokens
+   * stay inside output; getTraceReasoning reports them.
+   */
   getTokenUsage(span: OpenTelemetrySpan): TokenUsage | undefined {
     const input = getNumberAttribute(
       span,
@@ -187,8 +188,6 @@ export const openTelemetrySpanAdapter: SpanAdapter<
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_COST,
     );
 
-    // Per the GenAI semantic conventions, cache counts are part of
-    // input_tokens; they are taken out of it so no token is counted twice.
     const cacheRead = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_CACHE_READ_INPUT_TOKENS,
@@ -211,7 +210,6 @@ export const openTelemetrySpanAdapter: SpanAdapter<
       );
     }
 
-    // Reasoning tokens stay inside output; getTraceReasoning reports them.
     if (output !== undefined || outputCost !== undefined) {
       usage = addTokenUsage(usage, "output", output ?? 0, outputCost);
     }
@@ -236,14 +234,16 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     return Object.keys(usage).length > 0 ? usage : undefined;
   },
 
+  /**
+   * The semantic conventions carry the reasoning token count, not the text.
+   * Non-reasoning calls often report 0, which is no reasoning to show.
+   */
   getTraceReasoning(span: OpenTelemetrySpan): TraceReasoning | undefined {
     const tokens = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_REASONING_OUTPUT_TOKENS,
     );
 
-    // The semantic conventions carry the reasoning token count, not the text.
-    // Non-reasoning calls often report 0, which is no reasoning to show.
     return tokens !== undefined && tokens > 0
       ? { content: "", tokens }
       : undefined;

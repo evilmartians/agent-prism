@@ -7,7 +7,6 @@ import { MistralLogo } from "./BrandLogos/MistralLogo";
 import { OpenAILogo } from "./BrandLogos/OpenAILogo";
 import { PerplexityLogo } from "./BrandLogos/PerplexityLogo";
 
-// Logo registry
 const LOGO_REGISTRY = {
   anthropic: AnthropicLogo,
   google: GoogleLogo,

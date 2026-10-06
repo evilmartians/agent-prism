@@ -44,7 +44,6 @@ const variantClasses: Record<IconButtonVariant, string> = {
   ghost: "bg-transparent",
 };
 
-// TODO: Remake to call Icon component directly instead of passing children
 export const IconButton = ({
   "aria-label": ariaLabel,
   children,

@@ -11,7 +11,8 @@ type RawDataTabProps = {
 
 /**
  * One block per source record: a span assembled from several records (say, a
- * start and an end event) shows each of them, with its own copy button.
+ * start and an end event) shows each of them, with its own copy button. Blocks
+ * are numbered when there are several, so screen readers can tell them apart.
  */
 export const DetailsViewRawDataTab = ({
   data,
@@ -31,7 +32,6 @@ export const DetailsViewRawDataTab = ({
   return (
     <div className="space-y-4">
       {data.raw.map((content, index) => {
-        // Numbered when there are several, so screen readers can tell them apart.
         const label =
           data.raw.length > 1
             ? `Raw ${index + 1} of ${data.raw.length}`

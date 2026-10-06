@@ -13,16 +13,19 @@ export type LangfuseDocument = {
 
 export type LangfuseObservation = {
   costDetails?: LangfuseCostDetails | null;
-  createdAt: string; // ISO date string
-  endTime: null | string; // ISO date string; null while the observation runs
+  /** ISO date string. */
+  createdAt: string;
+  /** ISO date string; null while the observation runs. */
+  endTime: null | string;
   environment: string;
   id: string;
   input?: null | string;
   inputCost?: null | number;
-  // Aggregates Langfuse derives from usageDetails / costDetails
+  /** Aggregate Langfuse derives from usageDetails. */
   inputUsage?: null | number;
   internalModelId?: null | string;
-  latency?: number; // milliseconds
+  /** Milliseconds. */
+  latency?: number;
   level?: LangfuseObservationLevel;
   metadata?: null | unknown;
   model?: null | string;
@@ -36,14 +39,17 @@ export type LangfuseObservation = {
   promptName?: null | string;
   promptVersion?: null | number;
   providedCostDetails?: Record<string, unknown>;
-  startTime: string; // ISO date string
+  /** ISO date string. */
+  startTime: string;
   statusMessage?: null | string;
-  timeToFirstToken?: null | number; // seconds
+  /** Seconds. */
+  timeToFirstToken?: null | number;
   totalCost?: null | number;
   totalUsage?: null | number;
   traceId: string;
   type?: LangfuseObservationType;
-  updatedAt: string; // ISO date string
+  /** ISO date string. */
+  updatedAt: string;
   usageDetails?: LangfuseUsageDetails | null;
   version?: null | string;
 };
@@ -92,11 +98,13 @@ export type LangfuseScoreSource = "ANNOTATION" | "API" | "EVAL" | "USER";
 
 export type LangfuseTrace = {
   bookmarked: boolean;
-  createdAt: string; // ISO date string
+  /** ISO date string. */
+  createdAt: string;
   environment: string;
   id: string;
   input?: null | string;
-  latency?: number; // milliseconds
+  /** Milliseconds. */
+  latency?: number;
   metadata?: null | Record<string, unknown> | string;
   name: string;
   observations?: LangfuseObservation[];
@@ -107,8 +115,10 @@ export type LangfuseTrace = {
   scores: LangfuseScore[];
   sessionId?: null | string;
   tags: string[];
-  timestamp: string; // ISO date string
-  updatedAt: string; // ISO date string
+  /** ISO date string. */
+  timestamp: string;
+  /** ISO date string. */
+  updatedAt: string;
   userId?: null | string;
   version: null | string;
 };

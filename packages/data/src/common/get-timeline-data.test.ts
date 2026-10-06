@@ -249,7 +249,6 @@ describe("getTimelineData", () => {
       const minStart = +new Date("2023-10-01T10:00:00.000Z");
       const maxEnd = +new Date("2023-10-01T10:01:00.000Z");
 
-      // Test at 25% of the timeline
       const spanCard1: TraceSpan = {
         attributes: [
           {
@@ -283,7 +282,6 @@ describe("getTimelineData", () => {
       });
       expect(result1.startPercent).toBe(25);
 
-      // Test at 75% of the timeline
       const spanCard2: TraceSpan = {
         attributes: [
           {
@@ -322,7 +320,6 @@ describe("getTimelineData", () => {
       const minStart = +new Date("2023-10-01T10:00:00.000Z");
       const maxEnd = +new Date("2023-10-01T10:01:00.000Z");
 
-      // Test 10% width
       const spanCard1: TraceSpan = {
         attributes: [
           {
@@ -356,7 +353,6 @@ describe("getTimelineData", () => {
       });
       expect(result1.widthPercent).toBe(10);
 
-      // Test 20% width
       const spanCard2: TraceSpan = {
         attributes: [
           {
@@ -420,7 +416,6 @@ describe("getTimelineData", () => {
         type: "chain_operation",
       };
 
-      // 1 second range
       const minStart1 = +new Date("2023-10-01T10:00:00.000Z");
       const maxEnd1 = +new Date("2023-10-01T10:00:01.000Z");
       const result1 = getTimelineData({
@@ -430,7 +425,6 @@ describe("getTimelineData", () => {
       });
       expect(result1.widthPercent).toBe(10);
 
-      // 100 millisecond range
       const minStart2 = +new Date("2023-10-01T10:00:00.000Z");
       const maxEnd2 = +new Date("2023-10-01T10:00:00.200Z");
       const result2 = getTimelineData({
@@ -464,7 +458,6 @@ describe("getTimelineData", () => {
         type: "embedding",
       };
 
-      // 1 hour range
       const minStart = +new Date("2023-10-01T10:00:00.000Z");
       const maxEnd = +new Date("2023-10-01T11:00:00.000Z");
 

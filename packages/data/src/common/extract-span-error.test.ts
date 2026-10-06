@@ -31,7 +31,6 @@ const makeSpan = (
   ...span,
 });
 
-// Reads message + nodeName from the normalized `raw` payload.
 const rawStatusMessageSpan = makeSpan({
   id: "parser",
   raw: [
@@ -47,7 +46,6 @@ const rawStatusMessageSpan = makeSpan({
   title: "Structured Output Parser",
 });
 
-// No message in `raw` — falls back to the `error.message` attribute.
 const errorMessageAttributeSpan = makeSpan({
   attributes: [
     {
@@ -61,7 +59,6 @@ const errorMessageAttributeSpan = makeSpan({
   title: "Weather Tool",
 });
 
-// OTLP-style exception attributes carry both message and stack.
 const otlpExceptionSpan = makeSpan({
   attributes: [
     {
@@ -79,7 +76,6 @@ const otlpExceptionSpan = makeSpan({
   title: "Redis connect",
 });
 
-// `status.message` provided as an attribute rather than in `raw`.
 const statusMessageAttributeSpan = makeSpan({
   attributes: [
     {
@@ -93,7 +89,6 @@ const statusMessageAttributeSpan = makeSpan({
   title: "LLM call",
 });
 
-// Error span with no discoverable message anywhere.
 const noMessageErrorSpan = makeSpan({
   id: "mystery",
   raw: ["not-json"],
@@ -101,7 +96,6 @@ const noMessageErrorSpan = makeSpan({
   title: "Mystery node",
 });
 
-// A failed run: workflow root → agent → parser, all in error state.
 const agentParentSpan = makeSpan({
   children: [rawStatusMessageSpan],
   id: "agent",
@@ -176,7 +170,7 @@ describe("extractSpanError", () => {
         }),
       ],
       status: "error",
-      title: "renamed", // matches id; distinct from raw.name below
+      title: "renamed",
     });
 
     expect(extractSpanError(span)?.nodeName).toBe("Human-readable node name");
@@ -217,8 +211,6 @@ describe("extractSpanError", () => {
   it("reads message from a top-level statusMessage (Langfuse)", () => {
     const span = makeSpan({
       id: "langfuse-obs",
-      // Langfuse observations expose the error text on `statusMessage`, not a
-      // nested `status.message`.
       raw: [
         JSON.stringify({ name: "Obs", statusMessage: "Observation failed" }),
       ],
@@ -457,14 +449,11 @@ describe("format helpers", () => {
 
     const text = formatRunErrorsForAgent(collectRunErrorEntries([root]));
 
-    // Sections are numbered 1..N in traversal order (regression guard for an
-    // off-by-one or reversed ordering that substring matching would miss).
     expect(text).toMatch(/## 1\. First failure/);
     expect(text).toMatch(/## 2\. Second failure/);
     expect(text.indexOf("First failure")).toBeLessThan(
       text.indexOf("Second failure"),
     );
-    // The run-level export renders stacks, not only the single-span formatter.
     expect(text).toMatch(/Stack:\nat first\(\)/);
   });
 

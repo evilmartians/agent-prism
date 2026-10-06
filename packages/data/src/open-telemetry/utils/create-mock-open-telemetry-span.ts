@@ -13,7 +13,10 @@ type MockSpanOptions = {
 };
 
 /**
- * Creates a mock Open TelemetrySpan for testing.
+ * Creates a mock Open TelemetrySpan for testing. Attribute values map to OTLP
+ * values: null and undefined carry no value, every number becomes an
+ * `intValue` string (parsed back with parseFloat), arrays are joined into a
+ * string, and anything else is stringified.
  */
 export const createMockOpenTelemetrySpan = (
   options: MockSpanOptions = {},
@@ -29,7 +32,6 @@ export const createMockOpenTelemetrySpan = (
   const startTime: [number, number] = [1640995200, 0];
   const endTime: [number, number] = [startTime[0] + duration[0], duration[1]];
 
-  // Convert to nanosecond strings
   const startTimeNano = (
     BigInt(startTime[0]) * 1000000000n +
     BigInt(startTime[1])
@@ -44,21 +46,17 @@ export const createMockOpenTelemetrySpan = (
       key,
       value: (() => {
         if (value === null || value === undefined) {
-          // Don't include any value properties for null/undefined
           return {};
         }
         if (typeof value === "string") return { stringValue: value };
         if (typeof value === "number") {
-          // Store all numbers as intValue, including special values
-          // They'll be parsed back with parseFloat
           return { intValue: String(value) };
         }
         if (typeof value === "boolean") return { boolValue: value };
         if (Array.isArray(value)) {
-          // Convert arrays to string for testing compatibility
           return { stringValue: value.join(", ") };
         }
-        return { stringValue: String(value) }; // Fallback for objects, etc.
+        return { stringValue: String(value) };
       })(),
     })),
     droppedAttributesCount: 0,

@@ -40,8 +40,6 @@ describe("getOpenTelemetrySpanStandard", () => {
       expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
     });
 
-    // Note: getSpanStandard only checks OPERATION_NAME and SYSTEM for GenAI detection
-    // These attributes alone don't trigger GenAI detection
     it("should not detect OpenTelemetry GenAI with only model attribute", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
@@ -105,8 +103,6 @@ describe("getOpenTelemetrySpanStandard", () => {
       expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
-    // Note: getSpanStandard only checks SPAN_KIND and LLM_MODEL for OpenInference detection
-    // These attributes alone don't trigger OpenInference detection
     it("should not detect OpenInference with only input messages", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
@@ -246,7 +242,6 @@ describe("getOpenTelemetrySpanStandard", () => {
         },
       });
 
-      // Empty strings are falsy in this context, so should default to standard
       expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
     });
 
@@ -257,7 +252,6 @@ describe("getOpenTelemetrySpanStandard", () => {
         },
       });
 
-      // Whitespace strings are truthy
       expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
@@ -269,15 +263,14 @@ describe("getOpenTelemetrySpanStandard", () => {
         },
       });
 
-      // true is truthy, false is falsy
       expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
     });
 
     it("should handle numeric attribute values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: 1, // truthy
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: 0, // falsy
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: 1,
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: 0,
         },
       });
 
@@ -446,12 +439,10 @@ describe("getOpenTelemetrySpanStandard", () => {
     });
 
     it("should detect spans from actual trace examples (limited by actual detection logic)", () => {
-      // Based on the real trace data you showed earlier
-      // Only spans with operation_name or system will be detected as GenAI
       const span = createMockOpenTelemetrySpan({
         attributes: {
           "custom.field": "custom_value",
-          "gen_ai.operation.name": "chat", // This will trigger GenAI detection
+          "gen_ai.operation.name": "chat",
           "gen_ai.request.model": "gpt-4.1-mini",
         },
         name: "call_llm gpt-4.1-mini",

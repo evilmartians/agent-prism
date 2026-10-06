@@ -20,8 +20,6 @@ type DetailsViewRunErrorsSummaryProps = {
 export const DetailsViewRunErrorsSummary = ({
   entries,
 }: DetailsViewRunErrorsSummaryProps): null | ReactElement => {
-  // Memoized (hook must precede the early return) so the agent Markdown isn't
-  // rebuilt on unrelated re-renders of this component.
   const agentContent = useMemo(
     () => formatRunErrorsForAgent(entries),
     [entries],

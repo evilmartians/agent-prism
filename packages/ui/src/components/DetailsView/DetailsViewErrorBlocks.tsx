@@ -27,7 +27,8 @@ export type DetailsViewErrorBlocksProps = {
 /**
  * Error surface for the DetailsView Input/Output tab.
  *
- * - Root span selected → run-level summary of every failed span in the run.
+ * - Root span selected → run-level summary of every failed span in its own
+ *   subtree, so sibling roots' errors don't leak in.
  * - Any other span selected → that span's own error only.
  * - Otherwise renders nothing.
  */
@@ -35,9 +36,6 @@ export const DetailsViewErrorBlocks = ({
   allSpans,
   span,
 }: DetailsViewErrorBlocksProps): null | ReactElement => {
-  // Scope run errors to the selected root's own subtree ([span]), not the
-  // whole forest, so sibling roots' errors don't leak in. Memoized so
-  // unrelated parent re-renders don't re-walk/parse the tree.
   const runEntries = useMemo(
     () =>
       isRootTraceSpan(span, allSpans) ? collectRunErrorEntries([span]) : [],

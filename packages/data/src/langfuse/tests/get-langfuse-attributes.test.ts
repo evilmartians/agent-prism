@@ -131,7 +131,6 @@ describe("getLangfuseAttributes", () => {
         value: { boolValue: true },
       });
 
-      // Ensure complex/unsupported values are not included
       expect(result.find((r) => r.key === "obj")).toBeUndefined();
       expect(result.find((r) => r.key === "arr")).toBeUndefined();
       expect(result.find((r) => r.key === "nil")).toBeUndefined();

@@ -59,7 +59,6 @@ function extractOklchValues(colorString: string): string {
 
   const parts = values.trim().split(/\s+/);
 
-  // Convert 100% to 1 and 0% to 0 for lightness, keep percentages otherwise
   if (parts[0] === "100%") {
     parts[0] = "1";
   } else if (parts[0] === "0%") {

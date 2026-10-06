@@ -47,7 +47,7 @@ describe("generateOpenTelemetrySpanTitle", () => {
 
       const spanWithNumberModel = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: 123, // Invalid but should still work
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: 123,
         },
         name: "completion",
       });
@@ -94,7 +94,6 @@ describe("generateOpenTelemetrySpanTitle", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION]: "query",
-          // Missing collection
         },
         name: "vector_search",
       });
@@ -108,7 +107,6 @@ describe("generateOpenTelemetrySpanTitle", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION]: "embeddings",
-          // Missing operation
         },
         name: "vector_search",
       });
@@ -174,7 +172,6 @@ describe("generateOpenTelemetrySpanTitle", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           "http.url": "https://api.example.com/users",
-          // Missing method
         },
         name: "http_request",
       });
@@ -188,7 +185,6 @@ describe("generateOpenTelemetrySpanTitle", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           "http.method": "POST",
-          // Missing URL
         },
         name: "http_request",
       });
@@ -386,7 +382,7 @@ describe("generateOpenTelemetrySpanTitle", () => {
     it("should handle boolean values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: true, // boolean
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: true,
         },
         name: "test",
       });
@@ -399,7 +395,7 @@ describe("generateOpenTelemetrySpanTitle", () => {
     it("should handle numeric values for string fields", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "http.method": 404, // number instead of string
+          "http.method": 404,
           "http.url": "https://api.example.com/not-found",
         },
         name: "http_request",

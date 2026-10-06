@@ -179,7 +179,6 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
 
   describe("integration scenarios", () => {
     it("should handle spans with mixed standard indicators correctly", () => {
-      // Span that could match multiple standards but GenAI takes priority
       const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
@@ -202,7 +201,7 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
     it("should properly cascade through standards when primary returns unknown", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "custom", // Detected as GenAI but unknown operation
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "custom",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
       });
@@ -281,7 +280,6 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
     });
 
     it("should categorize tool execution across standards", () => {
-      // Test GenAI tool execution
       const genaiSpan = createMockOpenTelemetrySpan({
         attributes: {
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "execute_tool",
@@ -297,7 +295,6 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
         "tool_execution",
       );
 
-      // Test OpenInference tool execution
       const openinfSpan = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "TOOL",
@@ -342,7 +339,6 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
       });
       vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
 
-      // Should not throw, but fallback gracefully
       expect(() => openTelemetrySpanAdapter.getSpanCategory(span)).toThrow(
         "Categorization error",
       );

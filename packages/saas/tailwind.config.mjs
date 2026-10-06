@@ -1,6 +1,5 @@
 import { agentPrismTailwindColors } from "@evilmartians/agent-prism-ui/theme";
 
-/** @type {import('tailwindcss').Config} */
 export default {
   content: [
     "./src/**/*.{js,ts,jsx,tsx,mdx}",

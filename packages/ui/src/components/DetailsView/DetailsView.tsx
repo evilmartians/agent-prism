@@ -148,11 +148,6 @@ export const DetailsView = ({
 
   const tabItems = useMemo(() => getTabItems(data), [data]);
 
-  // Reconcile the selected tab when the available tabs change (e.g. the same
-  // DetailsView is reused for a different span that lacks the current tab's
-  // content). Fall back to the first always-present tab instead of showing an
-  // orphaned empty state, and report it like any other tab change so callers
-  // tracking the active tab stay in sync.
   useEffect(() => {
     if (!tabItems.some((item) => item.value === tab)) {
       const fallbackTab = tabItems[0]?.value ?? defaultTab;

@@ -9,11 +9,13 @@ export type ThinkingBadgeProps = {
   className?: string | undefined;
 };
 
+/**
+ * Badge in the thinking colors. It renders Badge `unstyled`, since Badge's
+ * default colors would otherwise override them.
+ */
 export const ThinkingBadge = ({
   className,
 }: ThinkingBadgeProps): ReactElement => {
-  // `unstyled` drops Badge's default colors, which would otherwise override
-  // the thinking tokens below.
   return (
     <Badge
       className={cn(

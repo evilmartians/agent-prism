@@ -23,7 +23,6 @@ export const SimpleTraceViewerMobileLayout = ({
 }: SimpleTraceViewerLayoutProps) => {
   const [showDetails, setShowDetails] = useState(false);
 
-  // Details view
   if (showDetails && selectedSpan) {
     return (
       <div className="flex h-full flex-col gap-4 overflow-y-auto p-4">
@@ -42,7 +41,6 @@ export const SimpleTraceViewerMobileLayout = ({
     );
   }
 
-  // Tree view
   return (
     <div className="flex h-full flex-col gap-4">
       <TraceViewerTreeViewContainer

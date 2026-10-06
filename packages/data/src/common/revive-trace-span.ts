@@ -21,8 +21,6 @@ const isTodoStatus = (value: unknown): value is TraceTodoStatus =>
 const isReasoningLevel = (value: unknown): value is TraceReasoningLevel =>
   value === "high" || value === "medium" || value === "low";
 
-// Records rather than arrays, so adding a status or category to the union
-// without listing it here is a type error.
 const SPAN_STATUSES: Record<TraceSpanStatus, true> = {
   error: true,
   pending: true,
@@ -82,9 +80,6 @@ export const isTraceSpanLike = (
   value["raw"].every((entry) => typeof entry === "string") &&
   isTimestamp(value["startTime"]) &&
   isTimestamp(value["endTime"]);
-
-// The optional structures below come from an untrusted file. Malformed parts
-// are dropped here rather than handed to views that would crash on them.
 
 const reviveTokenUsage = (value: unknown): TokenUsage | undefined => {
   if (!isRecord(value)) return undefined;

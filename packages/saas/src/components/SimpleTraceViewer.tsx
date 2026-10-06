@@ -72,8 +72,6 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
     searchValue,
     selectedSpan,
     selectedTrace: fakeTrace,
-    // Full (unfiltered) tree so DetailsView can surface run-level errors when
-    // the root span is selected.
     selectedTraceSpans: spans,
     setExpandedSpansIds,
     setSearchValue,

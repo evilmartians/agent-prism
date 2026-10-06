@@ -37,10 +37,8 @@ export const langfuseSpanAdapter: SpanAdapter<
   LangfuseObservation
 > = {
   convertRawDocumentsToSpans(documents: LangfuseDocument[]): TraceSpan[] {
-    // Handle both single document and array of documents
     const docArray = Array.isArray(documents) ? documents : [documents];
 
-    // Extract all spans from all documents, resource spans and scope spans
     const allObservations: LangfuseObservation[] = [];
 
     docArray.forEach((document) => {
@@ -49,20 +47,17 @@ export const langfuseSpanAdapter: SpanAdapter<
       });
     });
 
-    // Convert the flat array of spans to a tree structure
     return this.convertRawSpansToSpanTree(allObservations);
   },
   convertRawSpansToSpanTree(spans: LangfuseObservation[]): TraceSpan[] {
     const spanMap = new Map<string, TraceSpan>();
     const rootSpans: TraceSpan[] = [];
 
-    // First pass: create all span objects
     spans.forEach((span) => {
       const convertedSpan = this.convertRawSpanToTraceSpan(span);
       spanMap.set(convertedSpan.id, convertedSpan);
     });
 
-    // Second pass: build parent-child relationships
     spans.forEach((span) => {
       const convertedSpan = spanMap.get(span.id);
       if (!convertedSpan) return;
@@ -92,7 +87,6 @@ export const langfuseSpanAdapter: SpanAdapter<
     return {
       attributes: getLangfuseAttributes(span),
       children,
-      // Langfuse leaves endTime null while an observation is still running.
       endTime: new Date(span.endTime ?? span.startTime),
       id: span.id,
       input: ioData.input,
@@ -149,9 +143,12 @@ export const langfuseSpanAdapter: SpanAdapter<
         return "success";
     }
   },
+  /**
+   * Reads usageDetails and costDetails. The flat input/output/total fields are
+   * sums Langfuse derives from them, so they are read only when an observation
+   * comes without the details.
+   */
   getTokenUsage(span: LangfuseObservation): TokenUsage | undefined {
-    // The flat input/output/total fields are sums Langfuse derives from the
-    // details, so they are read only when an observation comes without them.
     const usageDetails: Record<string, null | number | undefined> =
       span.usageDetails ?? {
         input: span.inputUsage,
@@ -187,10 +184,10 @@ export const langfuseSpanAdapter: SpanAdapter<
 
     return Object.keys(usage).length > 0 ? usage : undefined;
   },
+  /** Langfuse records how many tokens went to reasoning, but not the text. */
   getTraceReasoning(span: LangfuseObservation): TraceReasoning | undefined {
     const tokens = span.usageDetails?.output_reasoning_tokens;
 
-    // Langfuse records how many tokens went to reasoning, but not the text.
     return tokens ? { content: "", tokens } : undefined;
   },
   getTraceTodos(): TraceTodo[] | undefined {

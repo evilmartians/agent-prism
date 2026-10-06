@@ -70,8 +70,6 @@ describe("agent-prism / details-tabs — tab decisions", () => {
     });
 
     expect(hasThinkingContent(langfuseSpan)).toBe(false);
-    // The upstream guard keyed on gen_ai.usage.input_tokens — we keep the Context
-    // tab claude_code-only so a plain OTLP/Langfuse LLM span never grows one.
     expect(hasContextContent(langfuseSpan)).toBe(false);
     expect(hasTodos(langfuseSpan)).toBe(false);
   });

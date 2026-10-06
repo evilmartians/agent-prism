@@ -41,20 +41,29 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * A single failed span — the label is singular ("1 error").
- */
 export const SingleError: Story = {
   args: {
     count: 1,
   },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A single failed span — the label is singular ("1 error").',
+      },
+    },
+  },
 };
 
-/**
- * Multiple failed spans in a run — the label is pluralized ("3 errors").
- */
 export const MultipleErrors: Story = {
   args: {
     count: 3,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Multiple failed spans in a run — the label is pluralized ("3 errors").',
+      },
+    },
   },
 };

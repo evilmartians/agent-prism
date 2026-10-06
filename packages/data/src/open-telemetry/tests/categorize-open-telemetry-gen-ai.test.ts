@@ -265,7 +265,6 @@ describe("categorizeOpenTelemetryGenAI", () => {
 
   describe("spans from real trace examples", () => {
     it("should categorize spans from the provided trace examples", () => {
-      // Based on the real trace data you showed earlier
       const llmSpan = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.operation.name": "chat",

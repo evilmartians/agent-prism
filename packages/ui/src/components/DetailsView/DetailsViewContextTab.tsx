@@ -57,8 +57,6 @@ const smallCostFormat = new Intl.NumberFormat("en-US", {
   style: "currency",
 });
 
-// Four decimals suit typical LLM costs. Smaller non-zero costs keep two
-// significant digits instead, so a real charge never reads as $0.0000.
 function formatCost(cost: number): string {
   return cost !== 0 && Math.abs(cost) < 0.0001
     ? smallCostFormat.format(cost)
@@ -122,6 +120,16 @@ const getContextRows = ({
   return contextRows;
 };
 
+/**
+ * Context window position and token breakdown of a span.
+ *
+ * - The context limit is used only when the span reports a positive one:
+ *   windows differ by model, so an unknown limit is never guessed.
+ * - Costs show four decimals; smaller non-zero costs keep two significant
+ *   digits, so a real charge never reads as $0.0000.
+ * - The `total` usage entry holds what the source did not break down by type,
+ *   so it has no row of its own: it is already part of the Total row.
+ */
 export function DetailsViewContextTab({
   data,
 }: DetailsViewContextTabProps): ReactElement {
@@ -163,8 +171,6 @@ export function DetailsViewContextTab({
 
   const cappedFill =
     fillPercent !== undefined ? clampPercent(fillPercent) : undefined;
-  // Context windows differ by model, so only a reported, positive limit is used.
-  // Without one, the limit stays unknown rather than defaulting to a guess.
   const limit =
     contextLimit !== undefined && contextLimit > 0 ? contextLimit : undefined;
   const barFill = getBarFill(cappedFill, cumulativeTokens, limit);
@@ -176,8 +182,6 @@ export function DetailsViewContextTab({
     limit,
   });
 
-  // The `total` entry holds whatever the source did not break down by type, so
-  // it has no row of its own: it is already part of the Total row.
   const breakdownRows: StatRowData[] = getTokenUsageEntries(usage)
     .filter(
       (entry) =>

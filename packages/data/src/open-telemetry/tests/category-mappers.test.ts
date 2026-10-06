@@ -489,7 +489,7 @@ describe("openTelemetryCategoryMappers", () => {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "openai_call",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
-        name: "openai tool function", // Matches LLM + function + tool keywords
+        name: "openai tool function",
       });
 
       expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
@@ -617,15 +617,15 @@ describe("openTelemetryCategoryMappers", () => {
     it("should handle attribute values of different types", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: true, // boolean instead of string
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: [], // array instead of string
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: 200, // number instead of string
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: true,
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: [],
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: 200,
         },
       });
 
-      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true); // 200 is truthy
-      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true); // true is truthy
-      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true); // [] is truthy
+      expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
+      expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true);
+      expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
     });
   });
 });

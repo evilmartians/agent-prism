@@ -41,17 +41,27 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * The default error glyph — a small error-accented dot placed next to failed
- * spans.
- */
-export const Default: Story = {};
+export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The default error glyph — a small error-accented dot placed next to failed spans.",
+      },
+    },
+  },
+};
 
-/**
- * The same glyph scaled up via `className`, e.g. for a standalone status marker.
- */
 export const Enlarged: Story = {
   args: {
     className: "size-3",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The same glyph scaled up via `className`, e.g. for a standalone status marker.",
+      },
+    },
   },
 };

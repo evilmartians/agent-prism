@@ -23,7 +23,7 @@ export const SimpleTraceViewerDesktopLayout = ({
   return (
     <PanelGroup className="h-full" direction="horizontal">
       <Panel
-        className="flex h-full flex-col overflow-hidden pr-2" // Added pr-2 for spacing
+        className="flex h-full flex-col overflow-hidden pr-2"
         defaultSize={60}
         id="tree-view"
         minSize={40}
@@ -43,7 +43,6 @@ export const SimpleTraceViewerDesktopLayout = ({
         />
       </Panel>
       <PanelResizeHandle className="mx-2" />{" "}
-      {/* Added mx-2 for handle spacing */}
       <Panel
         className="h-full overflow-hidden"
         defaultSize={40}

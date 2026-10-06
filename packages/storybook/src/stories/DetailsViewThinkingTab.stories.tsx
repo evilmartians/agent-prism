@@ -73,10 +73,16 @@ export const WithMetadata: Story = {
   },
 };
 
-/** The provider reported reasoning tokens but withheld the text. */
 export const TokensOnly: Story = {
   args: {
     data: withReasoning({ content: "", tokens: 512 }),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "The provider reported reasoning tokens but withheld the text.",
+      },
+    },
   },
 };
 

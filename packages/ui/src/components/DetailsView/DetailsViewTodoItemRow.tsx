@@ -8,14 +8,16 @@ import cn from "classnames";
 
 import { DetailsViewTodoStatusIcon } from "./DetailsViewTodoStatusIcon";
 
-// Status is otherwise shown only by icon, color and strike-through, so each row
-// and count also carries it as text for screen readers.
-const STATUS_LABELS: Record<TraceTodoStatus, string> = {
+const SCREEN_READER_STATUS_LABELS: Record<TraceTodoStatus, string> = {
   completed: "Completed",
   in_progress: "In progress",
   pending: "Pending",
 };
 
+/**
+ * One todo. Status is otherwise shown only by icon, color and strike-through,
+ * so the row also carries it as text for screen readers.
+ */
 export function DetailsViewTodoItemRow({
   todo,
 }: {
@@ -41,7 +43,9 @@ export function DetailsViewTodoItemRow({
           !isCompleted && !isInProgress && "text-agentprism-foreground",
         )}
       >
-        <span className="sr-only">{STATUS_LABELS[todo.status]}: </span>
+        <span className="sr-only">
+          {SCREEN_READER_STATUS_LABELS[todo.status]}:{" "}
+        </span>
         {todo.title}
       </span>
     </div>
