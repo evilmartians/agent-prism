@@ -3,13 +3,12 @@ import type {
   TraceSpanAttribute,
 } from "@evilmartians/agent-prism-types";
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null;
+import { isRecord } from "../../common/guards.js";
 
 const ATTRIBUTE_SECTIONS = ["attributes", "resourceAttributes"] as const;
 
 export function getLangfuseAttributes(
-  span: LangfuseObservation,
+  span: Readonly<Pick<LangfuseObservation, "metadata">>,
 ): TraceSpanAttribute[] {
   if (typeof span.metadata !== "string") {
     return [];
@@ -34,18 +33,22 @@ export function getLangfuseAttributes(
   });
 }
 
-function getAttributeValues(attributes: object): TraceSpanAttribute[] {
+function getAttributeValues(
+  attributes: Readonly<Record<string, unknown>>,
+): TraceSpanAttribute[] {
   const result: TraceSpanAttribute[] = [];
 
-  Object.entries(attributes).forEach(([key, value]) => {
-    if (typeof value === "string") {
-      result.push({ key, value: { stringValue: value } });
-    } else if (typeof value === "number") {
-      result.push({ key, value: { intValue: String(value) } });
-    } else if (typeof value === "boolean") {
-      result.push({ key, value: { boolValue: value } });
-    }
-  });
+  Object.entries(attributes).forEach(
+    ([key, value]: readonly [string, unknown]) => {
+      if (typeof value === "string") {
+        result.push({ key, value: { stringValue: value } });
+      } else if (typeof value === "number") {
+        result.push({ key, value: { intValue: String(value) } });
+      } else if (typeof value === "boolean") {
+        result.push({ key, value: { boolValue: value } });
+      }
+    },
+  );
 
   return result;
 }

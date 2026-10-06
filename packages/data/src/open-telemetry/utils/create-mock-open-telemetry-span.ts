@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   OpenTelemetrySpan,
   OpenTelemetrySpanKind,
   OpenTelemetryStatusCode,
@@ -27,8 +28,8 @@ type MockSpanOptions = {
  * string.
  */
 export const createMockOpenTelemetrySpan = (
-  options: MockSpanOptions = {},
-): OpenTelemetrySpan => {
+  options: DeepReadonly<MockSpanOptions> = {},
+): DeepReadonly<OpenTelemetrySpan> => {
   const {
     attributes = {},
     duration = [2, 0],
@@ -50,20 +51,22 @@ export const createMockOpenTelemetrySpan = (
   ).toString();
 
   return {
-    attributes: Object.entries(attributes).map(([key, value]) => ({
-      key,
-      value: (() => {
-        if (value === null || value === undefined) {
-          return {};
-        }
-        if (typeof value === "string") return { stringValue: value };
-        if (typeof value === "number") {
-          return { intValue: String(value) };
-        }
-        if (typeof value === "boolean") return { boolValue: value };
-        return { stringValue: value.join(", ") };
-      })(),
-    })),
+    attributes: Object.entries(attributes).map(
+      ([key, value]: readonly [string, MockAttributeValue]) => ({
+        key,
+        value: (() => {
+          if (value === null || value === undefined) {
+            return {};
+          }
+          if (typeof value === "string") return { stringValue: value };
+          if (typeof value === "number") {
+            return { intValue: String(value) };
+          }
+          if (typeof value === "boolean") return { boolValue: value };
+          return { stringValue: value.join(", ") };
+        })(),
+      }),
+    ),
     droppedAttributesCount: 0,
     droppedEventsCount: 0,
     droppedLinksCount: 0,

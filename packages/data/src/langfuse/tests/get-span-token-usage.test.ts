@@ -1,4 +1,7 @@
-import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
+import type {
+  DeepReadonly,
+  LangfuseObservation,
+} from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
@@ -12,8 +15,8 @@ import { langfuseSpanAdapter } from "../adapter.js";
 import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
 
 const observation = (
-  overrides: Partial<LangfuseObservation>,
-): LangfuseObservation => ({
+  overrides: DeepReadonly<Partial<LangfuseObservation>>,
+): DeepReadonly<LangfuseObservation> => ({
   ...createMockLangfuseObservation(),
   ...overrides,
 });

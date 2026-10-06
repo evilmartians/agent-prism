@@ -48,7 +48,9 @@ const matchesShape = (
   shape: Readonly<Record<string, Guard<unknown>>>,
 ): boolean =>
   isPlainRecord(value) &&
-  Object.entries(shape).every(([key, guard]) => guard(value[key]));
+  Object.entries(shape).every(
+    ([key, guard]: readonly [string, Guard<unknown>]) => guard(value[key]),
+  );
 
 export const hasShape =
   <T>(shape: Shape<T>): Guard<T> =>

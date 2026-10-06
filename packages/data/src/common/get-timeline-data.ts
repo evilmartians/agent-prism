@@ -7,9 +7,9 @@ export const getTimelineData = ({
   minStart,
   spanCard,
 }: {
-  maxEnd: number;
-  minStart: number;
-  spanCard: TraceSpan;
+  readonly maxEnd: number;
+  readonly minStart: number;
+  readonly spanCard: Readonly<Pick<TraceSpan, "endTime" | "startTime">>;
 }): { durationMs: number; startPercent: number; widthPercent: number } => {
   const startMs = +spanCard.startTime;
   const totalRange = maxEnd - minStart;

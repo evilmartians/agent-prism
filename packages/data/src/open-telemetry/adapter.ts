@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   InputOutputData,
   TokenUsage,
   TraceReasoning,
@@ -18,6 +19,7 @@ import {
 import type { SpanAdapter } from "../types.js";
 
 import { buildSpanTree } from "../common/build-span-tree.js";
+import { toList } from "../common/to-list.js";
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { categorizeOpenInference } from "./utils/categorize-open-inference.js";
 import { categorizeOpenTelemetryGenAI } from "./utils/categorize-open-telemetry-gen-ai.js";
@@ -27,8 +29,10 @@ import { generateOpenTelemetrySpanTitle } from "./utils/generate-open-telemetry-
 import { getOpenTelemetryAttributeValue } from "./utils/get-open-telemetry-attribute-value.js";
 import { getOpenTelemetrySpanStandard } from "./utils/get-open-telemetry-span-standard.js";
 
+type ReadonlyOpenTelemetrySpan = DeepReadonly<OpenTelemetrySpan>;
+
 const getNumberAttribute = (
-  span: OpenTelemetrySpan,
+  span: ReadonlyOpenTelemetrySpan,
   key: string,
 ): number | undefined => {
   const value = getOpenTelemetryAttributeValue(span, key);
@@ -43,13 +47,13 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   OpenTelemetrySpan
 > = {
   convertRawDocumentsToSpans(
-    documents: OpenTelemetryDocument | OpenTelemetryDocument[],
+    documents:
+      | DeepReadonly<OpenTelemetryDocument>
+      | readonly DeepReadonly<OpenTelemetryDocument>[],
   ): TraceSpan[] {
-    const docArray = Array.isArray(documents) ? documents : [documents];
+    const allSpans: ReadonlyOpenTelemetrySpan[] = [];
 
-    const allSpans: OpenTelemetrySpan[] = [];
-
-    docArray.forEach((document) => {
+    toList(documents).forEach((document) => {
       document.resourceSpans.forEach((resourceSpan) => {
         resourceSpan.scopeSpans.forEach((scopeSpan) => {
           allSpans.push(...scopeSpan.spans);
@@ -60,7 +64,9 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     return this.convertRawSpansToSpanTree(allSpans);
   },
 
-  convertRawSpansToSpanTree(spans: OpenTelemetrySpan[]): TraceSpan[] {
+  convertRawSpansToSpanTree(
+    spans: readonly ReadonlyOpenTelemetrySpan[],
+  ): TraceSpan[] {
     return buildSpanTree(spans, {
       convert: (span) => this.convertRawSpanToTraceSpan(span),
       getId: (span) => span.spanId,
@@ -68,15 +74,12 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     });
   },
 
-  convertRawSpanToTraceSpan(
-    span: OpenTelemetrySpan,
-    children: TraceSpan[] = [],
-  ): TraceSpan {
+  convertRawSpanToTraceSpan(span: ReadonlyOpenTelemetrySpan): TraceSpan {
     const ioData = this.getSpanInputOutput(span);
 
     return {
-      attributes: span.attributes,
-      children,
+      attributes: [...span.attributes],
+      children: [],
       endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
       id: span.spanId,
       input: ioData.input,
@@ -92,7 +95,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     };
   },
 
-  getSpanCategory(span: OpenTelemetrySpan): TraceSpanCategory {
+  getSpanCategory(span: ReadonlyOpenTelemetrySpan): TraceSpanCategory {
     const standard = getOpenTelemetrySpanStandard(span);
 
     switch (standard) {
@@ -117,7 +120,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     }
   },
 
-  getSpanInputOutput(span: OpenTelemetrySpan): InputOutputData {
+  getSpanInputOutput(span: ReadonlyOpenTelemetrySpan): InputOutputData {
     const input = getOpenTelemetryAttributeValue(
       span,
       INPUT_OUTPUT_ATTRIBUTES.INPUT_VALUE,
@@ -133,7 +136,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     };
   },
 
-  getSpanStatus(span: OpenTelemetrySpan): TraceSpanStatus {
+  getSpanStatus(span: ReadonlyOpenTelemetrySpan): TraceSpanStatus {
     switch (span.status.code) {
       case "STATUS_CODE_ERROR":
         return "error";
@@ -151,7 +154,7 @@ export const openTelemetrySpanAdapter: SpanAdapter<
    * they are taken out of it so no token is counted twice. Reasoning tokens
    * stay inside output; getTraceReasoning reports them.
    */
-  getTokenUsage(span: OpenTelemetrySpan): TokenUsage | undefined {
+  getTokenUsage(span: ReadonlyOpenTelemetrySpan): TokenUsage | undefined {
     const input = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS,
@@ -219,7 +222,9 @@ export const openTelemetrySpanAdapter: SpanAdapter<
    * The semantic conventions carry the reasoning token count, not the text.
    * Non-reasoning calls often report 0, which is no reasoning to show.
    */
-  getTraceReasoning(span: OpenTelemetrySpan): TraceReasoning | undefined {
+  getTraceReasoning(
+    span: ReadonlyOpenTelemetrySpan,
+  ): TraceReasoning | undefined {
     const tokens = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_REASONING_OUTPUT_TOKENS,

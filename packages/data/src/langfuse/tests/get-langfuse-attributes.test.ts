@@ -130,11 +130,6 @@ describe("getLangfuseAttributes", () => {
         key: "bool",
         value: { boolValue: true },
       });
-
-      expect(result.find((r) => r.key === "obj")).toBeUndefined();
-      expect(result.find((r) => r.key === "arr")).toBeUndefined();
-      expect(result.find((r) => r.key === "nil")).toBeUndefined();
-      expect(result.find((r) => r.key === "undef")).toBeUndefined();
       expect(result).toHaveLength(3);
     });
   });

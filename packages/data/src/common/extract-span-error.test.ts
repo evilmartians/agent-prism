@@ -1,4 +1,4 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
@@ -19,9 +19,11 @@ import {
   formatSpanErrorForAgent,
 } from "./format-errors-for-agent.js";
 
+type ReadonlySpan = DeepReadonly<TraceSpan>;
+
 const makeSpan = (
-  span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
-): TraceSpan => ({
+  span: DeepReadonly<Partial<TraceSpan> & Pick<TraceSpan, "id">>,
+): ReadonlySpan => ({
   endTime: new Date("2026-06-05T10:00:01.000Z"),
   raw: ["{}"],
   startTime: new Date("2026-06-05T10:00:00.000Z"),
@@ -124,9 +126,9 @@ const workflowRootSpan = makeSpan({
   type: "chain_operation",
 });
 
-const failedRunSpans: TraceSpan[] = [workflowRootSpan];
+const failedRunSpans: readonly ReadonlySpan[] = [workflowRootSpan];
 
-const extractDefinedSpanError = (span: TraceSpan): SpanErrorDetails => {
+const extractDefinedSpanError = (span: ReadonlySpan): SpanErrorDetails => {
   const details = extractSpanError(span);
 
   if (!details) throw new Error(`Span ${span.id} has no error details`);
@@ -134,7 +136,7 @@ const extractDefinedSpanError = (span: TraceSpan): SpanErrorDetails => {
   return details;
 };
 
-const singleErrorRunSpans: TraceSpan[] = [
+const singleErrorRunSpans: readonly ReadonlySpan[] = [
   makeSpan({
     children: [errorMessageAttributeSpan],
     id: "single-workflow",

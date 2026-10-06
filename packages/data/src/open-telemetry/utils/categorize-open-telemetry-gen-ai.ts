@@ -1,4 +1,5 @@
 import {
+  type DeepReadonly,
   OPENTELEMETRY_GENAI_ATTRIBUTES,
   OPENTELEMETRY_GENAI_MAPPINGS,
   type OpenTelemetrySpan,
@@ -8,7 +9,7 @@ import {
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export function categorizeOpenTelemetryGenAI(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<OpenTelemetrySpan>,
 ): TraceSpanCategory {
   const operationName = getOpenTelemetryAttributeValue(
     span,

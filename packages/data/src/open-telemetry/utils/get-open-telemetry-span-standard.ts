@@ -1,4 +1,5 @@
 import {
+  type DeepReadonly,
   OPENINFERENCE_ATTRIBUTES,
   OPENTELEMETRY_GENAI_ATTRIBUTES,
   type OpenTelemetrySpan,
@@ -8,7 +9,7 @@ import {
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export function getOpenTelemetrySpanStandard(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<OpenTelemetrySpan>,
 ): OpenTelemetryStandard {
   if (
     Boolean(

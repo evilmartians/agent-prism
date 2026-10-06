@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   InputOutputData,
   LangfuseDocument,
   LangfuseObservation,
@@ -14,8 +15,15 @@ import type {
 import type { SpanAdapter } from "../types.js";
 
 import { buildSpanTree } from "../common/build-span-tree.js";
+import { toList } from "../common/to-list.js";
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { getLangfuseAttributes } from "./utils/get-langfuse-attributes.js";
+
+type Details = Readonly<Record<string, null | number | undefined>>;
+
+type DetailsEntry = readonly [string, null | number | undefined];
+
+type ReadonlyObservation = DeepReadonly<LangfuseObservation>;
 
 /**
  * Langfuse usage keys that name one of the canonical token types; any other key
@@ -37,35 +45,30 @@ export const langfuseSpanAdapter: SpanAdapter<
   LangfuseDocument,
   LangfuseObservation
 > = {
-  convertRawDocumentsToSpans(documents: LangfuseDocument[]): TraceSpan[] {
-    const docArray = Array.isArray(documents) ? documents : [documents];
-
-    const allObservations: LangfuseObservation[] = [];
-
-    docArray.forEach((document) => {
-      document.observations.forEach((observation) => {
-        allObservations.push(observation);
-      });
-    });
-
-    return this.convertRawSpansToSpanTree(allObservations);
+  convertRawDocumentsToSpans(
+    documents:
+      | DeepReadonly<LangfuseDocument>
+      | readonly DeepReadonly<LangfuseDocument>[],
+  ): TraceSpan[] {
+    return this.convertRawSpansToSpanTree(
+      toList(documents).flatMap((document) => document.observations),
+    );
   },
-  convertRawSpansToSpanTree(spans: LangfuseObservation[]): TraceSpan[] {
+  convertRawSpansToSpanTree(
+    spans: readonly ReadonlyObservation[],
+  ): TraceSpan[] {
     return buildSpanTree(spans, {
       convert: (span) => this.convertRawSpanToTraceSpan(span),
       getId: (span) => span.id,
       getParentId: (span) => span.parentObservationId,
     });
   },
-  convertRawSpanToTraceSpan(
-    span: LangfuseObservation,
-    children: TraceSpan[] = [],
-  ): TraceSpan {
+  convertRawSpanToTraceSpan(span: ReadonlyObservation): TraceSpan {
     const ioData = this.getSpanInputOutput(span);
 
     return {
       attributes: getLangfuseAttributes(span),
-      children,
+      children: [],
       endTime: new Date(span.endTime ?? span.startTime),
       id: span.id,
       input: ioData.input,
@@ -80,7 +83,7 @@ export const langfuseSpanAdapter: SpanAdapter<
       type: this.getSpanCategory(span),
     };
   },
-  getSpanCategory(span: LangfuseObservation): TraceSpanCategory {
+  getSpanCategory(span: ReadonlyObservation): TraceSpanCategory {
     switch (span.type) {
       case "AGENT":
         return "agent_invocation";
@@ -107,13 +110,13 @@ export const langfuseSpanAdapter: SpanAdapter<
         return "unknown";
     }
   },
-  getSpanInputOutput(span: LangfuseObservation): InputOutputData {
+  getSpanInputOutput(span: ReadonlyObservation): InputOutputData {
     return {
       input: typeof span.input === "string" ? span.input : undefined,
       output: typeof span.output === "string" ? span.output : undefined,
     };
   },
-  getSpanStatus(span: LangfuseObservation): TraceSpanStatus {
+  getSpanStatus(span: ReadonlyObservation): TraceSpanStatus {
     switch (span.level) {
       case "ERROR":
         return "error";
@@ -131,29 +134,27 @@ export const langfuseSpanAdapter: SpanAdapter<
    * sums Langfuse derives from them, so they are read only when an observation
    * comes without the details.
    */
-  getTokenUsage(span: LangfuseObservation): TokenUsage | undefined {
-    const usageDetails: Record<string, null | number | undefined> =
-      span.usageDetails ?? {
-        input: span.inputUsage,
-        output: span.outputUsage,
-        total: span.totalUsage,
-      };
-    const costDetails: Record<string, null | number | undefined> =
-      span.costDetails ?? {
-        input: span.inputCost,
-        output: span.outputCost,
-        total: span.totalCost,
-      };
+  getTokenUsage(span: ReadonlyObservation): TokenUsage | undefined {
+    const usageDetails: Details = span.usageDetails ?? {
+      input: span.inputUsage,
+      output: span.outputUsage,
+      total: span.totalUsage,
+    };
+    const costDetails: Details = span.costDetails ?? {
+      input: span.inputCost,
+      output: span.outputCost,
+      total: span.totalCost,
+    };
 
     let usage: TokenUsage = {};
 
-    Object.entries(usageDetails).forEach(([key, tokens]) => {
+    Object.entries(usageDetails).forEach(([key, tokens]: DetailsEntry) => {
       if (key !== "total" && typeof tokens === "number") {
         usage = addTokenUsage(usage, toTokenType(key), tokens);
       }
     });
 
-    Object.entries(costDetails).forEach(([key, cost]) => {
+    Object.entries(costDetails).forEach(([key, cost]: DetailsEntry) => {
       if (key !== "total" && typeof cost === "number") {
         usage = addTokenUsage(usage, toTokenType(key), 0, cost);
       }
@@ -168,7 +169,7 @@ export const langfuseSpanAdapter: SpanAdapter<
     return Object.keys(usage).length > 0 ? usage : undefined;
   },
   /** Langfuse records how many tokens went to reasoning, but not the text. */
-  getTraceReasoning(span: LangfuseObservation): TraceReasoning | undefined {
+  getTraceReasoning(span: ReadonlyObservation): TraceReasoning | undefined {
     const tokens = span.usageDetails?.output_reasoning_tokens;
 
     return tokens !== undefined && tokens !== 0

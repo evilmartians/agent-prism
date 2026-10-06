@@ -1,3 +1,24 @@
+/**
+ * `T` with every property and array made readonly, all the way down, for
+ * parameters that only read a value. Dates, functions and classes are kept as
+ * they are. A mutable value is assignable to its `DeepReadonly` version.
+ */
+export type DeepReadonly<T> = unknown extends T
+  ? T
+  : T extends
+        | ((...args: never) => unknown)
+        | (abstract new (...args: never) => unknown)
+        | bigint
+        | boolean
+        | Date
+        | null
+        | number
+        | string
+        | symbol
+        | undefined
+    ? T
+    : { readonly [Key in keyof T]: DeepReadonly<T[Key]> };
+
 export type InputOutputData = {
   input?: string | undefined;
   output?: string | undefined;

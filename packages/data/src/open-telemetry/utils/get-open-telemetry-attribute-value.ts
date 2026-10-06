@@ -1,7 +1,10 @@
-import { type OpenTelemetrySpan } from "@evilmartians/agent-prism-types";
+import type {
+  DeepReadonly,
+  OpenTelemetrySpan,
+} from "@evilmartians/agent-prism-types";
 
 export function getOpenTelemetryAttributeValue(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<Pick<OpenTelemetrySpan, "attributes">>,
   key: string,
 ): boolean | number | string | undefined {
   const attr = span.attributes.find((a) => a.key === key);

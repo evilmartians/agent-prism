@@ -94,7 +94,7 @@ const reviveTokenUsage = (value: unknown): TokenUsage | undefined => {
 
   const usage: TokenUsage = {};
 
-  Object.entries(value).forEach(([type, entry]) => {
+  Object.entries(value).forEach(([type, entry]: readonly [string, unknown]) => {
     if (isRecord(entry) && isFiniteNumber(entry["tokens"])) {
       usage[type] = isFiniteNumber(entry["cost"])
         ? { cost: entry["cost"], tokens: entry["tokens"] }
@@ -161,7 +161,7 @@ const reviveAttribute = (item: unknown): TraceSpanAttribute[] => {
 };
 
 const reviveOptionalFields = (
-  value: Record<string, unknown>,
+  value: Readonly<Record<string, unknown>>,
 ): Pick<TraceSpan, "attributes" | "input" | "metadata" | "output"> => ({
   ...(Array.isArray(value["attributes"])
     ? { attributes: value["attributes"].flatMap(reviveAttribute) }

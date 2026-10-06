@@ -1,23 +1,29 @@
-import type {
-  LangfuseScore,
-  LangfuseTrace,
-  OpenTelemetrySpan,
-} from "@evilmartians/agent-prism-types";
+import type { OpenTelemetrySpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
 import { createMockLangfuseObservation } from "../langfuse/utils/create-mock-langfuse-observation.js";
+import {
+  createMockLangfuseTrace,
+  mockLangfuseScore,
+} from "../langfuse/utils/create-mock-langfuse-trace.js";
 import { createMockOpenTelemetrySpan } from "../open-telemetry/utils/create-mock-open-telemetry-span.js";
 import {
   isLangfuseDocument,
   isOpenTelemetryDocument,
 } from "./is-trace-document.js";
 
+type Override = Readonly<Record<string, unknown>>;
+
+type OverrideRow = readonly [string, Override];
+
+type ValueRow = readonly [string, unknown];
+
 const span = createMockOpenTelemetrySpan({
   attributes: { "llm.model": "gpt-4o", "llm.stream": true, "llm.tokens": 12 },
 });
 
-const otelDocument = (spanOverride: Record<string, unknown> = {}) => ({
+const otelDocument = (spanOverride: Override = {}) => ({
   resourceSpans: [
     {
       resource: { attributes: [{ key: "service", value: {} }] },
@@ -53,7 +59,7 @@ describe("isOpenTelemetryDocument", () => {
     expect(isOpenTelemetryDocument({ resourceSpans: [] })).toBe(true);
   });
 
-  it.each([
+  it.each<ValueRow>([
     ["null", null],
     ["a list of documents", [otelDocument()]],
     ["a document without resourceSpans", { spans: [] }],
@@ -77,7 +83,7 @@ describe("isOpenTelemetryDocument", () => {
     expect(isOpenTelemetryDocument(value)).toBe(false);
   });
 
-  it.each([
+  it.each<OverrideRow>([
     ["an unknown kind", { kind: "SPAN_KIND_BATCH" }],
     ["a missing flags", { flags: undefined }],
     ["a numeric spanId", { spanId: 1 }],
@@ -97,46 +103,13 @@ describe("isOpenTelemetryDocument", () => {
   });
 });
 
-const score: LangfuseScore = {
-  authorUserId: null,
-  comment: null,
-  configId: null,
-  createdAt: "2026-06-05T10:00:00.000Z",
-  dataType: "NUMERIC",
-  id: "score-1",
-  name: "accuracy",
-  observationId: null,
-  projectId: "project-1",
-  queueId: null,
-  source: "API",
-  stringValue: null,
-  timestamp: "2026-06-05T10:00:00.000Z",
-  traceId: "trace-1",
-  updatedAt: "2026-06-05T10:00:00.000Z",
-  value: 0.9,
-};
-
-const trace: LangfuseTrace = {
-  bookmarked: false,
-  createdAt: "2026-06-05T10:00:00.000Z",
-  environment: "default",
-  id: "trace-1",
-  name: "agent run",
-  projectId: "project-1",
-  public: false,
-  release: null,
-  scores: [score],
-  tags: ["prod"],
-  timestamp: "2026-06-05T10:00:00.000Z",
-  updatedAt: "2026-06-05T10:00:01.000Z",
-  version: null,
-};
+const trace = createMockLangfuseTrace();
 
 const observation = createMockLangfuseObservation();
 
 const langfuseDocument = (
-  traceOverride: Record<string, unknown> = {},
-  observationOverride: Record<string, unknown> = {},
+  traceOverride: Override = {},
+  observationOverride: Override = {},
 ) => ({
   observations: [{ ...observation, ...observationOverride }],
   trace: { ...trace, ...traceOverride },
@@ -147,7 +120,7 @@ describe("isLangfuseDocument", () => {
     expect(isLangfuseDocument(langfuseDocument())).toBe(true);
   });
 
-  it.each([
+  it.each<ValueRow>([
     ["a string", "trace=1"],
     ["a record", { team: "search" }],
     ["null", null],
@@ -172,7 +145,7 @@ describe("isLangfuseDocument", () => {
     ).toBe(true);
   });
 
-  it.each([
+  it.each<ValueRow>([
     ["a document without a trace", { observations: [] }],
     ["a document without observations", { trace }],
     ["a list of documents", [langfuseDocument()]],
@@ -180,18 +153,21 @@ describe("isLangfuseDocument", () => {
     expect(isLangfuseDocument(value)).toBe(false);
   });
 
-  it.each([
+  it.each<OverrideRow>([
     ["a numeric id", { id: 1 }],
     ["a non-boolean bookmarked", { bookmarked: "no" }],
     ["tags that are not strings", { tags: [1] }],
     ["metadata given as a number", { metadata: 1 }],
-    ["a score with an unknown source", { scores: [{ ...score, source: "X" }] }],
+    [
+      "a score with an unknown source",
+      { scores: [{ ...mockLangfuseScore, source: "X" }] },
+    ],
     ["malformed nested observations", { observations: [{ id: "x" }] }],
   ])("rejects a trace with %s", (_label, traceOverride) => {
     expect(isLangfuseDocument(langfuseDocument(traceOverride))).toBe(false);
   });
 
-  it.each([
+  it.each<OverrideRow>([
     ["an unknown type", { type: "STEP" }],
     ["an unknown level", { level: "FATAL" }],
     ["a numeric endTime", { endTime: 1 }],

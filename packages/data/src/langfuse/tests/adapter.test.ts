@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   LangfuseObservation,
   LangfuseObservationLevel,
 } from "@evilmartians/agent-prism-types";
@@ -10,19 +11,15 @@ import {
   toIdTree,
 } from "../../common/test-utils/to-id-tree.js";
 import { langfuseSpanAdapter } from "../adapter.js";
+import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
+import { createMockLangfuseTrace } from "../utils/create-mock-langfuse-trace.js";
 
 const makeObservation = (
-  observation: Partial<LangfuseObservation> & Pick<LangfuseObservation, "id">,
-): LangfuseObservation => ({
-  createdAt: "2026-06-05T10:00:00.000Z",
-  endTime: "2026-06-05T10:00:01.000Z",
-  environment: "default",
-  name: observation.id,
-  parentObservationId: null,
-  projectId: "project-1",
-  startTime: "2026-06-05T10:00:00.000Z",
-  traceId: "trace-1",
-  updatedAt: "2026-06-05T10:00:01.000Z",
+  observation: DeepReadonly<
+    Partial<LangfuseObservation> & Pick<LangfuseObservation, "id">
+  >,
+): DeepReadonly<LangfuseObservation> => ({
+  ...createMockLangfuseObservation({ name: observation.id }),
   ...observation,
 });
 
@@ -56,14 +53,28 @@ describe("langfuseSpanAdapter.getSpanStatus", () => {
   });
 });
 
+const observations = [
+  makeObservation({ id: "child", parentObservationId: "root" }),
+  makeObservation({ id: "root" }),
+  makeObservation({ id: "orphan", parentObservationId: "missing" }),
+];
+
+const document = { observations, trace: createMockLangfuseTrace() };
+
 describe("langfuseSpanAdapter.convertRawSpansToSpanTree", () => {
   it("nests children under their parent and drops orphans", () => {
-    const tree = langfuseSpanAdapter.convertRawSpansToSpanTree([
-      makeObservation({ id: "child", parentObservationId: "root" }),
-      makeObservation({ id: "root" }),
-      makeObservation({ id: "orphan", parentObservationId: "missing" }),
-    ]);
+    expect(
+      toIdTree(langfuseSpanAdapter.convertRawSpansToSpanTree(observations)),
+    ).toStrictEqual(ROOT_WITH_CHILD);
+  });
+});
 
-    expect(toIdTree(tree)).toStrictEqual(ROOT_WITH_CHILD);
+describe("langfuseSpanAdapter.convertRawDocumentsToSpans", () => {
+  it("builds the span tree from one document or a list of them", () => {
+    const fromOne = langfuseSpanAdapter.convertRawDocumentsToSpans(document);
+    const fromList = langfuseSpanAdapter.convertRawDocumentsToSpans([document]);
+
+    expect(toIdTree(fromOne)).toStrictEqual(ROOT_WITH_CHILD);
+    expect(fromList).toStrictEqual(fromOne);
   });
 });

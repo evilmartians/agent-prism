@@ -1,4 +1,5 @@
 import {
+  type DeepReadonly,
   OPENINFERENCE_ATTRIBUTES,
   OPENINFERENCE_MAPPINGS,
   type OpenTelemetrySpan,
@@ -8,7 +9,7 @@ import {
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export function categorizeOpenInference(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<OpenTelemetrySpan>,
 ): TraceSpanCategory {
   const spanKind = getOpenTelemetryAttributeValue(
     span,

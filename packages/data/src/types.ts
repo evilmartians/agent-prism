@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   InputOutputData,
   TokenUsage,
   TraceReasoning,
@@ -10,22 +11,28 @@ import type {
 
 export type SpanAdapter<TRawDocument, TRawSpan> = {
   convertRawDocumentsToSpans(
-    documents: TRawDocument | TRawDocument[],
+    documents:
+      | DeepReadonly<TRawDocument>
+      | readonly DeepReadonly<TRawDocument>[],
   ): TraceSpan[];
 
-  convertRawSpansToSpanTree(spans: TRawSpan[]): TraceSpan[];
+  convertRawSpansToSpanTree(
+    spans: readonly DeepReadonly<TRawSpan>[],
+  ): TraceSpan[];
 
-  convertRawSpanToTraceSpan(span: TRawSpan): TraceSpan;
+  convertRawSpanToTraceSpan(span: DeepReadonly<TRawSpan>): TraceSpan;
 
-  getSpanCategory(document: TRawSpan): TraceSpanCategory;
+  getSpanCategory(document: DeepReadonly<TRawSpan>): TraceSpanCategory;
 
-  getSpanInputOutput(document: TRawSpan): InputOutputData;
+  getSpanInputOutput(document: DeepReadonly<TRawSpan>): InputOutputData;
 
-  getSpanStatus(document: TRawSpan): TraceSpanStatus;
+  getSpanStatus(document: DeepReadonly<TRawSpan>): TraceSpanStatus;
 
-  getTokenUsage(document: TRawSpan): TokenUsage | undefined;
+  getTokenUsage(document: DeepReadonly<TRawSpan>): TokenUsage | undefined;
 
-  getTraceReasoning(document: TRawSpan): TraceReasoning | undefined;
+  getTraceReasoning(
+    document: DeepReadonly<TRawSpan>,
+  ): TraceReasoning | undefined;
 
-  getTraceTodos(document: TRawSpan): TraceTodo[] | undefined;
+  getTraceTodos(document: DeepReadonly<TRawSpan>): TraceTodo[] | undefined;
 };

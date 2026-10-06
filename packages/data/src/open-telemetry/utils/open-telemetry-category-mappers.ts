@@ -1,4 +1,5 @@
 import {
+  type DeepReadonly,
   type OpenTelemetrySpan,
   STANDARD_OPENTELEMETRY_ATTRIBUTES,
   STANDARD_OPENTELEMETRY_PATTERNS,
@@ -7,7 +8,7 @@ import {
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export const openTelemetryCategoryMappers = {
-  isAgentOperation: (span: OpenTelemetrySpan): boolean => {
+  isAgentOperation: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     const name = span.name.toLowerCase();
 
     return STANDARD_OPENTELEMETRY_PATTERNS.AGENT_KEYWORDS.some((keyword) =>
@@ -15,7 +16,7 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isChainOperation: (span: OpenTelemetrySpan): boolean => {
+  isChainOperation: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     const name = span.name.toLowerCase();
 
     return STANDARD_OPENTELEMETRY_PATTERNS.CHAIN_KEYWORDS.some((keyword) =>
@@ -23,7 +24,7 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isDatabaseCall: (span: OpenTelemetrySpan): boolean => {
+  isDatabaseCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     return (
       getOpenTelemetryAttributeValue(
         span,
@@ -32,7 +33,7 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isFunctionCall: (span: OpenTelemetrySpan): boolean => {
+  isFunctionCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     const name = span.name.toLowerCase();
 
     return (
@@ -46,7 +47,7 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isHttpCall: (span: OpenTelemetrySpan): boolean => {
+  isHttpCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     return (
       getOpenTelemetryAttributeValue(
         span,
@@ -55,7 +56,7 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isLLMCall: (span: OpenTelemetrySpan): boolean => {
+  isLLMCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     const name = span.name.toLowerCase();
 
     return STANDARD_OPENTELEMETRY_PATTERNS.LLM_KEYWORDS.some((keyword) =>
@@ -63,7 +64,7 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isRetrievalOperation: (span: OpenTelemetrySpan): boolean => {
+  isRetrievalOperation: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     const name = span.name.toLowerCase();
 
     return STANDARD_OPENTELEMETRY_PATTERNS.RETRIEVAL_KEYWORDS.some((keyword) =>

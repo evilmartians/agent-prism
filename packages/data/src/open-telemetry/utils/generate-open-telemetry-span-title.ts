@@ -1,4 +1,5 @@
 import {
+  type DeepReadonly,
   OPENTELEMETRY_GENAI_ATTRIBUTES,
   type OpenTelemetrySpan,
   STANDARD_OPENTELEMETRY_ATTRIBUTES,
@@ -7,7 +8,7 @@ import {
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export function generateOpenTelemetrySpanTitle(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<OpenTelemetrySpan>,
 ): string {
   const { name } = span;
 

@@ -1,11 +1,12 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
-export function findTimeRange(cards: TraceSpan[]): {
-  maxEnd: number;
-  minStart: number;
-} {
+type TimeRange = { maxEnd: number; minStart: number };
+
+export function findTimeRange(
+  cards: readonly DeepReadonly<TraceSpan>[],
+): TimeRange {
   return cards.reduce(
-    (acc, c) => {
+    (acc: Readonly<TimeRange>, c) => {
       const start = +new Date(c.startTime);
       const end = +new Date(c.endTime);
       return {

@@ -11,8 +11,8 @@ type RawSpanAccessors<TRawSpan> = {
  * parent id become roots, spans whose parent is missing are dropped.
  */
 export const buildSpanTree = <TRawSpan>(
-  spans: TRawSpan[],
-  { convert, getId, getParentId }: RawSpanAccessors<TRawSpan>,
+  spans: readonly TRawSpan[],
+  { convert, getId, getParentId }: Readonly<RawSpanAccessors<TRawSpan>>,
 ): TraceSpan[] => {
   const spanMap = new Map<string, TraceSpan>();
   const rootSpans: TraceSpan[] = [];

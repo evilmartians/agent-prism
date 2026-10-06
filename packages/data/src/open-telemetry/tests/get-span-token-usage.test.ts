@@ -14,7 +14,9 @@ import {
   type MockAttributeValue,
 } from "../utils/create-mock-open-telemetry-span.js";
 
-const usageOf = (attributes: Record<string, MockAttributeValue>) =>
+type Attributes = Readonly<Record<string, MockAttributeValue>>;
+
+const usageOf = (attributes: Attributes) =>
   openTelemetrySpanAdapter.getTokenUsage(
     createMockOpenTelemetrySpan({ attributes }),
   );
@@ -199,7 +201,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
   });
 
   describe("malformed attribute values", () => {
-    it.each([
+    it.each<readonly [string, MockAttributeValue]>([
       ["a string", "150"],
       ["a boolean", true],
       ["an array", ["150", "200"]],
@@ -233,7 +235,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 });
 
 describe("openTelemetrySpanAdapter.getTraceReasoning", () => {
-  const reasoningOf = (attributes: Record<string, MockAttributeValue>) =>
+  const reasoningOf = (attributes: Attributes) =>
     openTelemetrySpanAdapter.getTraceReasoning(
       createMockOpenTelemetrySpan({ attributes }),
     );

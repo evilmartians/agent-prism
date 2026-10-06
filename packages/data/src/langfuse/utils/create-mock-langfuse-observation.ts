@@ -9,7 +9,7 @@ type MockObservationOptions = {
  * Creates a mock LangfuseObservation for testing.
  */
 export function createMockLangfuseObservation(
-  options: MockObservationOptions = {},
+  options: Readonly<MockObservationOptions> = {},
 ): LangfuseObservation {
   const { metadata, name = "test-observation" } = options;
   const nowIso = new Date().toISOString();

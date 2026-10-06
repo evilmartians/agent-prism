@@ -1,9 +1,9 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
-
 import { describe, expect, it } from "vitest";
 
 import { isTraceSpanLike, reviveTraceSpan } from "./revive-trace-span.js";
 import { createTestSpan } from "./test-utils/create-test-span.js";
+
+type OverrideRow = readonly [string, Readonly<Record<string, unknown>>];
 
 const baseJSON = {
   endTime: "2024-01-01T00:00:02.500Z",
@@ -24,7 +24,7 @@ describe("isTraceSpanLike", () => {
     expect(isTraceSpanLike({ ...baseJSON, status: undefined })).toBe(false);
   });
 
-  it.each([
+  it.each<OverrideRow>([
     ["an unknown status", { status: "failed" }],
     ["an unknown type", { type: "llm" }],
     ["an unparseable startTime", { startTime: "yesterday" }],
@@ -54,7 +54,7 @@ describe("isTraceSpanLike", () => {
 describe("reviveTraceSpan", () => {
   it("survives a JSON round-trip", () => {
     const child = createTestSpan({ id: "child-1" });
-    const span: TraceSpan = createTestSpan({
+    const span = createTestSpan({
       attributes: [
         { key: "llm.model", value: { stringValue: "gpt-4o" } },
         { key: "llm.tokens", value: { intValue: "12" } },
@@ -111,7 +111,7 @@ describe("reviveTraceSpan", () => {
   });
 
   describe("malformed optional structures", () => {
-    it.each([
+    it.each<OverrideRow>([
       ["input", { input: 42 }],
       ["output", { output: { text: "answer" } }],
       ["metadata given as a string", { metadata: "tenant=acme" }],
