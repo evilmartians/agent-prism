@@ -841,12 +841,6 @@
         "react-you-might-not-need-an-effect/no-event-handler": "off",
         "react-you-might-not-need-an-effect/no-pass-data-to-parent": "off"
       }
-    },
-    {
-      "files": ["packages/data/src/common/revive-trace-span.ts"],
-      "rules": {
-        "typescript/no-unsafe-type-assertion": "off"
-      }
     }
   ]
 }

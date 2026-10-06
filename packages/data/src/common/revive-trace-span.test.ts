@@ -55,7 +55,15 @@ describe("reviveTraceSpan", () => {
   it("survives a JSON round-trip", () => {
     const child = createTestSpan({ id: "child-1" });
     const span: TraceSpan = createTestSpan({
+      attributes: [
+        { key: "llm.model", value: { stringValue: "gpt-4o" } },
+        { key: "llm.tokens", value: { intValue: "12" } },
+        { key: "llm.stream", value: { boolValue: false } },
+      ],
       children: [child],
+      input: "question",
+      metadata: { tenant: "acme" },
+      output: "answer",
       raw: ["{}", "[]"],
       reasoning: { content: "thinking", tokens: 10 },
       todos: [{ status: "in_progress", title: "Plan" }],
@@ -90,7 +98,75 @@ describe("reviveTraceSpan", () => {
     expect(() => reviveTraceSpan({ id: "1" })).toThrow(TypeError);
   });
 
+  it("throws when a child is not span-shaped", () => {
+    expect(() =>
+      reviveTraceSpan({ ...baseJSON, children: [{ ...baseJSON, id: 7 }] }),
+    ).toThrow(TypeError);
+  });
+
+  it("leaves out keys TraceSpan does not declare", () => {
+    expect(
+      reviveTraceSpan({ ...baseJSON, duration: 2500, extra: { a: 1 } }),
+    ).toStrictEqual(reviveTraceSpan(baseJSON));
+  });
+
   describe("malformed optional structures", () => {
+    it.each([
+      ["input", { input: 42 }],
+      ["output", { output: { text: "answer" } }],
+      ["metadata given as a string", { metadata: "tenant=acme" }],
+      ["metadata given as a list", { metadata: ["acme"] }],
+      ["metadata given as null", { metadata: null }],
+      ["attributes that are not a list", { attributes: { key: "a" } }],
+    ])("drops %s", (_label, override) => {
+      expect(reviveTraceSpan({ ...baseJSON, ...override })).toStrictEqual(
+        reviveTraceSpan(baseJSON),
+      );
+    });
+
+    it("keeps only well-formed attributes", () => {
+      const span = reviveTraceSpan({
+        ...baseJSON,
+        attributes: [
+          { key: "kept", value: { stringValue: "yes" } },
+          { key: 1, value: { stringValue: "numeric key" } },
+          { key: "list value", value: ["yes"] },
+          { key: "no value" },
+          "not an attribute",
+        ],
+      });
+
+      expect(span.attributes).toStrictEqual([
+        { key: "kept", value: { stringValue: "yes" } },
+      ]);
+    });
+
+    it("keeps only the well-typed parts of an attribute value", () => {
+      const span = reviveTraceSpan({
+        ...baseJSON,
+        attributes: [
+          {
+            key: "mixed",
+            value: {
+              boolValue: "true",
+              doubleValue: 1.5,
+              intValue: 3,
+              stringValue: "kept",
+            },
+          },
+          {
+            key: "typed",
+            value: { boolValue: true, intValue: "3", stringValue: 7 },
+          },
+        ],
+      });
+
+      expect(span.attributes).toStrictEqual([
+        { key: "mixed", value: { stringValue: "kept" } },
+        { key: "typed", value: { boolValue: true, intValue: "3" } },
+      ]);
+    });
+
     it("keeps only well-formed todos", () => {
       const span = reviveTraceSpan({
         ...baseJSON,

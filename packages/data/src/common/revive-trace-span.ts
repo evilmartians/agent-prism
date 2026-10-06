@@ -3,6 +3,7 @@ import type {
   TraceReasoning,
   TraceReasoningLevel,
   TraceSpan,
+  TraceSpanAttribute,
   TraceSpanCategory,
   TraceSpanStatus,
   TraceTodo,
@@ -11,6 +12,9 @@ import type {
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
+
+const isPlainRecord = (value: unknown): value is Record<string, unknown> =>
+  isRecord(value) && !Array.isArray(value);
 
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === "number" && Number.isFinite(value);
@@ -128,10 +132,54 @@ const reviveTodos = (value: unknown): TraceTodo[] | undefined =>
       )
     : undefined;
 
+const reviveAttribute = (item: unknown): TraceSpanAttribute[] => {
+  if (
+    !isRecord(item) ||
+    typeof item["key"] !== "string" ||
+    !isPlainRecord(item["value"])
+  ) {
+    return [];
+  }
+
+  const value = item["value"];
+
+  return [
+    {
+      key: item["key"],
+      value: {
+        ...(typeof value["boolValue"] === "boolean"
+          ? { boolValue: value["boolValue"] }
+          : {}),
+        ...(typeof value["intValue"] === "string"
+          ? { intValue: value["intValue"] }
+          : {}),
+        ...(typeof value["stringValue"] === "string"
+          ? { stringValue: value["stringValue"] }
+          : {}),
+      },
+    },
+  ];
+};
+
+const reviveOptionalFields = (
+  value: Record<string, unknown>,
+): Pick<TraceSpan, "attributes" | "input" | "metadata" | "output"> => ({
+  ...(Array.isArray(value["attributes"])
+    ? { attributes: value["attributes"].flatMap(reviveAttribute) }
+    : {}),
+  ...(typeof value["input"] === "string" ? { input: value["input"] } : {}),
+  ...(isPlainRecord(value["metadata"]) ? { metadata: value["metadata"] } : {}),
+  ...(typeof value["output"] === "string" ? { output: value["output"] } : {}),
+});
+
 /**
  * Turns a parsed-JSON span tree back into `TraceSpan`s: JSON has no dates, so
- * the timestamps arrive as strings and are converted back, and malformed token
- * usage, reasoning or todos are dropped.
+ * the timestamps arrive as strings and are converted back. Every field is
+ * checked against `TraceSpan`: keys it does not declare are left out, and a
+ * malformed optional field (or entry of one, such as an attribute) is dropped.
+ *
+ * @throws {TypeError} When the span or any of its children is missing a
+ * required field or has one of the wrong type.
  */
 export const reviveTraceSpan = (value: unknown): TraceSpan => {
   if (!isTraceSpanLike(value)) {
@@ -141,14 +189,19 @@ export const reviveTraceSpan = (value: unknown): TraceSpan => {
   }
 
   return {
-    ...(value as unknown as TraceSpan),
+    ...reviveOptionalFields(value),
     children: Array.isArray(value["children"])
       ? value["children"].map(reviveTraceSpan)
       : undefined,
     endTime: new Date(value.endTime),
+    id: value.id,
+    raw: value.raw,
     reasoning: reviveReasoning(value["reasoning"]),
     startTime: new Date(value.startTime),
+    status: value.status,
+    title: value.title,
     todos: reviveTodos(value["todos"]),
     tokenUsage: reviveTokenUsage(value["tokenUsage"]),
+    type: value.type,
   };
 };
