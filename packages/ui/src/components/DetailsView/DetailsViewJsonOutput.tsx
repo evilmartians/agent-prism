@@ -7,7 +7,7 @@ import { agentPrismPrefix } from "../theme";
 export interface JsonViewerProps {
   content: string;
   id: string;
-  className?: string;
+  className?: string | undefined;
 }
 
 export const DetailsViewJsonOutput: FC<JsonViewerProps> = ({

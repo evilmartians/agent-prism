@@ -30,28 +30,28 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
    * The size of the badge
    * @default "md"
    */
-  size?: BadgeSize;
+  size?: BadgeSize | undefined;
 
   /**
    * Optional icon to display at the start of the badge
    */
-  iconStart?: ReactElement;
+  iconStart?: ReactElement | undefined;
 
   /**
    * Optional icon to display at the end of the badge
    */
-  iconEnd?: ReactElement;
+  iconEnd?: ReactElement | undefined;
 
   /**
    * Optional className for additional styling
    */
-  className?: string;
+  className?: string | undefined;
 
   /**
    * Whether to render the badge without any default styles
    * @default false
    */
-  unstyled?: boolean;
+  unstyled?: boolean | undefined;
 };
 
 /**

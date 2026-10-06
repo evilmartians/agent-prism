@@ -85,8 +85,8 @@ type BrandType = keyof typeof LOGO_REGISTRY;
 
 type BrandLogoProps = {
   brand: BrandType | string;
-  className?: string;
-  fallback?: React.ReactNode;
+  className?: string | undefined;
+  fallback?: React.ReactNode | undefined;
 };
 
 export const BrandLogo: FC<BrandLogoProps> = ({

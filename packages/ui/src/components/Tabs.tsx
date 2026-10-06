@@ -7,8 +7,8 @@ import * as React from "react";
 export interface TabItem<T extends string = string> {
   value: T;
   label: string;
-  icon?: React.ReactNode;
-  disabled?: boolean;
+  icon?: React.ReactNode | undefined;
+  disabled?: boolean | undefined;
 }
 
 export type TabTheme = "underline" | "pill";
@@ -47,43 +47,43 @@ export type TabsProps<T extends string = string> = Omit<
   /**
    * The initially selected tab value (uncontrolled)
    */
-  defaultValue?: T;
+  defaultValue?: T | undefined;
 
   /**
    * The currently selected tab value (controlled)
    */
-  value?: T;
+  value?: T | undefined;
 
   /**
    * Callback fired when the selected tab changes
    */
-  onValueChange?: (value: T) => void;
+  onValueChange?: ((value: T) => void) | undefined;
 
   /**
    * Visual theme variant for the tabs
    * @default "underline"
    */
-  theme?: TabTheme;
+  theme?: TabTheme | undefined;
 
   /**
    * Optional className for the root container
    */
-  className?: string;
+  className?: string | undefined;
 
   /**
    * Optional className for the tabs list container
    */
-  tabsListClassName?: string;
+  tabsListClassName?: string | undefined;
 
   /**
    * Optional className for individual tab triggers
    */
-  triggerClassName?: string;
+  triggerClassName?: string | undefined;
 
   /**
    * The direction of the content of the tabs
    */
-  dir?: "ltr" | "rtl";
+  dir?: "ltr" | "rtl" | undefined;
 };
 
 export const Tabs = <T extends string = string>({
@@ -105,10 +105,10 @@ export const Tabs = <T extends string = string>({
   return (
     <RadixTabs.Root
       className={className}
-      defaultValue={!value ? defaultTab : undefined}
-      value={value}
+      {...(defaultTab === undefined ? {} : { defaultValue: defaultTab })}
+      {...(value === undefined ? {} : { value })}
       onValueChange={onValueChange as (value: string) => void}
-      dir={dir}
+      {...(dir === undefined ? {} : { dir })}
       {...rest}
     >
       <RadixTabs.List

@@ -10,16 +10,16 @@ import { IconButton } from "../IconButton";
 import { TraceListItem } from "./TraceListItem";
 
 type TraceRecordWithBadges = TraceRecord & {
-  badges?: Array<BadgeProps>;
+  badges?: Array<BadgeProps> | undefined;
 };
 
 type TraceListProps = {
   traces: TraceRecordWithBadges[];
   expanded: boolean;
   onExpandStateChange: (expanded: boolean) => void;
-  className?: string;
-  onTraceSelect?: (trace: TraceRecord) => void;
-  selectedTrace?: TraceRecord;
+  className?: string | undefined;
+  onTraceSelect?: ((trace: TraceRecord) => void) | undefined;
+  selectedTrace?: TraceRecord | undefined;
 };
 
 export const TraceList = ({

@@ -50,35 +50,35 @@ export type ButtonProps = ComponentPropsWithRef<"button"> & {
    * The size of the button
    * @default "6"
    */
-  size?: ButtonSize;
+  size?: ButtonSize | undefined;
 
   /**
    * The border radius of the button
    * @default "md"
    */
-  rounded?: "none" | "sm" | "md" | "lg" | "full";
+  rounded?: "none" | "sm" | "md" | "lg" | "full" | undefined;
 
   /**
    * The visual variant of the button
    * @default "primary"
    */
-  variant?: ButtonVariant;
+  variant?: ButtonVariant | undefined;
 
   /**
    * Makes the button full width
    * @default false
    */
-  fullWidth?: boolean;
+  fullWidth?: boolean | undefined;
 
   /**
    * Optional icon to display at the start of the button
    */
-  iconStart?: ReactElement;
+  iconStart?: ReactElement | undefined;
 
   /**
    * Optional icon to display at the end of the button
    */
-  iconEnd?: ReactElement;
+  iconEnd?: ReactElement | undefined;
 };
 
 export const Button = ({

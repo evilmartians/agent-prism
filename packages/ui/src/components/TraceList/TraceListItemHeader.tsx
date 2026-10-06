@@ -7,7 +7,7 @@ import { Badge } from "../Badge";
 
 interface TraceListItemHeaderProps {
   trace: TraceRecord;
-  avatar?: AvatarProps;
+  avatar?: AvatarProps | undefined;
 }
 
 export const TraceListItemHeader = ({

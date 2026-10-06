@@ -14,12 +14,12 @@ export type IconButtonProps = ComponentPropsWithRef<"button"> & {
   /**
    * The size of the icon button
    */
-  size?: IconButtonSize;
+  size?: IconButtonSize | undefined;
 
   /**
    * The visual variant of the icon button
    */
-  variant?: IconButtonVariant;
+  variant?: IconButtonVariant | undefined;
 
   /**
    * Accessible label for screen readers

@@ -31,9 +31,9 @@ export const TraceViewerTreeViewContainer = ({
   setSelectedSpan: (span: TraceSpan | undefined) => void;
   expandedSpansIds: string[];
   setExpandedSpansIds: (ids: string[]) => void;
-  spanCardViewOptions?: SpanCardViewOptions;
-  selectedTrace?: TraceRecordWithDisplayData;
-  showHeader?: boolean;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
+  selectedTrace?: TraceRecordWithDisplayData | undefined;
+  showHeader?: boolean | undefined;
 }) => (
   <>
     {showHeader && selectedTrace && (

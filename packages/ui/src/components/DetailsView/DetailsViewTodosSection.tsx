@@ -10,7 +10,7 @@ import { CheckCircle2, Circle, CircleDot, ListTodo } from "lucide-react";
 
 interface DetailsViewTodosSectionProps {
   data: TraceSpan;
-  className?: string;
+  className?: string | undefined;
 }
 
 // Status is otherwise shown only by icon, color and strike-through, so each row

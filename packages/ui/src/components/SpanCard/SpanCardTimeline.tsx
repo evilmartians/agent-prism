@@ -10,7 +10,7 @@ interface SpanCardTimelineProps {
   spanCard: TraceSpan;
   minStart: number;
   maxEnd: number;
-  className?: string;
+  className?: string | undefined;
 }
 
 const timelineBgColors: Record<TraceSpanCategory, string> = {

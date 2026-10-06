@@ -15,11 +15,11 @@ import { TraceListItemHeader } from "./TraceListItemHeader";
 
 interface TraceListItemProps {
   trace: TraceRecord;
-  badges?: Array<BadgeProps>;
-  avatar?: AvatarProps;
-  onClick?: () => void;
-  isSelected?: boolean;
-  showDescription?: boolean;
+  badges?: Array<BadgeProps> | undefined;
+  avatar?: AvatarProps | undefined;
+  onClick?: (() => void) | undefined;
+  isSelected?: boolean | undefined;
+  showDescription?: boolean | undefined;
 }
 
 export const TraceListItem = ({

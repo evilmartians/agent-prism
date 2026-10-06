@@ -17,7 +17,7 @@ import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
 
 interface DetailsViewInputOutputTabProps {
   data: TraceSpan;
-  allSpans?: TraceSpan[];
+  allSpans?: TraceSpan[] | undefined;
 }
 
 // Stable reference so memo deps don't change when allSpans is omitted.

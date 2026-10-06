@@ -12,28 +12,28 @@ export type TextInputProps = ComponentPropsWithRef<"input"> & {
   /**
    * Callback fired when the input value changes
    */
-  onValueChange?: (value: string) => void;
+  onValueChange?: ((value: string) => void) | undefined;
 
   /**
    * Icon to display at the start of the input
    */
-  startIcon?: ReactNode;
+  startIcon?: ReactNode | undefined;
 
   /**
    * Callback fired when the clear button is clicked. If this callback is provided,
    * the clear button will be shown.
    */
-  onClear?: () => void;
+  onClear?: (() => void) | undefined;
 
   /**
    * Ref to the input element
    */
-  ref?: RefObject<HTMLInputElement | null>;
+  ref?: RefObject<HTMLInputElement | null> | undefined;
 
   /**
    * Optional className for the input element
    */
-  inputClassName?: string;
+  inputClassName?: string | undefined;
 
   /**
    * Unique identifier for the input (required)
@@ -43,13 +43,13 @@ export type TextInputProps = ComponentPropsWithRef<"input"> & {
   /**
    * Label text for the input
    */
-  label?: string;
+  label?: string | undefined;
 
   /**
    * Whether to visually hide the label while keeping it for screen readers
    * @default false
    */
-  hideLabel?: boolean;
+  hideLabel?: boolean | undefined;
 };
 
 const iconBaseClassName =

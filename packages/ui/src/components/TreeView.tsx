@@ -11,12 +11,12 @@ import { SpanCard } from "./SpanCard/SpanCard";
 
 interface TreeViewProps {
   spans: TraceSpan[];
-  className?: string;
-  selectedSpan?: TraceSpan;
-  onSpanSelect?: (span: TraceSpan) => void;
+  className?: string | undefined;
+  selectedSpan?: TraceSpan | undefined;
+  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
-  spanCardViewOptions?: SpanCardViewOptions;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
 }
 
 export const TreeView: FC<TreeViewProps> = ({

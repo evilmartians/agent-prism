@@ -12,7 +12,7 @@ export interface CollapsibleSectionProps {
   /**
    * The content to display on the right side of the title
    */
-  rightContent?: React.ReactNode;
+  rightContent?: React.ReactNode | undefined;
 
   /**
    * The content to display when the section is expanded
@@ -23,27 +23,27 @@ export interface CollapsibleSectionProps {
    * Whether the section starts in an open state
    * @default false
    */
-  defaultOpen?: boolean;
+  defaultOpen?: boolean | undefined;
 
   /**
    * Optional className for the root container
    */
-  className?: string;
+  className?: string | undefined;
 
   /**
    * Optional className for the trigger button
    */
-  triggerClassName?: string;
+  triggerClassName?: string | undefined;
 
   /**
    * Optional className for the content area
    */
-  contentClassName?: string;
+  contentClassName?: string | undefined;
 
   /**
    * Optional callback fired when the section is expanded or collapsed
    */
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: ((open: boolean) => void) | undefined;
 }
 
 export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({

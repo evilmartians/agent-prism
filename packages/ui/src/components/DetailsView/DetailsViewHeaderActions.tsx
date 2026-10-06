@@ -4,11 +4,11 @@ export interface DetailsViewHeaderActionsProps {
   /**
    * Custom actions to render in the header
    */
-  children?: ReactNode;
+  children?: ReactNode | undefined;
   /**
    * Optional className for the actions container
    */
-  className?: string;
+  className?: string | undefined;
 }
 
 export const DetailsViewHeaderActions = ({

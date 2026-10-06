@@ -6,10 +6,10 @@ export interface TabSelectorProps<T extends string> {
   items: TabItem<T>[];
   value: T;
   onValueChange: (value: T) => void;
-  defaultValue?: T;
-  theme?: "underline" | "pill";
-  className?: string;
-  onClick?: (event: React.MouseEvent) => void;
+  defaultValue?: T | undefined;
+  theme?: "underline" | "pill" | undefined;
+  className?: string | undefined;
+  onClick?: ((event: React.MouseEvent) => void) | undefined;
 }
 
 export const TabSelector = <T extends string>({

@@ -58,29 +58,29 @@ export type AvatarProps = ComponentPropsWithRef<"div"> & {
   /**
    * The image source for the avatar
    */
-  src?: string;
+  src?: string | undefined;
   /**
    * The alt text for the avatar
    */
-  alt?: string;
+  alt?: string | undefined;
   /**
    * The size of the avatar
    * @default "md"
    */
-  size?: AvatarSize;
+  size?: AvatarSize | undefined;
   /**
    * The border radius of the avatar
    * @default "full"
    */
-  rounded?: "none" | "sm" | "md" | "lg" | "full";
+  rounded?: "none" | "sm" | "md" | "lg" | "full" | undefined;
   /**
    * Custom letter to display (will use first letter of alt if not provided)
    */
-  letter?: string;
+  letter?: string | undefined;
   /**
    * Optional className for additional styling
    */
-  className?: string;
+  className?: string | undefined;
 };
 
 export const Avatar = ({

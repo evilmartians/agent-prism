@@ -28,28 +28,28 @@ const LAYOUT_CONSTANTS = {
 type ExpandButtonPlacement = "inside" | "outside";
 
 export type SpanCardViewOptions = {
-  withStatus?: boolean;
-  expandButton?: ExpandButtonPlacement;
+  withStatus?: boolean | undefined;
+  expandButton?: ExpandButtonPlacement | undefined;
 };
 
-const DEFAULT_VIEW_OPTIONS: Required<SpanCardViewOptions> = {
+const DEFAULT_VIEW_OPTIONS = {
   withStatus: true,
   expandButton: "inside",
-};
+} satisfies Required<SpanCardViewOptions>;
 
 interface SpanCardProps {
   data: TraceSpan;
-  level?: number;
-  selectedSpan?: TraceSpan;
-  avatar?: AvatarProps;
-  onSpanSelect?: (span: TraceSpan) => void;
+  level?: number | undefined;
+  selectedSpan?: TraceSpan | undefined;
+  avatar?: AvatarProps | undefined;
+  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
   minStart: number;
   maxEnd: number;
   isLastChild: boolean;
-  prevLevelConnectors?: SpanCardConnectorType[];
+  prevLevelConnectors?: SpanCardConnectorType[] | undefined;
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
-  viewOptions?: SpanCardViewOptions;
+  viewOptions?: SpanCardViewOptions | undefined;
 }
 
 interface SpanCardState {
@@ -206,14 +206,14 @@ const useSpanCardEventHandlers = (
 const SpanCardChildren: FC<{
   data: TraceSpan;
   level: number;
-  selectedSpan?: TraceSpan;
-  onSpanSelect?: (span: TraceSpan) => void;
+  selectedSpan?: TraceSpan | undefined;
+  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
   minStart: number;
   maxEnd: number;
   prevLevelConnectors: SpanCardConnectorType[];
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
-  viewOptions?: SpanCardViewOptions;
+  viewOptions?: SpanCardViewOptions | undefined;
 }> = ({
   data,
   level,

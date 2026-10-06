@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 
 export interface ErrorStatusCircleProps {
-  className?: string;
+  className?: string | undefined;
 }
 
 /**

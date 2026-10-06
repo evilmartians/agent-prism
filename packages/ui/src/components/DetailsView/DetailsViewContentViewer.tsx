@@ -11,7 +11,7 @@ export interface DetailsViewContentViewerProps {
   mode: DetailsViewContentViewMode;
   label: string;
   id: string;
-  className?: string;
+  className?: string | undefined;
 }
 
 export const DetailsViewContentViewer = ({

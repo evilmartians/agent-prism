@@ -14,14 +14,14 @@ import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
 
 export interface TraceViewerData {
   traceRecord: TraceRecord;
-  badges?: Array<BadgeProps>;
+  badges?: Array<BadgeProps> | undefined;
   spans: TraceSpan[];
-  spanCardViewOptions?: SpanCardViewOptions;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
 }
 
 export interface TraceViewerProps {
   data: Array<TraceViewerData>;
-  spanCardViewOptions?: SpanCardViewOptions;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
 }
 
 export const TraceViewer = ({
@@ -145,8 +145,8 @@ export const TraceViewer = ({
 };
 
 export interface TraceRecordWithDisplayData extends TraceRecord {
-  spanCardViewOptions?: SpanCardViewOptions;
-  badges?: BadgeProps[];
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
+  badges?: BadgeProps[] | undefined;
 }
 
 export interface TraceViewerLayoutProps {
@@ -154,10 +154,10 @@ export interface TraceViewerLayoutProps {
   traceListExpanded: boolean;
   setTraceListExpanded: (expanded: boolean) => void;
   selectedTrace: TraceRecordWithDisplayData | undefined;
-  selectedTraceId?: string;
+  selectedTraceId?: string | undefined;
   selectedSpan: TraceSpan | undefined;
   setSelectedSpan: (span: TraceSpan | undefined) => void;
-  selectedTraceSpans?: TraceSpan[];
+  selectedTraceSpans?: TraceSpan[] | undefined;
   searchValue: string;
   setSearchValue: (value: string) => void;
   filteredSpans: TraceSpan[];
@@ -166,6 +166,6 @@ export interface TraceViewerLayoutProps {
   handleExpandAll: () => void;
   handleCollapseAll: () => void;
   handleTraceSelect: (trace: TraceRecord) => void;
-  spanCardViewOptions?: SpanCardViewOptions;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
   onClearTraceSelection: () => void;
 }

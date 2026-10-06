@@ -8,7 +8,7 @@ type StatusVariant = "dot" | "badge";
 
 export type StatusProps = ComponentPropsWithRef<"div"> & {
   status: TraceSpanStatus;
-  variant?: StatusVariant;
+  variant?: StatusVariant | undefined;
 };
 
 const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {

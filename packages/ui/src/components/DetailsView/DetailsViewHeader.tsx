@@ -23,19 +23,21 @@ import { TokensBadge } from "../TokensBadge";
 
 export interface DetailsViewHeaderProps {
   data: TraceSpan;
-  avatar?: AvatarProps;
-  copyButton?: {
-    isEnabled?: boolean;
-    onCopy?: (data: TraceSpan) => void;
-  };
+  avatar?: AvatarProps | undefined;
+  copyButton?:
+    | {
+        isEnabled?: boolean | undefined;
+        onCopy?: ((data: TraceSpan) => void) | undefined;
+      }
+    | undefined;
   /**
    * Custom actions to render in the header
    */
-  actions?: ReactNode;
+  actions?: ReactNode | undefined;
   /**
    * Optional className for the header container
    */
-  className?: string;
+  className?: string | undefined;
 }
 
 export const DetailsViewHeader = ({

@@ -44,47 +44,52 @@ export interface DetailsViewProps {
    * blocks in the Input/Output tab (a run summary when the root span is
    * selected, otherwise the selected span's own error).
    */
-  allSpans?: TraceSpan[];
+  allSpans?: TraceSpan[] | undefined;
 
   /**
    * Optional avatar configuration for the header
    */
-  avatar?: AvatarProps;
+  avatar?: AvatarProps | undefined;
 
   /**
    * The initially selected tab
    */
-  defaultTab?: DetailsViewTab;
+  defaultTab?: DetailsViewTab | undefined;
 
   /**
    * Optional className for the root container
    */
-  className?: string;
+  className?: string | undefined;
 
   /**
    * Configuration for the copy button functionality
    */
-  copyButton?: {
-    isEnabled?: boolean;
-    onCopy?: (data: TraceSpan) => void;
-  };
+  copyButton?:
+    | {
+        isEnabled?: boolean | undefined;
+        onCopy?: ((data: TraceSpan) => void) | undefined;
+      }
+    | undefined;
 
   /**
    * Custom header actions to render
    * Can be a ReactNode or a render function that receives the data
    */
-  headerActions?: ReactNode | ((data: TraceSpan) => ReactNode);
+  headerActions?: ReactNode | ((data: TraceSpan) => ReactNode) | undefined;
 
   /**
    * Optional custom header component to replace the default
    */
-  customHeader?: ReactNode | ((props: { data: TraceSpan }) => ReactNode);
+  customHeader?:
+    | ReactNode
+    | ((props: { data: TraceSpan }) => ReactNode)
+    | undefined;
 
   /**
    * Callback fired when the active tab changes, including when the current tab
    * isn't available for a new span and the view falls back to the first tab
    */
-  onTabChange?: (tabValue: DetailsViewTab) => void;
+  onTabChange?: ((tabValue: DetailsViewTab) => void) | undefined;
 }
 
 /**

@@ -72,7 +72,7 @@ const TOKEN_TYPE_LABELS: Record<string, string> = {
 interface StatRowData {
   label: string;
   value: string;
-  sub?: string;
+  sub?: string | undefined;
 }
 
 /**
