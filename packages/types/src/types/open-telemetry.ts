@@ -1,16 +1,16 @@
-import type { TraceSpanAttributeValue } from "./index.js";
-
 /**
- * An `AnyValue` in OTLP/JSON: an empty list has no `values`, and a double
- * that is not finite is written as a string.
+ * An `AnyValue` in OTLP/JSON: any field may be omitted or `null`, an empty
+ * list has no `values`, and a double may be a string, `"NaN"` and
+ * `"Infinity"` included.
  */
-export type OpenTelemetryAnyValue = Omit<
-  TraceSpanAttributeValue,
-  "arrayValue" | "doubleValue" | "kvlistValue"
-> & {
-  arrayValue?: { values?: null | OpenTelemetryAnyValue[] };
-  doubleValue?: "-Infinity" | "Infinity" | "NaN" | number;
-  kvlistValue?: { values?: null | OpenTelemetryAttribute[] };
+export type OpenTelemetryAnyValue = {
+  arrayValue?: null | { values?: null | OpenTelemetryAnyValue[] };
+  boolValue?: boolean | null;
+  bytesValue?: null | string;
+  doubleValue?: null | number | string;
+  intValue?: null | number | string;
+  kvlistValue?: null | { values?: null | OpenTelemetryAttribute[] };
+  stringValue?: null | string;
 };
 
 export type OpenTelemetryAttribute = {
@@ -21,7 +21,7 @@ export type OpenTelemetryAttribute = {
 /**
  * OTLP/JSON, as the OTLP specification encodes it over the Protobuf JSON
  * mapping: a field may be omitted or `null` when it holds its default value,
- * 64-bit integers are decimal strings or numbers, enums are integers or names.
+ * numbers may be written as strings, enums are integers or names.
  */
 export type OpenTelemetryDocument = {
   resourceSpans: OpenTelemetryResourceSpan[];
@@ -29,14 +29,14 @@ export type OpenTelemetryDocument = {
 
 export type OpenTelemetryEvent = {
   attributes?: null | OpenTelemetryAttribute[];
-  droppedAttributesCount?: null | number;
+  droppedAttributesCount?: null | number | string;
   name?: null | string;
   timeUnixNano?: null | OpenTelemetryUnixNano;
 };
 
 export type OpenTelemetryLink = {
   attributes?: null | OpenTelemetryAttribute[];
-  droppedAttributesCount?: null | number;
+  droppedAttributesCount?: null | number | string;
   spanId?: null | string;
   traceId?: null | string;
   traceState?: null | string;
@@ -65,12 +65,12 @@ export type OpenTelemetryScopeSpan = {
 
 export type OpenTelemetrySpan = {
   attributes?: null | OpenTelemetryAttribute[];
-  droppedAttributesCount?: null | number;
-  droppedEventsCount?: null | number;
-  droppedLinksCount?: null | number;
+  droppedAttributesCount?: null | number | string;
+  droppedEventsCount?: null | number | string;
+  droppedLinksCount?: null | number | string;
   endTimeUnixNano?: null | OpenTelemetryUnixNano;
   events?: null | OpenTelemetryEvent[];
-  flags?: null | number;
+  flags?: null | number | string;
   kind?: null | number | OpenTelemetrySpanKind;
   links?: null | OpenTelemetryLink[];
   name?: null | string;

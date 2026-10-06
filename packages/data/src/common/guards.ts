@@ -21,12 +21,15 @@ export const isBoolean = (value: unknown): value is boolean =>
 export const isFiniteNumber = (value: unknown): value is number =>
   isNumber(value) && Number.isFinite(value);
 
+export const isNumericString = (value: unknown): value is string =>
+  isString(value) && value.trim() !== "" && Number.isFinite(Number(value));
+
 export const isOneOf =
   <T extends string>(values: Readonly<Record<T, true>>): Guard<T> =>
   (value): value is T =>
     isString(value) && Object.hasOwn(values, value);
 
-export const isOptional =
+const isOptional =
   <T>(guard: Guard<T>): Guard<T | undefined> =>
   (value): value is T | undefined =>
     value === undefined || guard(value);

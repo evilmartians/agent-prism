@@ -20,13 +20,17 @@ import {
   isArrayOf,
   isFiniteNumber,
   isNumber,
+  isNumericString,
   isOneOf,
   isOptionalNullable,
   isPlainRecord,
   isString,
 } from "./guards.js";
 
-const isOptionalNullableNumber = isOptionalNullable(isNumber);
+const isOptionalNullableNumber = isOptionalNullable(
+  (value: unknown): value is number | string =>
+    isNumber(value) || isNumericString(value),
+);
 const isOptionalNullableString = isOptionalNullable(isString);
 
 const isInteger = (value: unknown): value is number =>

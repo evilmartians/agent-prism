@@ -12,8 +12,8 @@ import {
   isBoolean,
   isFiniteNumber,
   isNumber,
+  isNumericString,
   isOneOf,
-  isOptional,
   isOptionalNullable,
   isPlainRecord,
   isString,
@@ -22,8 +22,7 @@ import {
 type ReadonlyAttributeValue = DeepReadonly<TraceSpanAttributeValue>;
 
 const isIntValue = (value: unknown): value is number | string =>
-  (isString(value) && value.trim() !== "" && Number.isFinite(Number(value))) ||
-  (isFiniteNumber(value) && Number.isInteger(value));
+  isNumericString(value) || (isFiniteNumber(value) && Number.isInteger(value));
 
 const isNonFiniteDouble = isOneOf({
   "-Infinity": true,
@@ -31,14 +30,12 @@ const isNonFiniteDouble = isOneOf({
   NaN: true,
 });
 
-const isDoubleValue = (
-  value: unknown,
-): value is "-Infinity" | "Infinity" | "NaN" | number =>
-  isNumber(value) || isNonFiniteDouble(value);
+const isDoubleValue = (value: unknown): value is number | string =>
+  isNumber(value) || isNumericString(value) || isNonFiniteDouble(value);
 
 /**
  * Checks an attribute in OTLP/JSON form, where any field may be omitted or
- * `null` when it holds its default value.
+ * `null` and any number may be written as a string.
  */
 export function isOpenTelemetryAttribute(
   value: unknown,
@@ -51,21 +48,21 @@ export function isOpenTelemetryAttribute(
 
 function isAnyValue(value: unknown): value is OpenTelemetryAnyValue {
   return hasShape<OpenTelemetryAnyValue>({
-    arrayValue: isOptional(
+    arrayValue: isOptionalNullable(
       hasShape<NonNullable<OpenTelemetryAnyValue["arrayValue"]>>({
         values: isOptionalNullable(isArrayOf(isAnyValue)),
       }),
     ),
-    boolValue: isOptional(isBoolean),
-    bytesValue: isOptional(isString),
-    doubleValue: isOptional(isDoubleValue),
-    intValue: isOptional(isIntValue),
-    kvlistValue: isOptional(
+    boolValue: isOptionalNullable(isBoolean),
+    bytesValue: isOptionalNullable(isString),
+    doubleValue: isOptionalNullable(isDoubleValue),
+    intValue: isOptionalNullable(isIntValue),
+    kvlistValue: isOptionalNullable(
       hasShape<NonNullable<OpenTelemetryAnyValue["kvlistValue"]>>({
         values: isOptionalNullable(isArrayOf(isOpenTelemetryAttribute)),
       }),
     ),
-    stringValue: isOptional(isString),
+    stringValue: isOptionalNullable(isString),
   })(value);
 }
 

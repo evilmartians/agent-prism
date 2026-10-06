@@ -140,13 +140,31 @@ describe("isOpenTelemetryDocument", () => {
       { attributes: [{}], events: [{}], links: [{}] },
     ],
     [
-      "doubles OTLP/JSON writes as strings",
+      "doubles written as strings",
       {
         attributes: [
+          { key: "double", value: { doubleValue: "0.7" } },
           { key: "nan", value: { doubleValue: "NaN" } },
           { key: "inf", value: { doubleValue: "Infinity" } },
           { key: "-inf", value: { doubleValue: "-Infinity" } },
         ],
+      },
+    ],
+    [
+      "null attribute value fields",
+      {
+        attributes: [
+          { key: "string", value: { stringValue: null } },
+          { key: "list", value: { arrayValue: null, kvlistValue: null } },
+        ],
+      },
+    ],
+    [
+      "counts and flags written as strings",
+      {
+        droppedAttributesCount: "0",
+        events: [{ droppedAttributesCount: "1" }],
+        flags: "1",
       },
     ],
     ["a null parentSpanId", { parentSpanId: null }],
@@ -192,8 +210,9 @@ describe("isOpenTelemetryDocument", () => {
     ],
     [
       "an attribute with a non-numeric doubleValue",
-      { attributes: [{ key: "n", value: { doubleValue: "0.7" } }] },
+      { attributes: [{ key: "n", value: { doubleValue: "abc" } }] },
     ],
+    ["a non-numeric flags", { flags: "abc" }],
     [
       "an attribute with a malformed nested arrayValue",
       {

@@ -149,7 +149,7 @@ describe("reviveTraceSpan", () => {
             key: "mixed",
             value: {
               boolValue: "true",
-              doubleValue: "1.5",
+              doubleValue: "abc",
               intValue: 3.5,
               stringValue: "kept",
             },

@@ -78,6 +78,15 @@ describe("reviveAttribute", () => {
       { key: "extra", value: { kvlistValue: { values: [] } } },
     ]);
   });
+
+  it("reads a double written as a string and skips null fields", () => {
+    expect(
+      reviveAttribute({
+        key: "temperature",
+        value: { doubleValue: "0.7", stringValue: null },
+      }),
+    ).toStrictEqual([{ key: "temperature", value: { doubleValue: 0.7 } }]);
+  });
 });
 
 describe("toAttributeValue", () => {
