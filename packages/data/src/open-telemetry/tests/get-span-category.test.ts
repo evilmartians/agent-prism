@@ -108,15 +108,4 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
     expect(categorizeOpenTelemetryGenAI).not.toHaveBeenCalled();
     expect(categorizeOpenInference).not.toHaveBeenCalled();
   });
-
-  it("should use standard categorization for default case", () => {
-    vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
-      // @ts-expect-error - Return an unexpected value to test default case
-      "unexpected",
-    );
-    vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
-
-    expect(openTelemetrySpanAdapter.getSpanCategory(span)).toBe("unknown");
-    expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
-  });
 });

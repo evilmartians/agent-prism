@@ -98,26 +98,21 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   getSpanCategory(span: ReadonlyOpenTelemetrySpan): TraceSpanCategory {
     const standard = getOpenTelemetrySpanStandard(span);
 
-    switch (standard) {
-      case "openinference": {
-        const category = categorizeOpenInference(span);
-        return category !== "unknown"
-          ? category
-          : categorizeStandardOpenTelemetry(span);
-      }
-
-      case "opentelemetry_genai": {
-        const category = categorizeOpenTelemetryGenAI(span);
-        return category !== "unknown"
-          ? category
-          : categorizeStandardOpenTelemetry(span);
-      }
-
-      case "standard":
-      default: {
-        return categorizeStandardOpenTelemetry(span);
-      }
+    if (standard === "openinference") {
+      const category = categorizeOpenInference(span);
+      return category !== "unknown"
+        ? category
+        : categorizeStandardOpenTelemetry(span);
     }
+
+    if (standard === "opentelemetry_genai") {
+      const category = categorizeOpenTelemetryGenAI(span);
+      return category !== "unknown"
+        ? category
+        : categorizeStandardOpenTelemetry(span);
+    }
+
+    return categorizeStandardOpenTelemetry(span);
   },
 
   getSpanInputOutput(span: ReadonlyOpenTelemetrySpan): InputOutputData {
