@@ -1,8 +1,8 @@
 import { OPENTELEMETRY_GENAI_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai.js";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
 describe("categorizeOpenTelemetryGenAI", () => {
   describe("OpenTelemetry GenAI operation name mappings", () => {

@@ -8,7 +8,7 @@ import { useContext, useRef, useState } from "react";
 import { UploadFileErrorMessage } from "@/components/UploadFileErrorMessage";
 import { TraceContext } from "@/context/TraceContext";
 
-const FileUploader: FC = () => {
+export const FileUploader: FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -71,5 +71,3 @@ const FileUploader: FC = () => {
     </div>
   );
 };
-
-export default FileUploader;

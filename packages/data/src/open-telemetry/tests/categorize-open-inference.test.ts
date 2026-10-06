@@ -1,8 +1,8 @@
 import { OPENINFERENCE_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { categorizeOpenInference } from "../utils/categorize-open-inference";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { categorizeOpenInference } from "../utils/categorize-open-inference.js";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
 describe("categorizeOpenInference", () => {
   describe("OpenInference span kind mappings", () => {

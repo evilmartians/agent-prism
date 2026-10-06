@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "react", "jsx-a11y"],
+  "plugins": ["typescript", "react", "jsx-a11y", "import", "oxc"],
   "categories": {
     "correctness": "off"
   },
@@ -128,6 +128,10 @@
     "no-shadow": "error",
     "no-use-before-define": ["error", { "functions": false }],
     "max-depth": ["error", { "max": 3 }],
+    "import/no-cycle": "error",
+    "import/no-self-import": "error",
+    "import/no-default-export": "error",
+    "oxc/no-barrel-file": ["error", { "threshold": 0 }],
     "react/display-name": "error",
     "react/jsx-key": "error",
     "react/jsx-no-comment-textnodes": "error",
@@ -493,7 +497,8 @@
     {
       "files": ["packages/types/**", "packages/data/**"],
       "rules": {
-        "complexity": ["error", { "max": 12, "variant": "modified" }]
+        "complexity": ["error", { "max": 12, "variant": "modified" }],
+        "import/extensions": ["error", "always", { "ignorePackages": true }]
       }
     },
     {
@@ -504,7 +509,39 @@
         "packages/saas/**"
       ],
       "rules": {
-        "complexity": ["error", { "max": 20, "variant": "modified" }]
+        "complexity": ["error", { "max": 20, "variant": "modified" }],
+        "import/extensions": [
+          "error",
+          "never",
+          {
+            "ignorePackages": true,
+            "pattern": { "css": "always", "json": "always" }
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "**/*.config.{js,mjs,ts}",
+        "**/*.stories.tsx",
+        "**/*.d.ts",
+        "packages/storybook/.storybook/**",
+        "packages/saas/src/app/**"
+      ],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["packages/*/src/index.ts"],
+      "rules": {
+        "oxc/no-barrel-file": "off"
+      }
+    },
+    {
+      "files": ["packages/ui/src/index.ts"],
+      "rules": {
+        "import/extensions": "off"
       }
     },
     {

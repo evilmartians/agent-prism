@@ -4,8 +4,8 @@ import {
 } from "@evilmartians/agent-prism-types";
 import { describe, it, expect } from "vitest";
 
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
-import { generateOpenTelemetrySpanTitle } from "../utils/generate-open-telemetry-span-title";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
+import { generateOpenTelemetrySpanTitle } from "../utils/generate-open-telemetry-span-title.js";
 
 describe("generateOpenTelemetrySpanTitle", () => {
   describe("LLM operations", () => {

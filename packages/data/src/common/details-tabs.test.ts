@@ -4,8 +4,8 @@ import {
   hasContextContent,
   hasThinkingContent,
   hasTodos,
-} from "./details-tabs";
-import { createTestSpan } from "./test-utils/create-test-span";
+} from "./details-tabs.js";
+import { createTestSpan } from "./test-utils/create-test-span.js";
 
 describe("agent-prism / details-tabs — tab decisions", () => {
   it("hasThinkingContent is true only when the span carries reasoning", () => {

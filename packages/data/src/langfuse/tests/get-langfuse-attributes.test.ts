@@ -2,8 +2,8 @@ import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
 
 import { describe, it, expect } from "vitest";
 
-import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation";
-import { getLangfuseAttributes } from "../utils/get-langfuse-attributes";
+import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
+import { getLangfuseAttributes } from "../utils/get-langfuse-attributes.js";
 
 function createObservation(metadata?: unknown): LangfuseObservation {
   return createMockLangfuseObservation({ metadata });

@@ -7,7 +7,7 @@ import {
   getTotalCost,
   getTotalTokens,
   hasReportedCost,
-} from "./token-usage";
+} from "./token-usage.js";
 
 describe("token usage", () => {
   describe("totals", () => {

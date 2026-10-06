@@ -5,7 +5,7 @@ import type {
 
 import { describe, expect, it } from "vitest";
 
-import { langfuseSpanAdapter } from "../adapter";
+import { langfuseSpanAdapter } from "../adapter.js";
 
 const makeObservation = (
   observation: Partial<LangfuseObservation> & Pick<LangfuseObservation, "id">,

@@ -4,8 +4,8 @@ import {
 } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
-import { getOpenTelemetrySpanStandard } from "../utils/get-open-telemetry-span-standard";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
+import { getOpenTelemetrySpanStandard } from "../utils/get-open-telemetry-span-standard.js";
 
 describe("getOpenTelemetrySpanStandard", () => {
   describe("OpenTelemetry GenAI detection", () => {

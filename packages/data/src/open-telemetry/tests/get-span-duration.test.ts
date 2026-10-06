@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 
-import { getDurationMs } from "../../common/get-duration-ms";
-import { openTelemetrySpanAdapter } from "../adapter";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { getDurationMs } from "../../common/get-duration-ms.js";
+import { openTelemetrySpanAdapter } from "../adapter.js";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
 describe("openTelemetrySpanAdapter — span duration", () => {
   describe("basic duration calculations", () => {

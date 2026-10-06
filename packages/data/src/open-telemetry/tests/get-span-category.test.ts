@@ -1,20 +1,20 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
-vi.mock("../utils/categorize-open-inference", () => ({
+vi.mock("../utils/categorize-open-inference.js", () => ({
   categorizeOpenInference: vi.fn(),
 }));
 
-vi.mock("../utils/categorize-open-telemetry-gen-ai", () => ({
+vi.mock("../utils/categorize-open-telemetry-gen-ai.js", () => ({
   categorizeOpenTelemetryGenAI: vi.fn(),
 }));
 
-vi.mock("../utils/get-open-telemetry-span-standard", () => ({
+vi.mock("../utils/get-open-telemetry-span-standard.js", () => ({
   getOpenTelemetrySpanStandard: vi.fn(),
 }));
 
-vi.mock("../utils/categorize-standard-open-telemetry", () => ({
+vi.mock("../utils/categorize-standard-open-telemetry.js", () => ({
   categorizeStandardOpenTelemetry: vi.fn(),
 }));
 
@@ -24,11 +24,11 @@ import {
   STANDARD_OPENTELEMETRY_ATTRIBUTES,
 } from "@evilmartians/agent-prism-types";
 
-import { openTelemetrySpanAdapter } from "../adapter";
-import { categorizeOpenInference } from "../utils/categorize-open-inference";
-import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai";
-import { categorizeStandardOpenTelemetry } from "../utils/categorize-standard-open-telemetry";
-import { getOpenTelemetrySpanStandard } from "../utils/get-open-telemetry-span-standard";
+import { openTelemetrySpanAdapter } from "../adapter.js";
+import { categorizeOpenInference } from "../utils/categorize-open-inference.js";
+import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai.js";
+import { categorizeStandardOpenTelemetry } from "../utils/categorize-standard-open-telemetry.js";
+import { getOpenTelemetrySpanStandard } from "../utils/get-open-telemetry-span-standard.js";
 
 describe("openTelemetrySpanAdapter.getSpanCategory", () => {
   beforeEach(() => {

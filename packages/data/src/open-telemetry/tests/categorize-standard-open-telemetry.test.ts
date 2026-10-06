@@ -1,8 +1,8 @@
 import { STANDARD_OPENTELEMETRY_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { categorizeStandardOpenTelemetry } from "../utils/categorize-standard-open-telemetry";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { categorizeStandardOpenTelemetry } from "../utils/categorize-standard-open-telemetry.js";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
 describe("categorizeStandardOpenTelemetry", () => {
   describe("priority order detection", () => {

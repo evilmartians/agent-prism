@@ -2,14 +2,14 @@ import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { getDurationMs } from "../../common/get-duration-ms";
+import { getDurationMs } from "../../common/get-duration-ms.js";
 import {
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
-} from "../../common/token-usage";
-import { langfuseSpanAdapter } from "../adapter";
-import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation";
+} from "../../common/token-usage.js";
+import { langfuseSpanAdapter } from "../adapter.js";
+import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
 
 const observation = (
   overrides: Partial<LangfuseObservation>,

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
-import { getOpenTelemetryAttributeValue } from "../utils/get-open-telemetry-attribute-value";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
+import { getOpenTelemetryAttributeValue } from "../utils/get-open-telemetry-attribute-value.js";
 
 describe("getOpenTelemetryAttributeValue", () => {
   describe("string values", () => {

@@ -1,15 +1,15 @@
 import { OPENTELEMETRY_GENAI_ATTRIBUTES as GENAI } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { getDurationMs } from "../../common/get-duration-ms";
+import { getDurationMs } from "../../common/get-duration-ms.js";
 import {
   getTokenUsageEntries,
   getTotalCost,
   getTotalTokens,
   hasReportedCost,
-} from "../../common/token-usage";
-import { openTelemetrySpanAdapter } from "../adapter";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+} from "../../common/token-usage.js";
+import { openTelemetrySpanAdapter } from "../adapter.js";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
 const usageOf = (attributes: Record<string, unknown>) =>
   openTelemetrySpanAdapter.getTokenUsage(

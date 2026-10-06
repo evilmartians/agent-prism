@@ -2,8 +2,8 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { isTraceSpanLike, reviveTraceSpan } from "./revive-trace-span";
-import { createTestSpan } from "./test-utils/create-test-span";
+import { isTraceSpanLike, reviveTraceSpan } from "./revive-trace-span.js";
+import { createTestSpan } from "./test-utils/create-test-span.js";
 
 const baseJSON = {
   id: "span-1",

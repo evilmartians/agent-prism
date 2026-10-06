@@ -13,11 +13,11 @@ import {
   isRootTraceSpan,
   spanHasErrorSurface,
   traceRunHasErrors,
-} from "./extract-span-error";
+} from "./extract-span-error.js";
 import {
   formatRunErrorsForAgent,
   formatSpanErrorForAgent,
-} from "./format-errors-for-agent";
+} from "./format-errors-for-agent.js";
 
 const makeSpan = (
   span: Partial<TraceSpan> & Pick<TraceSpan, "id">,

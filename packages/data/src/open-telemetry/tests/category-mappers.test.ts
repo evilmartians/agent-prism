@@ -1,8 +1,8 @@
 import { STANDARD_OPENTELEMETRY_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
-import { openTelemetryCategoryMappers } from "../utils/open-telemetry-category-mappers";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
+import { openTelemetryCategoryMappers } from "../utils/open-telemetry-category-mappers.js";
 
 describe("openTelemetryCategoryMappers", () => {
   describe("isHttpCall", () => {

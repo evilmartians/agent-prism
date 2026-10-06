@@ -2,7 +2,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { flattenSpans } from "./flatten-spans";
+import { flattenSpans } from "./flatten-spans.js";
 
 describe("flattenSpans", () => {
   it("should return an empty array when input is an empty array", () => {

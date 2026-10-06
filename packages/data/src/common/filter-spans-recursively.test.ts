@@ -2,7 +2,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { filterSpansRecursively } from "./filter-spans-recursively";
+import { filterSpansRecursively } from "./filter-spans-recursively.js";
 
 describe("filterSpansRecursively", () => {
   const childSpanA: TraceSpan = {

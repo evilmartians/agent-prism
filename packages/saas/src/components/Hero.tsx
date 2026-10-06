@@ -1,6 +1,6 @@
 import { type FC } from "react";
 
-import FileUploader from "./FileUploader";
+import { FileUploader } from "./FileUploader";
 
 export const Hero: FC = () => {
   return (

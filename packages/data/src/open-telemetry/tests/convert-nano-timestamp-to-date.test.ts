@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { convertNanoTimestampToDate } from "../utils/convert-nano-timestamp-to-date";
+import { convertNanoTimestampToDate } from "../utils/convert-nano-timestamp-to-date.js";
 
 describe("convertNanoTimestampToDate", () => {
   it("should convert nanosecond timestamp string to a Date object", () => {
