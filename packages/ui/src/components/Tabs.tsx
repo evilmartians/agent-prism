@@ -5,18 +5,25 @@ import cn from "classnames";
 import * as React from "react";
 
 export type TabItem<T extends string = string> = {
-  value: T;
-  label: string;
-  icon?: React.ReactNode | undefined;
   disabled?: boolean | undefined;
+  icon?: React.ReactNode | undefined;
+  label: string;
+  value: T;
 };
 
-export type TabTheme = "underline" | "pill";
+export type TabTheme = "pill" | "underline";
 
 const BASE_TRIGGER =
   "text-sm font-medium transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
 const THEMES = {
+  pill: {
+    list: "h-9 inline-flex gap-1 p-1 bg-agentprism-secondary rounded-lg",
+    trigger: `px-3 ${BASE_TRIGGER} rounded-md
+      text-agentprism-muted-foreground data-[state=active]:text-agentprism-foreground
+      data-[state=inactive]:[&:not(:disabled)]:hover:bg-agentprism-background/50 data-[state=active]:bg-agentprism-background data-[state=active]:shadow-sm
+      dark:data-[state=active]:shadow-none`,
+  },
   underline: {
     list: "h-9 flex border-b border-agentprism-border",
     trigger: `w-full justify-center px-3 ${BASE_TRIGGER} 
@@ -26,13 +33,6 @@ const THEMES = {
       data-[state=inactive]:[&:not(:disabled)]:hover:border-agentprism-border-inverse/20
       data-[state=inactive]:[&:not(:disabled)]:hover:text-agentprism-muted-foreground`,
   },
-  pill: {
-    list: "h-9 inline-flex gap-1 p-1 bg-agentprism-secondary rounded-lg",
-    trigger: `px-3 ${BASE_TRIGGER} rounded-md
-      text-agentprism-muted-foreground data-[state=active]:text-agentprism-foreground
-      data-[state=inactive]:[&:not(:disabled)]:hover:bg-agentprism-background/50 data-[state=active]:bg-agentprism-background data-[state=active]:shadow-sm
-      dark:data-[state=active]:shadow-none`,
-  },
 } as const;
 
 export type TabsProps<T extends string = string> = Omit<
@@ -40,9 +40,9 @@ export type TabsProps<T extends string = string> = Omit<
   "dir"
 > & {
   /**
-   * Array of tab items to display
+   * Optional className for the root container
    */
-  items: TabItem<T>[];
+  className?: string | undefined;
 
   /**
    * The initially selected tab value (uncontrolled)
@@ -50,14 +50,24 @@ export type TabsProps<T extends string = string> = Omit<
   defaultValue?: T | undefined;
 
   /**
-   * The currently selected tab value (controlled)
+   * The direction of the content of the tabs
    */
-  value?: T | undefined;
+  dir?: "ltr" | "rtl" | undefined;
+
+  /**
+   * Array of tab items to display
+   */
+  items: TabItem<T>[];
 
   /**
    * Callback fired when the selected tab changes
    */
   onValueChange?: ((value: T) => void) | undefined;
+
+  /**
+   * Optional className for the tabs list container
+   */
+  tabsListClassName?: string | undefined;
 
   /**
    * Visual theme variant for the tabs
@@ -66,36 +76,26 @@ export type TabsProps<T extends string = string> = Omit<
   theme?: TabTheme | undefined;
 
   /**
-   * Optional className for the root container
-   */
-  className?: string | undefined;
-
-  /**
-   * Optional className for the tabs list container
-   */
-  tabsListClassName?: string | undefined;
-
-  /**
    * Optional className for individual tab triggers
    */
   triggerClassName?: string | undefined;
 
   /**
-   * The direction of the content of the tabs
+   * The currently selected tab value (controlled)
    */
-  dir?: "ltr" | "rtl" | undefined;
+  value?: T | undefined;
 };
 
 export const Tabs = <T extends string = string>({
-  items,
-  defaultValue,
-  value,
-  onValueChange,
-  theme = "underline",
   className = "",
-  tabsListClassName = "",
-  triggerClassName = "",
+  defaultValue,
   dir,
+  items,
+  onValueChange,
+  tabsListClassName = "",
+  theme = "underline",
+  triggerClassName = "",
+  value,
   ...rest
 }: TabsProps<T>): React.ReactElement => {
   const defaultTab = defaultValue || items[0]?.value;
@@ -112,19 +112,19 @@ export const Tabs = <T extends string = string>({
       {...rest}
     >
       <RadixTabs.List
-        className={cn(currentTheme.list, tabsListClassName)}
         aria-label="Navigation tabs"
+        className={cn(currentTheme.list, tabsListClassName)}
       >
         {items.map((item: TabItem) => (
           <RadixTabs.Trigger
-            key={item.value}
-            value={item.value}
-            disabled={item.disabled}
             className={cn(
               "group flex items-center overflow-hidden",
               currentTheme.trigger,
               triggerClassName,
             )}
+            disabled={item.disabled}
+            key={item.value}
+            value={item.value}
           >
             {item.icon ? (
               <span className="text-agentprism-secondary-foreground mr-2 group-data-[state=active]:text-current">

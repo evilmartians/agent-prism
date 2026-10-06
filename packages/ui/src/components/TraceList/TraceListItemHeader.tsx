@@ -7,13 +7,13 @@ import { Avatar } from "../Avatar";
 import { Badge } from "../Badge";
 
 type TraceListItemHeaderProps = {
-  trace: TraceRecord;
   avatar?: AvatarProps | undefined;
+  trace: TraceRecord;
 };
 
 export const TraceListItemHeader = ({
-  trace,
   avatar,
+  trace,
 }: TraceListItemHeaderProps): ReactElement => {
   return (
     <header className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2">
@@ -27,10 +27,10 @@ export const TraceListItemHeader = ({
 
       <div className="flex items-center gap-2">
         <Badge
-          size="4"
           label={
             trace.spansCount === 1 ? "1 span" : `${trace.spansCount} spans`
           }
+          size="4"
         />
       </div>
     </header>

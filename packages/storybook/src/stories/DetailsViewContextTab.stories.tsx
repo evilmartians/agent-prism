@@ -13,20 +13,18 @@ import {
 } from "@storybook/addon-docs/blocks";
 
 const baseSpan: TraceSpan = {
-  id: "span-context-001",
-  title: "LLM call",
-  startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  type: "llm_call",
+  id: "span-context-001",
   raw: [],
+  startTime: new Date("2024-01-15T10:30:00Z"),
   status: "success",
+  title: "LLM call",
+  type: "llm_call",
 };
 
 const meta = {
-  title: "Details View/Context Tab",
   component: DetailsViewContextTab,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -37,8 +35,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
+  title: "Details View/Context Tab",
 } satisfies Meta<typeof DetailsViewContextTab>;
 
 export default meta;
@@ -69,10 +69,10 @@ export const FullContext: Story = {
         },
       ],
       tokenUsage: {
-        input: { tokens: 12000, cost: 0.18 },
-        output: { tokens: 500, cost: 0.0375 },
-        cache_read: { tokens: 140000, cost: 0.21 },
-        cache_write: { tokens: 4000, cost: 0.075 },
+        cache_read: { cost: 0.21, tokens: 140000 },
+        cache_write: { cost: 0.075, tokens: 4000 },
+        input: { cost: 0.18, tokens: 12000 },
+        output: { cost: 0.0375, tokens: 500 },
       },
     },
   },

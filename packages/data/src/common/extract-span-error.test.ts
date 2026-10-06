@@ -3,7 +3,6 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
 import {
-  type SpanErrorDetails,
   collectErrorSpans,
   collectRunErrorEntries,
   collectSpanErrorEntry,
@@ -11,6 +10,7 @@ import {
   errorCountLabel,
   extractSpanError,
   isRootTraceSpan,
+  type SpanErrorDetails,
   spanHasErrorSurface,
   traceRunHasErrors,
 } from "./extract-span-error.js";
@@ -22,51 +22,47 @@ import {
 const makeSpan = (
   span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
 ): TraceSpan => ({
-  title: span.id,
-  startTime: new Date("2026-06-05T10:00:00.000Z"),
   endTime: new Date("2026-06-05T10:00:01.000Z"),
-  type: "span",
   raw: ["{}"],
+  startTime: new Date("2026-06-05T10:00:00.000Z"),
   status: "success",
+  title: span.id,
+  type: "span",
   ...span,
 });
 
 // Reads message + nodeName from the normalized `raw` payload.
 const rawStatusMessageSpan = makeSpan({
   id: "parser",
-  title: "Structured Output Parser",
-  status: "error",
   raw: [
     JSON.stringify({
+      name: "Structured Output Parser",
       status: {
         code: "ERROR",
         message: "Model output doesn't fit required format",
       },
-      name: "Structured Output Parser",
     }),
   ],
+  status: "error",
+  title: "Structured Output Parser",
 });
 
 // No message in `raw` — falls back to the `error.message` attribute.
 const errorMessageAttributeSpan = makeSpan({
-  id: "tool",
-  title: "Weather Tool",
-  status: "error",
-  raw: ["{}"],
   attributes: [
     {
       key: "error.message",
       value: { stringValue: "Tool timed out after 30s" },
     },
   ],
+  id: "tool",
+  raw: ["{}"],
+  status: "error",
+  title: "Weather Tool",
 });
 
 // OTLP-style exception attributes carry both message and stack.
 const otlpExceptionSpan = makeSpan({
-  id: "redis",
-  title: "Redis connect",
-  status: "error",
-  raw: ["{}"],
   attributes: [
     {
       key: "exception.message",
@@ -77,57 +73,61 @@ const otlpExceptionSpan = makeSpan({
       value: { stringValue: "Error\n    at RedisClient.connect (redis.ts:42)" },
     },
   ],
+  id: "redis",
+  raw: ["{}"],
+  status: "error",
+  title: "Redis connect",
 });
 
 // `status.message` provided as an attribute rather than in `raw`.
 const statusMessageAttributeSpan = makeSpan({
-  id: "rate-limited",
-  title: "LLM call",
-  status: "error",
-  raw: ["{}"],
   attributes: [
     {
       key: "status.message",
       value: { stringValue: "Rate limit exceeded (429)" },
     },
   ],
+  id: "rate-limited",
+  raw: ["{}"],
+  status: "error",
+  title: "LLM call",
 });
 
 // Error span with no discoverable message anywhere.
 const noMessageErrorSpan = makeSpan({
   id: "mystery",
-  title: "Mystery node",
-  status: "error",
   raw: ["not-json"],
+  status: "error",
+  title: "Mystery node",
 });
 
 // A failed run: workflow root → agent → parser, all in error state.
 const agentParentSpan = makeSpan({
+  children: [rawStatusMessageSpan],
   id: "agent",
-  title: "AI Agent",
-  type: "agent_invocation",
-  status: "error",
   raw: [
     JSON.stringify({
-      status: { message: "Child node failed" },
       name: "AI Agent",
+      status: { message: "Child node failed" },
     }),
   ],
-  children: [rawStatusMessageSpan],
+  status: "error",
+  title: "AI Agent",
+  type: "agent_invocation",
 });
 
 const workflowRootSpan = makeSpan({
+  children: [agentParentSpan],
   id: "workflow",
-  title: "Relevancy scoring workflow",
-  type: "chain_operation",
-  status: "error",
   raw: [
     JSON.stringify({
-      status: { message: "Run failed" },
       name: "Relevancy scoring workflow",
+      status: { message: "Run failed" },
     }),
   ],
-  children: [agentParentSpan],
+  status: "error",
+  title: "Relevancy scoring workflow",
+  type: "chain_operation",
 });
 
 const failedRunSpans: TraceSpan[] = [workflowRootSpan];
@@ -142,11 +142,11 @@ const extractDefinedSpanError = (span: TraceSpan): SpanErrorDetails => {
 
 const singleErrorRunSpans: TraceSpan[] = [
   makeSpan({
+    children: [errorMessageAttributeSpan],
     id: "single-workflow",
+    status: "success",
     title: "Single workflow",
     type: "chain_operation",
-    status: "success",
-    children: [errorMessageAttributeSpan],
   }),
 ];
 
@@ -169,14 +169,14 @@ describe("extractSpanError", () => {
   it("reads nodeName from raw.name over the span title", () => {
     const span = makeSpan({
       id: "renamed",
-      title: "renamed", // matches id; distinct from raw.name below
-      status: "error",
       raw: [
         JSON.stringify({
-          status: { message: "boom" },
           name: "Human-readable node name",
+          status: { message: "boom" },
         }),
       ],
+      status: "error",
+      title: "renamed", // matches id; distinct from raw.name below
     });
 
     expect(extractSpanError(span)?.nodeName).toBe("Human-readable node name");
@@ -184,13 +184,13 @@ describe("extractSpanError", () => {
 
   it("prefers the raw status message over the error.message attribute", () => {
     const span = makeSpan({
-      id: "both",
-      title: "Both sources",
-      status: "error",
-      raw: [JSON.stringify({ status: { message: "from raw status" } })],
       attributes: [
         { key: "error.message", value: { stringValue: "from attribute" } },
       ],
+      id: "both",
+      raw: [JSON.stringify({ status: { message: "from raw status" } })],
+      status: "error",
+      title: "Both sources",
     });
 
     expect(extractSpanError(span)?.message).toBe("from raw status");
@@ -199,13 +199,13 @@ describe("extractSpanError", () => {
   it("reads message and nodeName across several raw records", () => {
     const span = makeSpan({
       id: "multi-record",
-      title: "Multi-record span",
-      status: "error",
       raw: [
         JSON.stringify({ name: "Start event" }),
         "not-json",
         JSON.stringify({ status: { message: "Failed at the end" } }),
       ],
+      status: "error",
+      title: "Multi-record span",
     });
 
     const error = extractSpanError(span);
@@ -217,13 +217,13 @@ describe("extractSpanError", () => {
   it("reads message from a top-level statusMessage (Langfuse)", () => {
     const span = makeSpan({
       id: "langfuse-obs",
-      title: "Langfuse observation",
-      status: "error",
       // Langfuse observations expose the error text on `statusMessage`, not a
       // nested `status.message`.
       raw: [
-        JSON.stringify({ statusMessage: "Observation failed", name: "Obs" }),
+        JSON.stringify({ name: "Obs", statusMessage: "Observation failed" }),
       ],
+      status: "error",
+      title: "Langfuse observation",
     });
 
     const error = extractSpanError(span);
@@ -242,10 +242,10 @@ describe("extractSpanError", () => {
   it("preserves stack-trace whitespace verbatim", () => {
     const stack = "\n  at foo (a.ts:1)\n    at bar (b.ts:2)\n";
     const span = makeSpan({
-      id: "stack-whitespace",
-      status: "error",
-      raw: [JSON.stringify({ status: { message: "Boom" } })],
       attributes: [{ key: "error.stack", value: { stringValue: stack } }],
+      id: "stack-whitespace",
+      raw: [JSON.stringify({ status: { message: "Boom" } })],
+      status: "error",
     });
 
     expect(extractSpanError(span)?.stack).toBe(stack);
@@ -265,12 +265,12 @@ describe("extractSpanError", () => {
 
   it("ignores an empty/whitespace raw message in favor of an attribute", () => {
     const span = makeSpan({
-      id: "blank-raw-message",
-      status: "error",
-      raw: [JSON.stringify({ status: { message: "   " }, name: "Node" })],
       attributes: [
         { key: "error.message", value: { stringValue: "Real failure" } },
       ],
+      id: "blank-raw-message",
+      raw: [JSON.stringify({ name: "Node", status: { message: "   " } })],
+      status: "error",
     });
 
     expect(extractSpanError(span)?.message).toBe("Real failure");
@@ -279,9 +279,9 @@ describe("extractSpanError", () => {
   it("ignores an empty raw name and falls back to the span title", () => {
     const span = makeSpan({
       id: "blank-name",
-      title: "Fallback Title",
+      raw: [JSON.stringify({ name: "", status: { message: "Boom" } })],
       status: "error",
-      raw: [JSON.stringify({ status: { message: "Boom" }, name: "" })],
+      title: "Fallback Title",
     });
 
     expect(extractSpanError(span)?.nodeName).toBe("Fallback Title");
@@ -289,10 +289,10 @@ describe("extractSpanError", () => {
 
   it("treats a whitespace-only attribute value as absent", () => {
     const span = makeSpan({
-      id: "blank-attr",
-      status: "error",
-      raw: ["{}"],
       attributes: [{ key: "error.message", value: { stringValue: "   " } }],
+      id: "blank-attr",
+      raw: ["{}"],
+      status: "error",
     });
 
     expect(extractSpanError(span)?.message).toBe(
@@ -306,17 +306,17 @@ describe("extractSpanError", () => {
 
   it("never returns a non-string message from a malformed raw payload", () => {
     const objectMessageSpan = makeSpan({
-      id: "object-message",
-      status: "error",
-      raw: [JSON.stringify({ status: { message: { text: "nested" } } })],
       attributes: [
         { key: "error.message", value: { stringValue: "Flat message" } },
       ],
+      id: "object-message",
+      raw: [JSON.stringify({ status: { message: { text: "nested" } } })],
+      status: "error",
     });
     const primitiveRawSpan = makeSpan({
       id: "primitive-raw",
-      status: "error",
       raw: [JSON.stringify("just a string")],
+      status: "error",
     });
 
     expect(typeof extractSpanError(objectMessageSpan)?.message).toBe("string");
@@ -370,10 +370,10 @@ describe("isRootTraceSpan", () => {
 
 describe("spanHasErrorSurface", () => {
   const successRoot = makeSpan({
+    children: [makeSpan({ id: "surface-child", raw: ["{}"], status: "error" })],
     id: "surface-root",
-    type: "chain_operation",
     status: "success",
-    children: [makeSpan({ id: "surface-child", status: "error", raw: ["{}"] })],
+    type: "chain_operation",
   });
 
   it("is true for a root whose subtree contains an error", () => {
@@ -386,7 +386,7 @@ describe("spanHasErrorSurface", () => {
   });
 
   it("is true for a non-root error span even without the trace", () => {
-    const leaf = makeSpan({ id: "leaf", status: "error", raw: ["{}"] });
+    const leaf = makeSpan({ id: "leaf", raw: ["{}"], status: "error" });
     expect(spanHasErrorSurface(leaf, [])).toBe(true);
   });
 
@@ -431,28 +431,28 @@ describe("format helpers", () => {
 
   it("formatRunErrorsForAgent numbers sections in entry order and includes stacks", () => {
     const root = makeSpan({
-      id: "run-root",
-      status: "success",
       children: [
         makeSpan({
-          id: "first-fail",
-          title: "First failure",
-          status: "error",
-          raw: [JSON.stringify({ status: { message: "first boom" } })],
           attributes: [
             {
               key: "exception.stacktrace",
               value: { stringValue: "at first()" },
             },
           ],
+          id: "first-fail",
+          raw: [JSON.stringify({ status: { message: "first boom" } })],
+          status: "error",
+          title: "First failure",
         }),
         makeSpan({
           id: "second-fail",
-          title: "Second failure",
-          status: "error",
           raw: [JSON.stringify({ status: { message: "second boom" } })],
+          status: "error",
+          title: "Second failure",
         }),
       ],
+      id: "run-root",
+      status: "success",
     });
 
     const text = formatRunErrorsForAgent(collectRunErrorEntries([root]));

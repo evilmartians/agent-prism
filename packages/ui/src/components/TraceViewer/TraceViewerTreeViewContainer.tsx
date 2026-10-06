@@ -10,31 +10,31 @@ import { type TraceRecordWithDisplayData } from "./TraceViewer";
 import { TraceViewerSearchAndControls } from "./TraceViewerSearchAndControls";
 
 export const TraceViewerTreeViewContainer = ({
-  searchValue,
-  setSearchValue,
-  handleExpandAll,
-  handleCollapseAll,
-  filteredSpans,
-  selectedSpan,
-  setSelectedSpan,
   expandedSpansIds,
-  setExpandedSpansIds,
-  spanCardViewOptions,
+  filteredSpans,
+  handleCollapseAll,
+  handleExpandAll,
+  searchValue,
+  selectedSpan,
   selectedTrace,
+  setExpandedSpansIds,
+  setSearchValue,
+  setSelectedSpan,
   showHeader = true,
+  spanCardViewOptions,
 }: {
-  searchValue: string;
-  setSearchValue: (value: string) => void;
-  handleExpandAll: () => void;
-  handleCollapseAll: () => void;
-  filteredSpans: TraceSpan[];
-  selectedSpan: TraceSpan | undefined;
-  setSelectedSpan: (span: TraceSpan | undefined) => void;
   expandedSpansIds: string[];
-  setExpandedSpansIds: (ids: string[]) => void;
-  spanCardViewOptions?: SpanCardViewOptions | undefined;
+  filteredSpans: TraceSpan[];
+  handleCollapseAll: () => void;
+  handleExpandAll: () => void;
+  searchValue: string;
+  selectedSpan: TraceSpan | undefined;
   selectedTrace?: TraceRecordWithDisplayData | undefined;
+  setExpandedSpansIds: (ids: string[]) => void;
+  setSearchValue: (value: string) => void;
+  setSelectedSpan: (span: TraceSpan | undefined) => void;
   showHeader?: boolean | undefined;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
 }): ReactElement => (
   <>
     {showHeader && selectedTrace ? (
@@ -43,7 +43,7 @@ export const TraceViewerTreeViewContainer = ({
 
         <div className="flex flex-wrap items-center gap-2">
           {selectedTrace.badges?.map((badge, index) => (
-            <Badge key={index} size="4" label={badge.label} />
+            <Badge key={index} label={badge.label} size="4" />
           ))}
         </div>
       </div>
@@ -51,10 +51,10 @@ export const TraceViewerTreeViewContainer = ({
 
     <div className="bg-agentprism-background flex min-h-0 flex-1 flex-col overflow-hidden rounded-md">
       <TraceViewerSearchAndControls
+        handleCollapseAll={handleCollapseAll}
+        handleExpandAll={handleExpandAll}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
-        handleExpandAll={handleExpandAll}
-        handleCollapseAll={handleCollapseAll}
       />
       <div className="min-h-0 flex-1 overflow-y-auto">
         {filteredSpans.length === 0 ? (
@@ -63,12 +63,12 @@ export const TraceViewerTreeViewContainer = ({
           </div>
         ) : (
           <TreeView
-            spans={filteredSpans}
-            onSpanSelect={setSelectedSpan}
-            selectedSpan={selectedSpan}
             expandedSpansIds={expandedSpansIds}
             onExpandSpansIdsChange={setExpandedSpansIds}
+            onSpanSelect={setSelectedSpan}
+            selectedSpan={selectedSpan}
             spanCardViewOptions={spanCardViewOptions}
+            spans={filteredSpans}
           />
         )}
       </div>

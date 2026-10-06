@@ -4,20 +4,29 @@ export type OpenTelemetryDocument = {
   resourceSpans: OpenTelemetryResourceSpan[];
 };
 
-export type OpenTelemetryResourceSpan = {
-  resource: OpenTelemetryResource;
-  scopeSpans: OpenTelemetryScopeSpan[];
-  schemaUrl?: string;
+export type OpenTelemetryEvent = {
+  attributes?: TraceSpanAttribute[];
+  droppedAttributesCount?: number;
+  name: string;
+  timeUnixNano: string;
+};
+
+export type OpenTelemetryLink = {
+  attributes?: TraceSpanAttribute[];
+  droppedAttributesCount?: number;
+  spanId: string;
+  traceId: string;
+  traceState?: string;
 };
 
 export type OpenTelemetryResource = {
   attributes: TraceSpanAttribute[];
 };
 
-export type OpenTelemetryScopeSpan = {
-  scope: OpenTelemetryScope;
-  spans: OpenTelemetrySpan[];
+export type OpenTelemetryResourceSpan = {
+  resource: OpenTelemetryResource;
   schemaUrl?: string;
+  scopeSpans: OpenTelemetryScopeSpan[];
 };
 
 export type OpenTelemetryScope = {
@@ -25,59 +34,50 @@ export type OpenTelemetryScope = {
   version?: string;
 };
 
-export type OpenTelemetrySpan = {
-  traceId: string;
-  spanId: string;
-  parentSpanId?: string;
-  name: string;
-  kind: OpenTelemetrySpanKind;
-  startTimeUnixNano: string;
-  endTimeUnixNano: string;
-  attributes: TraceSpanAttribute[];
-  status: OpenTelemetryStatus;
-  flags: number;
-  events?: OpenTelemetryEvent[];
+export type OpenTelemetryScopeSpan = {
+  schemaUrl?: string;
+  scope: OpenTelemetryScope;
+  spans: OpenTelemetrySpan[];
+};
 
-  traceState?: string;
+export type OpenTelemetrySpan = {
+  attributes: TraceSpanAttribute[];
   droppedAttributesCount?: number;
   droppedEventsCount?: number;
   droppedLinksCount?: number;
+  endTimeUnixNano: string;
+  events?: OpenTelemetryEvent[];
+  flags: number;
+  kind: OpenTelemetrySpanKind;
   links?: OpenTelemetryLink[];
-};
-
-export type OpenTelemetryEvent = {
-  timeUnixNano: string;
   name: string;
-  attributes?: TraceSpanAttribute[];
-  droppedAttributesCount?: number;
+  parentSpanId?: string;
+
+  spanId: string;
+  startTimeUnixNano: string;
+  status: OpenTelemetryStatus;
+  traceId: string;
+  traceState?: string;
 };
 
-export type OpenTelemetryLink = {
-  traceId: string;
-  spanId: string;
-  traceState?: string;
-  attributes?: TraceSpanAttribute[];
-  droppedAttributesCount?: number;
-};
+export type OpenTelemetrySpanKind =
+  | "SPAN_KIND_CLIENT"
+  | "SPAN_KIND_CONSUMER"
+  | "SPAN_KIND_INTERNAL"
+  | "SPAN_KIND_PRODUCER"
+  | "SPAN_KIND_SERVER";
+
+export type OpenTelemetryStandard =
+  | "openinference"
+  | "opentelemetry_genai"
+  | "standard";
 
 export type OpenTelemetryStatus = {
   code?: OpenTelemetryStatusCode;
   message?: string;
 };
 
-export type OpenTelemetrySpanKind =
-  | "SPAN_KIND_INTERNAL"
-  | "SPAN_KIND_SERVER"
-  | "SPAN_KIND_CLIENT"
-  | "SPAN_KIND_PRODUCER"
-  | "SPAN_KIND_CONSUMER";
-
 export type OpenTelemetryStatusCode =
-  | "STATUS_CODE_OK"
   | "STATUS_CODE_ERROR"
+  | "STATUS_CODE_OK"
   | "STATUS_CODE_UNSET";
-
-export type OpenTelemetryStandard =
-  | "opentelemetry_genai"
-  | "openinference"
-  | "standard";

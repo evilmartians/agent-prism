@@ -3,19 +3,46 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { SpanCard, SpanCardSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 import { fn } from "storybook/test";
 
 const meta = {
-  title: "Main Components/SpanCard",
+  argTypes: {
+    avatar: {
+      description: "Optional avatar configuration",
+    },
+    data: {
+      description: "The trace span data to display",
+    },
+    isLastChild: {
+      control: "boolean",
+      defaultValue: false,
+      description: "Whether this is the last child in its parent",
+    },
+    level: {
+      control: "number",
+      defaultValue: 0,
+      description: "The nesting level of the span",
+    },
+    selectedSpan: {
+      description: "Currently selected span for highlighting",
+    },
+    viewOptions: {
+      control: { type: "object" },
+      defaultValue: {
+        expandButton: "outside",
+        withStatus: true,
+      },
+      description: "View options for the span card",
+    },
+  },
   component: SpanCard,
   parameters: {
-    layout: "padded",
     docs: {
       page: () => (
         <>
@@ -27,57 +54,13 @@ const meta = {
         </>
       ),
     },
+    layout: "padded",
   },
   tags: ["autodocs"],
-  argTypes: {
-    data: {
-      description: "The trace span data to display",
-    },
-    level: {
-      control: "number",
-      description: "The nesting level of the span",
-      defaultValue: 0,
-    },
-    selectedSpan: {
-      description: "Currently selected span for highlighting",
-    },
-    avatar: {
-      description: "Optional avatar configuration",
-    },
-    viewOptions: {
-      control: { type: "object" },
-      description: "View options for the span card",
-      defaultValue: {
-        expandButton: "outside",
-        withStatus: true,
-      },
-    },
-    isLastChild: {
-      control: "boolean",
-      description: "Whether this is the last child in its parent",
-      defaultValue: false,
-    },
-  },
+  title: "Main Components/SpanCard",
 } satisfies Meta<typeof SpanCard>;
 
 const mockTraceSpan: TraceSpan = {
-  id: "span-llm-001",
-  title: "GPT-4 Text Generation",
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  tokenUsage: {
-    input: { tokens: 600, cost: 0.018 },
-    output: { tokens: 250, cost: 0.027 },
-  },
-  type: "llm_call",
-  raw: [
-    JSON.stringify({
-      model: "gpt-4",
-      prompt: "Generate a creative story about AI",
-      temperature: 0.7,
-      max_tokens: 1000,
-    }),
-  ],
   attributes: [
     {
       key: "llm.model",
@@ -88,29 +71,46 @@ const mockTraceSpan: TraceSpan = {
       value: { intValue: "0.7" },
     },
   ],
+  endTime: new Date("2024-01-15T10:30:03Z"),
+  id: "span-llm-001",
+  raw: [
+    JSON.stringify({
+      max_tokens: 1000,
+      model: "gpt-4",
+      prompt: "Generate a creative story about AI",
+      temperature: 0.7,
+    }),
+  ],
+  startTime: new Date("2024-01-15T10:30:00Z"),
   status: "success",
+  title: "GPT-4 Text Generation",
+  tokenUsage: {
+    input: { cost: 0.018, tokens: 600 },
+    output: { cost: 0.027, tokens: 250 },
+  },
+  type: "llm_call",
 };
 
 const mockTraceSpanWithChildren: TraceSpan = {
   ...mockTraceSpan,
-  id: "span-parent-001",
-  title: "Parent Span with Children",
   children: [
     {
       ...mockTraceSpan,
       id: "span-child-001",
+      status: "success",
       title: "Child Span 1",
       type: "tool_execution",
-      status: "success",
     },
     {
       ...mockTraceSpan,
       id: "span-child-002",
+      status: "error",
       title: "Child Span 2",
       type: "retrieval",
-      status: "error",
     },
   ],
+  id: "span-parent-001",
+  title: "Parent Span with Children",
 };
 
 export default meta;
@@ -119,10 +119,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     data: mockTraceSpan,
-    minStart: mockTraceSpan.startTime.getTime(),
-    maxEnd: mockTraceSpan.endTime.getTime(),
-    isLastChild: false,
     expandedSpansIds: [],
+    isLastChild: false,
+    maxEnd: mockTraceSpan.endTime.getTime(),
+    minStart: mockTraceSpan.startTime.getTime(),
     onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
@@ -133,11 +133,11 @@ export const Default: Story = {
 export const Level: Story = {
   args: {
     data: mockTraceSpan,
-    level: 2,
-    minStart: mockTraceSpan.startTime.getTime(),
-    maxEnd: mockTraceSpan.endTime.getTime(),
-    isLastChild: false,
     expandedSpansIds: [],
+    isLastChild: false,
+    level: 2,
+    maxEnd: mockTraceSpan.endTime.getTime(),
+    minStart: mockTraceSpan.startTime.getTime(),
     onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
@@ -148,10 +148,10 @@ export const Level: Story = {
 export const ExpandButton: Story = {
   args: {
     data: mockTraceSpanWithChildren,
-    minStart: mockTraceSpan.startTime.getTime(),
-    maxEnd: mockTraceSpan.endTime.getTime(),
-    isLastChild: false,
     expandedSpansIds: [],
+    isLastChild: false,
+    maxEnd: mockTraceSpan.endTime.getTime(),
+    minStart: mockTraceSpan.startTime.getTime(),
     onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "inside",
@@ -161,17 +161,17 @@ export const ExpandButton: Story = {
 
 export const Avatar: Story = {
   args: {
-    data: mockTraceSpan,
     avatar: {
       alt: "LLM Service",
       category: "llm_call",
-      size: "4",
       letter: "AI",
+      size: "4",
     },
-    minStart: mockTraceSpan.startTime.getTime(),
-    maxEnd: mockTraceSpan.endTime.getTime(),
-    isLastChild: false,
+    data: mockTraceSpan,
     expandedSpansIds: [],
+    isLastChild: false,
+    maxEnd: mockTraceSpan.endTime.getTime(),
+    minStart: mockTraceSpan.startTime.getTime(),
     onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
@@ -182,12 +182,12 @@ export const Avatar: Story = {
 export const SelectedSpan: Story = {
   args: {
     data: mockTraceSpan,
-    selectedSpan: mockTraceSpan,
-    minStart: mockTraceSpan.startTime.getTime(),
-    maxEnd: mockTraceSpan.endTime.getTime(),
-    isLastChild: false,
     expandedSpansIds: [],
+    isLastChild: false,
+    maxEnd: mockTraceSpan.endTime.getTime(),
+    minStart: mockTraceSpan.startTime.getTime(),
     onExpandSpansIdsChange: fn(),
+    selectedSpan: mockTraceSpan,
     viewOptions: {
       expandButton: "outside",
     },
@@ -197,10 +197,10 @@ export const SelectedSpan: Story = {
 export const WithChildren: Story = {
   args: {
     data: mockTraceSpanWithChildren,
-    minStart: mockTraceSpan.startTime.getTime(),
-    maxEnd: mockTraceSpan.endTime.getTime(),
-    isLastChild: false,
     expandedSpansIds: ["span-parent-001"],
+    isLastChild: false,
+    maxEnd: mockTraceSpan.endTime.getTime(),
+    minStart: mockTraceSpan.startTime.getTime(),
     onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",

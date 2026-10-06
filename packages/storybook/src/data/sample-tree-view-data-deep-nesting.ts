@@ -2,15 +2,6 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
   {
-    id: "1",
-    title: "main",
-    startTime: new Date("2023-01-01T00:00:00Z"),
-    endTime: new Date("2023-01-01T00:06:12Z"),
-    tokenUsage: { total: { tokens: 1000, cost: 1234 } },
-    type: "chain_operation",
-    raw: [
-      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-    ],
     attributes: [
       {
         key: "llm.prompt_template.template",
@@ -24,17 +15,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
       { key: "output.format", value: { stringValue: "markdown" } },
       { key: "quality.check", value: { boolValue: true } },
     ],
-    status: "success",
     children: [
       {
-        id: "1-1",
-        title: "ChatCompletions",
-        startTime: new Date("2023-01-01T00:00:10Z"),
-        endTime: new Date("2023-01-01T00:05:00Z"),
-        tokenUsage: { total: { tokens: 500, cost: 150 } },
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
         attributes: [
           {
             key: "llm.prompt_template.template",
@@ -48,17 +30,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
           { key: "output.format", value: { stringValue: "markdown" } },
           { key: "quality.check", value: { boolValue: true } },
         ],
-        type: "llm_call",
-        status: "success",
         children: [
           {
-            id: "1-1-1",
-            title: "ChatCompletion",
-            startTime: new Date("2023-01-01T00:00:15Z"),
-            endTime: new Date("2023-01-01T00:00:45Z"),
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
             attributes: [
               {
                 key: "llm.prompt_template.template",
@@ -72,19 +45,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
               { key: "output.format", value: { stringValue: "markdown" } },
               { key: "quality.check", value: { boolValue: true } },
             ],
-            tokenUsage: { total: { tokens: 250, cost: 75 } },
-            status: "pending",
-            type: "llm_call",
             children: [
               {
-                id: "1-1-1-1",
-                title: "ChatCompletion",
-                startTime: new Date("2023-01-01T00:00:16Z"),
-                endTime: new Date("2023-01-01T00:00:30Z"),
-                tokenUsage: { total: { tokens: 125, cost: 37 } },
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
                 attributes: [
                   {
                     key: "llm.prompt_template.template",
@@ -100,18 +62,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                   { key: "output.format", value: { stringValue: "markdown" } },
                   { key: "quality.check", value: { boolValue: true } },
                 ],
-                status: "success",
-                type: "llm_call",
                 children: [
                   {
-                    id: "1-1-1-1-1",
-                    title: "ChatCompletion",
-                    startTime: new Date("2023-01-01T00:00:17Z"),
-                    endTime: new Date("2023-01-01T00:00:25Z"),
-                    tokenUsage: { total: { tokens: 62, cost: 18 } },
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
                     attributes: [
                       {
                         key: "llm.prompt_template.template",
@@ -130,18 +82,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                       },
                       { key: "quality.check", value: { boolValue: true } },
                     ],
-                    status: "success",
-                    type: "llm_call",
                     children: [
                       {
-                        id: "1-1-1-1-1-1",
-                        title: "ChatCompletion",
-                        startTime: new Date("2023-01-01T00:00:18Z"),
-                        endTime: new Date("2023-01-01T00:00:22Z"),
-                        tokenUsage: { total: { tokens: 31, cost: 9 } },
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
                         attributes: [
                           {
                             key: "llm.prompt_template.template",
@@ -161,18 +103,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                           },
                           { key: "quality.check", value: { boolValue: true } },
                         ],
-                        status: "success",
-                        type: "llm_call",
                         children: [
                           {
-                            id: "1-1-1-1-1-1-1",
-                            title: "ChatCompletion",
-                            startTime: new Date("2023-01-01T00:00:19Z"),
-                            endTime: new Date("2023-01-01T00:00:21Z"),
-                            tokenUsage: { total: { tokens: 15, cost: 4 } },
-                            raw: [
-                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                            ],
                             attributes: [
                               {
                                 key: "llm.prompt_template.template",
@@ -198,18 +130,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                 value: { boolValue: true },
                               },
                             ],
-                            status: "success",
-                            type: "llm_call",
                             children: [
                               {
-                                id: "1-1-1-1-1-1-1-1",
-                                title: "ChatCompletion",
-                                startTime: new Date("2023-01-01T00:00:19Z"),
-                                endTime: new Date("2023-01-01T00:00:21Z"),
-                                tokenUsage: { total: { tokens: 15, cost: 4 } },
-                                raw: [
-                                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                ],
                                 attributes: [
                                   {
                                     key: "llm.prompt_template.template",
@@ -237,17 +159,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                     value: { boolValue: true },
                                   },
                                 ],
-                                status: "success",
-                                type: "llm_call",
                                 children: [
                                   {
-                                    id: "1-1-1-1-1-1-1-1-1",
-                                    title: "ChatCompletion",
-                                    startTime: new Date("2023-01-01T00:00:19Z"),
-                                    endTime: new Date("2023-01-01T00:00:21Z"),
-                                    raw: [
-                                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                    ],
                                     attributes: [
                                       {
                                         key: "llm.prompt_template.template",
@@ -275,27 +188,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                         value: { boolValue: true },
                                       },
                                     ],
-                                    tokenUsage: {
-                                      total: { tokens: 15, cost: 4 },
-                                    },
-                                    status: "success",
-                                    type: "llm_call",
                                     children: [
                                       {
-                                        id: "1-1-1-1-1-1-1-1-1-1",
-                                        title: "ChatCompletion",
-                                        startTime: new Date(
-                                          "2023-01-01T00:00:19Z",
-                                        ),
-                                        endTime: new Date(
-                                          "2023-01-01T00:00:21Z",
-                                        ),
-                                        tokenUsage: {
-                                          total: { tokens: 15, cost: 4 },
-                                        },
-                                        raw: [
-                                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                        ],
                                         attributes: [
                                           {
                                             key: "llm.prompt_template.template",
@@ -324,24 +218,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                             value: { boolValue: true },
                                           },
                                         ],
-                                        status: "success",
-                                        type: "llm_call",
                                         children: [
                                           {
-                                            id: "1-1-1-1-1-1-1-1-1-1-1",
-                                            title: "ChatCompletion",
-                                            startTime: new Date(
-                                              "2023-01-01T00:00:19Z",
-                                            ),
-                                            endTime: new Date(
-                                              "2023-01-01T00:00:21Z",
-                                            ),
-                                            tokenUsage: {
-                                              total: { tokens: 15, cost: 4 },
-                                            },
-                                            raw: [
-                                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                            ],
                                             attributes: [
                                               {
                                                 key: "llm.prompt_template.template",
@@ -372,27 +250,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                                 value: { boolValue: true },
                                               },
                                             ],
-                                            status: "success",
-                                            type: "llm_call",
                                             children: [
                                               {
-                                                id: "1-1-1-1-1-1-1-1-1-1-1-1",
-                                                title: "ChatCompletion",
-                                                startTime: new Date(
-                                                  "2023-01-01T00:00:19Z",
-                                                ),
-                                                endTime: new Date(
-                                                  "2023-01-01T00:00:21Z",
-                                                ),
-                                                tokenUsage: {
-                                                  total: {
-                                                    tokens: 15,
-                                                    cost: 4,
-                                                  },
-                                                },
-                                                raw: [
-                                                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                                ],
                                                 attributes: [
                                                   {
                                                     key: "llm.prompt_template.template",
@@ -423,27 +282,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                                     value: { boolValue: true },
                                                   },
                                                 ],
-                                                status: "success",
-                                                type: "llm_call",
                                                 children: [
                                                   {
-                                                    id: "1-1-1-1-1-1-1-1-1-1-1-1-1",
-                                                    title: "ChatCompletion",
-                                                    startTime: new Date(
-                                                      "2023-01-01T00:00:19Z",
-                                                    ),
-                                                    endTime: new Date(
-                                                      "2023-01-01T00:00:21Z",
-                                                    ),
-                                                    tokenUsage: {
-                                                      total: {
-                                                        tokens: 15,
-                                                        cost: 4,
-                                                      },
-                                                    },
-                                                    raw: [
-                                                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                                    ],
                                                     attributes: [
                                                       {
                                                         key: "llm.prompt_template.template",
@@ -479,21 +319,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                                         },
                                                       },
                                                     ],
-                                                    status: "success",
-                                                    type: "llm_call",
                                                     children: [
                                                       {
-                                                        id: "1-1-1-1-1-1-1-1-1-1-1-1-1-1",
-                                                        title: "ChatCompletion",
-                                                        startTime: new Date(
-                                                          "2023-01-01T00:00:19Z",
-                                                        ),
-                                                        endTime: new Date(
-                                                          "2023-01-01T00:00:21Z",
-                                                        ),
-                                                        raw: [
-                                                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                                        ],
                                                         attributes: [
                                                           {
                                                             key: "llm.prompt_template.template",
@@ -529,36 +356,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                                             },
                                                           },
                                                         ],
-                                                        tokenUsage: {
-                                                          total: {
-                                                            tokens: 15,
-                                                            cost: 4,
-                                                          },
-                                                        },
-                                                        status: "success",
-                                                        type: "llm_call",
                                                         children: [
                                                           {
-                                                            id: "1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
-                                                            title:
-                                                              "ChatCompletion",
-                                                            startTime: new Date(
-                                                              "2023-01-01T00:00:19Z",
-                                                            ),
-                                                            endTime: new Date(
-                                                              "2023-01-01T00:00:21Z",
-                                                            ),
-                                                            tokenUsage: {
-                                                              total: {
-                                                                tokens: 15,
-                                                                cost: 4,
-                                                              },
-                                                            },
-                                                            status: "success",
-                                                            type: "llm_call",
-                                                            raw: [
-                                                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                                            ],
                                                             attributes: [
                                                               {
                                                                 key: "llm.prompt_template.template",
@@ -597,30 +396,6 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                                             ],
                                                             children: [
                                                               {
-                                                                id: "1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
-                                                                title:
-                                                                  "ChatCompletion",
-                                                                startTime:
-                                                                  new Date(
-                                                                    "2023-01-01T00:00:19Z",
-                                                                  ),
-                                                                endTime:
-                                                                  new Date(
-                                                                    "2023-01-01T00:00:21Z",
-                                                                  ),
-                                                                tokenUsage: {
-                                                                  total: {
-                                                                    tokens: 15,
-                                                                    cost: 4,
-                                                                  },
-                                                                },
-                                                                status:
-                                                                  "success",
-                                                                type: "llm_call",
-                                                                children: [],
-                                                                raw: [
-                                                                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                                                                ],
                                                                 attributes: [
                                                                   {
                                                                     key: "llm.prompt_template.template",
@@ -657,41 +432,239 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                                                     },
                                                                   },
                                                                 ],
+                                                                children: [],
+                                                                endTime:
+                                                                  new Date(
+                                                                    "2023-01-01T00:00:21Z",
+                                                                  ),
+                                                                id: "1-1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+                                                                raw: [
+                                                                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                                                ],
+                                                                startTime:
+                                                                  new Date(
+                                                                    "2023-01-01T00:00:19Z",
+                                                                  ),
+                                                                status:
+                                                                  "success",
+                                                                title:
+                                                                  "ChatCompletion",
+                                                                tokenUsage: {
+                                                                  total: {
+                                                                    cost: 4,
+                                                                    tokens: 15,
+                                                                  },
+                                                                },
+                                                                type: "llm_call",
                                                               },
                                                             ],
+                                                            endTime: new Date(
+                                                              "2023-01-01T00:00:21Z",
+                                                            ),
+                                                            id: "1-1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+                                                            raw: [
+                                                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                                            ],
+                                                            startTime: new Date(
+                                                              "2023-01-01T00:00:19Z",
+                                                            ),
+                                                            status: "success",
+                                                            title:
+                                                              "ChatCompletion",
+                                                            tokenUsage: {
+                                                              total: {
+                                                                cost: 4,
+                                                                tokens: 15,
+                                                              },
+                                                            },
+                                                            type: "llm_call",
                                                           },
                                                         ],
+                                                        endTime: new Date(
+                                                          "2023-01-01T00:00:21Z",
+                                                        ),
+                                                        id: "1-1-1-1-1-1-1-1-1-1-1-1-1-1",
+                                                        raw: [
+                                                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                                        ],
+                                                        startTime: new Date(
+                                                          "2023-01-01T00:00:19Z",
+                                                        ),
+                                                        status: "success",
+                                                        title: "ChatCompletion",
+                                                        tokenUsage: {
+                                                          total: {
+                                                            cost: 4,
+                                                            tokens: 15,
+                                                          },
+                                                        },
+                                                        type: "llm_call",
                                                       },
                                                     ],
+                                                    endTime: new Date(
+                                                      "2023-01-01T00:00:21Z",
+                                                    ),
+                                                    id: "1-1-1-1-1-1-1-1-1-1-1-1-1",
+                                                    raw: [
+                                                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                                    ],
+                                                    startTime: new Date(
+                                                      "2023-01-01T00:00:19Z",
+                                                    ),
+                                                    status: "success",
+                                                    title: "ChatCompletion",
+                                                    tokenUsage: {
+                                                      total: {
+                                                        cost: 4,
+                                                        tokens: 15,
+                                                      },
+                                                    },
+                                                    type: "llm_call",
                                                   },
                                                 ],
+                                                endTime: new Date(
+                                                  "2023-01-01T00:00:21Z",
+                                                ),
+                                                id: "1-1-1-1-1-1-1-1-1-1-1-1",
+                                                raw: [
+                                                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                                ],
+                                                startTime: new Date(
+                                                  "2023-01-01T00:00:19Z",
+                                                ),
+                                                status: "success",
+                                                title: "ChatCompletion",
+                                                tokenUsage: {
+                                                  total: {
+                                                    cost: 4,
+                                                    tokens: 15,
+                                                  },
+                                                },
+                                                type: "llm_call",
                                               },
                                             ],
+                                            endTime: new Date(
+                                              "2023-01-01T00:00:21Z",
+                                            ),
+                                            id: "1-1-1-1-1-1-1-1-1-1-1",
+                                            raw: [
+                                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                            ],
+                                            startTime: new Date(
+                                              "2023-01-01T00:00:19Z",
+                                            ),
+                                            status: "success",
+                                            title: "ChatCompletion",
+                                            tokenUsage: {
+                                              total: { cost: 4, tokens: 15 },
+                                            },
+                                            type: "llm_call",
                                           },
                                         ],
+                                        endTime: new Date(
+                                          "2023-01-01T00:00:21Z",
+                                        ),
+                                        id: "1-1-1-1-1-1-1-1-1-1",
+                                        raw: [
+                                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                        ],
+                                        startTime: new Date(
+                                          "2023-01-01T00:00:19Z",
+                                        ),
+                                        status: "success",
+                                        title: "ChatCompletion",
+                                        tokenUsage: {
+                                          total: { cost: 4, tokens: 15 },
+                                        },
+                                        type: "llm_call",
                                       },
                                     ],
+                                    endTime: new Date("2023-01-01T00:00:21Z"),
+                                    id: "1-1-1-1-1-1-1-1-1",
+                                    raw: [
+                                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                    ],
+                                    startTime: new Date("2023-01-01T00:00:19Z"),
+                                    status: "success",
+                                    title: "ChatCompletion",
+                                    tokenUsage: {
+                                      total: { cost: 4, tokens: 15 },
+                                    },
+                                    type: "llm_call",
                                   },
                                 ],
+                                endTime: new Date("2023-01-01T00:00:21Z"),
+                                id: "1-1-1-1-1-1-1-1",
+                                raw: [
+                                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                                ],
+                                startTime: new Date("2023-01-01T00:00:19Z"),
+                                status: "success",
+                                title: "ChatCompletion",
+                                tokenUsage: { total: { cost: 4, tokens: 15 } },
+                                type: "llm_call",
                               },
                             ],
+                            endTime: new Date("2023-01-01T00:00:21Z"),
+                            id: "1-1-1-1-1-1-1",
+                            raw: [
+                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                            ],
+                            startTime: new Date("2023-01-01T00:00:19Z"),
+                            status: "success",
+                            title: "ChatCompletion",
+                            tokenUsage: { total: { cost: 4, tokens: 15 } },
+                            type: "llm_call",
                           },
                         ],
+                        endTime: new Date("2023-01-01T00:00:22Z"),
+                        id: "1-1-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:00:18Z"),
+                        status: "success",
+                        title: "ChatCompletion",
+                        tokenUsage: { total: { cost: 9, tokens: 31 } },
+                        type: "llm_call",
                       },
                     ],
+                    endTime: new Date("2023-01-01T00:00:25Z"),
+                    id: "1-1-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:00:17Z"),
+                    status: "success",
+                    title: "ChatCompletion",
+                    tokenUsage: { total: { cost: 18, tokens: 62 } },
+                    type: "llm_call",
                   },
                 ],
+                endTime: new Date("2023-01-01T00:00:30Z"),
+                id: "1-1-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:00:16Z"),
+                status: "success",
+                title: "ChatCompletion",
+                tokenUsage: { total: { cost: 37, tokens: 125 } },
+                type: "llm_call",
               },
             ],
-          },
-          {
-            id: "1-1-2",
-            title: "ChatCompletion",
-            startTime: new Date("2023-01-01T00:00:45Z"),
-            endTime: new Date("2023-01-01T00:01:30Z"),
+            endTime: new Date("2023-01-01T00:00:45Z"),
+            id: "1-1-1",
             raw: [
               `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
             ],
+            startTime: new Date("2023-01-01T00:00:15Z"),
+            status: "pending",
+            title: "ChatCompletion",
+            tokenUsage: { total: { cost: 75, tokens: 250 } },
+            type: "llm_call",
+          },
+          {
             attributes: [
               {
                 key: "llm.prompt_template.template",
@@ -705,18 +678,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
               { key: "output.format", value: { stringValue: "markdown" } },
               { key: "quality.check", value: { boolValue: true } },
             ],
-            tokenUsage: { total: { tokens: 250, cost: 75 } },
-            status: "error",
-            type: "llm_call",
             children: [
               {
-                id: "1-1-2-1",
-                title: "ChatCompletion",
-                startTime: new Date("2023-01-01T00:00:46Z"),
-                endTime: new Date("2023-01-01T00:01:00Z"),
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
                 attributes: [
                   {
                     key: "llm.prompt_template.template",
@@ -732,18 +695,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                   { key: "output.format", value: { stringValue: "markdown" } },
                   { key: "quality.check", value: { boolValue: true } },
                 ],
-                tokenUsage: { total: { tokens: 125, cost: 37 } },
-                status: "error",
-                type: "llm_call",
                 children: [
                   {
-                    id: "1-1-2-1-1",
-                    title: "ChatCompletion",
-                    startTime: new Date("2023-01-01T00:00:47Z"),
-                    endTime: new Date("2023-01-01T00:00:55Z"),
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
                     attributes: [
                       {
                         key: "llm.prompt_template.template",
@@ -762,16 +715,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                       },
                       { key: "quality.check", value: { boolValue: true } },
                     ],
-                    tokenUsage: { total: { tokens: 62, cost: 18 } },
-                    status: "error",
-                    type: "llm_call",
                     children: [
                       {
-                        id: "1-1-2-1-1-1",
-                        title: "ChatCompletion",
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
                         attributes: [
                           {
                             key: "llm.prompt_template.template",
@@ -791,18 +736,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                           },
                           { key: "quality.check", value: { boolValue: true } },
                         ],
-                        startTime: new Date("2023-01-01T00:00:48Z"),
-                        endTime: new Date("2023-01-01T00:00:52Z"),
-                        tokenUsage: { total: { tokens: 31, cost: 9 } },
-                        status: "error",
-                        type: "llm_call",
                         children: [
                           {
-                            id: "1-1-2-1-1-1-1",
-                            title: "ChatCompletion",
-                            raw: [
-                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                            ],
                             attributes: [
                               {
                                 key: "llm.prompt_template.template",
@@ -827,540 +762,127 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                                 key: "quality.check",
                                 value: { boolValue: true },
                               },
+                            ],
+                            children: [],
+                            endTime: new Date("2023-01-01T00:00:51Z"),
+                            id: "1-1-2-1-1-1-1",
+                            raw: [
+                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
                             ],
                             startTime: new Date("2023-01-01T00:00:49Z"),
-                            endTime: new Date("2023-01-01T00:00:51Z"),
-                            tokenUsage: { total: { tokens: 15, cost: 4 } },
                             status: "error",
+                            title: "ChatCompletion",
+                            tokenUsage: { total: { cost: 4, tokens: 15 } },
                             type: "llm_call",
-                            children: [],
                           },
                         ],
+                        endTime: new Date("2023-01-01T00:00:52Z"),
+                        id: "1-1-2-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:00:48Z"),
+                        status: "error",
+                        title: "ChatCompletion",
+                        tokenUsage: { total: { cost: 9, tokens: 31 } },
+                        type: "llm_call",
                       },
                     ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "1-2",
-        title: "RunnableSequence",
-        startTime: new Date("2023-01-01T00:01:00Z"),
-        endTime: new Date("2023-01-01T00:05:00Z"),
-        tokenUsage: { total: { tokens: 200, cost: 80 } },
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
-        attributes: [
-          {
-            key: "llm.prompt_template.template",
-            value: { stringValue: "Create a summary based on: {summary}" },
-          },
-          {
-            key: "llm.prompt_template.variables",
-            value: { stringValue: "summary,style,length" },
-          },
-          { key: "template.tokens", value: { intValue: "25" } },
-          { key: "output.format", value: { stringValue: "markdown" } },
-          { key: "quality.check", value: { boolValue: true } },
-        ],
-        status: "success",
-        type: "chain_operation",
-        children: [
-          {
-            id: "1-2-1",
-            title: "RunnableSequence",
-            startTime: new Date("2023-01-01T00:01:05Z"),
-            endTime: new Date("2023-01-01T00:03:00Z"),
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            tokenUsage: { total: { tokens: 100, cost: 40 } },
-            status: "success",
-            type: "chain_operation",
-            children: [
-              {
-                id: "1-2-1-1",
-                title: "RunnableSequence",
-                startTime: new Date("2023-01-01T00:01:10Z"),
-                endTime: new Date("2023-01-01T00:02:00Z"),
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
-                attributes: [
-                  {
-                    key: "llm.prompt_template.template",
-                    value: {
-                      stringValue: "Create a summary based on: {summary}",
-                    },
-                  },
-                  {
-                    key: "llm.prompt_template.variables",
-                    value: { stringValue: "summary,style,length" },
-                  },
-                  { key: "template.tokens", value: { intValue: "25" } },
-                  { key: "output.format", value: { stringValue: "markdown" } },
-                  { key: "quality.check", value: { boolValue: true } },
-                ],
-                tokenUsage: { total: { tokens: 50, cost: 20 } },
-                status: "success",
-                type: "chain_operation",
-                children: [
-                  {
-                    id: "1-2-1-1-1",
-                    title: "RunnableSequence",
-                    startTime: new Date("2023-01-01T00:01:15Z"),
-                    endTime: new Date("2023-01-01T00:01:45Z"),
-                    tokenUsage: { total: { tokens: 25, cost: 10 } },
+                    endTime: new Date("2023-01-01T00:00:55Z"),
+                    id: "1-1-2-1-1",
                     raw: [
                       `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
                     ],
-                    attributes: [
-                      {
-                        key: "llm.prompt_template.template",
-                        value: {
-                          stringValue: "Create a summary based on: {summary}",
-                        },
-                      },
-                      {
-                        key: "llm.prompt_template.variables",
-                        value: { stringValue: "summary,style,length" },
-                      },
-                      { key: "template.tokens", value: { intValue: "25" } },
-                      {
-                        key: "output.format",
-                        value: { stringValue: "markdown" },
-                      },
-                      { key: "quality.check", value: { boolValue: true } },
-                    ],
-                    status: "success",
-                    type: "chain_operation",
-                    children: [
-                      {
-                        id: "1-2-1-1-1-1",
-                        title: "RunnableSequence",
-                        startTime: new Date("2023-01-01T00:01:20Z"),
-                        endTime: new Date("2023-01-01T00:01:35Z"),
-                        tokenUsage: { total: { tokens: 12, cost: 5 } },
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
-                        attributes: [
-                          {
-                            key: "llm.prompt_template.template",
-                            value: {
-                              stringValue:
-                                "Create a summary based on: {summary}",
-                            },
-                          },
-                          {
-                            key: "llm.prompt_template.variables",
-                            value: { stringValue: "summary,style,length" },
-                          },
-                          { key: "template.tokens", value: { intValue: "25" } },
-                          {
-                            key: "output.format",
-                            value: { stringValue: "markdown" },
-                          },
-                          { key: "quality.check", value: { boolValue: true } },
-                        ],
-                        status: "success",
-                        type: "chain_operation",
-                        children: [
-                          {
-                            id: "1-2-1-1-1-1-1",
-                            title: "RunnableSequence",
-                            raw: [
-                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                            ],
-                            attributes: [
-                              {
-                                key: "llm.prompt_template.template",
-                                value: {
-                                  stringValue:
-                                    "Create a summary based on: {summary}",
-                                },
-                              },
-                              {
-                                key: "llm.prompt_template.variables",
-                                value: { stringValue: "summary,style,length" },
-                              },
-                              {
-                                key: "template.tokens",
-                                value: { intValue: "25" },
-                              },
-                              {
-                                key: "output.format",
-                                value: { stringValue: "markdown" },
-                              },
-                              {
-                                key: "quality.check",
-                                value: { boolValue: true },
-                              },
-                            ],
-                            startTime: new Date("2023-01-01T00:01:25Z"),
-                            endTime: new Date("2023-01-01T00:01:30Z"),
-                            tokenUsage: { total: { tokens: 6, cost: 2 } },
-                            status: "success",
-                            type: "chain_operation",
-                            children: [],
-                          },
-                        ],
-                      },
-                      {
-                        id: "1-2-1-1-1-2",
-                        title: "RunnableSequence",
-                        startTime: new Date("2023-01-01T00:01:20Z"),
-                        endTime: new Date("2023-01-01T00:01:35Z"),
-                        tokenUsage: { total: { tokens: 12, cost: 5 } },
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
-                        attributes: [
-                          {
-                            key: "llm.prompt_template.template",
-                            value: {
-                              stringValue:
-                                "Create a summary based on: {summary}",
-                            },
-                          },
-                          {
-                            key: "llm.prompt_template.variables",
-                            value: { stringValue: "summary,style,length" },
-                          },
-                          { key: "template.tokens", value: { intValue: "25" } },
-                          {
-                            key: "output.format",
-                            value: { stringValue: "markdown" },
-                          },
-                          { key: "quality.check", value: { boolValue: true } },
-                        ],
-                        status: "success",
-                        type: "chain_operation",
-                        children: [
-                          {
-                            id: "1-2-1-1-1-2-1",
-                            title: "RunnableSequence",
-                            startTime: new Date("2023-01-01T00:01:25Z"),
-                            endTime: new Date("2023-01-01T00:01:30Z"),
-                            raw: [
-                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                            ],
-                            attributes: [
-                              {
-                                key: "llm.prompt_template.template",
-                                value: {
-                                  stringValue:
-                                    "Create a summary based on: {summary}",
-                                },
-                              },
-                              {
-                                key: "llm.prompt_template.variables",
-                                value: { stringValue: "summary,style,length" },
-                              },
-                              {
-                                key: "template.tokens",
-                                value: { intValue: "25" },
-                              },
-                              {
-                                key: "output.format",
-                                value: { stringValue: "markdown" },
-                              },
-                              {
-                                key: "quality.check",
-                                value: { boolValue: true },
-                              },
-                            ],
-                            tokenUsage: { total: { tokens: 6, cost: 2 } },
-                            status: "success",
-                            type: "chain_operation",
-                            children: [],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: "1-2-2",
-            title: "RunnableSequence",
-            startTime: new Date("2023-01-01T00:01:05Z"),
-            endTime: new Date("2023-01-01T00:03:00Z"),
-            tokenUsage: { total: { tokens: 100, cost: 40 } },
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            status: "success",
-            type: "chain_operation",
-          },
-        ],
-      },
-      {
-        id: "1-3",
-        title: "agent_search",
-        startTime: new Date("2023-01-01T00:01:30Z"),
-        endTime: new Date("2023-01-01T00:02:00Z"),
-        tokenUsage: { total: { tokens: 100, cost: 25 } },
-        status: "success",
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
-        attributes: [
-          {
-            key: "llm.prompt_template.template",
-            value: { stringValue: "Create a summary based on: {summary}" },
-          },
-          {
-            key: "llm.prompt_template.variables",
-            value: { stringValue: "summary,style,length" },
-          },
-          { key: "template.tokens", value: { intValue: "25" } },
-          { key: "output.format", value: { stringValue: "markdown" } },
-          { key: "quality.check", value: { boolValue: true } },
-        ],
-        type: "tool_execution",
-        children: [
-          {
-            id: "1-3-1",
-            title: "agent_search",
-            startTime: new Date("2023-01-01T00:01:31Z"),
-            endTime: new Date("2023-01-01T00:01:45Z"),
-            tokenUsage: { total: { tokens: 50, cost: 12 } },
-            status: "success",
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            type: "tool_execution",
-            children: [
-              {
-                id: "1-3-1-1",
-                title: "agent_search",
-                startTime: new Date("2023-01-01T00:01:32Z"),
-                endTime: new Date("2023-01-01T00:01:40Z"),
-                tokenUsage: { total: { tokens: 25, cost: 6 } },
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
-                attributes: [
-                  {
-                    key: "llm.prompt_template.template",
-                    value: {
-                      stringValue: "Create a summary based on: {summary}",
-                    },
-                  },
-                  {
-                    key: "llm.prompt_template.variables",
-                    value: { stringValue: "summary,style,length" },
-                  },
-                  { key: "template.tokens", value: { intValue: "25" } },
-                  { key: "output.format", value: { stringValue: "markdown" } },
-                  { key: "quality.check", value: { boolValue: true } },
-                ],
-                status: "success",
-                type: "tool_execution",
-                children: [
-                  {
-                    id: "1-3-1-1-1",
-                    title: "agent_search",
-                    startTime: new Date("2023-01-01T00:01:33Z"),
-                    endTime: new Date("2023-01-01T00:01:37Z"),
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
-                    attributes: [
-                      {
-                        key: "llm.prompt_template.template",
-                        value: {
-                          stringValue: "Create a summary based on: {summary}",
-                        },
-                      },
-                      {
-                        key: "llm.prompt_template.variables",
-                        value: { stringValue: "summary,style,length" },
-                      },
-                      { key: "template.tokens", value: { intValue: "25" } },
-                      {
-                        key: "output.format",
-                        value: { stringValue: "markdown" },
-                      },
-                      { key: "quality.check", value: { boolValue: true } },
-                    ],
-                    tokenUsage: { total: { tokens: 12, cost: 3 } },
-                    status: "success",
-                    type: "tool_execution",
-                    children: [
-                      {
-                        id: "1-3-1-1-1-1",
-                        title: "agent_search",
-                        startTime: new Date("2023-01-01T00:01:34Z"),
-                        endTime: new Date("2023-01-01T00:01:36Z"),
-                        tokenUsage: { total: { tokens: 6, cost: 1 } },
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
-                        attributes: [
-                          {
-                            key: "llm.prompt_template.template",
-                            value: {
-                              stringValue:
-                                "Create a summary based on: {summary}",
-                            },
-                          },
-                          {
-                            key: "llm.prompt_template.variables",
-                            value: { stringValue: "summary,style,length" },
-                          },
-                          { key: "template.tokens", value: { intValue: "25" } },
-                          {
-                            key: "output.format",
-                            value: { stringValue: "markdown" },
-                          },
-                          { key: "quality.check", value: { boolValue: true } },
-                        ],
-                        status: "success",
-                        type: "tool_execution",
-                        children: [],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "1-4",
-        title: "RunnableSequence",
-        startTime: new Date("2023-01-01T00:02:00Z"),
-        endTime: new Date("2023-01-01T00:05:00Z"),
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
-        attributes: [
-          {
-            key: "llm.prompt_template.template",
-            value: { stringValue: "Create a summary based on: {summary}" },
-          },
-          {
-            key: "llm.prompt_template.variables",
-            value: { stringValue: "summary,style,length" },
-          },
-          { key: "template.tokens", value: { intValue: "25" } },
-          { key: "output.format", value: { stringValue: "markdown" } },
-          { key: "quality.check", value: { boolValue: true } },
-        ],
-        status: "pending",
-        tokenUsage: { total: { tokens: 300, cost: 90 } },
-        type: "chain_operation",
-        children: [
-          {
-            id: "1-4-1",
-            title: "RunnableAssign",
-            startTime: new Date("2023-01-01T00:02:05Z"),
-            endTime: new Date("2023-01-01T00:02:10Z"),
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            tokenUsage: { total: { tokens: 50, cost: 15 } },
-            status: "error",
-            type: "chain_operation",
-            children: [
-              {
-                id: "1-4-1-1",
-                title: "RunnableAssign",
-                startTime: new Date("2023-01-01T00:02:06Z"),
-                endTime: new Date("2023-01-01T00:02:09Z"),
-                tokenUsage: { total: { tokens: 25, cost: 7 } },
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
-                attributes: [
-                  {
-                    key: "llm.prompt_template.template",
-                    value: {
-                      stringValue: "Create a summary based on: {summary}",
-                    },
-                  },
-                  {
-                    key: "llm.prompt_template.variables",
-                    value: { stringValue: "summary,style,length" },
-                  },
-                  { key: "template.tokens", value: { intValue: "25" } },
-                  { key: "output.format", value: { stringValue: "markdown" } },
-                  { key: "quality.check", value: { boolValue: true } },
-                ],
-                status: "error",
-                type: "chain_operation",
-                children: [
-                  {
-                    id: "1-4-1-1-1",
-                    title: "RunnableAssign",
-                    startTime: new Date("2023-01-01T00:02:07Z"),
-                    endTime: new Date("2023-01-01T00:02:08Z"),
-                    tokenUsage: { total: { tokens: 12, cost: 3 } },
+                    startTime: new Date("2023-01-01T00:00:47Z"),
                     status: "error",
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
+                    title: "ChatCompletion",
+                    tokenUsage: { total: { cost: 18, tokens: 62 } },
+                    type: "llm_call",
+                  },
+                ],
+                endTime: new Date("2023-01-01T00:01:00Z"),
+                id: "1-1-2-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:00:46Z"),
+                status: "error",
+                title: "ChatCompletion",
+                tokenUsage: { total: { cost: 37, tokens: 125 } },
+                type: "llm_call",
+              },
+            ],
+            endTime: new Date("2023-01-01T00:01:30Z"),
+            id: "1-1-2",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:00:45Z"),
+            status: "error",
+            title: "ChatCompletion",
+            tokenUsage: { total: { cost: 75, tokens: 250 } },
+            type: "llm_call",
+          },
+        ],
+        endTime: new Date("2023-01-01T00:05:00Z"),
+        id: "1-1",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:00:10Z"),
+        status: "success",
+        title: "ChatCompletions",
+        tokenUsage: { total: { cost: 150, tokens: 500 } },
+        type: "llm_call",
+      },
+      {
+        attributes: [
+          {
+            key: "llm.prompt_template.template",
+            value: { stringValue: "Create a summary based on: {summary}" },
+          },
+          {
+            key: "llm.prompt_template.variables",
+            value: { stringValue: "summary,style,length" },
+          },
+          { key: "template.tokens", value: { intValue: "25" } },
+          { key: "output.format", value: { stringValue: "markdown" } },
+          { key: "quality.check", value: { boolValue: true } },
+        ],
+        children: [
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            children: [
+              {
+                attributes: [
+                  {
+                    key: "llm.prompt_template.template",
+                    value: {
+                      stringValue: "Create a summary based on: {summary}",
+                    },
+                  },
+                  {
+                    key: "llm.prompt_template.variables",
+                    value: { stringValue: "summary,style,length" },
+                  },
+                  { key: "template.tokens", value: { intValue: "25" } },
+                  { key: "output.format", value: { stringValue: "markdown" } },
+                  { key: "quality.check", value: { boolValue: true } },
+                ],
+                children: [
+                  {
                     attributes: [
                       {
                         key: "llm.prompt_template.template",
@@ -1379,14 +901,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                       },
                       { key: "quality.check", value: { boolValue: true } },
                     ],
-                    type: "chain_operation",
                     children: [
                       {
-                        id: "1-4-1-1-1-1",
-                        title: "RunnableAssign",
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
                         attributes: [
                           {
                             key: "llm.prompt_template.template",
@@ -1405,471 +921,485 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                             value: { stringValue: "markdown" },
                           },
                           { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [
+                          {
+                            attributes: [
+                              {
+                                key: "llm.prompt_template.template",
+                                value: {
+                                  stringValue:
+                                    "Create a summary based on: {summary}",
+                                },
+                              },
+                              {
+                                key: "llm.prompt_template.variables",
+                                value: { stringValue: "summary,style,length" },
+                              },
+                              {
+                                key: "template.tokens",
+                                value: { intValue: "25" },
+                              },
+                              {
+                                key: "output.format",
+                                value: { stringValue: "markdown" },
+                              },
+                              {
+                                key: "quality.check",
+                                value: { boolValue: true },
+                              },
+                            ],
+                            children: [],
+                            endTime: new Date("2023-01-01T00:01:30Z"),
+                            id: "1-2-1-1-1-1-1",
+                            raw: [
+                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                            ],
+                            startTime: new Date("2023-01-01T00:01:25Z"),
+                            status: "success",
+                            title: "RunnableSequence",
+                            tokenUsage: { total: { cost: 2, tokens: 6 } },
+                            type: "chain_operation",
+                          },
+                        ],
+                        endTime: new Date("2023-01-01T00:01:35Z"),
+                        id: "1-2-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:01:20Z"),
+                        status: "success",
+                        title: "RunnableSequence",
+                        tokenUsage: { total: { cost: 5, tokens: 12 } },
+                        type: "chain_operation",
+                      },
+                      {
+                        attributes: [
+                          {
+                            key: "llm.prompt_template.template",
+                            value: {
+                              stringValue:
+                                "Create a summary based on: {summary}",
+                            },
+                          },
+                          {
+                            key: "llm.prompt_template.variables",
+                            value: { stringValue: "summary,style,length" },
+                          },
+                          { key: "template.tokens", value: { intValue: "25" } },
+                          {
+                            key: "output.format",
+                            value: { stringValue: "markdown" },
+                          },
+                          { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [
+                          {
+                            attributes: [
+                              {
+                                key: "llm.prompt_template.template",
+                                value: {
+                                  stringValue:
+                                    "Create a summary based on: {summary}",
+                                },
+                              },
+                              {
+                                key: "llm.prompt_template.variables",
+                                value: { stringValue: "summary,style,length" },
+                              },
+                              {
+                                key: "template.tokens",
+                                value: { intValue: "25" },
+                              },
+                              {
+                                key: "output.format",
+                                value: { stringValue: "markdown" },
+                              },
+                              {
+                                key: "quality.check",
+                                value: { boolValue: true },
+                              },
+                            ],
+                            children: [],
+                            endTime: new Date("2023-01-01T00:01:30Z"),
+                            id: "1-2-1-1-1-2-1",
+                            raw: [
+                              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                            ],
+                            startTime: new Date("2023-01-01T00:01:25Z"),
+                            status: "success",
+                            title: "RunnableSequence",
+                            tokenUsage: { total: { cost: 2, tokens: 6 } },
+                            type: "chain_operation",
+                          },
+                        ],
+                        endTime: new Date("2023-01-01T00:01:35Z"),
+                        id: "1-2-1-1-1-2",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:01:20Z"),
+                        status: "success",
+                        title: "RunnableSequence",
+                        tokenUsage: { total: { cost: 5, tokens: 12 } },
+                        type: "chain_operation",
+                      },
+                    ],
+                    endTime: new Date("2023-01-01T00:01:45Z"),
+                    id: "1-2-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:01:15Z"),
+                    status: "success",
+                    title: "RunnableSequence",
+                    tokenUsage: { total: { cost: 10, tokens: 25 } },
+                    type: "chain_operation",
+                  },
+                ],
+                endTime: new Date("2023-01-01T00:02:00Z"),
+                id: "1-2-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:01:10Z"),
+                status: "success",
+                title: "RunnableSequence",
+                tokenUsage: { total: { cost: 20, tokens: 50 } },
+                type: "chain_operation",
+              },
+            ],
+            endTime: new Date("2023-01-01T00:03:00Z"),
+            id: "1-2-1",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:01:05Z"),
+            status: "success",
+            title: "RunnableSequence",
+            tokenUsage: { total: { cost: 40, tokens: 100 } },
+            type: "chain_operation",
+          },
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            endTime: new Date("2023-01-01T00:03:00Z"),
+            id: "1-2-2",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:01:05Z"),
+            status: "success",
+            title: "RunnableSequence",
+            tokenUsage: { total: { cost: 40, tokens: 100 } },
+            type: "chain_operation",
+          },
+        ],
+        endTime: new Date("2023-01-01T00:05:00Z"),
+        id: "1-2",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:01:00Z"),
+        status: "success",
+        title: "RunnableSequence",
+        tokenUsage: { total: { cost: 80, tokens: 200 } },
+        type: "chain_operation",
+      },
+      {
+        attributes: [
+          {
+            key: "llm.prompt_template.template",
+            value: { stringValue: "Create a summary based on: {summary}" },
+          },
+          {
+            key: "llm.prompt_template.variables",
+            value: { stringValue: "summary,style,length" },
+          },
+          { key: "template.tokens", value: { intValue: "25" } },
+          { key: "output.format", value: { stringValue: "markdown" } },
+          { key: "quality.check", value: { boolValue: true } },
+        ],
+        children: [
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            children: [
+              {
+                attributes: [
+                  {
+                    key: "llm.prompt_template.template",
+                    value: {
+                      stringValue: "Create a summary based on: {summary}",
+                    },
+                  },
+                  {
+                    key: "llm.prompt_template.variables",
+                    value: { stringValue: "summary,style,length" },
+                  },
+                  { key: "template.tokens", value: { intValue: "25" } },
+                  { key: "output.format", value: { stringValue: "markdown" } },
+                  { key: "quality.check", value: { boolValue: true } },
+                ],
+                children: [
+                  {
+                    attributes: [
+                      {
+                        key: "llm.prompt_template.template",
+                        value: {
+                          stringValue: "Create a summary based on: {summary}",
+                        },
+                      },
+                      {
+                        key: "llm.prompt_template.variables",
+                        value: { stringValue: "summary,style,length" },
+                      },
+                      { key: "template.tokens", value: { intValue: "25" } },
+                      {
+                        key: "output.format",
+                        value: { stringValue: "markdown" },
+                      },
+                      { key: "quality.check", value: { boolValue: true } },
+                    ],
+                    children: [
+                      {
+                        attributes: [
+                          {
+                            key: "llm.prompt_template.template",
+                            value: {
+                              stringValue:
+                                "Create a summary based on: {summary}",
+                            },
+                          },
+                          {
+                            key: "llm.prompt_template.variables",
+                            value: { stringValue: "summary,style,length" },
+                          },
+                          { key: "template.tokens", value: { intValue: "25" } },
+                          {
+                            key: "output.format",
+                            value: { stringValue: "markdown" },
+                          },
+                          { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [],
+                        endTime: new Date("2023-01-01T00:01:36Z"),
+                        id: "1-3-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:01:34Z"),
+                        status: "success",
+                        title: "agent_search",
+                        tokenUsage: { total: { cost: 1, tokens: 6 } },
+                        type: "tool_execution",
+                      },
+                    ],
+                    endTime: new Date("2023-01-01T00:01:37Z"),
+                    id: "1-3-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:01:33Z"),
+                    status: "success",
+                    title: "agent_search",
+                    tokenUsage: { total: { cost: 3, tokens: 12 } },
+                    type: "tool_execution",
+                  },
+                ],
+                endTime: new Date("2023-01-01T00:01:40Z"),
+                id: "1-3-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:01:32Z"),
+                status: "success",
+                title: "agent_search",
+                tokenUsage: { total: { cost: 6, tokens: 25 } },
+                type: "tool_execution",
+              },
+            ],
+            endTime: new Date("2023-01-01T00:01:45Z"),
+            id: "1-3-1",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:01:31Z"),
+            status: "success",
+            title: "agent_search",
+            tokenUsage: { total: { cost: 12, tokens: 50 } },
+            type: "tool_execution",
+          },
+        ],
+        endTime: new Date("2023-01-01T00:02:00Z"),
+        id: "1-3",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:01:30Z"),
+        status: "success",
+        title: "agent_search",
+        tokenUsage: { total: { cost: 25, tokens: 100 } },
+        type: "tool_execution",
+      },
+      {
+        attributes: [
+          {
+            key: "llm.prompt_template.template",
+            value: { stringValue: "Create a summary based on: {summary}" },
+          },
+          {
+            key: "llm.prompt_template.variables",
+            value: { stringValue: "summary,style,length" },
+          },
+          { key: "template.tokens", value: { intValue: "25" } },
+          { key: "output.format", value: { stringValue: "markdown" } },
+          { key: "quality.check", value: { boolValue: true } },
+        ],
+        children: [
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            children: [
+              {
+                attributes: [
+                  {
+                    key: "llm.prompt_template.template",
+                    value: {
+                      stringValue: "Create a summary based on: {summary}",
+                    },
+                  },
+                  {
+                    key: "llm.prompt_template.variables",
+                    value: { stringValue: "summary,style,length" },
+                  },
+                  { key: "template.tokens", value: { intValue: "25" } },
+                  { key: "output.format", value: { stringValue: "markdown" } },
+                  { key: "quality.check", value: { boolValue: true } },
+                ],
+                children: [
+                  {
+                    attributes: [
+                      {
+                        key: "llm.prompt_template.template",
+                        value: {
+                          stringValue: "Create a summary based on: {summary}",
+                        },
+                      },
+                      {
+                        key: "llm.prompt_template.variables",
+                        value: { stringValue: "summary,style,length" },
+                      },
+                      { key: "template.tokens", value: { intValue: "25" } },
+                      {
+                        key: "output.format",
+                        value: { stringValue: "markdown" },
+                      },
+                      { key: "quality.check", value: { boolValue: true } },
+                    ],
+                    children: [
+                      {
+                        attributes: [
+                          {
+                            key: "llm.prompt_template.template",
+                            value: {
+                              stringValue:
+                                "Create a summary based on: {summary}",
+                            },
+                          },
+                          {
+                            key: "llm.prompt_template.variables",
+                            value: { stringValue: "summary,style,length" },
+                          },
+                          { key: "template.tokens", value: { intValue: "25" } },
+                          {
+                            key: "output.format",
+                            value: { stringValue: "markdown" },
+                          },
+                          { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [],
+                        endTime: new Date("2023-01-01T00:02:08Z"),
+                        id: "1-4-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
                         ],
                         startTime: new Date("2023-01-01T00:02:07Z"),
-                        endTime: new Date("2023-01-01T00:02:08Z"),
-                        tokenUsage: { total: { tokens: 6, cost: 1 } },
                         status: "error",
-                        type: "chain_operation",
-                        children: [],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            id: "1-4-2",
-            title: "ChatPromptTemplate",
-            startTime: new Date("2023-01-01T00:02:10Z"),
-            endTime: new Date("2023-01-01T00:02:15Z"),
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            tokenUsage: { total: { tokens: 100, cost: 5 } },
-            status: "error",
-            type: "llm_call",
-            children: [
-              {
-                id: "1-4-2-1",
-                title: "ChatPromptTemplate",
-                startTime: new Date("2023-01-01T00:02:11Z"),
-                endTime: new Date("2023-01-01T00:02:14Z"),
-                tokenUsage: { total: { tokens: 50, cost: 2 } },
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
-                attributes: [
-                  {
-                    key: "llm.prompt_template.template",
-                    value: {
-                      stringValue: "Create a summary based on: {summary}",
-                    },
-                  },
-                  {
-                    key: "llm.prompt_template.variables",
-                    value: { stringValue: "summary,style,length" },
-                  },
-                  { key: "template.tokens", value: { intValue: "25" } },
-                  { key: "output.format", value: { stringValue: "markdown" } },
-                  { key: "quality.check", value: { boolValue: true } },
-                ],
-                status: "error",
-                type: "llm_call",
-                children: [
-                  {
-                    id: "1-4-2-1-1",
-                    title: "ChatPromptTemplate",
-                    startTime: new Date("2023-01-01T00:02:12Z"),
-                    endTime: new Date("2023-01-01T00:02:13Z"),
-                    tokenUsage: { total: { tokens: 25, cost: 1 } },
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
-                    attributes: [
-                      {
-                        key: "llm.prompt_template.template",
-                        value: {
-                          stringValue: "Create a summary based on: {summary}",
-                        },
-                      },
-                      {
-                        key: "llm.prompt_template.variables",
-                        value: { stringValue: "summary,style,length" },
-                      },
-                      { key: "template.tokens", value: { intValue: "25" } },
-                      {
-                        key: "output.format",
-                        value: { stringValue: "markdown" },
-                      },
-                      { key: "quality.check", value: { boolValue: true } },
-                    ],
-                    status: "error",
-                    type: "llm_call",
-                    children: [
-                      {
-                        id: "1-4-2-1-1-1",
-                        title: "ChatPromptTemplate",
-                        startTime: new Date("2023-01-01T00:02:12Z"),
-                        endTime: new Date("2023-01-01T00:02:13Z"),
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
-                        attributes: [
-                          {
-                            key: "llm.prompt_template.template",
-                            value: {
-                              stringValue:
-                                "Create a summary based on: {summary}",
-                            },
-                          },
-                          {
-                            key: "llm.prompt_template.variables",
-                            value: { stringValue: "summary,style,length" },
-                          },
-                          { key: "template.tokens", value: { intValue: "25" } },
-                          {
-                            key: "output.format",
-                            value: { stringValue: "markdown" },
-                          },
-                          { key: "quality.check", value: { boolValue: true } },
-                        ],
-                        tokenUsage: { total: { tokens: 12, cost: 0 } },
-                        status: "error",
-                        type: "llm_call",
-                        children: [],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "1-5",
-        title: "agent_extract",
-        startTime: new Date("2023-01-01T00:02:15Z"),
-        endTime: new Date("2023-01-01T00:02:20Z"),
-        status: "pending",
-        tokenUsage: { total: { tokens: 150, cost: 20 } },
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
-        attributes: [
-          {
-            key: "llm.prompt_template.template",
-            value: { stringValue: "Create a summary based on: {summary}" },
-          },
-          {
-            key: "llm.prompt_template.variables",
-            value: { stringValue: "summary,style,length" },
-          },
-          { key: "template.tokens", value: { intValue: "25" } },
-          { key: "output.format", value: { stringValue: "markdown" } },
-          { key: "quality.check", value: { boolValue: true } },
-        ],
-        type: "tool_execution",
-        children: [
-          {
-            id: "1-5-1",
-            title: "agent_extract",
-            startTime: new Date("2023-01-01T00:02:16Z"),
-            endTime: new Date("2023-01-01T00:02:19Z"),
-            status: "pending",
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            tokenUsage: { total: { tokens: 75, cost: 10 } },
-            type: "tool_execution",
-            children: [
-              {
-                id: "1-5-1-1",
-                title: "agent_extract",
-                startTime: new Date("2023-01-01T00:02:17Z"),
-                endTime: new Date("2023-01-01T00:02:18Z"),
-                status: "pending",
-                tokenUsage: { total: { tokens: 37, cost: 5 } },
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
-                attributes: [
-                  {
-                    key: "llm.prompt_template.template",
-                    value: {
-                      stringValue: "Create a summary based on: {summary}",
-                    },
-                  },
-                  {
-                    key: "llm.prompt_template.variables",
-                    value: { stringValue: "summary,style,length" },
-                  },
-                  { key: "template.tokens", value: { intValue: "25" } },
-                  { key: "output.format", value: { stringValue: "markdown" } },
-                  { key: "quality.check", value: { boolValue: true } },
-                ],
-                type: "tool_execution",
-                children: [
-                  {
-                    id: "1-5-1-1-1",
-                    title: "agent_extract",
-                    startTime: new Date("2023-01-01T00:02:17Z"),
-                    endTime: new Date("2023-01-01T00:02:18Z"),
-                    status: "pending",
-                    tokenUsage: { total: { tokens: 18, cost: 2 } },
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
-                    attributes: [
-                      {
-                        key: "llm.prompt_template.template",
-                        value: {
-                          stringValue: "Create a summary based on: {summary}",
-                        },
-                      },
-                      {
-                        key: "llm.prompt_template.variables",
-                        value: { stringValue: "summary,style,length" },
-                      },
-                      { key: "template.tokens", value: { intValue: "25" } },
-                      {
-                        key: "output.format",
-                        value: { stringValue: "markdown" },
-                      },
-                      { key: "quality.check", value: { boolValue: true } },
-                    ],
-                    type: "tool_execution",
-                    children: [
-                      {
-                        id: "1-5-1-1-1-1",
-                        title: "agent_extract",
-                        startTime: new Date("2023-01-01T00:02:17Z"),
-                        endTime: new Date("2023-01-01T00:02:18Z"),
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
-                        attributes: [
-                          {
-                            key: "llm.prompt_template.template",
-                            value: {
-                              stringValue:
-                                "Create a summary based on: {summary}",
-                            },
-                          },
-                          {
-                            key: "llm.prompt_template.variables",
-                            value: { stringValue: "summary,style,length" },
-                          },
-                          { key: "template.tokens", value: { intValue: "25" } },
-                          {
-                            key: "output.format",
-                            value: { stringValue: "markdown" },
-                          },
-                          { key: "quality.check", value: { boolValue: true } },
-                        ],
-                        status: "pending",
-                        tokenUsage: { total: { tokens: 9, cost: 1 } },
-                        type: "tool_execution",
-                        children: [],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "1-6",
-        title: "RunnableAssign",
-        startTime: new Date("2023-01-01T00:02:20Z"),
-        endTime: new Date("2023-01-01T00:02:25Z"),
-        tokenUsage: { total: { tokens: 50, cost: 15 } },
-        status: "success",
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
-        attributes: [
-          {
-            key: "llm.prompt_template.template",
-            value: { stringValue: "Create a summary based on: {summary}" },
-          },
-          {
-            key: "llm.prompt_template.variables",
-            value: { stringValue: "summary,style,length" },
-          },
-          { key: "template.tokens", value: { intValue: "25" } },
-          { key: "output.format", value: { stringValue: "markdown" } },
-          { key: "quality.check", value: { boolValue: true } },
-        ],
-        type: "chain_operation",
-        children: [
-          {
-            id: "1-6-1",
-            title: "RunnableAssign",
-            startTime: new Date("2023-01-01T00:02:21Z"),
-            endTime: new Date("2023-01-01T00:02:24Z"),
-            tokenUsage: { total: { tokens: 25, cost: 7 } },
-            status: "success",
-            raw: [
-              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-            ],
-            attributes: [
-              {
-                key: "llm.prompt_template.template",
-                value: { stringValue: "Create a summary based on: {summary}" },
-              },
-              {
-                key: "llm.prompt_template.variables",
-                value: { stringValue: "summary,style,length" },
-              },
-              { key: "template.tokens", value: { intValue: "25" } },
-              { key: "output.format", value: { stringValue: "markdown" } },
-              { key: "quality.check", value: { boolValue: true } },
-            ],
-            type: "chain_operation",
-            children: [
-              {
-                id: "1-6-1-1",
-                title: "RunnableAssign",
-                startTime: new Date("2023-01-01T00:02:22Z"),
-                endTime: new Date("2023-01-01T00:02:23Z"),
-                tokenUsage: { total: { tokens: 12, cost: 3 } },
-                status: "success",
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
-                attributes: [
-                  {
-                    key: "llm.prompt_template.template",
-                    value: {
-                      stringValue: "Create a summary based on: {summary}",
-                    },
-                  },
-                  {
-                    key: "llm.prompt_template.variables",
-                    value: { stringValue: "summary,style,length" },
-                  },
-                  { key: "template.tokens", value: { intValue: "25" } },
-                  { key: "output.format", value: { stringValue: "markdown" } },
-                  { key: "quality.check", value: { boolValue: true } },
-                ],
-                type: "chain_operation",
-                children: [
-                  {
-                    id: "1-6-1-1-1",
-                    title: "RunnableAssign",
-                    startTime: new Date("2023-01-01T00:02:22Z"),
-                    endTime: new Date("2023-01-01T00:02:23Z"),
-                    tokenUsage: { total: { tokens: 6, cost: 1 } },
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
-                    attributes: [
-                      {
-                        key: "llm.prompt_template.template",
-                        value: {
-                          stringValue: "Create a summary based on: {summary}",
-                        },
-                      },
-                      {
-                        key: "llm.prompt_template.variables",
-                        value: { stringValue: "summary,style,length" },
-                      },
-                      { key: "template.tokens", value: { intValue: "25" } },
-                      {
-                        key: "output.format",
-                        value: { stringValue: "markdown" },
-                      },
-                      { key: "quality.check", value: { boolValue: true } },
-                    ],
-                    status: "success",
-                    type: "chain_operation",
-                    children: [
-                      {
-                        id: "1-6-1-1-1-1",
                         title: "RunnableAssign",
-                        startTime: new Date("2023-01-01T00:02:22Z"),
-                        endTime: new Date("2023-01-01T00:02:23Z"),
-                        tokenUsage: { total: { tokens: 3, cost: 0 } },
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
-                        attributes: [
-                          {
-                            key: "llm.prompt_template.template",
-                            value: {
-                              stringValue:
-                                "Create a summary based on: {summary}",
-                            },
-                          },
-                          {
-                            key: "llm.prompt_template.variables",
-                            value: { stringValue: "summary,style,length" },
-                          },
-                          { key: "template.tokens", value: { intValue: "25" } },
-                          {
-                            key: "output.format",
-                            value: { stringValue: "markdown" },
-                          },
-                          { key: "quality.check", value: { boolValue: true } },
-                        ],
-                        status: "success",
+                        tokenUsage: { total: { cost: 1, tokens: 6 } },
                         type: "chain_operation",
-                        children: [],
                       },
                     ],
+                    endTime: new Date("2023-01-01T00:02:08Z"),
+                    id: "1-4-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:02:07Z"),
+                    status: "error",
+                    title: "RunnableAssign",
+                    tokenUsage: { total: { cost: 3, tokens: 12 } },
+                    type: "chain_operation",
                   },
                 ],
+                endTime: new Date("2023-01-01T00:02:09Z"),
+                id: "1-4-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:02:06Z"),
+                status: "error",
+                title: "RunnableAssign",
+                tokenUsage: { total: { cost: 7, tokens: 25 } },
+                type: "chain_operation",
               },
             ],
-          },
-        ],
-      },
-      {
-        id: "1-7",
-        title: "ChatPromptTemplate",
-        startTime: new Date("2023-01-01T00:02:25Z"),
-        endTime: new Date("2023-01-01T00:02:30Z"),
-        tokenUsage: { total: { tokens: 100, cost: 5 } },
-        status: "success",
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
-        attributes: [
-          {
-            key: "llm.prompt_template.template",
-            value: { stringValue: "Create a summary based on: {summary}" },
-          },
-          {
-            key: "llm.prompt_template.variables",
-            value: { stringValue: "summary,style,length" },
-          },
-          { key: "template.tokens", value: { intValue: "25" } },
-          { key: "output.format", value: { stringValue: "markdown" } },
-          { key: "quality.check", value: { boolValue: true } },
-        ],
-        type: "llm_call",
-        children: [
-          {
-            id: "1-7-1",
-            title: "ChatPromptTemplate",
-            startTime: new Date("2023-01-01T00:02:26Z"),
-            endTime: new Date("2023-01-01T00:02:29Z"),
-            tokenUsage: { total: { tokens: 50, cost: 2 } },
-            status: "success",
+            endTime: new Date("2023-01-01T00:02:10Z"),
+            id: "1-4-1",
             raw: [
               `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
             ],
+            startTime: new Date("2023-01-01T00:02:05Z"),
+            status: "error",
+            title: "RunnableAssign",
+            tokenUsage: { total: { cost: 15, tokens: 50 } },
+            type: "chain_operation",
+          },
+          {
             attributes: [
               {
                 key: "llm.prompt_template.template",
@@ -1883,17 +1413,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
               { key: "output.format", value: { stringValue: "markdown" } },
               { key: "quality.check", value: { boolValue: true } },
             ],
-            type: "llm_call",
             children: [
               {
-                id: "1-7-1-1",
-                title: "ChatPromptTemplate",
-                startTime: new Date("2023-01-01T00:02:27Z"),
-                endTime: new Date("2023-01-01T00:02:28Z"),
-                tokenUsage: { total: { tokens: 25, cost: 1 } },
-                raw: [
-                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                ],
                 attributes: [
                   {
                     key: "llm.prompt_template.template",
@@ -1909,19 +1430,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                   { key: "output.format", value: { stringValue: "markdown" } },
                   { key: "quality.check", value: { boolValue: true } },
                 ],
-                status: "success",
-                type: "llm_call",
                 children: [
                   {
-                    id: "1-7-1-1-1",
-                    title: "ChatPromptTemplate",
-                    startTime: new Date("2023-01-01T00:02:27Z"),
-                    endTime: new Date("2023-01-01T00:02:28Z"),
-                    tokenUsage: { total: { tokens: 12, cost: 0 } },
-                    status: "success",
-                    raw: [
-                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                    ],
                     attributes: [
                       {
                         key: "llm.prompt_template.template",
@@ -1940,18 +1450,8 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                       },
                       { key: "quality.check", value: { boolValue: true } },
                     ],
-                    type: "llm_call",
                     children: [
                       {
-                        id: "1-7-1-1-1-1",
-                        title: "ChatPromptTemplate",
-                        startTime: new Date("2023-01-01T00:02:27Z"),
-                        endTime: new Date("2023-01-01T00:02:28Z"),
-                        tokenUsage: { total: { tokens: 6, cost: 0 } },
-                        status: "success",
-                        raw: [
-                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-                        ],
                         attributes: [
                           {
                             key: "llm.prompt_template.template",
@@ -1971,17 +1471,517 @@ export const sampleTreeViewDataDeepNesting: TraceSpan[] = [
                           },
                           { key: "quality.check", value: { boolValue: true } },
                         ],
-                        type: "llm_call",
                         children: [],
+                        endTime: new Date("2023-01-01T00:02:13Z"),
+                        id: "1-4-2-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:02:12Z"),
+                        status: "error",
+                        title: "ChatPromptTemplate",
+                        tokenUsage: { total: { cost: 0, tokens: 12 } },
+                        type: "llm_call",
                       },
                     ],
+                    endTime: new Date("2023-01-01T00:02:13Z"),
+                    id: "1-4-2-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:02:12Z"),
+                    status: "error",
+                    title: "ChatPromptTemplate",
+                    tokenUsage: { total: { cost: 1, tokens: 25 } },
+                    type: "llm_call",
                   },
                 ],
+                endTime: new Date("2023-01-01T00:02:14Z"),
+                id: "1-4-2-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:02:11Z"),
+                status: "error",
+                title: "ChatPromptTemplate",
+                tokenUsage: { total: { cost: 2, tokens: 50 } },
+                type: "llm_call",
               },
             ],
+            endTime: new Date("2023-01-01T00:02:15Z"),
+            id: "1-4-2",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:02:10Z"),
+            status: "error",
+            title: "ChatPromptTemplate",
+            tokenUsage: { total: { cost: 5, tokens: 100 } },
+            type: "llm_call",
           },
         ],
+        endTime: new Date("2023-01-01T00:05:00Z"),
+        id: "1-4",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:00Z"),
+        status: "pending",
+        title: "RunnableSequence",
+        tokenUsage: { total: { cost: 90, tokens: 300 } },
+        type: "chain_operation",
+      },
+      {
+        attributes: [
+          {
+            key: "llm.prompt_template.template",
+            value: { stringValue: "Create a summary based on: {summary}" },
+          },
+          {
+            key: "llm.prompt_template.variables",
+            value: { stringValue: "summary,style,length" },
+          },
+          { key: "template.tokens", value: { intValue: "25" } },
+          { key: "output.format", value: { stringValue: "markdown" } },
+          { key: "quality.check", value: { boolValue: true } },
+        ],
+        children: [
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            children: [
+              {
+                attributes: [
+                  {
+                    key: "llm.prompt_template.template",
+                    value: {
+                      stringValue: "Create a summary based on: {summary}",
+                    },
+                  },
+                  {
+                    key: "llm.prompt_template.variables",
+                    value: { stringValue: "summary,style,length" },
+                  },
+                  { key: "template.tokens", value: { intValue: "25" } },
+                  { key: "output.format", value: { stringValue: "markdown" } },
+                  { key: "quality.check", value: { boolValue: true } },
+                ],
+                children: [
+                  {
+                    attributes: [
+                      {
+                        key: "llm.prompt_template.template",
+                        value: {
+                          stringValue: "Create a summary based on: {summary}",
+                        },
+                      },
+                      {
+                        key: "llm.prompt_template.variables",
+                        value: { stringValue: "summary,style,length" },
+                      },
+                      { key: "template.tokens", value: { intValue: "25" } },
+                      {
+                        key: "output.format",
+                        value: { stringValue: "markdown" },
+                      },
+                      { key: "quality.check", value: { boolValue: true } },
+                    ],
+                    children: [
+                      {
+                        attributes: [
+                          {
+                            key: "llm.prompt_template.template",
+                            value: {
+                              stringValue:
+                                "Create a summary based on: {summary}",
+                            },
+                          },
+                          {
+                            key: "llm.prompt_template.variables",
+                            value: { stringValue: "summary,style,length" },
+                          },
+                          { key: "template.tokens", value: { intValue: "25" } },
+                          {
+                            key: "output.format",
+                            value: { stringValue: "markdown" },
+                          },
+                          { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [],
+                        endTime: new Date("2023-01-01T00:02:18Z"),
+                        id: "1-5-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:02:17Z"),
+                        status: "pending",
+                        title: "agent_extract",
+                        tokenUsage: { total: { cost: 1, tokens: 9 } },
+                        type: "tool_execution",
+                      },
+                    ],
+                    endTime: new Date("2023-01-01T00:02:18Z"),
+                    id: "1-5-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:02:17Z"),
+                    status: "pending",
+                    title: "agent_extract",
+                    tokenUsage: { total: { cost: 2, tokens: 18 } },
+                    type: "tool_execution",
+                  },
+                ],
+                endTime: new Date("2023-01-01T00:02:18Z"),
+                id: "1-5-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:02:17Z"),
+                status: "pending",
+                title: "agent_extract",
+                tokenUsage: { total: { cost: 5, tokens: 37 } },
+                type: "tool_execution",
+              },
+            ],
+            endTime: new Date("2023-01-01T00:02:19Z"),
+            id: "1-5-1",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:02:16Z"),
+            status: "pending",
+            title: "agent_extract",
+            tokenUsage: { total: { cost: 10, tokens: 75 } },
+            type: "tool_execution",
+          },
+        ],
+        endTime: new Date("2023-01-01T00:02:20Z"),
+        id: "1-5",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:15Z"),
+        status: "pending",
+        title: "agent_extract",
+        tokenUsage: { total: { cost: 20, tokens: 150 } },
+        type: "tool_execution",
+      },
+      {
+        attributes: [
+          {
+            key: "llm.prompt_template.template",
+            value: { stringValue: "Create a summary based on: {summary}" },
+          },
+          {
+            key: "llm.prompt_template.variables",
+            value: { stringValue: "summary,style,length" },
+          },
+          { key: "template.tokens", value: { intValue: "25" } },
+          { key: "output.format", value: { stringValue: "markdown" } },
+          { key: "quality.check", value: { boolValue: true } },
+        ],
+        children: [
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            children: [
+              {
+                attributes: [
+                  {
+                    key: "llm.prompt_template.template",
+                    value: {
+                      stringValue: "Create a summary based on: {summary}",
+                    },
+                  },
+                  {
+                    key: "llm.prompt_template.variables",
+                    value: { stringValue: "summary,style,length" },
+                  },
+                  { key: "template.tokens", value: { intValue: "25" } },
+                  { key: "output.format", value: { stringValue: "markdown" } },
+                  { key: "quality.check", value: { boolValue: true } },
+                ],
+                children: [
+                  {
+                    attributes: [
+                      {
+                        key: "llm.prompt_template.template",
+                        value: {
+                          stringValue: "Create a summary based on: {summary}",
+                        },
+                      },
+                      {
+                        key: "llm.prompt_template.variables",
+                        value: { stringValue: "summary,style,length" },
+                      },
+                      { key: "template.tokens", value: { intValue: "25" } },
+                      {
+                        key: "output.format",
+                        value: { stringValue: "markdown" },
+                      },
+                      { key: "quality.check", value: { boolValue: true } },
+                    ],
+                    children: [
+                      {
+                        attributes: [
+                          {
+                            key: "llm.prompt_template.template",
+                            value: {
+                              stringValue:
+                                "Create a summary based on: {summary}",
+                            },
+                          },
+                          {
+                            key: "llm.prompt_template.variables",
+                            value: { stringValue: "summary,style,length" },
+                          },
+                          { key: "template.tokens", value: { intValue: "25" } },
+                          {
+                            key: "output.format",
+                            value: { stringValue: "markdown" },
+                          },
+                          { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [],
+                        endTime: new Date("2023-01-01T00:02:23Z"),
+                        id: "1-6-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:02:22Z"),
+                        status: "success",
+                        title: "RunnableAssign",
+                        tokenUsage: { total: { cost: 0, tokens: 3 } },
+                        type: "chain_operation",
+                      },
+                    ],
+                    endTime: new Date("2023-01-01T00:02:23Z"),
+                    id: "1-6-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:02:22Z"),
+                    status: "success",
+                    title: "RunnableAssign",
+                    tokenUsage: { total: { cost: 1, tokens: 6 } },
+                    type: "chain_operation",
+                  },
+                ],
+                endTime: new Date("2023-01-01T00:02:23Z"),
+                id: "1-6-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:02:22Z"),
+                status: "success",
+                title: "RunnableAssign",
+                tokenUsage: { total: { cost: 3, tokens: 12 } },
+                type: "chain_operation",
+              },
+            ],
+            endTime: new Date("2023-01-01T00:02:24Z"),
+            id: "1-6-1",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:02:21Z"),
+            status: "success",
+            title: "RunnableAssign",
+            tokenUsage: { total: { cost: 7, tokens: 25 } },
+            type: "chain_operation",
+          },
+        ],
+        endTime: new Date("2023-01-01T00:02:25Z"),
+        id: "1-6",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:20Z"),
+        status: "success",
+        title: "RunnableAssign",
+        tokenUsage: { total: { cost: 15, tokens: 50 } },
+        type: "chain_operation",
+      },
+      {
+        attributes: [
+          {
+            key: "llm.prompt_template.template",
+            value: { stringValue: "Create a summary based on: {summary}" },
+          },
+          {
+            key: "llm.prompt_template.variables",
+            value: { stringValue: "summary,style,length" },
+          },
+          { key: "template.tokens", value: { intValue: "25" } },
+          { key: "output.format", value: { stringValue: "markdown" } },
+          { key: "quality.check", value: { boolValue: true } },
+        ],
+        children: [
+          {
+            attributes: [
+              {
+                key: "llm.prompt_template.template",
+                value: { stringValue: "Create a summary based on: {summary}" },
+              },
+              {
+                key: "llm.prompt_template.variables",
+                value: { stringValue: "summary,style,length" },
+              },
+              { key: "template.tokens", value: { intValue: "25" } },
+              { key: "output.format", value: { stringValue: "markdown" } },
+              { key: "quality.check", value: { boolValue: true } },
+            ],
+            children: [
+              {
+                attributes: [
+                  {
+                    key: "llm.prompt_template.template",
+                    value: {
+                      stringValue: "Create a summary based on: {summary}",
+                    },
+                  },
+                  {
+                    key: "llm.prompt_template.variables",
+                    value: { stringValue: "summary,style,length" },
+                  },
+                  { key: "template.tokens", value: { intValue: "25" } },
+                  { key: "output.format", value: { stringValue: "markdown" } },
+                  { key: "quality.check", value: { boolValue: true } },
+                ],
+                children: [
+                  {
+                    attributes: [
+                      {
+                        key: "llm.prompt_template.template",
+                        value: {
+                          stringValue: "Create a summary based on: {summary}",
+                        },
+                      },
+                      {
+                        key: "llm.prompt_template.variables",
+                        value: { stringValue: "summary,style,length" },
+                      },
+                      { key: "template.tokens", value: { intValue: "25" } },
+                      {
+                        key: "output.format",
+                        value: { stringValue: "markdown" },
+                      },
+                      { key: "quality.check", value: { boolValue: true } },
+                    ],
+                    children: [
+                      {
+                        attributes: [
+                          {
+                            key: "llm.prompt_template.template",
+                            value: {
+                              stringValue:
+                                "Create a summary based on: {summary}",
+                            },
+                          },
+                          {
+                            key: "llm.prompt_template.variables",
+                            value: { stringValue: "summary,style,length" },
+                          },
+                          { key: "template.tokens", value: { intValue: "25" } },
+                          {
+                            key: "output.format",
+                            value: { stringValue: "markdown" },
+                          },
+                          { key: "quality.check", value: { boolValue: true } },
+                        ],
+                        children: [],
+                        endTime: new Date("2023-01-01T00:02:28Z"),
+                        id: "1-7-1-1-1-1",
+                        raw: [
+                          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                        ],
+                        startTime: new Date("2023-01-01T00:02:27Z"),
+                        status: "success",
+                        title: "ChatPromptTemplate",
+                        tokenUsage: { total: { cost: 0, tokens: 6 } },
+                        type: "llm_call",
+                      },
+                    ],
+                    endTime: new Date("2023-01-01T00:02:28Z"),
+                    id: "1-7-1-1-1",
+                    raw: [
+                      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                    ],
+                    startTime: new Date("2023-01-01T00:02:27Z"),
+                    status: "success",
+                    title: "ChatPromptTemplate",
+                    tokenUsage: { total: { cost: 0, tokens: 12 } },
+                    type: "llm_call",
+                  },
+                ],
+                endTime: new Date("2023-01-01T00:02:28Z"),
+                id: "1-7-1-1",
+                raw: [
+                  `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+                ],
+                startTime: new Date("2023-01-01T00:02:27Z"),
+                status: "success",
+                title: "ChatPromptTemplate",
+                tokenUsage: { total: { cost: 1, tokens: 25 } },
+                type: "llm_call",
+              },
+            ],
+            endTime: new Date("2023-01-01T00:02:29Z"),
+            id: "1-7-1",
+            raw: [
+              `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+            ],
+            startTime: new Date("2023-01-01T00:02:26Z"),
+            status: "success",
+            title: "ChatPromptTemplate",
+            tokenUsage: { total: { cost: 2, tokens: 50 } },
+            type: "llm_call",
+          },
+        ],
+        endTime: new Date("2023-01-01T00:02:30Z"),
+        id: "1-7",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:25Z"),
+        status: "success",
+        title: "ChatPromptTemplate",
+        tokenUsage: { total: { cost: 5, tokens: 100 } },
+        type: "llm_call",
       },
     ],
+    endTime: new Date("2023-01-01T00:06:12Z"),
+    id: "1",
+    raw: [
+      `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+    ],
+    startTime: new Date("2023-01-01T00:00:00Z"),
+    status: "success",
+    title: "main",
+    tokenUsage: { total: { cost: 1234, tokens: 1000 } },
+    type: "chain_operation",
   },
 ];

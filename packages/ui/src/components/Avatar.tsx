@@ -37,61 +37,61 @@ const iconSizeClasses: Record<AvatarSize, string> = {
 };
 
 const bgColorClasses: Record<TraceSpanCategory, string> = {
-  llm_call: "bg-agentprism-avatar-llm",
-  tool_execution: "bg-agentprism-avatar-tool",
   agent_invocation: "bg-agentprism-avatar-agent",
   chain_operation: "bg-agentprism-avatar-chain",
-  retrieval: "bg-agentprism-avatar-retrieval",
-  embedding: "bg-agentprism-avatar-embedding",
   create_agent: "bg-agentprism-avatar-create-agent",
-  span: "bg-agentprism-avatar-span",
+  embedding: "bg-agentprism-avatar-embedding",
   event: "bg-agentprism-avatar-event",
   guardrail: "bg-agentprism-avatar-guardrail",
+  llm_call: "bg-agentprism-avatar-llm",
+  retrieval: "bg-agentprism-avatar-retrieval",
+  span: "bg-agentprism-avatar-span",
+  tool_execution: "bg-agentprism-avatar-tool",
   unknown: "bg-agentprism-avatar-unknown",
 };
 
 export type AvatarProps = ComponentPropsWithRef<"div"> & {
   /**
+   * The alt text for the avatar
+   */
+  alt?: string | undefined;
+  /**
    * The category of the span which avatar is associated with
    */
   category: TraceSpanCategory;
   /**
-   * The image source for the avatar
+   * Optional className for additional styling
    */
-  src?: string | undefined;
+  className?: string | undefined;
   /**
-   * The alt text for the avatar
+   * Custom letter to display (will use first letter of alt if not provided)
    */
-  alt?: string | undefined;
+  letter?: string | undefined;
+  /**
+   * The border radius of the avatar
+   * @default "full"
+   */
+  rounded?: "full" | "lg" | "md" | "none" | "sm" | undefined;
   /**
    * The size of the avatar
    * @default "md"
    */
   size?: AvatarSize | undefined;
   /**
-   * The border radius of the avatar
-   * @default "full"
+   * The image source for the avatar
    */
-  rounded?: "none" | "sm" | "md" | "lg" | "full" | undefined;
-  /**
-   * Custom letter to display (will use first letter of alt if not provided)
-   */
-  letter?: string | undefined;
-  /**
-   * Optional className for additional styling
-   */
-  className?: string | undefined;
+  src?: string | undefined;
 };
 
 export const Avatar = ({
-  category,
-  src,
   alt = "Avatar",
-  size = "10",
-  rounded = "full",
-  letter,
+  category,
   children,
   className = "",
+  letter,
+  rounded = "full",
+  size = "10",
+  src,
   ...rest
 }: AvatarProps): ReactElement => {
   const [error, setError] = useState(false);
@@ -123,10 +123,10 @@ export const Avatar = ({
         <>
           {src ? (
             <img
-              src={src}
               alt={alt}
               className="size-full object-cover"
               onError={() => setError(true)}
+              src={src}
             />
           ) : (
             <div

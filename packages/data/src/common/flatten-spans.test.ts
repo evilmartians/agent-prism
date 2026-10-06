@@ -14,13 +14,13 @@ describe("flattenSpans", () => {
   it("should return the same array if there are no children", () => {
     const input: TraceSpan[] = [
       {
-        id: "1",
-        title: "Span 1",
-        startTime: new Date(),
         endTime: new Date(),
-        type: "guardrail",
+        id: "1",
         raw: ["raw-data"],
+        startTime: new Date(),
         status: "success",
+        title: "Span 1",
+        type: "guardrail",
       },
     ];
     const result = flattenSpans(input);
@@ -29,24 +29,24 @@ describe("flattenSpans", () => {
 
   it("should flatten spans with one level of children", () => {
     const childSpan: TraceSpan = {
-      id: "2",
-      title: "Child Span",
-      startTime: new Date(),
       endTime: new Date(),
-      type: "chain_operation",
+      id: "2",
       raw: ["raw-data"],
+      startTime: new Date(),
       status: "success",
+      title: "Child Span",
+      type: "chain_operation",
     };
     const input: TraceSpan[] = [
       {
-        id: "1",
-        title: "Parent Span",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "create_agent",
-        raw: ["raw-data"],
-        status: "success",
         children: [childSpan],
+        endTime: new Date(),
+        id: "1",
+        raw: ["raw-data"],
+        startTime: new Date(),
+        status: "success",
+        title: "Parent Span",
+        type: "create_agent",
       },
     ];
     const result = flattenSpans(input);
@@ -55,34 +55,34 @@ describe("flattenSpans", () => {
 
   it("should flatten spans with multiple levels of children", () => {
     const grandChildSpan: TraceSpan = {
-      id: "3",
-      title: "Grandchild Span",
-      startTime: new Date(),
       endTime: new Date(),
-      type: "chain_operation",
+      id: "3",
       raw: ["raw-data"],
+      startTime: new Date(),
       status: "success",
+      title: "Grandchild Span",
+      type: "chain_operation",
     };
     const childSpan: TraceSpan = {
-      id: "2",
-      title: "Child Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "llm_call",
-      raw: ["raw-data"],
-      status: "success",
       children: [grandChildSpan],
+      endTime: new Date(),
+      id: "2",
+      raw: ["raw-data"],
+      startTime: new Date(),
+      status: "success",
+      title: "Child Span",
+      type: "llm_call",
     };
     const input: TraceSpan[] = [
       {
-        id: "1",
-        title: "Parent Span",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "chain_operation",
-        raw: ["raw-data"],
-        status: "success",
         children: [childSpan],
+        endTime: new Date(),
+        id: "1",
+        raw: ["raw-data"],
+        startTime: new Date(),
+        status: "success",
+        title: "Parent Span",
+        type: "chain_operation",
       },
     ];
     const result = flattenSpans(input);
@@ -92,24 +92,24 @@ describe("flattenSpans", () => {
   it("should handle spans where some children arrays are empty or undefined", () => {
     const input: TraceSpan[] = [
       {
-        id: "1",
-        title: "Span 1",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "create_agent",
-        raw: ["raw-data"],
-        status: "success",
         children: [],
+        endTime: new Date(),
+        id: "1",
+        raw: ["raw-data"],
+        startTime: new Date(),
+        status: "success",
+        title: "Span 1",
+        type: "create_agent",
       },
       {
-        id: "2",
-        title: "Span 2",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "create_agent",
-        raw: ["raw-data"],
-        status: "success",
         children: undefined,
+        endTime: new Date(),
+        id: "2",
+        raw: ["raw-data"],
+        startTime: new Date(),
+        status: "success",
+        title: "Span 2",
+        type: "create_agent",
       },
     ];
     const result = flattenSpans(input);
@@ -118,33 +118,33 @@ describe("flattenSpans", () => {
 
   it("should handle nested spans with mixed empty and non-empty children", () => {
     const grandChildSpan: TraceSpan = {
-      id: "3",
-      title: "Grandchild Span",
-      startTime: new Date(),
       endTime: new Date(),
-      type: "guardrail",
+      id: "3",
       raw: ["raw-data"],
+      startTime: new Date(),
       status: "success",
+      title: "Grandchild Span",
+      type: "guardrail",
     };
     const childSpan: TraceSpan = {
-      id: "2",
-      title: "Child Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "create_agent",
-      raw: ["raw-data"],
-      status: "success",
       children: [],
+      endTime: new Date(),
+      id: "2",
+      raw: ["raw-data"],
+      startTime: new Date(),
+      status: "success",
+      title: "Child Span",
+      type: "create_agent",
     };
     const parentSpan: TraceSpan = {
-      id: "1",
-      title: "Parent Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "retrieval",
-      raw: ["raw-data"],
-      status: "success",
       children: [childSpan, grandChildSpan],
+      endTime: new Date(),
+      id: "1",
+      raw: ["raw-data"],
+      startTime: new Date(),
+      status: "success",
+      title: "Parent Span",
+      type: "retrieval",
     };
     const result = flattenSpans([parentSpan]);
     expect(result).toStrictEqual([parentSpan, childSpan, grandChildSpan]);

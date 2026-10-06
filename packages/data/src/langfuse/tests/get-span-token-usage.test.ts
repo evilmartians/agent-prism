@@ -22,14 +22,14 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
   it("records each usage type with its cost", () => {
     const usage = langfuseSpanAdapter.getTokenUsage(
       observation({
-        usageDetails: { input: 1115, output: 101, total: 1216 },
         costDetails: { input: 0.00139375, output: 0.00101, total: 0.00240375 },
+        usageDetails: { input: 1115, output: 101, total: 1216 },
       }),
     );
 
     expect(getTokenUsageEntries(usage)).toStrictEqual([
-      { type: "input", tokens: 1115, cost: 0.00139375 },
-      { type: "output", tokens: 101, cost: 0.00101 },
+      { cost: 0.00139375, tokens: 1115, type: "input" },
+      { cost: 0.00101, tokens: 101, type: "output" },
     ]);
     expect(getTotalTokens(usage)).toBe(1216);
     expect(getTotalCost(usage)).toBe(0.00240375);
@@ -56,32 +56,32 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
   it("falls back to the totals when nothing is broken down", () => {
     const usage = langfuseSpanAdapter.getTokenUsage(
       observation({
-        usageDetails: { total: 300 },
         costDetails: { total: 0.01 },
+        usageDetails: { total: 300 },
       }),
     );
 
     expect(getTokenUsageEntries(usage)).toStrictEqual([
-      { type: "total", tokens: 300, cost: 0.01 },
+      { cost: 0.01, tokens: 300, type: "total" },
     ]);
   });
 
   it("reads the flat usage and cost fields when the details are missing", () => {
     const usage = langfuseSpanAdapter.getTokenUsage(
       observation({
-        usageDetails: null,
-        inputUsage: 100,
-        outputUsage: 20,
-        totalUsage: 120,
         inputCost: 0.001,
+        inputUsage: 100,
         outputCost: 0.002,
+        outputUsage: 20,
         totalCost: 0.003,
+        totalUsage: 120,
+        usageDetails: null,
       }),
     );
 
     expect(getTokenUsageEntries(usage)).toStrictEqual([
-      { type: "input", tokens: 100, cost: 0.001 },
-      { type: "output", tokens: 20, cost: 0.002 },
+      { cost: 0.001, tokens: 100, type: "input" },
+      { cost: 0.002, tokens: 20, type: "output" },
     ]);
   });
 
@@ -91,21 +91,21 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
     );
 
     expect(getTokenUsageEntries(usage)).toStrictEqual([
-      { type: "total", tokens: 0, cost: 0.05 },
+      { cost: 0.05, tokens: 0, type: "total" },
     ]);
   });
 
   it("ignores the flat fields when the details are present", () => {
     const usage = langfuseSpanAdapter.getTokenUsage(
       observation({
-        usageDetails: { input: 1115, output: 101, total: 1216 },
         costDetails: { input: 0.00139375, output: 0.00101, total: 0.00240375 },
-        inputUsage: 1115,
-        outputUsage: 101,
-        totalUsage: 1216,
         inputCost: 0.00139375,
+        inputUsage: 1115,
         outputCost: 0.00101,
+        outputUsage: 101,
         totalCost: 0.00240375,
+        totalUsage: 1216,
+        usageDetails: { input: 1115, output: 101, total: 1216 },
       }),
     );
 
@@ -118,14 +118,14 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
     expect(
       langfuseSpanAdapter.getTokenUsage(
         observation({
-          usageDetails: {},
           costDetails: {},
-          inputUsage: 0,
-          outputUsage: 0,
-          totalUsage: 0,
           inputCost: null,
+          inputUsage: 0,
           outputCost: null,
+          outputUsage: 0,
           totalCost: 0,
+          totalUsage: 0,
+          usageDetails: {},
         }),
       ),
     ).toBeUndefined();
@@ -135,7 +135,7 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
 describe("langfuseSpanAdapter.convertRawSpanToTraceSpan", () => {
   it("gives a still-running observation (null endTime) zero duration", () => {
     const span = langfuseSpanAdapter.convertRawSpanToTraceSpan(
-      observation({ startTime: "2024-01-01T00:00:00.000Z", endTime: null }),
+      observation({ endTime: null, startTime: "2024-01-01T00:00:00.000Z" }),
     );
 
     expect(span.endTime).toStrictEqual(new Date("2024-01-01T00:00:00.000Z"));

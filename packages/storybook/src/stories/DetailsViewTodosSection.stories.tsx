@@ -13,13 +13,13 @@ import {
 } from "@storybook/addon-docs/blocks";
 
 const baseSpan: TraceSpan = {
-  id: "span-todos-001",
-  title: "Agent turn",
-  startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  type: "agent_invocation",
+  id: "span-todos-001",
   raw: [],
+  startTime: new Date("2024-01-15T10:30:00Z"),
   status: "success",
+  title: "Agent turn",
+  type: "agent_invocation",
 };
 
 const withTodos = (todos: TraceTodo[]): TraceSpan => ({
@@ -28,10 +28,8 @@ const withTodos = (todos: TraceTodo[]): TraceSpan => ({
 });
 
 const meta = {
-  title: "Details View/Todos Section",
   component: DetailsViewTodosSection,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -42,8 +40,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
+  title: "Details View/Todos Section",
 } satisfies Meta<typeof DetailsViewTodosSection>;
 
 export default meta;
@@ -52,17 +52,17 @@ type Story = StoryObj<typeof meta>;
 export const MixedStatuses: Story = {
   args: {
     data: withTodos([
-      { title: "Explore the codebase conventions", status: "completed" },
-      { title: "Port the details-tabs helpers", status: "completed" },
-      { title: "Wire the Thinking and Context tabs", status: "in_progress" },
-      { title: "Add Storybook stories", status: "pending" },
-      { title: "Run tsc, eslint and storybook build", status: "pending" },
+      { status: "completed", title: "Explore the codebase conventions" },
+      { status: "completed", title: "Port the details-tabs helpers" },
+      { status: "in_progress", title: "Wire the Thinking and Context tabs" },
+      { status: "pending", title: "Add Storybook stories" },
+      { status: "pending", title: "Run tsc, eslint and storybook build" },
     ]),
   },
 };
 
 export const AllCompleted: Story = {
   args: {
-    data: withTodos([{ title: "Ship the feature", status: "completed" }]),
+    data: withTodos([{ status: "completed", title: "Ship the feature" }]),
   },
 };

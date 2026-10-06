@@ -6,84 +6,79 @@ import {
   DetailsViewErrorBlocksSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const baseSpan = (
   span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
 ): TraceSpan => ({
-  title: span.id,
-  startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  type: "span",
   raw: ["{}"],
+  startTime: new Date("2024-01-15T10:30:00Z"),
   status: "success",
+  title: span.id,
+  type: "span",
   ...span,
 });
 
 const parserSpan = baseSpan({
   id: "span-parser",
-  title: "Structured Output Parser",
-  type: "tool_execution",
-  status: "error",
   raw: [
     JSON.stringify({
+      name: "Structured Output Parser",
       status: {
         code: "ERROR",
         message: "Model output doesn't fit required format",
       },
-      name: "Structured Output Parser",
     }),
   ],
+  status: "error",
+  title: "Structured Output Parser",
+  type: "tool_execution",
 });
 
 const agentSpan = baseSpan({
+  children: [parserSpan],
   id: "span-agent",
-  title: "AI Agent",
-  type: "agent_invocation",
-  status: "error",
   raw: [
     JSON.stringify({
-      status: { message: "Child node failed" },
       name: "AI Agent",
+      status: { message: "Child node failed" },
     }),
   ],
-  children: [parserSpan],
+  status: "error",
+  title: "AI Agent",
+  type: "agent_invocation",
 });
 
 const rootSpan = baseSpan({
+  children: [agentSpan],
   id: "span-root",
-  title: "Relevancy scoring workflow",
-  type: "chain_operation",
-  status: "error",
   raw: [
     JSON.stringify({
-      status: { message: "Run failed" },
       name: "Relevancy scoring workflow",
+      status: { message: "Run failed" },
     }),
   ],
-  children: [agentSpan],
+  status: "error",
+  title: "Relevancy scoring workflow",
+  type: "chain_operation",
 });
 
 const failedRunSpans: TraceSpan[] = [rootSpan];
 
 const successRootSpan = baseSpan({
+  children: [baseSpan({ id: "span-ok-child", title: "Fetch data" })],
   id: "span-ok-root",
   title: "Healthy workflow",
   type: "chain_operation",
-  children: [baseSpan({ id: "span-ok-child", title: "Fetch data" })],
 });
 
 const exceptionSpan = baseSpan({
-  id: "span-exception",
-  title: "Redis connection",
-  type: "tool_execution",
-  status: "error",
-  raw: ["{}"],
   attributes: [
     {
       key: "exception.message",
@@ -101,13 +96,16 @@ const exceptionSpan = baseSpan({
       },
     },
   ],
+  id: "span-exception",
+  raw: ["{}"],
+  status: "error",
+  title: "Redis connection",
+  type: "tool_execution",
 });
 
 const meta = {
-  title: "Main Components/DetailsViewErrorBlocks",
   component: DetailsViewErrorBlocks,
   parameters: {
-    layout: "padded",
     docs: {
       page: () => (
         <>
@@ -119,8 +117,10 @@ const meta = {
         </>
       ),
     },
+    layout: "padded",
   },
   tags: ["autodocs"],
+  title: "Main Components/DetailsViewErrorBlocks",
 } satisfies Meta<typeof DetailsViewErrorBlocks>;
 
 export default meta;
@@ -132,8 +132,8 @@ type Story = StoryObj<typeof meta>;
  */
 export const RunErrors: Story = {
   args: {
-    span: rootSpan,
     allSpans: failedRunSpans,
+    span: rootSpan,
   },
 };
 
@@ -142,8 +142,8 @@ export const RunErrors: Story = {
  */
 export const SingleSpanError: Story = {
   args: {
-    span: parserSpan,
     allSpans: failedRunSpans,
+    span: parserSpan,
   },
 };
 
@@ -152,8 +152,8 @@ export const SingleSpanError: Story = {
  */
 export const NoErrors: Story = {
   args: {
-    span: successRootSpan,
     allSpans: [successRootSpan],
+    span: successRootSpan,
   },
 };
 
@@ -163,7 +163,7 @@ export const NoErrors: Story = {
  */
 export const SpanErrorWithStack: Story = {
   args: {
-    span: exceptionSpan,
     allSpans: [],
+    span: exceptionSpan,
   },
 };

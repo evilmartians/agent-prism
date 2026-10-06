@@ -5,18 +5,28 @@ import {
   TimestampBadgeSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/TimestampBadge",
+  argTypes: {
+    size: {
+      control: { type: "select" },
+      defaultValue: "4",
+      description: "The size of the badge",
+      options: ["4", "5", "6", "7"],
+    },
+    timestamp: {
+      control: { type: "number" },
+      defaultValue: Date.now(),
+    },
+  },
   component: TimestampBadge,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,20 +38,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    timestamp: {
-      control: { type: "number" },
-      defaultValue: Date.now(),
-    },
-    size: {
-      control: { type: "select" },
-      options: ["4", "5", "6", "7"],
-      description: "The size of the badge",
-      defaultValue: "4",
-    },
-  },
+  title: "Atoms/TimestampBadge",
 } satisfies Meta<typeof TimestampBadge>;
 
 export default meta;
@@ -49,7 +49,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    timestamp: Date.now(),
     size: "4",
+    timestamp: Date.now(),
   },
 };

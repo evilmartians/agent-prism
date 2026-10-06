@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 import { getOpenTelemetryAttributeValue } from "../utils/get-open-telemetry-attribute-value.js";
@@ -8,9 +8,9 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should return string values directly", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          "db.collection.name": "users",
           "gen_ai.request.model": "gpt-4",
           "http.method": "POST",
-          "db.collection.name": "users",
         },
       });
 
@@ -38,9 +38,9 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle strings with special characters", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          "json.data": '{"key": "value", "nested": {"count": 42}}',
           "query.text": "What is 2+2? Let me know ASAP!",
           "user.email": "test@example.com",
-          "json.data": '{"key": "value", "nested": {"count": 42}}',
         },
       });
 
@@ -60,10 +60,10 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should return number values directly", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          "gen_ai.usage.cost": 0.0045,
           "gen_ai.usage.total_tokens": 150,
           "http.status_code": 200,
           "vector.top_k": 5,
-          "gen_ai.usage.cost": 0.0045,
         },
       });
 
@@ -82,8 +82,8 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle zero values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "retry.attempt": 0,
           "gen_ai.usage.cost": 0,
+          "retry.attempt": 0,
         },
       });
 
@@ -94,8 +94,8 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle negative numbers", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          temperature: -5.5,
           offset: -100,
+          temperature: -5.5,
         },
       });
 
@@ -106,11 +106,11 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle special number values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "nan.value": NaN,
           "infinity.value": Infinity,
-          "negative.infinity": -Infinity,
-          "min.value": Number.MIN_VALUE,
           "max.value": Number.MAX_VALUE,
+          "min.value": Number.MIN_VALUE,
+          "nan.value": NaN,
+          "negative.infinity": -Infinity,
         },
       });
 
@@ -134,10 +134,10 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should return boolean values directly", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "gen_ai.streaming": true,
-          "retry.enabled": false,
           "cache.hit": true,
           "error.occurred": false,
+          "gen_ai.streaming": true,
+          "retry.enabled": false,
         },
       });
 
@@ -174,9 +174,9 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should convert number arrays to comma-separated strings", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          indices: [0, 1, 2, 5, 10],
           "port.numbers": [8080, 8081, 8082],
           scores: [95.5, 87.2, 92.1],
-          indices: [0, 1, 2, 5, 10],
         },
       });
 
@@ -210,8 +210,8 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should convert mixed arrays to comma-separated strings", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "mixed.values": ["text", 42, true, "another"],
           "config.values": [100, "auto", false],
+          "mixed.values": ["text", 42, true, "another"],
         },
       });
 
@@ -238,8 +238,8 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle arrays with null and undefined values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "sparse.array": ["value1", null, undefined, "value2"],
           "null.array": [null, null],
+          "sparse.array": ["value1", null, undefined, "value2"],
           "undefined.array": [undefined, undefined],
         },
       });
@@ -297,12 +297,12 @@ describe("getOpenTelemetryAttributeValue", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.request.model": "gpt-4",
+          "gen_ai.request.temperature": 0.7,
+          "gen_ai.streaming": false,
+          "gen_ai.usage.cost": 0.0045,
           "gen_ai.usage.input_tokens": 150,
           "gen_ai.usage.output_tokens": 75,
           "gen_ai.usage.total_tokens": 225,
-          "gen_ai.usage.cost": 0.0045,
-          "gen_ai.request.temperature": 0.7,
-          "gen_ai.streaming": false,
         },
       });
 
@@ -333,10 +333,10 @@ describe("getOpenTelemetryAttributeValue", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           "http.method": "POST",
-          "http.url": "https://api.openai.com/v1/chat/completions",
-          "http.status_code": 200,
           "http.request.header.content-type": "application/json",
           "http.response.header.x-ratelimit-remaining": "59",
+          "http.status_code": 200,
+          "http.url": "https://api.openai.com/v1/chat/completions",
         },
       });
 
@@ -364,12 +364,12 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle typical database span attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "db.system": "pinecone",
-          "db.operation.name": "query",
           "db.collection.name": "embeddings",
+          "db.operation.name": "query",
           "db.query.text": "SELECT * FROM vectors WHERE similarity > 0.8",
-          "vector.top_k": 10,
+          "db.system": "pinecone",
           "vector.include_metadata": true,
+          "vector.top_k": 10,
         },
       });
 
@@ -426,11 +426,11 @@ describe("getOpenTelemetryAttributeValue", () => {
     it("should handle error and retry attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "error.type": "rate_limit_exceeded",
           "error.message": "API rate limit exceeded",
+          "error.type": "rate_limit_exceeded",
           "retry.attempt": 3,
-          "retry.max_attempts": 5,
           "retry.delay_ms": 1000,
+          "retry.max_attempts": 5,
           "retry.successful": true,
         },
       });
@@ -471,9 +471,9 @@ describe("getOpenTelemetryAttributeValue", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           "key.with-dashes": "dash-value",
+          "key@with#symbols%": "symbol-value",
           key_with_underscores: "underscore-value",
           "key with spaces": "space-value",
-          "key@with#symbols%": "symbol-value",
         },
       });
 

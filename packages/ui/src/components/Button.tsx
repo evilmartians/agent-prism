@@ -13,11 +13,11 @@ type ButtonSize = Extract<
 
 type ButtonVariant =
   | "brand"
-  | "primary"
-  | "outlined"
-  | "secondary"
-  | "ghost"
   | "destructive"
+  | "ghost"
+  | "outlined"
+  | "primary"
+  | "secondary"
   | "success";
 
 const BASE_CLASSES =
@@ -36,34 +36,16 @@ const sizeClasses = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   brand: "text-agentprism-brand-foreground bg-agentprism-brand",
-  primary: "text-agentprism-primary-foreground bg-agentprism-primary",
+  destructive: "bg-agentprism-error text-agentprism-primary-foreground",
+  ghost: "bg-transparent text-agentprism-foreground",
   outlined:
     "border border bg-transparent text-agentprism-foreground border-agentprism-foreground",
+  primary: "text-agentprism-primary-foreground bg-agentprism-primary",
   secondary: "bg-agentprism-secondary text-agentprism-secondary-foreground",
-  ghost: "bg-transparent text-agentprism-foreground",
-  destructive: "bg-agentprism-error text-agentprism-primary-foreground",
   success: "bg-agentprism-success text-agentprism-primary-foreground",
 };
 
 export type ButtonProps = ComponentPropsWithRef<"button"> & {
-  /**
-   * The size of the button
-   * @default "6"
-   */
-  size?: ButtonSize | undefined;
-
-  /**
-   * The border radius of the button
-   * @default "md"
-   */
-  rounded?: "none" | "sm" | "md" | "lg" | "full" | undefined;
-
-  /**
-   * The visual variant of the button
-   * @default "primary"
-   */
-  variant?: ButtonVariant | undefined;
-
   /**
    * Makes the button full width
    * @default false
@@ -71,28 +53,46 @@ export type ButtonProps = ComponentPropsWithRef<"button"> & {
   fullWidth?: boolean | undefined;
 
   /**
+   * Optional icon to display at the end of the button
+   */
+  iconEnd?: ReactElement | undefined;
+
+  /**
    * Optional icon to display at the start of the button
    */
   iconStart?: ReactElement | undefined;
 
   /**
-   * Optional icon to display at the end of the button
+   * The border radius of the button
+   * @default "md"
    */
-  iconEnd?: ReactElement | undefined;
+  rounded?: "full" | "lg" | "md" | "none" | "sm" | undefined;
+
+  /**
+   * The size of the button
+   * @default "6"
+   */
+  size?: ButtonSize | undefined;
+
+  /**
+   * The visual variant of the button
+   * @default "primary"
+   */
+  variant?: ButtonVariant | undefined;
 };
 
 export const Button = ({
   children,
-  size = "6",
-  rounded = "md",
-  variant = "primary",
-  fullWidth = false,
-  disabled = false,
-  iconStart,
-  iconEnd,
-  type = "button",
-  onClick,
   className = "",
+  disabled = false,
+  fullWidth = false,
+  iconEnd,
+  iconStart,
+  onClick,
+  rounded = "md",
+  size = "6",
+  type = "button",
+  variant = "primary",
   ...rest
 }: ButtonProps): ReactElement => {
   const widthClass = fullWidth ? "w-full" : "";
@@ -102,11 +102,6 @@ export const Button = ({
 
   return (
     <button
-      type={
-        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
-      }
-      onClick={onClick}
-      disabled={disabled}
       className={cn(
         BASE_CLASSES,
         sizeClasses[size],
@@ -116,6 +111,11 @@ export const Button = ({
         stateClasses,
         className,
       )}
+      disabled={disabled}
+      onClick={onClick}
+      type={
+        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
+      }
       {...rest}
     >
       {iconStart ? <span className="mr-1">{iconStart}</span> : null}

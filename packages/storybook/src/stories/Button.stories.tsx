@@ -2,18 +2,64 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Button, ButtonSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/Button",
+  argTypes: {
+    children: {
+      control: "text",
+      description: "The content of the button",
+    },
+    disabled: {
+      control: "boolean",
+      defaultValue: false,
+      description: "Disables the button",
+    },
+    fullWidth: {
+      control: "boolean",
+      defaultValue: false,
+      description: "Makes the button full width",
+    },
+    rounded: {
+      control: { type: "select" },
+      defaultValue: "md",
+      description: "The border radius of the button",
+      options: ["none", "sm", "md", "lg", "full"],
+    },
+    size: {
+      control: { type: "select" },
+      defaultValue: "8",
+      description: "The size of the button",
+      options: ["6", "7", "8", "9", "10", "11", "12", "16"],
+    },
+    type: {
+      control: { type: "select" },
+      defaultValue: "button",
+      description: "The button type attribute",
+      options: ["button", "submit", "reset"],
+    },
+    variant: {
+      control: { type: "select" },
+      defaultValue: "primary",
+      description: "The visual variant of the button",
+      options: [
+        "brand",
+        "primary",
+        "outlined",
+        "secondary",
+        "ghost",
+        "destructive",
+        "success",
+      ],
+    },
+  },
   component: Button,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -25,56 +71,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    children: {
-      control: "text",
-      description: "The content of the button",
-    },
-    size: {
-      control: { type: "select" },
-      options: ["6", "7", "8", "9", "10", "11", "12", "16"],
-      description: "The size of the button",
-      defaultValue: "8",
-    },
-    rounded: {
-      control: { type: "select" },
-      options: ["none", "sm", "md", "lg", "full"],
-      description: "The border radius of the button",
-      defaultValue: "md",
-    },
-    variant: {
-      control: { type: "select" },
-      options: [
-        "brand",
-        "primary",
-        "outlined",
-        "secondary",
-        "ghost",
-        "destructive",
-        "success",
-      ],
-      description: "The visual variant of the button",
-      defaultValue: "primary",
-    },
-    fullWidth: {
-      control: "boolean",
-      description: "Makes the button full width",
-      defaultValue: false,
-    },
-    disabled: {
-      control: "boolean",
-      description: "Disables the button",
-      defaultValue: false,
-    },
-    type: {
-      control: { type: "select" },
-      options: ["button", "submit", "reset"],
-      description: "The button type attribute",
-      defaultValue: "button",
-    },
-  },
+  title: "Atoms/Button",
 } satisfies Meta<typeof Button>;
 
 export default meta;

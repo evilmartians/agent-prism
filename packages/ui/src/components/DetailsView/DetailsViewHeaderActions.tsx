@@ -14,7 +14,7 @@ export type DetailsViewHeaderActionsProps = {
 export const DetailsViewHeaderActions = ({
   children,
   className = "flex flex-wrap items-center gap-2",
-}: DetailsViewHeaderActionsProps): ReactElement | null => {
+}: DetailsViewHeaderActionsProps): null | ReactElement => {
   if (!children) return null;
 
   return <div className={className}>{children}</div>;

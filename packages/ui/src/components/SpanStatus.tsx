@@ -4,12 +4,12 @@ import type { ComponentPropsWithRef, ReactElement } from "react";
 import { SpanStatusBadge } from "./SpanStatusBadge";
 import { SpanStatusDot } from "./SpanStatusDot";
 
-type StatusVariant = "dot" | "badge";
-
 export type StatusProps = ComponentPropsWithRef<"div"> & {
   status: TraceSpanStatus;
   variant?: StatusVariant | undefined;
 };
+
+type StatusVariant = "badge" | "dot";
 
 export const SpanStatus = ({
   status,

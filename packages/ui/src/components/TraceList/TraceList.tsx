@@ -10,26 +10,26 @@ import { Badge } from "../Badge";
 import { IconButton } from "../IconButton";
 import { TraceListItem } from "./TraceListItem";
 
+type TraceListProps = {
+  className?: string | undefined;
+  expanded: boolean;
+  onExpandStateChange: (expanded: boolean) => void;
+  onTraceSelect?: ((trace: TraceRecord) => void) | undefined;
+  selectedTrace?: TraceRecord | undefined;
+  traces: TraceRecordWithBadges[];
+};
+
 type TraceRecordWithBadges = TraceRecord & {
   badges?: BadgeProps[] | undefined;
 };
 
-type TraceListProps = {
-  traces: TraceRecordWithBadges[];
-  expanded: boolean;
-  onExpandStateChange: (expanded: boolean) => void;
-  className?: string | undefined;
-  onTraceSelect?: ((trace: TraceRecord) => void) | undefined;
-  selectedTrace?: TraceRecord | undefined;
-};
-
 export const TraceList = ({
-  traces,
+  className,
   expanded,
   onExpandStateChange,
-  className,
   onTraceSelect,
   selectedTrace,
+  traces,
 }: TraceListProps): ReactElement => {
   return (
     <div
@@ -49,9 +49,9 @@ export const TraceList = ({
           <h2 className="text-agentprism-muted-foreground">Traces</h2>
 
           <Badge
-            size="5"
             aria-label={`Total number of traces: ${traces.length}`}
             label={traces.length}
+            size="5"
           />
         </div>
 
@@ -72,11 +72,11 @@ export const TraceList = ({
                 key={trace.id}
               >
                 <TraceListItem
+                  badges={trace.badges}
+                  isSelected={selectedTrace?.id === trace.id}
+                  onClick={() => onTraceSelect?.(trace)}
                   showDescription={false}
                   trace={trace}
-                  onClick={() => onTraceSelect?.(trace)}
-                  isSelected={selectedTrace?.id === trace.id}
-                  badges={trace.badges}
                 />
               </li>
             ))}

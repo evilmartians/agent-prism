@@ -1,6 +1,6 @@
 import {
-  OPENTELEMETRY_GENAI_ATTRIBUTES,
   OPENINFERENCE_ATTRIBUTES,
+  OPENTELEMETRY_GENAI_ATTRIBUTES,
   type OpenTelemetrySpan,
   type OpenTelemetryStandard,
 } from "@evilmartians/agent-prism-types";

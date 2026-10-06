@@ -1,7 +1,7 @@
 import {
   OPENTELEMETRY_GENAI_ATTRIBUTES,
-  STANDARD_OPENTELEMETRY_ATTRIBUTES,
   type OpenTelemetrySpan,
+  STANDARD_OPENTELEMETRY_ATTRIBUTES,
 } from "@evilmartians/agent-prism-types";
 
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";

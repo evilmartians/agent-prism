@@ -2,14 +2,6 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 export const sampleTreeViewData: TraceSpan[] = [
   {
-    id: "1",
-    title: "main",
-    startTime: new Date("2023-01-01T00:00:00Z"),
-    endTime: new Date("2023-01-01T00:06:12Z"),
-    tokenUsage: { total: { tokens: 1000, cost: 1234 } },
-    type: "chain_operation",
-    status: "success",
-    raw: [`{"span_id": "main-001", "status": "SUCCESS", "duration_ms": 37220}`],
     attributes: [
       { key: "app.name", value: { stringValue: "ai-research-agent" } },
       { key: "app.environment", value: { stringValue: "production" } },
@@ -19,16 +11,6 @@ export const sampleTreeViewData: TraceSpan[] = [
     ],
     children: [
       {
-        id: "1-1",
-        title: "ChatCompletions",
-        startTime: new Date("2023-01-01T00:00:10Z"),
-        endTime: new Date("2023-01-01T00:05:00Z"),
-        tokenUsage: { total: { tokens: 500, cost: 150 } },
-        type: "llm_call",
-        status: "success",
-        raw: [
-          `{"span_id": "chat-completions-001", "model": "gpt-4", "tokens": 500}`,
-        ],
         attributes: [
           { key: "gen_ai.request.model", value: { stringValue: "gpt-4" } },
           { key: "gen_ai.usage.input_tokens", value: { intValue: "300" } },
@@ -39,16 +21,6 @@ export const sampleTreeViewData: TraceSpan[] = [
         ],
         children: [
           {
-            id: "1-1-1",
-            title: "ChatCompletion",
-            startTime: new Date("2023-01-01T00:00:15Z"),
-            endTime: new Date("2023-01-01T00:00:45Z"),
-            tokenUsage: { total: { tokens: 250, cost: 75 } },
-            status: "pending",
-            type: "llm_call",
-            raw: [
-              `{"span_id": "chat-completion-001", "status": "PENDING", "retry": true}`,
-            ],
             attributes: [
               { key: "gen_ai.request.model", value: { stringValue: "gpt-4" } },
               { key: "gen_ai.usage.input_tokens", value: { intValue: "150" } },
@@ -58,18 +30,18 @@ export const sampleTreeViewData: TraceSpan[] = [
               { key: "http.status_code", value: { intValue: "200" } },
               { key: "retry.enabled", value: { boolValue: true } },
             ],
+            endTime: new Date("2023-01-01T00:00:45Z"),
+            id: "1-1-1",
+            raw: [
+              `{"span_id": "chat-completion-001", "status": "PENDING", "retry": true}`,
+            ],
+            startTime: new Date("2023-01-01T00:00:15Z"),
+            status: "pending",
+            title: "ChatCompletion",
+            tokenUsage: { total: { cost: 75, tokens: 250 } },
+            type: "llm_call",
           },
           {
-            id: "1-1-2",
-            title: "ChatCompletion",
-            startTime: new Date("2023-01-01T00:00:45Z"),
-            endTime: new Date("2023-01-01T00:01:30Z"),
-            tokenUsage: { total: { tokens: 250, cost: 75 } },
-            status: "error",
-            type: "llm_call",
-            raw: [
-              `{"span_id": "chat-completion-002", "error": "rate_limit_exceeded", "retry_count": 3}`,
-            ],
             attributes: [
               { key: "gen_ai.request.model", value: { stringValue: "gpt-4" } },
               { key: "gen_ai.usage.input_tokens", value: { intValue: "150" } },
@@ -85,20 +57,30 @@ export const sampleTreeViewData: TraceSpan[] = [
               { key: "http.status_code", value: { intValue: "429" } },
               { key: "retry.count", value: { intValue: "3" } },
             ],
+            endTime: new Date("2023-01-01T00:01:30Z"),
+            id: "1-1-2",
+            raw: [
+              `{"span_id": "chat-completion-002", "error": "rate_limit_exceeded", "retry_count": 3}`,
+            ],
+            startTime: new Date("2023-01-01T00:00:45Z"),
+            status: "error",
+            title: "ChatCompletion",
+            tokenUsage: { total: { cost: 75, tokens: 250 } },
+            type: "llm_call",
           },
         ],
+        endTime: new Date("2023-01-01T00:05:00Z"),
+        id: "1-1",
+        raw: [
+          `{"span_id": "chat-completions-001", "model": "gpt-4", "tokens": 500}`,
+        ],
+        startTime: new Date("2023-01-01T00:00:10Z"),
+        status: "success",
+        title: "ChatCompletions",
+        tokenUsage: { total: { cost: 150, tokens: 500 } },
+        type: "llm_call",
       },
       {
-        id: "1-2",
-        title: "RunnableSequence",
-        startTime: new Date("2023-01-01T00:01:00Z"),
-        endTime: new Date("2023-01-01T00:05:00Z"),
-        tokenUsage: { total: { tokens: 200, cost: 80 } },
-        status: "success",
-        type: "chain_operation",
-        raw: [
-          `{"span_id": "sequence-001", "chain": "DocumentProcessingChain", "docs": 5}`,
-        ],
         attributes: [
           {
             key: "langchain.chain",
@@ -109,18 +91,18 @@ export const sampleTreeViewData: TraceSpan[] = [
           { key: "cache.enabled", value: { boolValue: true } },
           { key: "cache.hit", value: { boolValue: false } },
         ],
+        endTime: new Date("2023-01-01T00:05:00Z"),
+        id: "1-2",
+        raw: [
+          `{"span_id": "sequence-001", "chain": "DocumentProcessingChain", "docs": 5}`,
+        ],
+        startTime: new Date("2023-01-01T00:01:00Z"),
+        status: "success",
+        title: "RunnableSequence",
+        tokenUsage: { total: { cost: 80, tokens: 200 } },
+        type: "chain_operation",
       },
       {
-        id: "1-3",
-        title: "agent_search",
-        startTime: new Date("2023-01-01T00:01:30Z"),
-        endTime: new Date("2023-01-01T00:02:00Z"),
-        tokenUsage: { total: { tokens: 100, cost: 25 } },
-        status: "success",
-        type: "tool_execution",
-        raw: [
-          `{"span_id": "agent-search-001", "query": "AI trends 2024", "results": 10}`,
-        ],
         attributes: [
           { key: "function.name", value: { stringValue: "agent_search" } },
           {
@@ -131,18 +113,18 @@ export const sampleTreeViewData: TraceSpan[] = [
           { key: "http.status_code", value: { intValue: "200" } },
           { key: "search.results_count", value: { intValue: "10" } },
         ],
+        endTime: new Date("2023-01-01T00:02:00Z"),
+        id: "1-3",
+        raw: [
+          `{"span_id": "agent-search-001", "query": "AI trends 2024", "results": 10}`,
+        ],
+        startTime: new Date("2023-01-01T00:01:30Z"),
+        status: "success",
+        title: "agent_search",
+        tokenUsage: { total: { cost: 25, tokens: 100 } },
+        type: "tool_execution",
       },
       {
-        id: "1-4",
-        title: "RunnableSequence",
-        startTime: new Date("2023-01-01T00:02:00Z"),
-        endTime: new Date("2023-01-01T00:05:00Z"),
-        status: "pending",
-        tokenUsage: { total: { tokens: 300, cost: 90 } },
-        type: "chain_operation",
-        raw: [
-          `{"span_id": "sequence-002", "chain": "ContentSynthesisChain", "status": "PENDING"}`,
-        ],
         attributes: [
           {
             key: "langchain.chain",
@@ -154,16 +136,6 @@ export const sampleTreeViewData: TraceSpan[] = [
         ],
         children: [
           {
-            id: "1-4-1",
-            title: "RunnableAssign",
-            startTime: new Date("2023-01-01T00:02:05Z"),
-            endTime: new Date("2023-01-01T00:02:10Z"),
-            tokenUsage: { total: { tokens: 50, cost: 15 } },
-            status: "error",
-            type: "chain_operation",
-            raw: [
-              `{"span_id": "assign-001", "error": "validation_error", "field": "temperature"}`,
-            ],
             attributes: [
               {
                 key: "langchain.runnable",
@@ -173,18 +145,18 @@ export const sampleTreeViewData: TraceSpan[] = [
               { key: "error.type", value: { stringValue: "validation_error" } },
               { key: "error.field", value: { stringValue: "temperature" } },
             ],
+            endTime: new Date("2023-01-01T00:02:10Z"),
+            id: "1-4-1",
+            raw: [
+              `{"span_id": "assign-001", "error": "validation_error", "field": "temperature"}`,
+            ],
+            startTime: new Date("2023-01-01T00:02:05Z"),
+            status: "error",
+            title: "RunnableAssign",
+            tokenUsage: { total: { cost: 15, tokens: 50 } },
+            type: "chain_operation",
           },
           {
-            id: "1-4-2",
-            title: "ChatPromptTemplate",
-            startTime: new Date("2023-01-01T00:02:10Z"),
-            endTime: new Date("2023-01-01T00:02:15Z"),
-            tokenUsage: { total: { tokens: 100, cost: 5 } },
-            status: "error",
-            type: "llm_call",
-            raw: [
-              `{"span_id": "template-001", "error": "template_error", "missing": "context"}`,
-            ],
             attributes: [
               {
                 key: "llm.prompt_template.template",
@@ -201,20 +173,30 @@ export const sampleTreeViewData: TraceSpan[] = [
                 value: { stringValue: "Missing required variable: context" },
               },
             ],
+            endTime: new Date("2023-01-01T00:02:15Z"),
+            id: "1-4-2",
+            raw: [
+              `{"span_id": "template-001", "error": "template_error", "missing": "context"}`,
+            ],
+            startTime: new Date("2023-01-01T00:02:10Z"),
+            status: "error",
+            title: "ChatPromptTemplate",
+            tokenUsage: { total: { cost: 5, tokens: 100 } },
+            type: "llm_call",
           },
         ],
+        endTime: new Date("2023-01-01T00:05:00Z"),
+        id: "1-4",
+        raw: [
+          `{"span_id": "sequence-002", "chain": "ContentSynthesisChain", "status": "PENDING"}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:00Z"),
+        status: "pending",
+        title: "RunnableSequence",
+        tokenUsage: { total: { cost: 90, tokens: 300 } },
+        type: "chain_operation",
       },
       {
-        id: "1-5",
-        title: "agent_extract",
-        startTime: new Date("2023-01-01T00:02:15Z"),
-        endTime: new Date("2023-01-01T00:02:20Z"),
-        status: "pending",
-        tokenUsage: { total: { tokens: 150, cost: 20 } },
-        type: "tool_execution",
-        raw: [
-          `{"span_id": "extract-001", "urls": 2, "status": "PENDING", "progress": 50}`,
-        ],
         attributes: [
           { key: "function.name", value: { stringValue: "agent_extract" } },
           {
@@ -226,18 +208,18 @@ export const sampleTreeViewData: TraceSpan[] = [
           { key: "content.length", value: { intValue: "5420" } },
           { key: "rate_limit.remaining", value: { intValue: "95" } },
         ],
+        endTime: new Date("2023-01-01T00:02:20Z"),
+        id: "1-5",
+        raw: [
+          `{"span_id": "extract-001", "urls": 2, "status": "PENDING", "progress": 50}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:15Z"),
+        status: "pending",
+        title: "agent_extract",
+        tokenUsage: { total: { cost: 20, tokens: 150 } },
+        type: "tool_execution",
       },
       {
-        id: "1-6",
-        title: "RunnableAssign",
-        startTime: new Date("2023-01-01T00:02:20Z"),
-        endTime: new Date("2023-01-01T00:02:25Z"),
-        tokenUsage: { total: { tokens: 50, cost: 15 } },
-        status: "success",
-        type: "chain_operation",
-        raw: [
-          `{"span_id": "assign-002", "operation": "SummaryAssigner", "compression": 0.15}`,
-        ],
         attributes: [
           {
             key: "langchain.runnable",
@@ -248,18 +230,18 @@ export const sampleTreeViewData: TraceSpan[] = [
           { key: "compression.ratio", value: { stringValue: "0.15" } },
           { key: "performance.optimized", value: { boolValue: true } },
         ],
+        endTime: new Date("2023-01-01T00:02:25Z"),
+        id: "1-6",
+        raw: [
+          `{"span_id": "assign-002", "operation": "SummaryAssigner", "compression": 0.15}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:20Z"),
+        status: "success",
+        title: "RunnableAssign",
+        tokenUsage: { total: { cost: 15, tokens: 50 } },
+        type: "chain_operation",
       },
       {
-        id: "1-7",
-        title: "ChatPromptTemplate",
-        startTime: new Date("2023-01-01T00:02:25Z"),
-        endTime: new Date("2023-01-01T00:02:30Z"),
-        tokenUsage: { total: { tokens: 100, cost: 5 } },
-        status: "success",
-        type: "llm_call",
-        raw: [
-          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
-        ],
         attributes: [
           {
             key: "llm.prompt_template.template",
@@ -273,7 +255,25 @@ export const sampleTreeViewData: TraceSpan[] = [
           { key: "output.format", value: { stringValue: "markdown" } },
           { key: "quality.check", value: { boolValue: true } },
         ],
+        endTime: new Date("2023-01-01T00:02:30Z"),
+        id: "1-7",
+        raw: [
+          `{"span_id": "template-002", "template": "summary_report", "format": "markdown"}`,
+        ],
+        startTime: new Date("2023-01-01T00:02:25Z"),
+        status: "success",
+        title: "ChatPromptTemplate",
+        tokenUsage: { total: { cost: 5, tokens: 100 } },
+        type: "llm_call",
       },
     ],
+    endTime: new Date("2023-01-01T00:06:12Z"),
+    id: "1",
+    raw: [`{"span_id": "main-001", "status": "SUCCESS", "duration_ms": 37220}`],
+    startTime: new Date("2023-01-01T00:00:00Z"),
+    status: "success",
+    title: "main",
+    tokenUsage: { total: { cost: 1234, tokens: 1000 } },
+    type: "chain_operation",
   },
 ];

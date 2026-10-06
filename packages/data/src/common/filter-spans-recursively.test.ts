@@ -6,60 +6,60 @@ import { filterSpansRecursively } from "./filter-spans-recursively.js";
 
 describe("filterSpansRecursively", () => {
   const childSpanA: TraceSpan = {
-    id: "1.1",
-    title: "Child Span A",
-    startTime: new Date(),
-    endTime: new Date(),
-    type: "embedding",
-    raw: [],
-    status: "success",
     children: [],
+    endTime: new Date(),
+    id: "1.1",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Child Span A",
+    type: "embedding",
   };
 
   const nestedSpan: TraceSpan = {
-    id: "1.2.1",
-    title: "Nested Span",
-    startTime: new Date(),
-    endTime: new Date(),
-    type: "guardrail",
-    raw: [],
-    status: "success",
     children: [],
+    endTime: new Date(),
+    id: "1.2.1",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Nested Span",
+    type: "guardrail",
   };
 
   const childSpanB: TraceSpan = {
-    id: "1.2",
-    title: "Child Span B",
-    startTime: new Date(),
-    endTime: new Date(),
-    type: "embedding",
-    raw: [],
-    status: "success",
     children: [nestedSpan],
+    endTime: new Date(),
+    id: "1.2",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Child Span B",
+    type: "embedding",
   };
 
   const parentSpan: TraceSpan = {
-    id: "1",
-    title: "Parent Span",
-    startTime: new Date(),
-    endTime: new Date(),
-    type: "guardrail",
-    raw: [],
-    status: "success",
     children: [childSpanA, childSpanB],
+    endTime: new Date(),
+    id: "1",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Parent Span",
+    type: "guardrail",
   };
 
   const sampleSpans: TraceSpan[] = [
     parentSpan,
     {
-      id: "2",
-      title: "Another Parent Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "embedding",
-      raw: [],
-      status: "success",
       children: [],
+      endTime: new Date(),
+      id: "2",
+      raw: [],
+      startTime: new Date(),
+      status: "success",
+      title: "Another Parent Span",
+      type: "embedding",
     },
   ];
 

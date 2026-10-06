@@ -22,30 +22,30 @@ import { TimestampBadge } from "../TimestampBadge";
 import { TokensBadge } from "../TokensBadge";
 
 export type DetailsViewHeaderProps = {
-  data: TraceSpan;
-  avatar?: AvatarProps | undefined;
-  copyButton?:
-    | {
-        isEnabled?: boolean | undefined;
-        onCopy?: ((data: TraceSpan) => void) | undefined;
-      }
-    | undefined;
   /**
    * Custom actions to render in the header
    */
   actions?: ReactNode | undefined;
+  avatar?: AvatarProps | undefined;
   /**
    * Optional className for the header container
    */
   className?: string | undefined;
+  copyButton?:
+    | undefined
+    | {
+        isEnabled?: boolean | undefined;
+        onCopy?: ((data: TraceSpan) => void) | undefined;
+      };
+  data: TraceSpan;
 };
 
 export const DetailsViewHeader = ({
-  data,
-  avatar,
-  copyButton,
   actions,
+  avatar,
   className,
+  copyButton,
+  data,
 }: DetailsViewHeaderProps): ReactElement => {
   const [hasCopied, setHasCopied] = useState(false);
   const durationMs = getDurationMs(data);
@@ -75,8 +75,8 @@ export const DetailsViewHeader = ({
           aria-label={
             copyButton.isEnabled ? "Copy span details" : "Copy disabled"
           }
-          variant="ghost"
           onClick={handleCopy}
+          variant="ghost"
         >
           {hasCopied ? (
             <Check className="text-agentprism-muted-foreground size-3" />

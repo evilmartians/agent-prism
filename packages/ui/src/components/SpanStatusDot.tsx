@@ -4,9 +4,9 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 
 const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {
-  success: "bg-agentprism-success",
   error: "bg-agentprism-error",
   pending: "bg-agentprism-pending",
+  success: "bg-agentprism-success",
   warning: "bg-agentprism-warning",
 };
 
@@ -19,8 +19,8 @@ export const SpanStatusDot = ({
 }): ReactElement => {
   return (
     <span
-      className={cn("block size-1.5 rounded-full", STATUS_COLORS_DOT[status])}
       aria-label={title}
+      className={cn("block size-1.5 rounded-full", STATUS_COLORS_DOT[status])}
       title={title}
     />
   );

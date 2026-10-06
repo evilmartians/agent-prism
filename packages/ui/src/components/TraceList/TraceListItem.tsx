@@ -14,21 +14,21 @@ import { TokensBadge } from "../TokensBadge";
 import { TraceListItemHeader } from "./TraceListItemHeader";
 
 type TraceListItemProps = {
-  trace: TraceRecord;
-  badges?: BadgeProps[] | undefined;
   avatar?: AvatarProps | undefined;
-  onClick?: (() => void) | undefined;
+  badges?: BadgeProps[] | undefined;
   isSelected?: boolean | undefined;
+  onClick?: (() => void) | undefined;
   showDescription?: boolean | undefined;
+  trace: TraceRecord;
 };
 
 export const TraceListItem = ({
-  trace,
   avatar,
-  onClick,
   badges,
   isSelected,
+  onClick,
   showDescription = true,
+  trace,
 }: TraceListItemProps): ReactElement => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
@@ -40,10 +40,11 @@ export const TraceListItem = ({
     [onClick],
   );
 
-  const { name, agentDescription, totalCost, totalTokens, startTime } = trace;
+  const { agentDescription, name, startTime, totalCost, totalTokens } = trace;
 
   return (
     <div
+      aria-label={`Select trace ${name}`}
       className={cn(
         "group w-full",
         "flex flex-col gap-2 p-4",
@@ -52,13 +53,12 @@ export const TraceListItem = ({
           ? "bg-agentprism-secondary/75 dark:bg-agentprism-muted/80"
           : "bg-agentprism-background hover:bg-agentprism-secondary/45 dark:hover:bg-agentprism-muted/70",
       )}
-      role="button"
-      tabIndex={0}
       onClick={onClick}
       onKeyDown={handleKeyDown}
-      aria-label={`Select trace ${name}`}
+      role="button"
+      tabIndex={0}
     >
-      <TraceListItemHeader trace={trace} avatar={avatar} />
+      <TraceListItemHeader avatar={avatar} trace={trace} />
 
       <div className="flex flex-wrap items-center gap-2">
         {showDescription ? (
@@ -74,7 +74,7 @@ export const TraceListItem = ({
         )}
 
         {badges?.map((badge, index) => (
-          <Badge key={index} size="4" label={badge.label} />
+          <Badge key={index} label={badge.label} size="4" />
         ))}
 
         {typeof startTime === "number" && (

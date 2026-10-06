@@ -8,30 +8,6 @@ describe("findTimeRange", () => {
   it("should return minStart and maxEnd for a single card", () => {
     const cards: TraceSpan[] = [
       {
-        id: "1",
-        title: "Task 1",
-        raw: [
-          JSON.stringify({
-            id: "1",
-            title: "Task 1",
-            attributes: {
-              model: "gpt-4",
-              prompt_tokens: 1000,
-              completion_tokens: 500,
-              total_tokens: 1500,
-              user_id: "user123",
-            },
-            startTimeUnixNano: "1704067200000000000",
-            endTimeUnixNano: "1704067500000000000",
-            tokensCount: 1500,
-            type: "llm_call",
-            duration: 300,
-            status: "success",
-            cost: 10,
-          }),
-        ],
-        startTime: new Date("2023-10-01T10:00:00.000Z"),
-        endTime: new Date("2023-10-01T12:00:00.000Z"),
         attributes: [
           { key: "model", value: { stringValue: "gpt-4" } },
           { key: "prompt_tokens", value: { intValue: "1000" } },
@@ -39,45 +15,47 @@ describe("findTimeRange", () => {
           { key: "total_tokens", value: { intValue: "1500" } },
           { key: "user_id", value: { stringValue: "user123" } },
         ],
-        tokenUsage: { total: { tokens: 1, cost: 100 } },
-        type: "embedding",
+        endTime: new Date("2023-10-01T12:00:00.000Z"),
+        id: "1",
+        raw: [
+          JSON.stringify({
+            attributes: {
+              completion_tokens: 500,
+              model: "gpt-4",
+              prompt_tokens: 1000,
+              total_tokens: 1500,
+              user_id: "user123",
+            },
+            cost: 10,
+            duration: 300,
+            endTimeUnixNano: "1704067500000000000",
+            id: "1",
+            startTimeUnixNano: "1704067200000000000",
+            status: "success",
+            title: "Task 1",
+            tokensCount: 1500,
+            type: "llm_call",
+          }),
+        ],
+        startTime: new Date("2023-10-01T10:00:00.000Z"),
         status: "success",
+        title: "Task 1",
+        tokenUsage: { total: { cost: 100, tokens: 1 } },
+        type: "embedding",
       },
     ];
 
     const result = findTimeRange(cards);
 
     expect(result).toStrictEqual({
-      minStart: +new Date("2023-10-01T10:00:00.000Z"),
       maxEnd: +new Date("2023-10-01T12:00:00.000Z"),
+      minStart: +new Date("2023-10-01T10:00:00.000Z"),
     });
   });
 
   it("should return minStart and maxEnd for multiple cards", () => {
     const cards: TraceSpan[] = [
       {
-        id: "1",
-        raw: [
-          JSON.stringify({
-            id: "1",
-            title: "Task 1",
-            attributes: {
-              model: "gpt-4",
-              prompt_tokens: 1000,
-              completion_tokens: 500,
-              total_tokens: 1500,
-              user_id: "user123",
-            },
-            startTimeUnixNano: "1704067200000000000",
-            endTimeUnixNano: "1704067500000000000",
-            tokensCount: 1500,
-            type: "llm_call",
-            duration: 300,
-            status: "success",
-            cost: 10,
-          }),
-        ],
-        title: "Task 1",
         attributes: [
           { key: "model", value: { stringValue: "gpt-4" } },
           { key: "prompt_tokens", value: { intValue: "1000" } },
@@ -85,39 +63,35 @@ describe("findTimeRange", () => {
           { key: "total_tokens", value: { intValue: "1500" } },
           { key: "user_id", value: { stringValue: "user123" } },
         ],
-        startTime: new Date("2023-10-01T10:00:00.000Z"),
         endTime: new Date("2023-10-01T12:00:00.000Z"),
-        tokenUsage: { total: { tokens: 1, cost: 100 } },
-        type: "chain_operation",
-        status: "success",
-      },
-      {
-        id: "2",
+        id: "1",
         raw: [
           JSON.stringify({
-            id: "1",
-            title: "Task 1",
             attributes: {
+              completion_tokens: 500,
               model: "gpt-4",
               prompt_tokens: 1000,
-              completion_tokens: 500,
               total_tokens: 1500,
               user_id: "user123",
             },
-            startTimeUnixNano: "1704067200000000000",
+            cost: 10,
+            duration: 300,
             endTimeUnixNano: "1704067500000000000",
+            id: "1",
+            startTimeUnixNano: "1704067200000000000",
+            status: "success",
+            title: "Task 1",
             tokensCount: 1500,
             type: "llm_call",
-            duration: 300,
-            status: "success",
-            cost: 10,
           }),
         ],
-        title: "Task 2",
-        startTime: new Date("2023-10-01T09:00:00.000Z"),
-        endTime: new Date("2023-10-01T11:00:00.000Z"),
-        tokenUsage: { total: { tokens: 2, cost: 200 } },
-        type: "llm_call",
+        startTime: new Date("2023-10-01T10:00:00.000Z"),
+        status: "success",
+        title: "Task 1",
+        tokenUsage: { total: { cost: 100, tokens: 1 } },
+        type: "chain_operation",
+      },
+      {
         attributes: [
           { key: "model", value: { stringValue: "gpt-3.5" } },
           { key: "prompt_tokens", value: { intValue: "800" } },
@@ -125,33 +99,35 @@ describe("findTimeRange", () => {
           { key: "total_tokens", value: { intValue: "1200" } },
           { key: "user_id", value: { stringValue: "user456" } },
         ],
-        status: "success",
-      },
-      {
-        id: "3",
-        title: "Task 3",
+        endTime: new Date("2023-10-01T11:00:00.000Z"),
+        id: "2",
         raw: [
           JSON.stringify({
-            id: "1",
-            title: "Task 1",
             attributes: {
+              completion_tokens: 500,
               model: "gpt-4",
               prompt_tokens: 1000,
-              completion_tokens: 500,
               total_tokens: 1500,
               user_id: "user123",
             },
-            startTimeUnixNano: "1704067200000000000",
+            cost: 10,
+            duration: 300,
             endTimeUnixNano: "1704067500000000000",
+            id: "1",
+            startTimeUnixNano: "1704067200000000000",
+            status: "success",
+            title: "Task 1",
             tokensCount: 1500,
             type: "llm_call",
-            duration: 300,
-            status: "success",
-            cost: 10,
           }),
         ],
-        startTime: new Date("2023-10-01T11:30:00.000Z"),
-        endTime: new Date("2023-10-01T13:00:00.000Z"),
+        startTime: new Date("2023-10-01T09:00:00.000Z"),
+        status: "success",
+        title: "Task 2",
+        tokenUsage: { total: { cost: 200, tokens: 2 } },
+        type: "llm_call",
+      },
+      {
         attributes: [
           { key: "model", value: { stringValue: "gpt-4" } },
           { key: "prompt_tokens", value: { intValue: "1200" } },
@@ -159,17 +135,41 @@ describe("findTimeRange", () => {
           { key: "total_tokens", value: { intValue: "1800" } },
           { key: "user_id", value: { stringValue: "user789" } },
         ],
-        tokenUsage: { total: { tokens: 3, cost: 300 } },
-        type: "agent_invocation",
+        endTime: new Date("2023-10-01T13:00:00.000Z"),
+        id: "3",
+        raw: [
+          JSON.stringify({
+            attributes: {
+              completion_tokens: 500,
+              model: "gpt-4",
+              prompt_tokens: 1000,
+              total_tokens: 1500,
+              user_id: "user123",
+            },
+            cost: 10,
+            duration: 300,
+            endTimeUnixNano: "1704067500000000000",
+            id: "1",
+            startTimeUnixNano: "1704067200000000000",
+            status: "success",
+            title: "Task 1",
+            tokensCount: 1500,
+            type: "llm_call",
+          }),
+        ],
+        startTime: new Date("2023-10-01T11:30:00.000Z"),
         status: "success",
+        title: "Task 3",
+        tokenUsage: { total: { cost: 300, tokens: 3 } },
+        type: "agent_invocation",
       },
     ];
 
     const result = findTimeRange(cards);
 
     expect(result).toStrictEqual({
-      minStart: +new Date("2023-10-01T09:00:00.000Z"),
       maxEnd: +new Date("2023-10-01T13:00:00.000Z"),
+      minStart: +new Date("2023-10-01T09:00:00.000Z"),
     });
   });
 
@@ -179,8 +179,8 @@ describe("findTimeRange", () => {
     const result = findTimeRange(cards);
 
     expect(result).toStrictEqual({
-      minStart: Infinity,
       maxEnd: -Infinity,
+      minStart: Infinity,
     });
   });
 });

@@ -43,7 +43,7 @@ export const DetailsViewErrorRunRow = ({
               {title}
             </h4>
 
-            <CopyButton label="error for agent" content={agentContent} />
+            <CopyButton content={agentContent} label="error for agent" />
           </div>
 
           <p className="text-agentprism-foreground whitespace-pre-wrap break-words text-sm">

@@ -2,18 +2,29 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { TokensBadge, TokensBadgeSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/TokensBadge",
+  argTypes: {
+    size: {
+      control: { type: "select" },
+      defaultValue: "xs",
+      description: "The size of the badge",
+      options: ["xs", "sm", "md"],
+    },
+    tokensCount: {
+      control: { type: "number" },
+      defaultValue: 1500,
+      description: "The number of tokens to display",
+    },
+  },
   component: TokensBadge,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -25,21 +36,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    tokensCount: {
-      control: { type: "number" },
-      description: "The number of tokens to display",
-      defaultValue: 1500,
-    },
-    size: {
-      control: { type: "select" },
-      options: ["xs", "sm", "md"],
-      description: "The size of the badge",
-      defaultValue: "xs",
-    },
-  },
+  title: "Atoms/TokensBadge",
 } satisfies Meta<typeof TokensBadge>;
 
 export default meta;

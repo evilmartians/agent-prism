@@ -1,11 +1,11 @@
 import type { ReactElement } from "react";
 
 export type SpanCardConnectorType =
-  | "horizontal"
-  | "vertical"
-  | "t-right"
   | "corner-top-right"
-  | "empty";
+  | "empty"
+  | "horizontal"
+  | "t-right"
+  | "vertical";
 
 type SpanCardConnectorProps = {
   type: SpanCardConnectorType;

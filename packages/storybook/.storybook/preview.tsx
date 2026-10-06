@@ -22,27 +22,27 @@ const withTheme: Decorator = (StoryFn, context) => {
 export const decorators = [withTheme];
 
 const preview: Preview = {
-  parameters: {
-    backgrounds: { disable: true },
-    options: { storySort: { order: ["Demo", "Main Components", "Atoms"] } },
-    docs: { codePanel: true },
-    controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
-    a11y: { test: "todo" },
-  },
   globalTypes: {
     theme: {
       description: "Theme",
       toolbar: {
-        title: "Theme",
+        dynamicTitle: true,
         icon: "circlehollow",
         items: [
-          { value: "light", title: "Light" },
-          { value: "dark", title: "Dark" },
-          { value: "system", title: "System" },
+          { title: "Light", value: "light" },
+          { title: "Dark", value: "dark" },
+          { title: "System", value: "system" },
         ],
-        dynamicTitle: true,
+        title: "Theme",
       },
     },
+  },
+  parameters: {
+    a11y: { test: "todo" },
+    backgrounds: { disable: true },
+    controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
+    docs: { codePanel: true },
+    options: { storySort: { order: ["Demo", "Main Components", "Atoms"] } },
   },
 };
 

@@ -9,15 +9,15 @@ export type SpanCardCollapseAllButtonProps = ComponentPropsWithRef<"button"> & {
 };
 
 export const CollapseAllButton = ({
-  onCollapseAll,
   "aria-label": ariaLabel = "Collapse all",
+  onCollapseAll,
   ...rest
 }: SpanCardCollapseAllButtonProps): ReactElement => {
   return (
     <IconButton
-      size="6"
-      onClick={onCollapseAll}
       aria-label={ariaLabel}
+      onClick={onCollapseAll}
+      size="6"
       {...rest}
     >
       <ChevronsDownUp className="size-3.5" />

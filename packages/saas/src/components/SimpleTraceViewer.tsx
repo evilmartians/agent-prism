@@ -7,9 +7,9 @@ import {
   flattenSpans,
 } from "@evilmartians/agent-prism-data";
 import {
+  type TraceRecordWithDisplayData,
   useIsMobile,
   useIsMounted,
-  type TraceRecordWithDisplayData,
 } from "@evilmartians/agent-prism-ui";
 import { useCallback, useMemo, useState } from "react";
 
@@ -57,27 +57,27 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   }, []);
 
   const fakeTrace: TraceRecordWithDisplayData = {
+    agentDescription: "",
+    durationMs: 0,
     id: "single-trace",
     name: "Trace",
     spansCount: spans.length,
-    durationMs: 0,
-    agentDescription: "",
   };
 
   const layoutProps: SimpleTraceViewerLayoutProps = {
-    selectedTrace: fakeTrace,
-    selectedSpan,
-    setSelectedSpan,
-    searchValue,
-    setSearchValue,
+    expandedSpansIds,
     filteredSpans,
+    handleCollapseAll,
+    handleExpandAll,
+    searchValue,
+    selectedSpan,
+    selectedTrace: fakeTrace,
     // Full (unfiltered) tree so DetailsView can surface run-level errors when
     // the root span is selected.
     selectedTraceSpans: spans,
-    expandedSpansIds,
     setExpandedSpansIds,
-    handleExpandAll,
-    handleCollapseAll,
+    setSearchValue,
+    setSelectedSpan,
   };
 
   if (!spans || spans.length === 0) {

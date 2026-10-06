@@ -22,6 +22,21 @@ const textSizes: Record<BadgeSize, string> = {
 
 export type BadgeProps = ComponentPropsWithRef<"span"> & {
   /**
+   * Optional className for additional styling
+   */
+  className?: string | undefined;
+
+  /**
+   * Optional icon to display at the end of the badge
+   */
+  iconEnd?: ReactElement | undefined;
+
+  /**
+   * Optional icon to display at the start of the badge
+   */
+  iconStart?: ReactElement | undefined;
+
+  /**
    * The content of the badge
    */
   label: ReactNode;
@@ -31,21 +46,6 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
    * @default "md"
    */
   size?: BadgeSize | undefined;
-
-  /**
-   * Optional icon to display at the start of the badge
-   */
-  iconStart?: ReactElement | undefined;
-
-  /**
-   * Optional icon to display at the end of the badge
-   */
-  iconEnd?: ReactElement | undefined;
-
-  /**
-   * Optional className for additional styling
-   */
-  className?: string | undefined;
 
   /**
    * Whether to render the badge without any default styles
@@ -58,11 +58,11 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
  * An unstyled badge component that displays a label with an optional icon
  */
 export const Badge = ({
+  className = "",
+  iconEnd,
+  iconStart,
   label,
   size = "4",
-  iconStart,
-  iconEnd,
-  className = "",
   unstyled = false,
   ...rest
 }: BadgeProps): ReactElement => {

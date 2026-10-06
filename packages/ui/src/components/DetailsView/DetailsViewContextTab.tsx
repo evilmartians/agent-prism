@@ -18,21 +18,10 @@ type DetailsViewContextTabProps = {
   data: TraceSpan;
 };
 
-function getStringAttr(
-  attributes: TraceSpanAttribute[] | undefined,
-  key: string,
-): string | undefined {
-  return attributes?.find((a) => a.key === key)?.value.stringValue;
-}
-
-function getIntAttr(
-  attributes: TraceSpanAttribute[] | undefined,
-  key: string,
-): number | undefined {
-  const attr = attributes?.find((a) => a.key === key);
-  if (attr?.value.intValue === undefined) return undefined;
-  const v = Number.parseInt(attr.value.intValue, 10);
-  return Number.isNaN(v) ? undefined : v;
+function formatTokens(tokens: number): string {
+  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(1)}M`;
+  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}k`;
+  return String(tokens);
 }
 
 function getFloatAttr(
@@ -45,16 +34,27 @@ function getFloatAttr(
   return Number.isNaN(v) ? undefined : v;
 }
 
-function formatTokens(tokens: number): string {
-  if (tokens >= 1_000_000) return `${(tokens / 1_000_000).toFixed(1)}M`;
-  if (tokens >= 1_000) return `${(tokens / 1_000).toFixed(1)}k`;
-  return String(tokens);
+function getIntAttr(
+  attributes: TraceSpanAttribute[] | undefined,
+  key: string,
+): number | undefined {
+  const attr = attributes?.find((a) => a.key === key);
+  if (attr?.value.intValue === undefined) return undefined;
+  const v = Number.parseInt(attr.value.intValue, 10);
+  return Number.isNaN(v) ? undefined : v;
+}
+
+function getStringAttr(
+  attributes: TraceSpanAttribute[] | undefined,
+  key: string,
+): string | undefined {
+  return attributes?.find((a) => a.key === key)?.value.stringValue;
 }
 
 const smallCostFormat = new Intl.NumberFormat("en-US", {
-  style: "currency",
   currency: "USD",
   maximumSignificantDigits: 2,
+  style: "currency",
 });
 
 // Four decimals suit typical LLM costs. Smaller non-zero costs keep two
@@ -66,10 +66,10 @@ function formatCost(cost: number): string {
 }
 
 const TOKEN_TYPE_LABELS: Record<string, string> = {
-  input: "Input tokens",
-  output: "Output tokens",
   cache_read: "Cache read",
   cache_write: "Cache write",
+  input: "Input tokens",
+  output: "Output tokens",
 };
 
 const clampPercent = (value: number): number =>
@@ -87,22 +87,22 @@ const getBarFill = (
 };
 
 const getContextRows = ({
+  cacheHitRatio,
+  cappedFill,
   cumulativeTokens,
   limit,
-  cappedFill,
-  cacheHitRatio,
 }: {
+  cacheHitRatio: number | undefined;
+  cappedFill: number | undefined;
   cumulativeTokens: number | undefined;
   limit: number | undefined;
-  cappedFill: number | undefined;
-  cacheHitRatio: number | undefined;
 }): StatRowData[] => {
   const contextRows: StatRowData[] = [];
   if (cumulativeTokens !== undefined) {
     contextRows.push({
       label: "Cumulative tokens",
-      value: formatTokens(cumulativeTokens),
       sub: limit !== undefined ? `of ${formatTokens(limit)}` : undefined,
+      value: formatTokens(cumulativeTokens),
     });
   }
   if (cappedFill !== undefined) {
@@ -114,8 +114,8 @@ const getContextRows = ({
   if (cacheHitRatio !== undefined) {
     contextRows.push({
       label: "Cache hit ratio",
-      value: `${(cacheHitRatio * 100).toFixed(0)}%`,
       sub: cacheHitRatio > 0.9 ? "mostly cached" : undefined,
+      value: `${(cacheHitRatio * 100).toFixed(0)}%`,
     });
   }
 
@@ -170,10 +170,10 @@ export function DetailsViewContextTab({
   const barFill = getBarFill(cappedFill, cumulativeTokens, limit);
 
   const contextRows = getContextRows({
+    cacheHitRatio,
+    cappedFill,
     cumulativeTokens,
     limit,
-    cappedFill,
-    cacheHitRatio,
   });
 
   // The `total` entry holds whatever the source did not break down by type, so
@@ -185,8 +185,8 @@ export function DetailsViewContextTab({
     )
     .map((entry) => ({
       label: TOKEN_TYPE_LABELS[entry.type] ?? entry.type,
-      value: formatTokens(entry.tokens),
       sub: entry.cost !== 0 ? formatCost(entry.cost) : undefined,
+      value: formatTokens(entry.tokens),
     }));
   breakdownRows.push({
     label: "Total",

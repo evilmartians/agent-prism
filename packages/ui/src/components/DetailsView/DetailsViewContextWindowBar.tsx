@@ -11,13 +11,13 @@ export const DetailsViewContextWindowBar = ({
 }: DetailsViewContextWindowBarProps): ReactElement => (
   <>
     <div
-      role="progressbar"
       aria-label="Context window fill"
-      aria-valuemin={0}
       aria-valuemax={100}
+      aria-valuemin={0}
       aria-valuenow={Number(fill.toFixed(1))}
       aria-valuetext={`${fill.toFixed(1)}%`}
       className="bg-agentprism-secondary relative h-4 overflow-hidden rounded-md"
+      role="progressbar"
     >
       <div
         className="bg-agentprism-context-source-conversation absolute left-0 top-0 h-full transition-all"

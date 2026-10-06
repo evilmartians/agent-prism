@@ -7,15 +7,15 @@ import { getDurationMs } from "./get-duration-ms.js";
 describe("getDurationMs", () => {
   it("should return the correct duration in milliseconds", () => {
     const spanCard: TraceSpan = {
-      id: "1",
-      title: "Test Span",
-      startTime: new Date("2023-01-01T00:00:00.000Z"),
-      endTime: new Date("2023-01-01T00:00:05.500Z"),
-      type: "llm_call",
-      status: "success",
-      tokenUsage: { total: { tokens: 0, cost: 0 } },
-      raw: [],
       attributes: [],
+      endTime: new Date("2023-01-01T00:00:05.500Z"),
+      id: "1",
+      raw: [],
+      startTime: new Date("2023-01-01T00:00:00.000Z"),
+      status: "success",
+      title: "Test Span",
+      tokenUsage: { total: { cost: 0, tokens: 0 } },
+      type: "llm_call",
     };
 
     const result = getDurationMs(spanCard);
@@ -24,15 +24,15 @@ describe("getDurationMs", () => {
 
   it("should return 0 when start and end times are equal", () => {
     const spanCard: TraceSpan = {
-      id: "1",
-      title: "Test Span",
-      startTime: new Date("2023-01-01T00:00:00.000Z"),
-      endTime: new Date("2023-01-01T00:00:00.000Z"),
-      tokenUsage: { total: { tokens: 0, cost: 0 } },
-      type: "llm_call",
-      status: "success",
-      raw: [],
       attributes: [],
+      endTime: new Date("2023-01-01T00:00:00.000Z"),
+      id: "1",
+      raw: [],
+      startTime: new Date("2023-01-01T00:00:00.000Z"),
+      status: "success",
+      title: "Test Span",
+      tokenUsage: { total: { cost: 0, tokens: 0 } },
+      type: "llm_call",
     };
 
     const result = getDurationMs(spanCard);
@@ -41,15 +41,15 @@ describe("getDurationMs", () => {
 
   it("should handle negative duration correctly", () => {
     const spanCard: TraceSpan = {
-      id: "1",
-      title: "Test Span",
-      startTime: new Date("2023-01-01T00:05:00.000Z"),
-      endTime: new Date("2023-01-01T00:00:00.000Z"),
-      tokenUsage: { total: { tokens: 0, cost: 0 } },
-      type: "llm_call",
-      status: "success",
-      raw: [],
       attributes: [],
+      endTime: new Date("2023-01-01T00:00:00.000Z"),
+      id: "1",
+      raw: [],
+      startTime: new Date("2023-01-01T00:05:00.000Z"),
+      status: "success",
+      title: "Test Span",
+      tokenUsage: { total: { cost: 0, tokens: 0 } },
+      type: "llm_call",
     };
 
     const result = getDurationMs(spanCard);

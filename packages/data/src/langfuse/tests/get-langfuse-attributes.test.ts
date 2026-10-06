@@ -1,6 +1,6 @@
 import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
 import { getLangfuseAttributes } from "../utils/get-langfuse-attributes.js";
@@ -63,9 +63,9 @@ describe("getLangfuseAttributes", () => {
     it("extracts primitive attributes from resourceAttributes field", () => {
       const metadata = JSON.stringify({
         resourceAttributes: {
-          "service.name": "api",
-          "service.instance.id": 42,
           "service.debug": false,
+          "service.instance.id": 42,
+          "service.name": "api",
         },
       });
 
@@ -108,13 +108,13 @@ describe("getLangfuseAttributes", () => {
     it("ignores non-primitive attribute values", () => {
       const metadata = JSON.stringify({
         attributes: {
-          obj: { nested: true },
           arr: [1, 2, 3],
-          nil: null,
-          undef: undefined,
-          ok: "yes",
-          num: 10,
           bool: true,
+          nil: null,
+          num: 10,
+          obj: { nested: true },
+          ok: "yes",
+          undef: undefined,
         },
       });
 

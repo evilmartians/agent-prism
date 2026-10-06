@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
@@ -139,10 +139,10 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
   describe("Standard OpenTelemetry fallback", () => {
     it("should use standard categorization when standard is detected", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "http request",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
+        name: "http request",
       });
 
       vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("standard");
@@ -182,8 +182,8 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
       // Span that could match multiple standards but GenAI takes priority
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
       });
@@ -226,12 +226,12 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
   describe("real-world span examples", () => {
     it("should categorize OpenAI chat completion spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "openai.chat.completions.create",
         attributes: {
+          "gen_ai.request.model": "gpt-4",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          "gen_ai.request.model": "gpt-4",
         },
+        name: "openai.chat.completions.create",
       });
 
       vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(
@@ -246,11 +246,11 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
 
     it("should categorize OpenInference LLM spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "llm.completion",
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
         },
+        name: "llm.completion",
       });
 
       vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("openinference");
@@ -263,11 +263,11 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
 
     it("should categorize standard HTTP spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "GET /api/users",
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
           "http.url": "/api/users",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
+        name: "GET /api/users",
       });
 
       vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue("standard");

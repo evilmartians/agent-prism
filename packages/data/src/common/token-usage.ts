@@ -48,9 +48,9 @@ export const getTokenUsageEntries = (
       entry
         ? [
             {
-              type,
-              tokens: toFiniteNumber(entry.tokens),
               cost: toFiniteNumber(entry.cost),
+              tokens: toFiniteNumber(entry.tokens),
+              type,
             },
           ]
         : [],

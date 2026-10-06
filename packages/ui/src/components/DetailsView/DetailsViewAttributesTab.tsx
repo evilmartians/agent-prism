@@ -30,7 +30,7 @@ export const DetailsViewAttributesTab = ({
           attribute.value.boolValue?.toString() ||
           "N/A";
 
-        let parsedJson: string | null = null;
+        let parsedJson: null | string = null;
         if (typeof stringValue === "string") {
           try {
             parsedJson = JSON.parse(stringValue);
@@ -44,19 +44,19 @@ export const DetailsViewAttributesTab = ({
         if (isComplex && parsedJson && stringValue) {
           return (
             <DetailsViewAttributeSection
-              key={`${attribute.key}-${index}`}
               attributeKey={attribute.key}
               content={stringValue}
-              parsedContent={parsedJson}
               id={`${data.id}-${attribute.key}-${index}`}
+              key={`${attribute.key}-${index}`}
+              parsedContent={parsedJson}
             />
           );
         }
 
         return (
           <div
-            key={`${attribute.key}-${index}`}
             className="border-agentprism-border rounded-md border p-4"
+            key={`${attribute.key}-${index}`}
           >
             <dt className="text-agentprism-muted-foreground mb-1 text-sm">
               {attribute.key}

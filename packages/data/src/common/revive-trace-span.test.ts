@@ -6,13 +6,13 @@ import { isTraceSpanLike, reviveTraceSpan } from "./revive-trace-span.js";
 import { createTestSpan } from "./test-utils/create-test-span.js";
 
 const baseJSON = {
-  id: "span-1",
-  title: "ChatCompletion",
-  startTime: "2024-01-01T00:00:00.000Z",
   endTime: "2024-01-01T00:00:02.500Z",
-  type: "llm_call",
-  status: "success",
+  id: "span-1",
   raw: [],
+  startTime: "2024-01-01T00:00:00.000Z",
+  status: "success",
+  title: "ChatCompletion",
+  type: "llm_call",
 };
 
 describe("isTraceSpanLike", () => {
@@ -35,7 +35,7 @@ describe("isTraceSpanLike", () => {
   });
 
   it("accepts epoch-millisecond timestamps", () => {
-    expect(isTraceSpanLike({ ...baseJSON, startTime: 0, endTime: 1_000 })).toBe(
+    expect(isTraceSpanLike({ ...baseJSON, endTime: 1_000, startTime: 0 })).toBe(
       true,
     );
   });
@@ -55,23 +55,17 @@ describe("reviveTraceSpan", () => {
   it("survives a JSON round-trip", () => {
     const child = createTestSpan({ id: "child-1" });
     const span: TraceSpan = createTestSpan({
-      raw: ["{}", "[]"],
-      tokenUsage: { input: { tokens: 300, cost: 0.003 } },
-      reasoning: { content: "thinking", tokens: 10 },
-      todos: [{ title: "Plan", status: "in_progress" }],
       children: [child],
+      raw: ["{}", "[]"],
+      reasoning: { content: "thinking", tokens: 10 },
+      todos: [{ status: "in_progress", title: "Plan" }],
+      tokenUsage: { input: { cost: 0.003, tokens: 300 } },
     });
 
     const revived = reviveTraceSpan(JSON.parse(JSON.stringify(span)));
 
     expect(revived).toStrictEqual({
       ...span,
-      reasoning: {
-        content: "thinking",
-        tokens: 10,
-        level: undefined,
-        triggers: undefined,
-      },
       children: [
         {
           ...child,
@@ -81,6 +75,12 @@ describe("reviveTraceSpan", () => {
           tokenUsage: undefined,
         },
       ],
+      reasoning: {
+        content: "thinking",
+        level: undefined,
+        tokens: 10,
+        triggers: undefined,
+      },
     });
     expect(revived.startTime).toBeInstanceOf(Date);
     expect(revived.children?.[0]?.endTime).toBeInstanceOf(Date);
@@ -95,15 +95,15 @@ describe("reviveTraceSpan", () => {
       const span = reviveTraceSpan({
         ...baseJSON,
         todos: [
-          { title: "Plan", status: "pending" },
+          { status: "pending", title: "Plan" },
           { title: "No status" },
-          { title: 42, status: "completed" },
-          { title: "Unknown status", status: "blocked" },
+          { status: "completed", title: 42 },
+          { status: "blocked", title: "Unknown status" },
           "not a todo",
         ],
       });
 
-      expect(span.todos).toStrictEqual([{ title: "Plan", status: "pending" }]);
+      expect(span.todos).toStrictEqual([{ status: "pending", title: "Plan" }]);
     });
 
     it("drops todos that are not a list", () => {
@@ -117,16 +117,16 @@ describe("reviveTraceSpan", () => {
         ...baseJSON,
         reasoning: {
           content: "weighing options",
-          tokens: "many",
           level: "extreme",
+          tokens: "many",
           triggers: ["think hard", 7],
         },
       });
 
       expect(span.reasoning).toStrictEqual({
         content: "weighing options",
-        tokens: undefined,
         level: undefined,
+        tokens: undefined,
         triggers: ["think hard"],
       });
     });
@@ -144,15 +144,15 @@ describe("reviveTraceSpan", () => {
       const span = reviveTraceSpan({
         ...baseJSON,
         tokenUsage: {
-          input: { tokens: 100, cost: 0.001 },
-          output: { tokens: 50, cost: "free" },
           cache_read: { tokens: "lots" },
+          input: { cost: 0.001, tokens: 100 },
+          output: { cost: "free", tokens: 50 },
           total: 7,
         },
       });
 
       expect(span.tokenUsage).toStrictEqual({
-        input: { tokens: 100, cost: 0.001 },
+        input: { cost: 0.001, tokens: 100 },
         output: { tokens: 50 },
       });
     });

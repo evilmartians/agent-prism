@@ -9,21 +9,21 @@ import { PerplexityLogo } from "./BrandLogos/PerplexityLogo";
 
 // Logo registry
 const LOGO_REGISTRY = {
-  openai: OpenAILogo,
   anthropic: AnthropicLogo,
   google: GoogleLogo,
   meta: MetaLogo,
   mistral: MistralLogo,
+  openai: OpenAILogo,
   perplexity: PerplexityLogo,
 } as const;
-
-type BrandType = keyof typeof LOGO_REGISTRY;
 
 type BrandLogoProps = {
   brand: BrandType | string;
   className?: string | undefined;
   fallback?: React.ReactNode | undefined;
 };
+
+type BrandType = keyof typeof LOGO_REGISTRY;
 
 export const BrandLogo: FC<BrandLogoProps> = ({
   brand,

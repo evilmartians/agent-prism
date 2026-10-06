@@ -12,45 +12,45 @@ import {
 } from "./DetailsViewContentViewer";
 
 const TAB_ITEMS: TabItem<DetailsViewContentViewMode>[] = [
-  { value: "json", label: "JSON" },
-  { value: "plain", label: "Plain" },
+  { label: "JSON", value: "json" },
+  { label: "Plain", value: "plain" },
 ];
 
 type DetailsViewAttributeSectionProps = {
   attributeKey: string;
   content: string;
-  parsedContent: string;
   id: string;
+  parsedContent: string;
 };
 
 export const DetailsViewAttributeSection = ({
   attributeKey,
   content,
-  parsedContent,
   id,
+  parsedContent,
 }: DetailsViewAttributeSectionProps): ReactElement => {
   const [tab, setTab] = useState<DetailsViewContentViewMode>("json");
 
   return (
     <CollapsibleSection
-      title={attributeKey}
       defaultOpen
       rightContent={
         <TabSelector<DetailsViewContentViewMode>
-          items={TAB_ITEMS}
           defaultValue="json"
-          value={tab}
+          items={TAB_ITEMS}
           onValueChange={setTab}
           theme="pill"
+          value={tab}
         />
       }
+      title={attributeKey}
     >
       <DetailsViewContentViewer
         content={content}
-        parsedContent={parsedContent}
-        mode={tab}
-        label={attributeKey}
         id={id}
+        label={attributeKey}
+        mode={tab}
+        parsedContent={parsedContent}
       />
     </CollapsibleSection>
   );

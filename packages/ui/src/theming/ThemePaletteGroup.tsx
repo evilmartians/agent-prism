@@ -1,11 +1,11 @@
 import type { ReactElement, ReactNode } from "react";
 
 export function ThemePaletteGroup({
-  title,
   children,
+  title,
 }: {
-  title: string;
   children: ReactNode;
+  title: string;
 }): ReactElement {
   return (
     <div className="flex flex-col gap-4">

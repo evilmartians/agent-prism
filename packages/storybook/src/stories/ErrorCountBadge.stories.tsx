@@ -5,18 +5,22 @@ import {
   ErrorCountBadgeSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/ErrorCountBadge",
+  argTypes: {
+    count: {
+      control: { type: "number" },
+      description: "The number of failed spans to display",
+    },
+  },
   component: ErrorCountBadge,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,14 +32,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    count: {
-      control: { type: "number" },
-      description: "The number of failed spans to display",
-    },
-  },
+  title: "Atoms/ErrorCountBadge",
 } satisfies Meta<typeof ErrorCountBadge>;
 
 export default meta;

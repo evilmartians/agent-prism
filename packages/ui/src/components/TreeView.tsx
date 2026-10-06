@@ -1,6 +1,6 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
-import { flattenSpans, findTimeRange } from "@evilmartians/agent-prism-data";
+import { findTimeRange, flattenSpans } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import { type FC } from "react";
 
@@ -10,48 +10,48 @@ import { getSpanBrandAvatar } from "./SpanCard/getSpanBrandAvatar";
 import { SpanCard } from "./SpanCard/SpanCard";
 
 type TreeViewProps = {
-  spans: TraceSpan[];
   className?: string | undefined;
-  selectedSpan?: TraceSpan | undefined;
-  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
+  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
+  selectedSpan?: TraceSpan | undefined;
   spanCardViewOptions?: SpanCardViewOptions | undefined;
+  spans: TraceSpan[];
 };
 
 export const TreeView: FC<TreeViewProps> = ({
-  spans,
-  onSpanSelect,
   className = "",
-  selectedSpan,
   expandedSpansIds,
   onExpandSpansIdsChange,
+  onSpanSelect,
+  selectedSpan,
   spanCardViewOptions,
+  spans,
 }) => {
   const allCards = flattenSpans(spans);
-  const { minStart, maxEnd } = findTimeRange(allCards);
+  const { maxEnd, minStart } = findTimeRange(allCards);
 
   return (
     <div className="w-full min-w-0 px-4">
       <ul
+        aria-label="Hierarchical card list"
         className={cn(className, "overflow-x-auto pt-2")}
         role="tree"
-        aria-label="Hierarchical card list"
       >
         {spans.map((span, idx) => (
           <SpanCard
-            key={span.id}
-            data={span}
-            level={0}
-            selectedSpan={selectedSpan}
-            onSpanSelect={onSpanSelect}
-            minStart={minStart}
-            maxEnd={maxEnd}
-            isLastChild={idx === spans.length - 1}
-            expandedSpansIds={expandedSpansIds}
-            onExpandSpansIdsChange={onExpandSpansIdsChange}
-            viewOptions={spanCardViewOptions}
             avatar={getSpanBrandAvatar(span)}
+            data={span}
+            expandedSpansIds={expandedSpansIds}
+            isLastChild={idx === spans.length - 1}
+            key={span.id}
+            level={0}
+            maxEnd={maxEnd}
+            minStart={minStart}
+            onExpandSpansIdsChange={onExpandSpansIdsChange}
+            onSpanSelect={onSpanSelect}
+            selectedSpan={selectedSpan}
+            viewOptions={spanCardViewOptions}
           />
         ))}
       </ul>

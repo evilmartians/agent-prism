@@ -5,15 +5,15 @@ import colors from "tailwindcss/colors";
 import { agentPrismPrefix } from "../theme";
 
 export type JsonViewerProps = {
+  className?: string | undefined;
   content: string;
   id: string;
-  className?: string | undefined;
 };
 
 export const DetailsViewJsonOutput: FC<JsonViewerProps> = ({
+  className = "",
   content,
   id,
-  className = "",
 }) => {
   return (
     <JSONPretty

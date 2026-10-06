@@ -2,8 +2,8 @@ import type { ReactElement } from "react";
 
 export type StatRowData = {
   label: string;
-  value: string;
   sub?: string | undefined;
+  value: string;
 };
 
 /**
@@ -21,8 +21,8 @@ export function DetailsViewStatGrid({
     <div className="divide-agentprism-border grid grid-cols-[1fr_auto_auto] divide-y">
       {rows.map((row) => (
         <div
-          key={row.label}
           className="col-span-3 grid grid-cols-subgrid items-baseline py-1.5"
+          key={row.label}
         >
           <span className="text-agentprism-muted-foreground pr-3 text-xs">
             {row.label}

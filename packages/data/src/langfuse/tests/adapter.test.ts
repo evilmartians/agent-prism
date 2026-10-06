@@ -10,14 +10,14 @@ import { langfuseSpanAdapter } from "../adapter.js";
 const makeObservation = (
   observation: Partial<LangfuseObservation> & Pick<LangfuseObservation, "id">,
 ): LangfuseObservation => ({
-  traceId: "trace-1",
-  projectId: "project-1",
-  environment: "default",
-  parentObservationId: null,
-  startTime: "2026-06-05T10:00:00.000Z",
-  endTime: "2026-06-05T10:00:01.000Z",
-  name: observation.id,
   createdAt: "2026-06-05T10:00:00.000Z",
+  endTime: "2026-06-05T10:00:01.000Z",
+  environment: "default",
+  name: observation.id,
+  parentObservationId: null,
+  projectId: "project-1",
+  startTime: "2026-06-05T10:00:00.000Z",
+  traceId: "trace-1",
   updatedAt: "2026-06-05T10:00:01.000Z",
   ...observation,
 });

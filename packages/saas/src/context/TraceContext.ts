@@ -2,17 +2,17 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { createContext } from "react";
 
-export type TraceState = {
-  spans: TraceSpan[];
-  isLoading: boolean;
-  error: string | null;
-};
-
 export type TraceContextType = {
+  clearError: () => void;
+  clearTraces: () => void;
   traceState: TraceState;
   uploadTraces: (files: FileList) => Promise<void>;
-  clearTraces: () => void;
-  clearError: () => void;
+};
+
+export type TraceState = {
+  error: null | string;
+  isLoading: boolean;
+  spans: TraceSpan[];
 };
 
 export const TraceContext = createContext<TraceContextType | undefined>(

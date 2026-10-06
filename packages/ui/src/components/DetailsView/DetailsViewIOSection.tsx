@@ -12,15 +12,15 @@ import {
 } from "./DetailsViewContentViewer";
 
 type DetailsViewIOSectionProps = {
-  section: "Input" | "Output";
   content: string;
-  parsedContent: string | null;
+  parsedContent: null | string;
+  section: "Input" | "Output";
 };
 
 export const DetailsViewIOSection = ({
-  section,
   content,
   parsedContent,
+  section,
 }: DetailsViewIOSectionProps): ReactElement => {
   const [tab, setTab] = useState<DetailsViewContentViewMode>(
     parsedContent ? "json" : "plain",
@@ -31,30 +31,30 @@ export const DetailsViewIOSection = ({
   }
 
   const tabItems: TabItem<DetailsViewContentViewMode>[] = [
-    { value: "json", label: "JSON", disabled: !parsedContent },
-    { value: "plain", label: "Plain" },
+    { disabled: !parsedContent, label: "JSON", value: "json" },
+    { label: "Plain", value: "plain" },
   ];
 
   return (
     <CollapsibleSection
-      title={section}
       defaultOpen
       rightContent={
         <TabSelector<DetailsViewContentViewMode>
-          items={tabItems}
           defaultValue={parsedContent ? "json" : "plain"}
-          value={tab}
+          items={tabItems}
           onValueChange={setTab}
           theme="pill"
+          value={tab}
         />
       }
+      title={section}
     >
       <DetailsViewContentViewer
         content={content}
-        parsedContent={parsedContent}
-        mode={tab}
-        label={section}
         id={section}
+        label={section}
+        mode={tab}
+        parsedContent={parsedContent}
       />
     </CollapsibleSection>
   );

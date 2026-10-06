@@ -1,7 +1,7 @@
 // @ts-expect-error - Node.js built-in modules
 import { writeFileSync } from "node:fs";
 // @ts-expect-error - Node.js built-in modules
-import { join, dirname } from "node:path";
+import { dirname, join } from "node:path";
 // @ts-expect-error - Node.js built-in modules
 import { fileURLToPath } from "node:url";
 

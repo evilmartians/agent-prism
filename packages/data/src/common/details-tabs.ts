@@ -7,12 +7,6 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
  */
 type SpanTabData = Pick<TraceSpan, "attributes" | "reasoning" | "todos">;
 
-export function hasThinkingContent(
-  data: Pick<SpanTabData, "reasoning">,
-): boolean {
-  return data.reasoning !== undefined;
-}
-
 /**
  * Context tab presence. Kept claude_code-only on purpose: an upstream guard also
  * fired on `gen_ai.usage.input_tokens`, which would grow a Context tab on any plain
@@ -29,6 +23,12 @@ export function hasContextContent(
         attr.key === "claude_code.context_fill_percent",
     ) ?? false
   );
+}
+
+export function hasThinkingContent(
+  data: Pick<SpanTabData, "reasoning">,
+): boolean {
+  return data.reasoning !== undefined;
 }
 
 export function hasTodos(data: Pick<SpanTabData, "todos">): boolean {

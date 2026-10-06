@@ -5,18 +5,22 @@ import {
   ErrorStatusCircleSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/ErrorStatusCircle",
+  argTypes: {
+    className: {
+      control: "text",
+      description: "Optional className to override the default size or color",
+    },
+  },
   component: ErrorStatusCircle,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,14 +32,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    className: {
-      control: "text",
-      description: "Optional className to override the default size or color",
-    },
-  },
+  title: "Atoms/ErrorStatusCircle",
 } satisfies Meta<typeof ErrorStatusCircle>;
 
 export default meta;

@@ -12,16 +12,16 @@ import { DetailsViewSpanErrorCallout } from "./DetailsViewSpanErrorCallout";
 
 export type DetailsViewErrorBlocksProps = {
   /**
-   * The currently selected span.
-   */
-  span: TraceSpan;
-
-  /**
    * All spans of the selected trace — enables run-level error blocks when the
    * root span is selected. Pass an empty array to show only the selected
    * span's own error.
    */
   allSpans: TraceSpan[];
+
+  /**
+   * The currently selected span.
+   */
+  span: TraceSpan;
 };
 
 /**
@@ -32,9 +32,9 @@ export type DetailsViewErrorBlocksProps = {
  * - Otherwise renders nothing.
  */
 export const DetailsViewErrorBlocks = ({
-  span,
   allSpans,
-}: DetailsViewErrorBlocksProps): ReactElement | null => {
+  span,
+}: DetailsViewErrorBlocksProps): null | ReactElement => {
   // Scope run errors to the selected root's own subtree ([span]), not the
   // whole forest, so sibling roots' errors don't leak in. Memoized so
   // unrelated parent re-renders don't re-walk/parse the tree.

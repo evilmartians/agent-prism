@@ -39,15 +39,15 @@ export const DetailsViewRawDataTab = ({
 
         return (
           <div
-            key={index}
-            role="group"
             aria-label={label}
             className="border-agentprism-border rounded-md border bg-transparent"
+            key={index}
+            role="group"
           >
             <div className="relative">
               <div className="pointer-events-none sticky top-0 z-10 flex justify-end p-1.5">
                 <div className="pointer-events-auto">
-                  <CopyButton label={label} content={content} />
+                  <CopyButton content={content} label={label} />
                 </div>
               </div>
 

@@ -135,11 +135,11 @@ describe("categorizeOpenInference", () => {
     it("should categorize LLM completion spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
-          [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
           [OPENINFERENCE_ATTRIBUTES.INPUT_MESSAGES]: JSON.stringify([
-            { role: "user", content: "Hello" },
+            { content: "Hello", role: "user" },
           ]),
+          [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
         },
         name: "llm.completion",
       });
@@ -149,10 +149,10 @@ describe("categorizeOpenInference", () => {
     it("should categorize retrieval spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "RETRIEVER",
           [OPENINFERENCE_ATTRIBUTES.RETRIEVAL_DOCUMENTS]: JSON.stringify([
             { content: "document content" },
           ]),
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "RETRIEVER",
         },
         name: "vector.search",
       });
@@ -162,8 +162,8 @@ describe("categorizeOpenInference", () => {
     it("should categorize embedding spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "EMBEDDING",
           [OPENINFERENCE_ATTRIBUTES.EMBEDDING_MODEL]: "text-embedding-ada-002",
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "EMBEDDING",
         },
         name: "embedding.create",
       });
@@ -205,10 +205,10 @@ describe("categorizeOpenInference", () => {
     it("should prioritize span kind over other attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
-          [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
-          "custom.attribute": "some_value",
           "another.attribute": 123,
+          "custom.attribute": "some_value",
+          [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
         },
         name: "complex span",
       });

@@ -97,8 +97,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should detect OpenInference with both span kind and model", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CHAIN",
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "claude-3-sonnet",
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "CHAIN",
         },
       });
 
@@ -111,7 +111,7 @@ describe("getOpenTelemetrySpanStandard", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
           [OPENINFERENCE_ATTRIBUTES.INPUT_MESSAGES]: JSON.stringify([
-            { role: "user", content: "Hello" },
+            { content: "Hello", role: "user" },
           ]),
         },
       });
@@ -146,8 +146,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should prioritize OpenTelemetry GenAI over OpenInference when both are present", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "LLM",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
         },
       });
 
@@ -157,8 +157,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should prioritize OpenTelemetry GenAI system over OpenInference model", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "gpt-4",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
         },
       });
 
@@ -168,12 +168,12 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should prioritize OpenTelemetry GenAI even with multiple OpenInference attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
-          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "AGENT",
-          [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "claude-3-sonnet",
           [OPENINFERENCE_ATTRIBUTES.INPUT_MESSAGES]: JSON.stringify([
-            { role: "user", content: "Test" },
+            { content: "Test", role: "user" },
           ]),
+          [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: "claude-3-sonnet",
+          [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "AGENT",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
         },
       });
 
@@ -184,11 +184,11 @@ describe("getOpenTelemetrySpanStandard", () => {
   describe("standard OpenTelemetry fallback", () => {
     it("should default to standard when no special attributes are present", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "http request",
         attributes: {
           "http.method": "GET",
           "http.url": "/api/users",
         },
+        name: "http request",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
@@ -219,8 +219,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should handle null attribute values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: null,
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: null,
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: null,
         },
       });
 
@@ -230,8 +230,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should handle undefined attribute values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: undefined,
           [OPENINFERENCE_ATTRIBUTES.LLM_MODEL]: undefined,
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: undefined,
         },
       });
 
@@ -241,8 +241,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should handle empty string attribute values correctly", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "",
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: "",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "",
         },
       });
 
@@ -264,8 +264,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should handle boolean attribute values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: false,
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: true,
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: false,
         },
       });
 
@@ -276,8 +276,8 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should handle numeric attribute values", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: 0, // falsy
           [OPENINFERENCE_ATTRIBUTES.SPAN_KIND]: 1, // truthy
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: 0, // falsy
         },
       });
 
@@ -288,13 +288,13 @@ describe("getOpenTelemetrySpanStandard", () => {
   describe("real-world scenarios", () => {
     it("should detect OpenAI chat completion spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "openai.chat.completions.create",
         attributes: {
           "gen_ai.operation.name": "chat",
-          "gen_ai.system": "openai",
           "gen_ai.request.model": "gpt-4",
+          "gen_ai.system": "openai",
           "gen_ai.usage.input_tokens": 150,
         },
+        name: "openai.chat.completions.create",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
@@ -302,12 +302,12 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect Anthropic message creation spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "anthropic.messages.create",
         attributes: {
           "gen_ai.operation.name": "generate_content",
-          "gen_ai.system": "anthropic",
           "gen_ai.request.model": "claude-3-sonnet",
+          "gen_ai.system": "anthropic",
         },
+        name: "anthropic.messages.create",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
@@ -315,12 +315,12 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect tool execution spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "execute_tool calculator",
         attributes: {
           "gen_ai.operation.name": "execute_tool",
-          "gen_ai.tool.name": "calculator",
           "gen_ai.tool.description": "Performs mathematical calculations",
+          "gen_ai.tool.name": "calculator",
         },
+        name: "execute_tool calculator",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
@@ -328,12 +328,12 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect agent invocation spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "invoke_agent customer_support",
         attributes: {
-          "gen_ai.operation.name": "invoke_agent",
-          "gen_ai.agent.name": "customer-support-agent",
           "gen_ai.agent.description": "Handles customer inquiries",
+          "gen_ai.agent.name": "customer-support-agent",
+          "gen_ai.operation.name": "invoke_agent",
         },
+        name: "invoke_agent customer_support",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");
@@ -341,15 +341,15 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect OpenInference LLM spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "llm.completion",
         attributes: {
-          "openinference.span.kind": "LLM",
-          "llm.model_name": "gpt-4",
           "llm.input_messages": JSON.stringify([
-            { role: "system", content: "You are a helpful assistant" },
-            { role: "user", content: "Hello!" },
+            { content: "You are a helpful assistant", role: "system" },
+            { content: "Hello!", role: "user" },
           ]),
+          "llm.model_name": "gpt-4",
+          "openinference.span.kind": "LLM",
         },
+        name: "llm.completion",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
@@ -357,13 +357,13 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect OpenInference retrieval spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "retrieval.query",
         attributes: {
           "openinference.span.kind": "RETRIEVER",
           "retrieval.documents": JSON.stringify([
             { content: "Document 1 content", metadata: { source: "doc1.pdf" } },
           ]),
         },
+        name: "retrieval.query",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
@@ -371,11 +371,11 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect OpenInference embedding spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "embedding.create",
         attributes: {
-          "openinference.span.kind": "EMBEDDING",
           "embedding.model_name": "text-embedding-ada-002",
+          "openinference.span.kind": "EMBEDDING",
         },
+        name: "embedding.create",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("openinference");
@@ -383,12 +383,12 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect standard HTTP API spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "GET /api/users",
         attributes: {
           "http.method": "GET",
-          "http.url": "/api/users",
           "http.status_code": 200,
+          "http.url": "/api/users",
         },
+        name: "GET /api/users",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
@@ -396,12 +396,12 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect standard database spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "SELECT users",
         attributes: {
-          "db.system": "postgresql",
           "db.operation.name": "SELECT",
           "db.sql.table": "users",
+          "db.system": "postgresql",
         },
+        name: "SELECT users",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
@@ -409,11 +409,11 @@ describe("getOpenTelemetrySpanStandard", () => {
 
     it("should detect standard function call spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "calculator.add",
         attributes: {
           "function.name": "calculator.add",
           "function.parameters": JSON.stringify({ a: 5, b: 3 }),
         },
+        name: "calculator.add",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("standard");
@@ -424,9 +424,9 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should prioritize GenAI when mixed with standard attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          "db.system": "mysql",
           "gen_ai.operation.name": "chat",
           "http.method": "POST",
-          "db.system": "mysql",
         },
       });
 
@@ -436,9 +436,9 @@ describe("getOpenTelemetrySpanStandard", () => {
     it("should prioritize OpenInference when mixed with standard attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          "openinference.span.kind": "TOOL",
-          "http.method": "POST",
           "function.name": "calculator",
+          "http.method": "POST",
+          "openinference.span.kind": "TOOL",
         },
       });
 
@@ -449,12 +449,12 @@ describe("getOpenTelemetrySpanStandard", () => {
       // Based on the real trace data you showed earlier
       // Only spans with operation_name or system will be detected as GenAI
       const span = createMockOpenTelemetrySpan({
-        name: "call_llm gpt-4.1-mini",
         attributes: {
+          "custom.field": "custom_value",
           "gen_ai.operation.name": "chat", // This will trigger GenAI detection
           "gen_ai.request.model": "gpt-4.1-mini",
-          "custom.field": "custom_value",
         },
+        name: "call_llm gpt-4.1-mini",
       });
 
       expect(getOpenTelemetrySpanStandard(span)).toBe("opentelemetry_genai");

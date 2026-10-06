@@ -19,7 +19,7 @@ type DetailsViewRunErrorsSummaryProps = {
  */
 export const DetailsViewRunErrorsSummary = ({
   entries,
-}: DetailsViewRunErrorsSummaryProps): ReactElement | null => {
+}: DetailsViewRunErrorsSummaryProps): null | ReactElement => {
   // Memoized (hook must precede the early return) so the agent Markdown isn't
   // rebuilt on unrelated re-renders of this component.
   const agentContent = useMemo(
@@ -31,16 +31,16 @@ export const DetailsViewRunErrorsSummary = ({
 
   return (
     <CollapsibleSection
-      title="Run errors"
+      contentClassName="pb-1"
       defaultOpen
       rightContent={
         <div className="flex items-center gap-1">
-          <CopyButton label="all errors for agent" content={agentContent} />
+          <CopyButton content={agentContent} label="all errors for agent" />
           <ErrorCountBadge count={entries.length} />
         </div>
       }
+      title="Run errors"
       triggerClassName="text-agentprism-foreground"
-      contentClassName="pb-1"
     >
       <DetailsViewErrorEntryList entries={entries} />
     </CollapsibleSection>

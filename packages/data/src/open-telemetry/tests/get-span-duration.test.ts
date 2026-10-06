@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { getDurationMs } from "../../common/get-duration-ms.js";
 import { openTelemetrySpanAdapter } from "../adapter.js";

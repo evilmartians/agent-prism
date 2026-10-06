@@ -8,36 +8,36 @@ import { getTimelineData } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 
 type SpanCardTimelineProps = {
-  spanCard: TraceSpan;
-  minStart: number;
-  maxEnd: number;
   className?: string | undefined;
+  maxEnd: number;
+  minStart: number;
+  spanCard: TraceSpan;
 };
 
 const timelineBgColors: Record<TraceSpanCategory, string> = {
-  llm_call: "bg-agentprism-timeline-llm",
   agent_invocation: "bg-agentprism-timeline-agent",
-  tool_execution: "bg-agentprism-timeline-tool",
   chain_operation: "bg-agentprism-timeline-chain",
-  retrieval: "bg-agentprism-timeline-retrieval",
-  embedding: "bg-agentprism-timeline-embedding",
-  guardrail: "bg-agentprism-timeline-guardrail",
   create_agent: "bg-agentprism-timeline-create-agent",
-  span: "bg-agentprism-timeline-span",
+  embedding: "bg-agentprism-timeline-embedding",
   event: "bg-agentprism-timeline-event",
+  guardrail: "bg-agentprism-timeline-guardrail",
+  llm_call: "bg-agentprism-timeline-llm",
+  retrieval: "bg-agentprism-timeline-retrieval",
+  span: "bg-agentprism-timeline-span",
+  tool_execution: "bg-agentprism-timeline-tool",
   unknown: "bg-agentprism-timeline-unknown",
 };
 
 export const SpanCardTimeline = ({
-  spanCard,
-  minStart,
-  maxEnd,
   className,
+  maxEnd,
+  minStart,
+  spanCard,
 }: SpanCardTimelineProps): ReactElement => {
   const { startPercent, widthPercent } = getTimelineData({
-    spanCard,
-    minStart,
     maxEnd,
+    minStart,
+    spanCard,
   });
 
   return (

@@ -31,10 +31,10 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 
     it("takes semantic-convention cache counts out of input_tokens", () => {
       const usage = usageOf({
+        [GENAI.USAGE_CACHE_CREATION_INPUT_TOKENS]: 100,
+        [GENAI.USAGE_CACHE_READ_INPUT_TOKENS]: 600,
         [GENAI.USAGE_INPUT_TOKENS]: 1000,
         [GENAI.USAGE_OUTPUT_TOKENS]: 50,
-        [GENAI.USAGE_CACHE_READ_INPUT_TOKENS]: 600,
-        [GENAI.USAGE_CACHE_CREATION_INPUT_TOKENS]: 100,
       });
 
       expect(usage?.input?.tokens).toBe(300);
@@ -66,9 +66,9 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 
     it("records only the side that was reported", () => {
       const usage = usageOf({
+        "error.type": "timeout",
         "gen_ai.request.model": "gpt-3.5-turbo",
         [GENAI.USAGE_INPUT_TOKENS]: 120,
-        "error.type": "timeout",
       });
 
       expect(getTotalTokens(usage)).toBe(120);
@@ -81,15 +81,15 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
       const usage = usageOf({ [GENAI.USAGE_TOTAL_TOKENS]: 5000 });
 
       expect(getTokenUsageEntries(usage)).toStrictEqual([
-        { type: "total", tokens: 5000, cost: 0 },
+        { cost: 0, tokens: 5000, type: "total" },
       ]);
     });
 
     it("adds nothing when total_tokens matches the typed counts", () => {
       const usage = usageOf({
-        [GENAI.USAGE_TOTAL_TOKENS]: 150,
         [GENAI.USAGE_INPUT_TOKENS]: 100,
         [GENAI.USAGE_OUTPUT_TOKENS]: 50,
+        [GENAI.USAGE_TOTAL_TOKENS]: 150,
       });
 
       expect(usage?.total).toBeUndefined();
@@ -98,9 +98,9 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 
     it("keeps the part of total_tokens the typed counts don't cover", () => {
       const usage = usageOf({
-        [GENAI.USAGE_TOTAL_TOKENS]: 200,
         [GENAI.USAGE_INPUT_TOKENS]: 100,
         [GENAI.USAGE_OUTPUT_TOKENS]: 50,
+        [GENAI.USAGE_TOTAL_TOKENS]: 200,
       });
 
       expect(usage?.total?.tokens).toBe(50);
@@ -117,8 +117,8 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 
     it("is undefined for a failed call with no usage attributes", () => {
       const usage = usageOf({
-        "gen_ai.request.model": "gpt-4",
         "error.type": "rate_limit_exceeded",
+        "gen_ai.request.model": "gpt-4",
         "http.status_code": 429,
       });
 
@@ -129,10 +129,10 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
   describe("cost", () => {
     it("attaches per-side costs to the matching token types", () => {
       const usage = usageOf({
-        [GENAI.USAGE_INPUT_TOKENS]: 150,
-        [GENAI.USAGE_OUTPUT_TOKENS]: 75,
         [GENAI.USAGE_INPUT_COST]: 0.003,
+        [GENAI.USAGE_INPUT_TOKENS]: 150,
         [GENAI.USAGE_OUTPUT_COST]: 0.0015,
+        [GENAI.USAGE_OUTPUT_TOKENS]: 75,
       });
 
       expect(usage?.input?.cost).toBe(0.003);
@@ -142,21 +142,21 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 
     it("records a flat usage cost when no side costs are given", () => {
       const usage = usageOf({
+        [GENAI.USAGE_COST]: 0.0245,
         [GENAI.USAGE_INPUT_TOKENS]: 1250,
         [GENAI.USAGE_OUTPUT_TOKENS]: 380,
-        [GENAI.USAGE_COST]: 0.0245,
       });
 
-      expect(usage?.total).toStrictEqual({ tokens: 0, cost: 0.0245 });
+      expect(usage?.total).toStrictEqual({ cost: 0.0245, tokens: 0 });
       expect(getTotalTokens(usage)).toBe(1630);
       expect(getTotalCost(usage)).toBe(0.0245);
     });
 
     it("adds nothing when the flat cost matches the side costs", () => {
       const usage = usageOf({
+        [GENAI.USAGE_COST]: 0.0045,
         [GENAI.USAGE_INPUT_COST]: 0.003,
         [GENAI.USAGE_OUTPUT_COST]: 0.0015,
-        [GENAI.USAGE_COST]: 0.0045,
       });
 
       expect(usage?.total).toBeUndefined();
@@ -177,8 +177,8 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 
     it("keeps a negative cost (a credit or refund)", () => {
       const usage = usageOf({
-        [GENAI.USAGE_TOTAL_TOKENS]: 100,
         [GENAI.USAGE_COST]: -5,
+        [GENAI.USAGE_TOTAL_TOKENS]: 100,
       });
 
       expect(getTotalCost(usage)).toBe(-5);
@@ -203,9 +203,9 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
       ["null", null],
     ])("ignores %s where a token count is expected", (_label, value) => {
       const usage = usageOf({
-        [GENAI.USAGE_TOTAL_TOKENS]: value,
         [GENAI.USAGE_INPUT_TOKENS]: 80,
         [GENAI.USAGE_OUTPUT_TOKENS]: 70,
+        [GENAI.USAGE_TOTAL_TOKENS]: value,
       });
 
       expect(usage?.total).toBeUndefined();
@@ -220,8 +220,8 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
       ["a boolean", true],
     ])("does not let %s poison the cost", (_label, value) => {
       const usage = usageOf({
-        [GENAI.USAGE_TOTAL_TOKENS]: 100,
         [GENAI.USAGE_COST]: value,
+        [GENAI.USAGE_TOTAL_TOKENS]: 100,
       });
 
       expect(getTotalCost(usage)).toBe(0);
@@ -252,13 +252,13 @@ describe("openTelemetrySpanAdapter.getTraceReasoning", () => {
 describe("openTelemetrySpanAdapter.convertRawSpanToTraceSpan", () => {
   it("builds a span whose derived values come from the source", () => {
     const source = createMockOpenTelemetrySpan({
-      duration: [2, 500_000_000],
       attributes: {
+        [GENAI.USAGE_COST]: 0.002,
         [GENAI.USAGE_INPUT_TOKENS]: 100,
         [GENAI.USAGE_OUTPUT_TOKENS]: 40,
-        [GENAI.USAGE_COST]: 0.002,
         [GENAI.USAGE_REASONING_OUTPUT_TOKENS]: 30,
       },
+      duration: [2, 500_000_000],
     });
 
     const span = openTelemetrySpanAdapter.convertRawSpanToTraceSpan(source);

@@ -9,16 +9,16 @@ import { DetailsViewIOSection } from "./DetailsViewIOSection";
 import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
 
 type DetailsViewInputOutputTabProps = {
-  data: TraceSpan;
   allSpans?: TraceSpan[] | undefined;
+  data: TraceSpan;
 };
 
 // Stable reference so memo deps don't change when allSpans is omitted.
 const EMPTY_SPANS: TraceSpan[] = [];
 
 export const DetailsViewInputOutputTab = ({
-  data,
   allSpans,
+  data,
 }: DetailsViewInputOutputTabProps): ReactElement => {
   const hasInput = Boolean(data.input);
   const hasOutput = Boolean(data.output);
@@ -28,7 +28,7 @@ export const DetailsViewInputOutputTab = ({
   // Always rendered: shows the selected span's own error even when the full
   // trace isn't supplied. Renders nothing when there is no error to show.
   const errorBlocks = (
-    <DetailsViewErrorBlocks span={data} allSpans={resolvedSpans} />
+    <DetailsViewErrorBlocks allSpans={resolvedSpans} span={data} />
   );
 
   // Whether errorBlocks will render content — used to hide the redundant
@@ -54,8 +54,8 @@ export const DetailsViewInputOutputTab = ({
     );
   }
 
-  let parsedInput: string | null = null;
-  let parsedOutput: string | null = null;
+  let parsedInput: null | string = null;
+  let parsedOutput: null | string = null;
 
   if (typeof data.input === "string") {
     try {
@@ -80,16 +80,16 @@ export const DetailsViewInputOutputTab = ({
       <DetailsViewTodosSection data={data} />
       {typeof data.input === "string" && (
         <DetailsViewIOSection
-          section="Input"
           content={data.input}
           parsedContent={parsedInput}
+          section="Input"
         />
       )}
       {typeof data.output === "string" && (
         <DetailsViewIOSection
-          section="Output"
           content={data.output}
           parsedContent={parsedOutput}
+          section="Output"
         />
       )}
     </div>

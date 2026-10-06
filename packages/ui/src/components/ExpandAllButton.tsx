@@ -9,12 +9,12 @@ export type SpanCardExpandAllButtonProps = ComponentPropsWithRef<"button"> & {
 };
 
 export const ExpandAllButton = ({
-  onExpandAll,
   "aria-label": ariaLabel = "Expand all",
+  onExpandAll,
   ...rest
 }: SpanCardExpandAllButtonProps): ReactElement => {
   return (
-    <IconButton size="6" onClick={onExpandAll} aria-label={ariaLabel} {...rest}>
+    <IconButton aria-label={ariaLabel} onClick={onExpandAll} size="6" {...rest}>
       <ChevronsUpDown className="size-3.5" />
     </IconButton>
   );

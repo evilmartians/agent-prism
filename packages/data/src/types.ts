@@ -1,9 +1,9 @@
 import type {
   InputOutputData,
   TokenUsage,
+  TraceReasoning,
   TraceSpan,
   TraceSpanCategory,
-  TraceReasoning,
   TraceSpanStatus,
   TraceTodo,
 } from "@evilmartians/agent-prism-types";
@@ -17,15 +17,15 @@ export type SpanAdapter<TRawDocument, TRawSpan> = {
 
   convertRawSpanToTraceSpan(span: TRawSpan): TraceSpan;
 
-  getTokenUsage(document: TRawSpan): TokenUsage | undefined;
-
-  getTraceReasoning(document: TRawSpan): TraceReasoning | undefined;
-
-  getTraceTodos(document: TRawSpan): TraceTodo[] | undefined;
+  getSpanCategory(document: TRawSpan): TraceSpanCategory;
 
   getSpanInputOutput(document: TRawSpan): InputOutputData;
 
   getSpanStatus(document: TRawSpan): TraceSpanStatus;
 
-  getSpanCategory(document: TRawSpan): TraceSpanCategory;
+  getTokenUsage(document: TRawSpan): TokenUsage | undefined;
+
+  getTraceReasoning(document: TRawSpan): TraceReasoning | undefined;
+
+  getTraceTodos(document: TRawSpan): TraceTodo[] | undefined;
 };

@@ -2,18 +2,18 @@ import type { ReactElement } from "react";
 
 import cn from "classnames";
 
-import { agentPrismTheme, AGENT_PRISM_PREFIX } from "./theme";
+import { AGENT_PRISM_PREFIX, agentPrismTheme } from "./theme";
 
 const tokensFlat = agentPrismTheme.tokenGroups.flatMap((group) => group.tokens);
 
 type ThemePaletteTokenProps = {
-  name: string;
   bg: string;
+  name: string;
 };
 
 export function ThemePaletteToken({
-  name,
   bg,
+  name,
 }: ThemePaletteTokenProps): ReactElement {
   const tokenName = bg.replace(`bg-${AGENT_PRISM_PREFIX}-`, "");
   const token = tokensFlat.find((candidate) => candidate.name === tokenName);

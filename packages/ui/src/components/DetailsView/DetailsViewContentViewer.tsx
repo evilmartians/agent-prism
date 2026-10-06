@@ -3,24 +3,24 @@ import { type ReactElement } from "react";
 import { CopyButton } from "../CopyButton";
 import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
-export type DetailsViewContentViewMode = "json" | "plain";
-
 export type DetailsViewContentViewerProps = {
-  content: string;
-  parsedContent: string | null;
-  mode: DetailsViewContentViewMode;
-  label: string;
-  id: string;
   className?: string | undefined;
+  content: string;
+  id: string;
+  label: string;
+  mode: DetailsViewContentViewMode;
+  parsedContent: null | string;
 };
 
+export type DetailsViewContentViewMode = "json" | "plain";
+
 export const DetailsViewContentViewer = ({
-  content,
-  parsedContent,
-  mode,
-  label,
-  id,
   className = "",
+  content,
+  id,
+  label,
+  mode,
+  parsedContent,
 }: DetailsViewContentViewerProps): ReactElement => {
   if (!content) {
     return (
@@ -35,7 +35,7 @@ export const DetailsViewContentViewer = ({
       className={`border-agentprism-border relative rounded-lg border ${className}`}
     >
       <div className="absolute right-1.5 top-1.5 z-10">
-        <CopyButton label={label} content={content} />
+        <CopyButton content={content} label={label} />
       </div>
       {mode === "json" && parsedContent ? (
         <DetailsViewJsonOutput content={parsedContent} id={id} />

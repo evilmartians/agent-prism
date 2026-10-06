@@ -19,12 +19,12 @@ const toTraceState = (data: object): TraceState => {
       throw new Error("No spans found");
     }
 
-    return { spans, isLoading: false, error: null };
+    return { error: null, isLoading: false, spans };
   } catch (error) {
     return {
-      spans: [],
-      isLoading: false,
       error: error instanceof Error ? error.message : "Failed to load",
+      isLoading: false,
+      spans: [],
     };
   }
 };
@@ -51,12 +51,12 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const clearTraces = () =>
-    setTraceState({ spans: [], isLoading: false, error: null });
+    setTraceState({ error: null, isLoading: false, spans: [] });
   const clearError = () => setTraceState((prev) => ({ ...prev, error: null }));
 
   return (
     <TraceContext.Provider
-      value={{ traceState, uploadTraces, clearTraces, clearError }}
+      value={{ clearError, clearTraces, traceState, uploadTraces }}
     >
       {children}
     </TraceContext.Provider>

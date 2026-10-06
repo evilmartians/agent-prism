@@ -8,10 +8,10 @@ describe("categorizeStandardOpenTelemetry", () => {
   describe("priority order detection", () => {
     it("should prioritize LLM call detection over other types", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "openai function call", // Contains both 'openai' and 'function'
         attributes: {
           "function.name": "some_function",
         },
+        name: "openai function call", // Contains both 'openai' and 'function'
       });
       // Should return llm_call due to 'openai' in name, not tool_execution for function
       expect(categorizeStandardOpenTelemetry(span)).toBe("llm_call");
@@ -43,11 +43,11 @@ describe("categorizeStandardOpenTelemetry", () => {
 
     it("should prioritize function calls over HTTP calls", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "tool operation",
         attributes: {
           "function.name": "http_request",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
+        name: "tool operation",
       });
       // Should return tool_execution due to function call priority
       expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
@@ -56,8 +56,8 @@ describe("categorizeStandardOpenTelemetry", () => {
     it("should prioritize HTTP calls over database calls", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "mysql",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
       });
       // Should return tool_execution due to HTTP priority
@@ -194,10 +194,10 @@ describe("categorizeStandardOpenTelemetry", () => {
 
     it("should detect spans with function.name attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "custom operation",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "my_function",
         },
+        name: "custom operation",
       });
       expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
@@ -217,10 +217,10 @@ describe("categorizeStandardOpenTelemetry", () => {
   describe("HTTP call detection", () => {
     it("should detect HTTP spans by method attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "http request",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
+        name: "http request",
       });
       expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
@@ -242,10 +242,10 @@ describe("categorizeStandardOpenTelemetry", () => {
   describe("database call detection", () => {
     it("should detect database spans by system attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "database query",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "mysql",
         },
+        name: "database query",
       });
       expect(categorizeStandardOpenTelemetry(span)).toBe("tool_execution");
     });
@@ -267,27 +267,27 @@ describe("categorizeStandardOpenTelemetry", () => {
   describe("unknown category", () => {
     it("should return 'unknown' for spans with no recognizable patterns", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "generic operation",
         attributes: {},
+        name: "generic operation",
       });
       expect(categorizeStandardOpenTelemetry(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for empty span name", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "",
         attributes: {},
+        name: "",
       });
       expect(categorizeStandardOpenTelemetry(span)).toBe("unknown");
     });
 
     it("should return 'unknown' for spans with unrelated attributes", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "custom span",
         attributes: {
-          "custom.attribute": "value",
           "another.field": 123,
+          "custom.attribute": "value",
         },
+        name: "custom span",
       });
       expect(categorizeStandardOpenTelemetry(span)).toBe("unknown");
     });
@@ -296,22 +296,22 @@ describe("categorizeStandardOpenTelemetry", () => {
   describe("real-world scenarios", () => {
     it("should categorize typical web service spans", () => {
       const httpSpan = createMockOpenTelemetrySpan({
-        name: "GET /api/users",
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
           "http.url": "/api/users",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
+        name: "GET /api/users",
       });
       expect(categorizeStandardOpenTelemetry(httpSpan)).toBe("tool_execution");
     });
 
     it("should categorize database query spans", () => {
       const dbSpan = createMockOpenTelemetrySpan({
-        name: "SELECT users FROM database",
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "postgresql",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION]: "SELECT",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "postgresql",
         },
+        name: "SELECT users FROM database",
       });
       expect(categorizeStandardOpenTelemetry(dbSpan)).toBe("tool_execution");
     });
@@ -334,10 +334,10 @@ describe("categorizeStandardOpenTelemetry", () => {
 
     it("should categorize custom tool functions", () => {
       const toolSpan = createMockOpenTelemetrySpan({
-        name: "calculator.add",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "calculator.add",
         },
+        name: "calculator.add",
       });
       expect(categorizeStandardOpenTelemetry(toolSpan)).toBe("tool_execution");
     });
@@ -355,11 +355,11 @@ describe("categorizeStandardOpenTelemetry", () => {
 
     it("should handle spans with only lower priority keywords", () => {
       const toolSpan = createMockOpenTelemetrySpan({
-        name: "tool http database", // tool + http + database (all tool_execution)
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "mysql",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
+        name: "tool http database", // tool + http + database (all tool_execution)
       });
       // Should return tool_execution (function call has higher priority than http/db)
       expect(categorizeStandardOpenTelemetry(toolSpan)).toBe("tool_execution");

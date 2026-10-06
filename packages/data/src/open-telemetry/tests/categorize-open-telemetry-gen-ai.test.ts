@@ -157,9 +157,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize OpenAI chat completion spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
         },
         name: "openai.chat.completions.create",
       });
@@ -169,9 +169,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize Anthropic text generation spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "claude-3-sonnet",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "generate_content",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "anthropic",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "claude-3-sonnet",
         },
         name: "anthropic.messages.create",
       });
@@ -192,8 +192,8 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize agent invocation spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "customer-support-agent",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
         },
         name: "agent.invoke",
       });
@@ -203,8 +203,8 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize agent creation spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "create_agent",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "new-agent",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "create_agent",
         },
         name: "agent.create",
       });
@@ -214,9 +214,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize embedding spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "text-embedding-ada-002",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "embeddings",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "text-embedding-ada-002",
         },
         name: "embeddings.create",
       });
@@ -226,9 +226,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize legacy text completion spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-3.5-turbo-instruct",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "text_completion",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-3.5-turbo-instruct",
         },
         name: "completions.create",
       });
@@ -240,12 +240,12 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should prioritize operation name over other attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          "another.attribute": 123,
+          "custom.attribute": "some_value",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "some-agent",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "some-agent",
-          "custom.attribute": "some_value",
-          "another.attribute": 123,
         },
         name: "complex span",
       });

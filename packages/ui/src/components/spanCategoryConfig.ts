@@ -2,30 +2,30 @@ import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
 import type { LucideIcon } from "lucide-react";
 
 import {
-  Zap,
-  Wrench,
-  Bot,
-  Link,
-  Search,
   BarChart2,
-  Plus,
-  HelpCircle,
-  MoveHorizontal,
+  Bot,
   CircleDot,
+  HelpCircle,
+  Link,
+  MoveHorizontal,
+  Plus,
+  Search,
   ShieldCheck,
+  Wrench,
+  Zap,
 } from "lucide-react";
 
 export type ColorVariant =
-  | "purple"
+  | "cyan"
+  | "emerald"
+  | "gray"
   | "indigo"
   | "orange"
-  | "teal"
-  | "cyan"
-  | "sky"
-  | "yellow"
-  | "emerald"
+  | "purple"
   | "red"
-  | "gray";
+  | "sky"
+  | "teal"
+  | "yellow";
 
 /**
  * Shared configuration for span categories containing label, theme, and icon
@@ -33,78 +33,78 @@ export type ColorVariant =
 export const SPAN_CATEGORY_CONFIG: Record<
   TraceSpanCategory,
   {
+    icon: LucideIcon;
     label: string;
     theme: ColorVariant;
-    icon: LucideIcon;
   }
 > = {
-  llm_call: {
-    label: "LLM",
-    theme: "purple",
-    icon: Zap,
-  },
-  tool_execution: {
-    label: "TOOL",
-    theme: "orange",
-    icon: Wrench,
-  },
   agent_invocation: {
+    icon: Bot,
     label: "AGENT INVOCATION",
     theme: "indigo",
-    icon: Bot,
   },
   chain_operation: {
+    icon: Link,
     label: "CHAIN",
     theme: "teal",
-    icon: Link,
-  },
-  retrieval: {
-    label: "RETRIEVAL",
-    theme: "cyan",
-    icon: Search,
-  },
-  embedding: {
-    label: "EMBEDDING",
-    theme: "emerald",
-    icon: BarChart2,
   },
   create_agent: {
+    icon: Plus,
     label: "CREATE AGENT",
     theme: "sky",
-    icon: Plus,
   },
-  span: {
-    label: "SPAN",
-    theme: "cyan",
-    icon: MoveHorizontal,
+  embedding: {
+    icon: BarChart2,
+    label: "EMBEDDING",
+    theme: "emerald",
   },
   event: {
+    icon: CircleDot,
     label: "EVENT",
     theme: "emerald",
-    icon: CircleDot,
   },
   guardrail: {
+    icon: ShieldCheck,
     label: "GUARDRAIL",
     theme: "red",
-    icon: ShieldCheck,
+  },
+  llm_call: {
+    icon: Zap,
+    label: "LLM",
+    theme: "purple",
+  },
+  retrieval: {
+    icon: Search,
+    label: "RETRIEVAL",
+    theme: "cyan",
+  },
+  span: {
+    icon: MoveHorizontal,
+    label: "SPAN",
+    theme: "cyan",
+  },
+  tool_execution: {
+    icon: Wrench,
+    label: "TOOL",
+    theme: "orange",
   },
   unknown: {
+    icon: HelpCircle,
     label: "UNKNOWN",
     theme: "gray",
-    icon: HelpCircle,
   },
 };
 
-export function getSpanCategoryTheme(
-  category: TraceSpanCategory,
-): ColorVariant {
-  return SPAN_CATEGORY_CONFIG[category].theme;
+export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
+  return SPAN_CATEGORY_CONFIG[category].icon;
 }
 
 export function getSpanCategoryLabel(category: TraceSpanCategory): string {
   return SPAN_CATEGORY_CONFIG[category].label;
 }
 
-export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
-  return SPAN_CATEGORY_CONFIG[category].icon;
+export function getSpanCategoryTheme(
+  category: TraceSpanCategory,
+): ColorVariant {
+  return SPAN_CATEGORY_CONFIG[category].theme;
 }

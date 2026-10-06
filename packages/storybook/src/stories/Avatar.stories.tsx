@@ -2,59 +2,23 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Avatar, AvatarSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/Avatar",
-  component: Avatar,
-  parameters: {
-    layout: "centered",
-    docs: {
-      page: () => (
-        <>
-          <Description />
-          <Primary />
-          <Controls />
-          <Stories />
-          <Source code={AvatarSource} language="tsx" />
-        </>
-      ),
-    },
-  },
-  tags: ["autodocs"],
   argTypes: {
-    src: {
-      control: "text",
-      description: "The image source for the avatar",
-    },
     alt: {
       control: "text",
       description: "The alt text for the avatar",
     },
-    size: {
-      control: { type: "select" },
-      options: ["4", "6", "8", "9", "10", "11", "12", "16"],
-      description: "The size of the avatar",
-      defaultValue: "8",
-    },
-    letter: {
-      control: "text",
-      description:
-        "Custom letter to display (will use first letter of alt if not provided)",
-    },
-    rounded: {
-      control: { type: "select" },
-      options: ["none", "sm", "md", "lg", "full"],
-      description: "The border radius of the avatar",
-      defaultValue: "full",
-    },
     category: {
       control: { type: "select" },
+      defaultValue: "llm_call",
+      description: "The category of the span which avatar is associated with",
       options: [
         "llm_call",
         "tool_execution",
@@ -68,10 +32,46 @@ const meta = {
         "guardrail",
         "unknown",
       ],
-      description: "The category of the span which avatar is associated with",
-      defaultValue: "llm_call",
+    },
+    letter: {
+      control: "text",
+      description:
+        "Custom letter to display (will use first letter of alt if not provided)",
+    },
+    rounded: {
+      control: { type: "select" },
+      defaultValue: "full",
+      description: "The border radius of the avatar",
+      options: ["none", "sm", "md", "lg", "full"],
+    },
+    size: {
+      control: { type: "select" },
+      defaultValue: "8",
+      description: "The size of the avatar",
+      options: ["4", "6", "8", "9", "10", "11", "12", "16"],
+    },
+    src: {
+      control: "text",
+      description: "The image source for the avatar",
     },
   },
+  component: Avatar,
+  parameters: {
+    docs: {
+      page: () => (
+        <>
+          <Description />
+          <Primary />
+          <Controls />
+          <Stories />
+          <Source code={AvatarSource} language="tsx" />
+        </>
+      ),
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  title: "Atoms/Avatar",
 } satisfies Meta<typeof Avatar>;
 
 export default meta;
@@ -79,9 +79,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    src: "https://i.pravatar.cc/150?img=3",
     alt: "Sarah Johnson",
     category: "llm_call",
+    src: "https://i.pravatar.cc/150?img=3",
   },
 };
 
@@ -95,9 +95,9 @@ export const Size: Story = {
 
 export const Letter: Story = {
   args: {
-    letter: "JD",
     alt: "John Doe",
     category: "agent_invocation",
+    letter: "JD",
   },
 };
 
@@ -126,7 +126,7 @@ export const Rounded: Story = {
 export const FailedToLoad: Story = {
   args: {
     alt: "Failed to load",
-    src: "that-does-not-exist.jpg",
     category: "unknown",
+    src: "that-does-not-exist.jpg",
   },
 };

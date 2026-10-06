@@ -1,9 +1,7 @@
 import type { TailwindColorToken } from "./tailwindColors";
 
-type TokenValue = {
-  name: string;
-  light: TailwindColorToken;
-  dark: TailwindColorToken;
+type Theme = {
+  tokenGroups: TokenGroup[];
 };
 
 type TokenGroup = {
@@ -11,8 +9,10 @@ type TokenGroup = {
   tokens: TokenValue[];
 };
 
-type Theme = {
-  tokenGroups: TokenGroup[];
+type TokenValue = {
+  dark: TailwindColorToken;
+  light: TailwindColorToken;
+  name: string;
 };
 
 export const AGENT_PRISM_PREFIX = "agentprism";
@@ -22,111 +22,111 @@ export const agentPrismTheme: Theme = {
     {
       title: "General purpose colors",
       tokens: [
-        { name: "background", light: "white", dark: "gray.950" },
-        { name: "foreground", light: "gray.900", dark: "gray.100" },
-        { name: "primary", light: "gray.900", dark: "gray.100" },
-        { name: "primary-foreground", light: "gray.50", dark: "gray.950" },
-        { name: "primary", light: "gray.900", dark: "gray.100" },
-        { name: "primary-foreground", light: "gray.50", dark: "gray.950" },
-        { name: "secondary", light: "gray.100", dark: "gray.800" },
-        { name: "secondary-foreground", light: "gray.500", dark: "gray.500" },
-        { name: "muted", light: "gray.50", dark: "gray.900" },
-        { name: "muted-foreground", light: "gray.600", dark: "gray.400" },
-        { name: "accent", light: "gray.100", dark: "gray.100" },
-        { name: "accent-foreground", light: "gray.100", dark: "gray.900" },
+        { dark: "gray.950", light: "white", name: "background" },
+        { dark: "gray.100", light: "gray.900", name: "foreground" },
+        { dark: "gray.100", light: "gray.900", name: "primary" },
+        { dark: "gray.950", light: "gray.50", name: "primary-foreground" },
+        { dark: "gray.100", light: "gray.900", name: "primary" },
+        { dark: "gray.950", light: "gray.50", name: "primary-foreground" },
+        { dark: "gray.800", light: "gray.100", name: "secondary" },
+        { dark: "gray.500", light: "gray.500", name: "secondary-foreground" },
+        { dark: "gray.900", light: "gray.50", name: "muted" },
+        { dark: "gray.400", light: "gray.600", name: "muted-foreground" },
+        { dark: "gray.100", light: "gray.100", name: "accent" },
+        { dark: "gray.900", light: "gray.100", name: "accent-foreground" },
       ],
     },
     {
       title: "Brand colors",
       tokens: [
-        { name: "brand", light: "violet.500", dark: "violet.500" },
-        { name: "brand-foreground", light: "white", dark: "white" },
-        { name: "brand-secondary", light: "orange.500", dark: "orange.500" },
-        { name: "brand-secondary-foreground", light: "white", dark: "white" },
+        { dark: "violet.500", light: "violet.500", name: "brand" },
+        { dark: "white", light: "white", name: "brand-foreground" },
+        { dark: "orange.500", light: "orange.500", name: "brand-secondary" },
+        { dark: "white", light: "white", name: "brand-secondary-foreground" },
       ],
     },
     {
       title: "Borders",
       tokens: [
-        { name: "border", light: "gray.200", dark: "gray.600" },
+        { dark: "gray.600", light: "gray.200", name: "border" },
         {
-          name: "border-subtle",
-          light: "gray.100",
           dark: "gray.700",
+          light: "gray.100",
+          name: "border-subtle",
         },
         {
-          name: "border-strong",
-          light: "gray.300",
           dark: "gray.500",
+          light: "gray.300",
+          name: "border-strong",
         },
         {
-          name: "border-inverse",
-          light: "gray.900",
           dark: "gray.200",
+          light: "gray.900",
+          name: "border-inverse",
         },
       ],
     },
     {
       title: "Success status color",
       tokens: [
-        { name: "success", light: "emerald.500", dark: "green.500" },
-        { name: "success-muted", light: "emerald.50", dark: "green.950" },
+        { dark: "green.500", light: "emerald.500", name: "success" },
+        { dark: "green.950", light: "emerald.50", name: "success-muted" },
         {
-          name: "success-muted-foreground",
-          light: "emerald.700",
           dark: "green.300",
+          light: "emerald.700",
+          name: "success-muted-foreground",
         },
       ],
     },
     {
       title: "Error status color",
       tokens: [
-        { name: "error", light: "red.500", dark: "red.500" },
-        { name: "error-muted", light: "red.50", dark: "red.950" },
-        { name: "error-muted-foreground", light: "red.600", dark: "red.300" },
+        { dark: "red.500", light: "red.500", name: "error" },
+        { dark: "red.950", light: "red.50", name: "error-muted" },
+        { dark: "red.300", light: "red.600", name: "error-muted-foreground" },
       ],
     },
     {
       title: "Warning status color",
       tokens: [
-        { name: "warning", light: "yellow.500", dark: "yellow.500" },
-        { name: "warning-muted", light: "yellow.50", dark: "yellow.950" },
+        { dark: "yellow.500", light: "yellow.500", name: "warning" },
+        { dark: "yellow.950", light: "yellow.50", name: "warning-muted" },
         {
-          name: "warning-muted-foreground",
-          light: "yellow.700",
           dark: "yellow.300",
+          light: "yellow.700",
+          name: "warning-muted-foreground",
         },
       ],
     },
     {
       title: "Pending status color",
       tokens: [
-        { name: "pending", light: "violet.500", dark: "violet.500" },
-        { name: "pending-muted", light: "violet.100", dark: "violet.950" },
+        { dark: "violet.500", light: "violet.500", name: "pending" },
+        { dark: "violet.950", light: "violet.100", name: "pending-muted" },
         {
-          name: "pending-muted-foreground",
-          light: "violet.600",
           dark: "violet.400",
+          light: "violet.600",
+          name: "pending-muted-foreground",
         },
       ],
     },
     {
       title: "Code syntax highlighting",
       tokens: [
-        { name: "code-string", light: "red.600", dark: "red.400" },
-        { name: "code-number", light: "red.600", dark: "red.400" },
-        { name: "code-key", light: "blue.600", dark: "blue.300" },
-        { name: "code-base", light: "gray.500", dark: "gray.400" },
+        { dark: "red.400", light: "red.600", name: "code-string" },
+        { dark: "red.400", light: "red.600", name: "code-number" },
+        { dark: "blue.300", light: "blue.600", name: "code-key" },
+        { dark: "gray.400", light: "gray.500", name: "code-base" },
       ],
     },
     {
       title: "Generic badge colors",
       tokens: [
-        { name: "badge-default", light: "gray.100", dark: "gray.900" },
+        { dark: "gray.900", light: "gray.100", name: "badge-default" },
         {
-          name: "badge-default-foreground",
-          light: "gray.600",
           dark: "gray.400",
+          light: "gray.600",
+          name: "badge-default-foreground",
         },
       ],
     },
@@ -134,159 +134,159 @@ export const agentPrismTheme: Theme = {
       title: "Agent content colors (claude)",
       tokens: [
         {
-          name: "badge-claude-thinking",
-          light: "purple.50",
           dark: "purple.950",
+          light: "purple.50",
+          name: "badge-claude-thinking",
         },
         {
-          name: "badge-claude-thinking-foreground",
-          light: "purple.500",
           dark: "purple.300",
+          light: "purple.500",
+          name: "badge-claude-thinking-foreground",
         },
         {
-          name: "context-source-conversation",
-          light: "violet.500",
           dark: "violet.400",
+          light: "violet.500",
+          name: "context-source-conversation",
         },
       ],
     },
     {
       title: "Trace colors (llm)",
       tokens: [
-        { name: "avatar-llm", light: "purple.500", dark: "purple.300" },
-        { name: "badge-llm", light: "purple.50", dark: "purple.950" },
+        { dark: "purple.300", light: "purple.500", name: "avatar-llm" },
+        { dark: "purple.950", light: "purple.50", name: "badge-llm" },
         {
-          name: "badge-llm-foreground",
-          light: "purple.500",
           dark: "purple.300",
+          light: "purple.500",
+          name: "badge-llm-foreground",
         },
-        { name: "timeline-llm", light: "purple.400", dark: "purple.400" },
+        { dark: "purple.400", light: "purple.400", name: "timeline-llm" },
       ],
     },
     {
       title: "Trace colors (agent)",
       tokens: [
-        { name: "avatar-agent", light: "indigo.500", dark: "indigo.300" },
-        { name: "badge-agent", light: "indigo.50", dark: "indigo.950" },
+        { dark: "indigo.300", light: "indigo.500", name: "avatar-agent" },
+        { dark: "indigo.950", light: "indigo.50", name: "badge-agent" },
         {
-          name: "badge-agent-foreground",
-          light: "indigo.500",
           dark: "indigo.300",
+          light: "indigo.500",
+          name: "badge-agent-foreground",
         },
-        { name: "timeline-agent", light: "indigo.400", dark: "indigo.400" },
+        { dark: "indigo.400", light: "indigo.400", name: "timeline-agent" },
       ],
     },
     {
       title: "Trace colors (tool)",
       tokens: [
-        { name: "avatar-tool", light: "orange.500", dark: "orange.300" },
-        { name: "badge-tool", light: "orange.50", dark: "orange.950" },
+        { dark: "orange.300", light: "orange.500", name: "avatar-tool" },
+        { dark: "orange.950", light: "orange.50", name: "badge-tool" },
         {
-          name: "badge-tool-foreground",
-          light: "orange.500",
           dark: "orange.300",
+          light: "orange.500",
+          name: "badge-tool-foreground",
         },
-        { name: "timeline-tool", light: "orange.400", dark: "orange.400" },
+        { dark: "orange.400", light: "orange.400", name: "timeline-tool" },
       ],
     },
     {
       title: "Trace colors (chain)",
       tokens: [
-        { name: "avatar-chain", light: "teal.500", dark: "teal.300" },
-        { name: "badge-chain", light: "teal.50", dark: "teal.950" },
-        { name: "badge-chain-foreground", light: "teal.500", dark: "teal.300" },
-        { name: "timeline-chain", light: "teal.400", dark: "teal.400" },
+        { dark: "teal.300", light: "teal.500", name: "avatar-chain" },
+        { dark: "teal.950", light: "teal.50", name: "badge-chain" },
+        { dark: "teal.300", light: "teal.500", name: "badge-chain-foreground" },
+        { dark: "teal.400", light: "teal.400", name: "timeline-chain" },
       ],
     },
     {
       title: "Trace colors (retrieval)",
       tokens: [
-        { name: "avatar-retrieval", light: "cyan.500", dark: "cyan.300" },
-        { name: "badge-retrieval", light: "cyan.50", dark: "cyan.950" },
+        { dark: "cyan.300", light: "cyan.500", name: "avatar-retrieval" },
+        { dark: "cyan.950", light: "cyan.50", name: "badge-retrieval" },
         {
-          name: "badge-retrieval-foreground",
-          light: "cyan.500",
           dark: "cyan.300",
+          light: "cyan.500",
+          name: "badge-retrieval-foreground",
         },
-        { name: "timeline-retrieval", light: "cyan.400", dark: "cyan.400" },
+        { dark: "cyan.400", light: "cyan.400", name: "timeline-retrieval" },
       ],
     },
     {
       title: "Trace colors (embedding)",
       tokens: [
-        { name: "avatar-embedding", light: "emerald.500", dark: "emerald.300" },
-        { name: "badge-embedding", light: "emerald.50", dark: "emerald.950" },
+        { dark: "emerald.300", light: "emerald.500", name: "avatar-embedding" },
+        { dark: "emerald.950", light: "emerald.50", name: "badge-embedding" },
         {
-          name: "badge-embedding-foreground",
-          light: "emerald.500",
           dark: "emerald.300",
+          light: "emerald.500",
+          name: "badge-embedding-foreground",
         },
         {
-          name: "timeline-embedding",
-          light: "emerald.400",
           dark: "emerald.400",
+          light: "emerald.400",
+          name: "timeline-embedding",
         },
       ],
     },
     {
       title: "Trace colors (guardrail)",
       tokens: [
-        { name: "avatar-guardrail", light: "red.500", dark: "red.300" },
-        { name: "badge-guardrail", light: "red.50", dark: "red.950" },
+        { dark: "red.300", light: "red.500", name: "avatar-guardrail" },
+        { dark: "red.950", light: "red.50", name: "badge-guardrail" },
         {
-          name: "badge-guardrail-foreground",
-          light: "red.500",
           dark: "red.300",
+          light: "red.500",
+          name: "badge-guardrail-foreground",
         },
-        { name: "timeline-guardrail", light: "red.400", dark: "red.400" },
+        { dark: "red.400", light: "red.400", name: "timeline-guardrail" },
       ],
     },
     {
       title: "Trace colors (create agent)",
       tokens: [
-        { name: "avatar-create-agent", light: "sky.500", dark: "sky.300" },
-        { name: "badge-create-agent", light: "sky.50", dark: "sky.950" },
+        { dark: "sky.300", light: "sky.500", name: "avatar-create-agent" },
+        { dark: "sky.950", light: "sky.50", name: "badge-create-agent" },
         {
-          name: "badge-create-agent-foreground",
-          light: "sky.500",
           dark: "sky.300",
+          light: "sky.500",
+          name: "badge-create-agent-foreground",
         },
-        { name: "timeline-create-agent", light: "sky.400", dark: "sky.400" },
+        { dark: "sky.400", light: "sky.400", name: "timeline-create-agent" },
       ],
     },
     {
       title: "Trace colors (span)",
       tokens: [
-        { name: "avatar-span", light: "cyan.500", dark: "cyan.300" },
-        { name: "badge-span", light: "cyan.50", dark: "cyan.950" },
-        { name: "badge-span-foreground", light: "cyan.500", dark: "cyan.300" },
-        { name: "timeline-span", light: "cyan.400", dark: "cyan.400" },
+        { dark: "cyan.300", light: "cyan.500", name: "avatar-span" },
+        { dark: "cyan.950", light: "cyan.50", name: "badge-span" },
+        { dark: "cyan.300", light: "cyan.500", name: "badge-span-foreground" },
+        { dark: "cyan.400", light: "cyan.400", name: "timeline-span" },
       ],
     },
     {
       title: "Trace colors (event)",
       tokens: [
-        { name: "avatar-event", light: "emerald.500", dark: "emerald.300" },
-        { name: "badge-event", light: "emerald.50", dark: "emerald.950" },
+        { dark: "emerald.300", light: "emerald.500", name: "avatar-event" },
+        { dark: "emerald.950", light: "emerald.50", name: "badge-event" },
         {
-          name: "badge-event-foreground",
-          light: "emerald.500",
           dark: "emerald.300",
+          light: "emerald.500",
+          name: "badge-event-foreground",
         },
-        { name: "timeline-event", light: "emerald.400", dark: "emerald.400" },
+        { dark: "emerald.400", light: "emerald.400", name: "timeline-event" },
       ],
     },
     {
       title: "Trace colors (unknown)",
       tokens: [
-        { name: "avatar-unknown", light: "gray.500", dark: "gray.300" },
-        { name: "badge-unknown", light: "gray.50", dark: "gray.950" },
+        { dark: "gray.300", light: "gray.500", name: "avatar-unknown" },
+        { dark: "gray.950", light: "gray.50", name: "badge-unknown" },
         {
-          name: "badge-unknown-foreground",
-          light: "gray.500",
           dark: "gray.300",
+          light: "gray.500",
+          name: "badge-unknown-foreground",
         },
-        { name: "timeline-unknown", light: "gray.400", dark: "gray.400" },
+        { dark: "gray.400", light: "gray.400", name: "timeline-unknown" },
       ],
     },
   ],

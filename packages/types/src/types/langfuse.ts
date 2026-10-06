@@ -1,122 +1,122 @@
+export type LangfuseCostDetails = {
+  input?: number;
+  input_cached_tokens?: number;
+  output?: number;
+  output_reasoning_tokens?: number;
+  total?: number;
+};
+
 export type LangfuseDocument = {
-  trace: LangfuseTrace;
   observations: LangfuseObservation[];
+  trace: LangfuseTrace;
 };
 
-export type LangfuseTrace = {
-  id: string;
-  projectId: string;
-  name: string;
-  timestamp: string; // ISO date string
-  environment: string;
-  tags: string[];
-  bookmarked: boolean;
-  release: string | null;
-  version: string | null;
-  userId?: string | null;
-  sessionId?: string | null;
-  public: boolean;
-  input?: string | null;
-  output?: string | null;
-  metadata?: string | Record<string, unknown> | null;
+export type LangfuseObservation = {
+  costDetails?: LangfuseCostDetails | null;
   createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  scores: LangfuseScore[];
-  latency?: number; // milliseconds
-  observations?: LangfuseObservation[];
-};
-
-export type LangfuseScoreSource = "ANNOTATION" | "API" | "EVAL" | "USER";
-
-export type LangfuseScoreDataType = "CATEGORICAL" | "NUMERIC" | "BOOLEAN";
-
-export type LangfuseScore = {
+  endTime: null | string; // ISO date string; null while the observation runs
+  environment: string;
   id: string;
-  timestamp: string;
-  projectId: string;
+  input?: null | string;
+  inputCost?: null | number;
+  // Aggregates Langfuse derives from usageDetails / costDetails
+  inputUsage?: null | number;
+  internalModelId?: null | string;
+  latency?: number; // milliseconds
+  level?: LangfuseObservationLevel;
+  metadata?: null | unknown;
+  model?: null | string;
   name: string;
-  value: number | null;
-  source: LangfuseScoreSource;
-  authorUserId: string | null;
-  comment: string | null;
+  output?: null | string;
+  outputCost?: null | number;
+  outputUsage?: null | number;
+  parentObservationId: null | string;
+  projectId: string;
+  promptId?: null | string;
+  promptName?: null | string;
+  promptVersion?: null | number;
+  providedCostDetails?: Record<string, unknown>;
+  startTime: string; // ISO date string
+  statusMessage?: null | string;
+  timeToFirstToken?: null | number; // seconds
+  totalCost?: null | number;
+  totalUsage?: null | number;
   traceId: string;
-  observationId: string | null;
-  configId: string | null;
-  stringValue: string | null;
-  queueId: string | null;
-  createdAt: string;
-  updatedAt: string;
-  dataType: LangfuseScoreDataType;
+  type?: LangfuseObservationType;
+  updatedAt: string; // ISO date string
+  usageDetails?: LangfuseUsageDetails | null;
+  version?: null | string;
 };
-
-export type LangfuseObservationType =
-  | "EVENT"
-  | "SPAN"
-  | "GENERATION"
-  | "AGENT"
-  | "TOOL"
-  | "CHAIN"
-  | "RETRIEVER"
-  | "EVALUATOR"
-  | "EMBEDDING"
-  | "GUARDRAIL"
-  | "UNKNOWN";
 
 export type LangfuseObservationLevel =
   | "DEBUG"
   | "DEFAULT"
-  | "WARNING"
-  | "ERROR";
+  | "ERROR"
+  | "WARNING";
 
-export type LangfuseObservation = {
+export type LangfuseObservationType =
+  | "AGENT"
+  | "CHAIN"
+  | "EMBEDDING"
+  | "EVALUATOR"
+  | "EVENT"
+  | "GENERATION"
+  | "GUARDRAIL"
+  | "RETRIEVER"
+  | "SPAN"
+  | "TOOL"
+  | "UNKNOWN";
+
+export type LangfuseScore = {
+  authorUserId: null | string;
+  comment: null | string;
+  configId: null | string;
+  createdAt: string;
+  dataType: LangfuseScoreDataType;
   id: string;
-  traceId: string;
-  projectId: string;
-  environment: string;
-  parentObservationId: string | null;
-  startTime: string; // ISO date string
-  endTime: string | null; // ISO date string; null while the observation runs
   name: string;
-  metadata?: unknown | null;
-  type?: LangfuseObservationType;
-  level?: LangfuseObservationLevel;
-  input?: string | null;
-  output?: string | null;
-  statusMessage?: string | null;
-  version?: string | null;
-  promptId?: string | null;
+  observationId: null | string;
+  projectId: string;
+  queueId: null | string;
+  source: LangfuseScoreSource;
+  stringValue: null | string;
+  timestamp: string;
+  traceId: string;
+  updatedAt: string;
+  value: null | number;
+};
+
+export type LangfuseScoreDataType = "BOOLEAN" | "CATEGORICAL" | "NUMERIC";
+
+export type LangfuseScoreSource = "ANNOTATION" | "API" | "EVAL" | "USER";
+
+export type LangfuseTrace = {
+  bookmarked: boolean;
   createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
+  environment: string;
+  id: string;
+  input?: null | string;
   latency?: number; // milliseconds
-  timeToFirstToken?: number | null; // seconds
-  model?: string | null;
-  internalModelId?: string | null;
-  promptName?: string | null;
-  promptVersion?: number | null;
-  usageDetails?: LangfuseUsageDetails | null;
-  costDetails?: LangfuseCostDetails | null;
-  providedCostDetails?: Record<string, unknown>;
-  // Aggregates Langfuse derives from usageDetails / costDetails
-  inputUsage?: number | null;
-  outputUsage?: number | null;
-  totalUsage?: number | null;
-  inputCost?: number | null;
-  outputCost?: number | null;
-  totalCost?: number | null;
+  metadata?: null | Record<string, unknown> | string;
+  name: string;
+  observations?: LangfuseObservation[];
+  output?: null | string;
+  projectId: string;
+  public: boolean;
+  release: null | string;
+  scores: LangfuseScore[];
+  sessionId?: null | string;
+  tags: string[];
+  timestamp: string; // ISO date string
+  updatedAt: string; // ISO date string
+  userId?: null | string;
+  version: null | string;
 };
 
 export type LangfuseUsageDetails = {
   input?: number;
-  output?: number;
-  total?: number;
   input_cached_tokens?: number;
-  output_reasoning_tokens?: number;
-};
-
-export type LangfuseCostDetails = {
-  input?: number;
   output?: number;
-  total?: number;
-  input_cached_tokens?: number;
   output_reasoning_tokens?: number;
+  total?: number;
 };

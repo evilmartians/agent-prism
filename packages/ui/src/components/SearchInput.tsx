@@ -11,8 +11,8 @@ import { TextInput, type TextInputProps } from "./TextInput";
 export const SearchInput = ({ ...props }: TextInputProps): ReactElement => {
   return (
     <TextInput
-      startIcon={<Search className="size-4" />}
       placeholder="Filter..."
+      startIcon={<Search className="size-4" />}
       {...props}
     />
   );

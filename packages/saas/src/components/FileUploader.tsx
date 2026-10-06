@@ -50,16 +50,16 @@ export const FileUploader: FC = () => {
   return (
     <div className="flex flex-col items-center">
       <input
+        accept=".json"
+        aria-label="Upload trace or log files"
+        className="hidden"
+        disabled={isProcessing}
+        onChange={handleFilesChange}
         ref={fileInputRef}
         type="file"
-        className="hidden"
-        accept=".json"
-        onChange={handleFilesChange}
-        aria-label="Upload trace or log files"
-        disabled={isProcessing}
       />
 
-      <Button size="12" variant="secondary" onClick={handleButtonClick}>
+      <Button onClick={handleButtonClick} size="12" variant="secondary">
         Upload traces
       </Button>
 

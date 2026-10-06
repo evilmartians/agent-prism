@@ -2,18 +2,18 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { flattenSpans } from "./flatten-spans.js";
 
+export interface RunErrorEntry {
+  details: SpanErrorDetails;
+  span: TraceSpan;
+}
+
 export interface SpanErrorDetails {
   message: string;
-  stack?: string | undefined;
   nodeName: string;
+  stack?: string | undefined;
 }
 
-export interface RunErrorEntry {
-  span: TraceSpan;
-  details: SpanErrorDetails;
-}
-
-export type TraceRunStatus = "success" | "error";
+export type TraceRunStatus = "error" | "success";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
@@ -88,7 +88,7 @@ const findInRecords = (
  * source records and falling back to well-known attribute keys.
  * Returns `null` for spans that are not in the `error` state.
  */
-export const extractSpanError = (span: TraceSpan): SpanErrorDetails | null => {
+export const extractSpanError = (span: TraceSpan): null | SpanErrorDetails => {
   if (span.status !== "error") return null;
 
   const records = parseRawRecords(span.raw);
@@ -115,8 +115,8 @@ export const extractSpanError = (span: TraceSpan): SpanErrorDetails | null => {
 
   return {
     message,
-    stack: readAttribute(span, ERROR_STACK_KEYS, nonBlankString),
     nodeName: rawName ?? span.title,
+    stack: readAttribute(span, ERROR_STACK_KEYS, nonBlankString),
   };
 };
 
@@ -140,7 +140,7 @@ export const collectRunErrorEntries = (spans: TraceSpan[]): RunErrorEntry[] =>
   collectErrorSpans(spans).flatMap((span) => {
     const details = extractSpanError(span);
 
-    return details ? [{ span, details }] : [];
+    return details ? [{ details, span }] : [];
   });
 
 /**
@@ -149,10 +149,10 @@ export const collectRunErrorEntries = (spans: TraceSpan[]): RunErrorEntry[] =>
  */
 export const collectSpanErrorEntry = (
   span: TraceSpan,
-): RunErrorEntry | null => {
+): null | RunErrorEntry => {
   const details = extractSpanError(span);
 
-  return details ? { span, details } : null;
+  return details ? { details, span } : null;
 };
 
 /**

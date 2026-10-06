@@ -14,7 +14,7 @@ type DetailsViewSpanErrorCalloutProps = {
  */
 export const DetailsViewSpanErrorCallout = ({
   span,
-}: DetailsViewSpanErrorCalloutProps): ReactElement | null => {
+}: DetailsViewSpanErrorCalloutProps): null | ReactElement => {
   const entry = collectSpanErrorEntry(span);
 
   if (!entry) return null;

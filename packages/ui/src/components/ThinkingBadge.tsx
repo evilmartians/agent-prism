@@ -16,13 +16,13 @@ export const ThinkingBadge = ({
   // the thinking tokens below.
   return (
     <Badge
-      label="Thinking"
-      size="4"
-      iconStart={<Brain className="size-3" />}
       className={cn(
         "bg-agentprism-badge-claude-thinking text-agentprism-badge-claude-thinking-foreground",
         className,
       )}
+      iconStart={<Brain className="size-3" />}
+      label="Thinking"
+      size="4"
       unstyled
     />
   );

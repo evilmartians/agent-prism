@@ -3,18 +3,35 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { DetailsView, DetailsViewSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Main Components/DetailsView",
+  argTypes: {
+    avatar: {
+      description: "Optional avatar configuration for the header",
+    },
+    className: {
+      control: "text",
+      description: "Optional className for the root container",
+    },
+    copyButton: {
+      description: "Configuration for the copy button functionality",
+    },
+    data: {
+      description: "The span data to display in the details view",
+    },
+    defaultTab: {
+      control: "text",
+      description: "The initially selected tab",
+    },
+  },
   component: DetailsView,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -26,47 +43,13 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    data: {
-      description: "The span data to display in the details view",
-    },
-    avatar: {
-      description: "Optional avatar configuration for the header",
-    },
-    defaultTab: {
-      control: "text",
-      description: "The initially selected tab",
-    },
-    className: {
-      control: "text",
-      description: "Optional className for the root container",
-    },
-    copyButton: {
-      description: "Configuration for the copy button functionality",
-    },
-  },
+  title: "Main Components/DetailsView",
 } satisfies Meta<typeof DetailsView>;
 
 const mockSpanData: TraceSpan = {
-  id: "span-llm-001",
-  title: "GPT-4 Text Generation",
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  tokenUsage: {
-    input: { tokens: 600, cost: 0.018 },
-    output: { tokens: 250, cost: 0.027 },
-  },
-  type: "llm_call",
-  raw: [
-    JSON.stringify({
-      model: "gpt-4",
-      prompt: "Generate a creative story about AI",
-      temperature: 0.7,
-      max_tokens: 1000,
-    }),
-  ],
   attributes: [
     {
       key: "llm.model",
@@ -85,7 +68,24 @@ const mockSpanData: TraceSpan = {
       value: { stringValue: "openai" },
     },
   ],
+  endTime: new Date("2024-01-15T10:30:03Z"),
+  id: "span-llm-001",
+  raw: [
+    JSON.stringify({
+      max_tokens: 1000,
+      model: "gpt-4",
+      prompt: "Generate a creative story about AI",
+      temperature: 0.7,
+    }),
+  ],
+  startTime: new Date("2024-01-15T10:30:00Z"),
   status: "success",
+  title: "GPT-4 Text Generation",
+  tokenUsage: {
+    input: { cost: 0.018, tokens: 600 },
+    output: { cost: 0.027, tokens: 250 },
+  },
+  type: "llm_call",
 };
 
 export default meta;
@@ -106,21 +106,21 @@ export const DefaultTab: Story = {
 
 export const Avatar: Story = {
   args: {
-    data: mockSpanData,
     avatar: {
       alt: "Service Avatar",
-      letter: "US",
       category: "llm_call",
+      letter: "US",
     },
+    data: mockSpanData,
   },
 };
 
 export const CopyButton: Story = {
   args: {
-    data: mockSpanData,
     copyButton: {
       isEnabled: true,
       onCopy: (data) => console.log("Copied:", data),
     },
+    data: mockSpanData,
   },
 };

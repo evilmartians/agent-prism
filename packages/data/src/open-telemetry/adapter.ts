@@ -100,21 +100,73 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     const ioData = this.getSpanInputOutput(span);
 
     return {
-      id: span.spanId,
-      title: generateOpenTelemetrySpanTitle(span),
-      type: this.getSpanCategory(span),
-      status: this.getSpanStatus(span),
       attributes: span.attributes,
-      raw: [JSON.stringify(span, null, 2)],
-      startTime: convertNanoTimestampToDate(span.startTimeUnixNano),
-      endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
       children,
+      endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
+      id: span.spanId,
       input: ioData.input,
       output: ioData.output,
-      tokenUsage: this.getTokenUsage(span),
+      raw: [JSON.stringify(span, null, 2)],
       reasoning: this.getTraceReasoning(span),
+      startTime: convertNanoTimestampToDate(span.startTimeUnixNano),
+      status: this.getSpanStatus(span),
+      title: generateOpenTelemetrySpanTitle(span),
       todos: this.getTraceTodos(span),
+      tokenUsage: this.getTokenUsage(span),
+      type: this.getSpanCategory(span),
     };
+  },
+
+  getSpanCategory(span: OpenTelemetrySpan): TraceSpanCategory {
+    const standard = getOpenTelemetrySpanStandard(span);
+
+    switch (standard) {
+      case "openinference": {
+        const category = categorizeOpenInference(span);
+        return category !== "unknown"
+          ? category
+          : categorizeStandardOpenTelemetry(span);
+      }
+
+      case "opentelemetry_genai": {
+        const category = categorizeOpenTelemetryGenAI(span);
+        return category !== "unknown"
+          ? category
+          : categorizeStandardOpenTelemetry(span);
+      }
+
+      case "standard":
+      default: {
+        return categorizeStandardOpenTelemetry(span);
+      }
+    }
+  },
+
+  getSpanInputOutput(span: OpenTelemetrySpan): InputOutputData {
+    const input = getOpenTelemetryAttributeValue(
+      span,
+      INPUT_OUTPUT_ATTRIBUTES.INPUT_VALUE,
+    );
+    const output = getOpenTelemetryAttributeValue(
+      span,
+      INPUT_OUTPUT_ATTRIBUTES.OUTPUT_VALUE,
+    );
+
+    return {
+      input: typeof input === "string" ? input : undefined,
+      output: typeof output === "string" ? output : undefined,
+    };
+  },
+
+  getSpanStatus(span: OpenTelemetrySpan): TraceSpanStatus {
+    switch (span.status.code) {
+      case "STATUS_CODE_ERROR":
+        return "error";
+      case "STATUS_CODE_OK":
+        return "success";
+      default:
+        return "warning";
+    }
   },
 
   getTokenUsage(span: OpenTelemetrySpan): TokenUsage | undefined {
@@ -199,57 +251,5 @@ export const openTelemetrySpanAdapter: SpanAdapter<
 
   getTraceTodos(): TraceTodo[] | undefined {
     return undefined;
-  },
-
-  getSpanInputOutput(span: OpenTelemetrySpan): InputOutputData {
-    const input = getOpenTelemetryAttributeValue(
-      span,
-      INPUT_OUTPUT_ATTRIBUTES.INPUT_VALUE,
-    );
-    const output = getOpenTelemetryAttributeValue(
-      span,
-      INPUT_OUTPUT_ATTRIBUTES.OUTPUT_VALUE,
-    );
-
-    return {
-      input: typeof input === "string" ? input : undefined,
-      output: typeof output === "string" ? output : undefined,
-    };
-  },
-
-  getSpanStatus(span: OpenTelemetrySpan): TraceSpanStatus {
-    switch (span.status.code) {
-      case "STATUS_CODE_OK":
-        return "success";
-      case "STATUS_CODE_ERROR":
-        return "error";
-      default:
-        return "warning";
-    }
-  },
-
-  getSpanCategory(span: OpenTelemetrySpan): TraceSpanCategory {
-    const standard = getOpenTelemetrySpanStandard(span);
-
-    switch (standard) {
-      case "opentelemetry_genai": {
-        const category = categorizeOpenTelemetryGenAI(span);
-        return category !== "unknown"
-          ? category
-          : categorizeStandardOpenTelemetry(span);
-      }
-
-      case "openinference": {
-        const category = categorizeOpenInference(span);
-        return category !== "unknown"
-          ? category
-          : categorizeStandardOpenTelemetry(span);
-      }
-
-      case "standard":
-      default: {
-        return categorizeStandardOpenTelemetry(span);
-      }
-    }
   },
 };

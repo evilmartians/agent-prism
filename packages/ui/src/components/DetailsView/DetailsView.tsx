@@ -7,11 +7,11 @@ import {
 } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import {
-  SquareTerminal,
-  Tags,
   ArrowRightLeft,
   Brain,
   Gauge,
+  SquareTerminal,
+  Tags,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -26,19 +26,7 @@ import { DetailsViewInputOutputTab } from "./DetailsViewInputOutputTab";
 import { DetailsViewRawDataTab } from "./DetailsViewRawDataTab";
 import { DetailsViewThinkingTab } from "./DetailsViewThinkingTab";
 
-type DetailsViewTab =
-  | "input-output"
-  | "thinking"
-  | "context"
-  | "attributes"
-  | "raw";
-
 export type DetailsViewProps = {
-  /**
-   * The span data to display in the details view
-   */
-  data: TraceSpan;
-
   /**
    * All spans of the selected trace. When provided, enables run-level error
    * blocks in the Input/Output tab (a run summary when the root span is
@@ -52,11 +40,6 @@ export type DetailsViewProps = {
   avatar?: AvatarProps | undefined;
 
   /**
-   * The initially selected tab
-   */
-  defaultTab?: DetailsViewTab | undefined;
-
-  /**
    * Optional className for the root container
    */
   className?: string | undefined;
@@ -65,25 +48,35 @@ export type DetailsViewProps = {
    * Configuration for the copy button functionality
    */
   copyButton?:
+    | undefined
     | {
         isEnabled?: boolean | undefined;
         onCopy?: ((data: TraceSpan) => void) | undefined;
-      }
-    | undefined;
-
-  /**
-   * Custom header actions to render
-   * Can be a ReactNode or a render function that receives the data
-   */
-  headerActions?: ReactNode | ((data: TraceSpan) => ReactNode) | undefined;
+      };
 
   /**
    * Optional custom header component to replace the default
    */
   customHeader?:
-    | ReactNode
     | ((props: { data: TraceSpan }) => ReactNode)
+    | ReactNode
     | undefined;
+
+  /**
+   * The span data to display in the details view
+   */
+  data: TraceSpan;
+
+  /**
+   * The initially selected tab
+   */
+  defaultTab?: DetailsViewTab | undefined;
+
+  /**
+   * Custom header actions to render
+   * Can be a ReactNode or a render function that receives the data
+   */
+  headerActions?: ((data: TraceSpan) => ReactNode) | ReactNode | undefined;
 
   /**
    * Callback fired when the active tab changes, including when the current tab
@@ -92,6 +85,13 @@ export type DetailsViewProps = {
   onTabChange?: ((tabValue: DetailsViewTab) => void) | undefined;
 };
 
+type DetailsViewTab =
+  | "attributes"
+  | "context"
+  | "input-output"
+  | "raw"
+  | "thinking";
+
 /**
  * Tabs are content-aware. Thinking is offered for any span that reports
  * reasoning, whatever the vendor, even when only a reasoning-token count is
@@ -99,49 +99,49 @@ export type DetailsViewProps = {
  */
 const getTabItems = (data: TraceSpan): TabItem<DetailsViewTab>[] => [
   {
-    value: "input-output",
-    label: "In/Out",
     icon: <ArrowRightLeft className="size-4" />,
+    label: "In/Out",
+    value: "input-output",
   },
   ...(hasThinkingContent(data)
     ? [
         {
-          value: "thinking" as const,
-          label: "Thinking",
           icon: <Brain className="size-4" />,
+          label: "Thinking",
+          value: "thinking" as const,
         },
       ]
     : []),
   ...(hasContextContent(data)
     ? [
         {
-          value: "context" as const,
-          label: "Context",
           icon: <Gauge className="size-4" />,
+          label: "Context",
+          value: "context" as const,
         },
       ]
     : []),
   {
-    value: "attributes",
-    label: "Attributes",
     icon: <Tags className="size-4" />,
+    label: "Attributes",
+    value: "attributes",
   },
   {
-    value: "raw",
-    label: "RAW",
     icon: <SquareTerminal className="size-4" />,
+    label: "RAW",
+    value: "raw",
   },
 ];
 
 export const DetailsView = ({
-  data,
   allSpans,
   avatar,
-  defaultTab = "input-output",
   className,
   copyButton,
-  headerActions,
   customHeader,
+  data,
+  defaultTab = "input-output",
+  headerActions,
   onTabChange,
 }: DetailsViewProps): ReactElement => {
   const [tab, setTab] = useState<DetailsViewTab>(defaultTab);
@@ -178,10 +178,10 @@ export const DetailsView = ({
     )
   ) : (
     <DetailsViewHeader
-      data={data}
+      actions={resolvedHeaderActions}
       avatar={avatar}
       copyButton={copyButton}
-      actions={resolvedHeaderActions}
+      data={data}
     />
   );
 
@@ -195,17 +195,17 @@ export const DetailsView = ({
       <div className="mb-4 shrink-0">{headerContent}</div>
       <div className="shrink-0">
         <TabSelector
+          defaultValue={defaultTab}
           items={tabItems}
-          value={tab}
           onValueChange={handleTabChange}
           theme="underline"
-          defaultValue={defaultTab}
+          value={tab}
         />
       </div>
 
-      <div key={tab} className="min-h-0 flex-1 overflow-y-auto py-4">
+      <div className="min-h-0 flex-1 overflow-y-auto py-4" key={tab}>
         {tab === "input-output" && (
-          <DetailsViewInputOutputTab data={data} allSpans={allSpans} />
+          <DetailsViewInputOutputTab allSpans={allSpans} data={data} />
         )}
         {tab === "thinking" && <DetailsViewThinkingTab data={data} />}
         {tab === "context" && <DetailsViewContextTab data={data} />}

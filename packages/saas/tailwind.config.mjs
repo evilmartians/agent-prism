@@ -6,10 +6,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@evilmartians/agent-prism-ui/src/**/*.{js,ts,jsx,tsx}",
   ],
+  plugins: [],
   theme: {
     extend: {
       colors: agentPrismTailwindColors,
     },
   },
-  plugins: [],
 };

@@ -9,24 +9,24 @@ import { type TraceViewerLayoutProps } from "../TraceViewer/TraceViewer";
 import { TraceViewerTreeViewContainer } from "./TraceViewerTreeViewContainer";
 
 export const TraceViewerMobileLayout = ({
-  traceRecords,
-  traceListExpanded,
-  setTraceListExpanded,
+  expandedSpansIds,
+  filteredSpans,
+  handleCollapseAll,
+  handleExpandAll,
+  handleTraceSelect,
+  onClearTraceSelection,
+  searchValue,
+  selectedSpan,
   selectedTrace,
   selectedTraceId,
-  selectedSpan,
-  setSelectedSpan,
   selectedTraceSpans,
-  searchValue,
-  setSearchValue,
-  filteredSpans,
-  expandedSpansIds,
   setExpandedSpansIds,
-  handleExpandAll,
-  handleCollapseAll,
-  handleTraceSelect,
+  setSearchValue,
+  setSelectedSpan,
+  setTraceListExpanded,
   spanCardViewOptions,
-  onClearTraceSelection,
+  traceListExpanded,
+  traceRecords,
 }: TraceViewerLayoutProps): ReactElement => {
   if (
     selectedTrace &&
@@ -37,16 +37,16 @@ export const TraceViewerMobileLayout = ({
     return (
       <div className="flex h-full flex-col gap-4 overflow-y-auto">
         <Button
+          className="self-start"
+          iconStart={<ArrowLeft className="size-3" />}
           onClick={() => {
             setSelectedSpan(undefined);
           }}
-          iconStart={<ArrowLeft className="size-3" />}
           variant="ghost"
-          className="self-start"
         >
           Tree View
         </Button>
-        <DetailsView data={selectedSpan} allSpans={selectedTraceSpans} />
+        <DetailsView allSpans={selectedTraceSpans} data={selectedSpan} />
       </div>
     );
   }
@@ -61,31 +61,31 @@ export const TraceViewerMobileLayout = ({
       <div className="flex h-full flex-col gap-4">
         <div className="shrink-0">
           <Button
+            className="self-start"
+            iconStart={<ArrowLeft className="size-3" />}
             onClick={() => {
               if (onClearTraceSelection) {
                 onClearTraceSelection();
               }
             }}
-            iconStart={<ArrowLeft className="size-3" />}
             variant="ghost"
-            className="self-start"
           >
             Traces list
           </Button>
         </div>
 
         <TraceViewerTreeViewContainer
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          handleExpandAll={handleExpandAll}
-          handleCollapseAll={handleCollapseAll}
-          filteredSpans={filteredSpans}
-          selectedSpan={selectedSpan}
-          setSelectedSpan={setSelectedSpan}
           expandedSpansIds={expandedSpansIds}
-          setExpandedSpansIds={setExpandedSpansIds}
-          spanCardViewOptions={spanCardViewOptions}
+          filteredSpans={filteredSpans}
+          handleCollapseAll={handleCollapseAll}
+          handleExpandAll={handleExpandAll}
+          searchValue={searchValue}
+          selectedSpan={selectedSpan}
           selectedTrace={selectedTrace}
+          setExpandedSpansIds={setExpandedSpansIds}
+          setSearchValue={setSearchValue}
+          setSelectedSpan={setSelectedSpan}
+          spanCardViewOptions={spanCardViewOptions}
         />
       </div>
     );
@@ -94,11 +94,11 @@ export const TraceViewerMobileLayout = ({
   return (
     <div className="h-full overflow-y-auto">
       <TraceList
-        traces={traceRecords}
         expanded={traceListExpanded}
         onExpandStateChange={setTraceListExpanded}
         onTraceSelect={handleTraceSelect}
         selectedTrace={traceRecords.find((t) => t.id === selectedTraceId)}
+        traces={traceRecords}
       />
     </div>
   );

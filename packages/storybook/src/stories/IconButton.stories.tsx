@@ -2,18 +2,43 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { IconButton, IconButtonSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/IconButton",
+  argTypes: {
+    "aria-label": {
+      control: "text",
+      description: "Accessible label for screen readers (required)",
+    },
+    children: {
+      control: "text",
+      description: "Icon content (usually an icon component)",
+    },
+    disabled: {
+      control: "boolean",
+      defaultValue: false,
+      description: "Disables the button",
+    },
+    size: {
+      control: { type: "select" },
+      defaultValue: "8",
+      description: "The size of the icon button",
+      options: ["6", "7", "8", "9", "10", "11", "12", "16"],
+    },
+    variant: {
+      control: { type: "select" },
+      defaultValue: "default",
+      description: "The visual variant of the icon button",
+      options: ["default", "ghost"],
+    },
+  },
   component: IconButton,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -25,35 +50,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    size: {
-      control: { type: "select" },
-      options: ["6", "7", "8", "9", "10", "11", "12", "16"],
-      description: "The size of the icon button",
-      defaultValue: "8",
-    },
-    variant: {
-      control: { type: "select" },
-      options: ["default", "ghost"],
-      description: "The visual variant of the icon button",
-      defaultValue: "default",
-    },
-    "aria-label": {
-      control: "text",
-      description: "Accessible label for screen readers (required)",
-    },
-    children: {
-      control: "text",
-      description: "Icon content (usually an icon component)",
-    },
-    disabled: {
-      control: "boolean",
-      description: "Disables the button",
-      defaultValue: false,
-    },
-  },
+  title: "Atoms/IconButton",
 } satisfies Meta<typeof IconButton>;
 
 export default meta;

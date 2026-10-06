@@ -4,13 +4,13 @@ import cn from "classnames";
 
 import type { ComponentSize } from "./ComponentSize";
 
-type IconButtonSize = Extract<
-  ComponentSize,
-  "6" | "7" | "8" | "9" | "10" | "11" | "12" | "16"
->;
-type IconButtonVariant = "default" | "ghost";
-
 export type IconButtonProps = ComponentPropsWithRef<"button"> & {
+  /**
+   * Accessible label for screen readers
+   * Required for accessibility compliance
+   */
+  "aria-label": string;
+
   /**
    * The size of the icon button
    */
@@ -20,13 +20,13 @@ export type IconButtonProps = ComponentPropsWithRef<"button"> & {
    * The visual variant of the icon button
    */
   variant?: IconButtonVariant | undefined;
-
-  /**
-   * Accessible label for screen readers
-   * Required for accessibility compliance
-   */
-  "aria-label": string;
 };
+type IconButtonSize = Extract<
+  ComponentSize,
+  "6" | "7" | "8" | "9" | "10" | "11" | "12" | "16"
+>;
+
+type IconButtonVariant = "default" | "ghost";
 
 const sizeClasses: Record<IconButtonSize, string> = {
   "6": "h-6 min-h-6",
@@ -46,19 +46,16 @@ const variantClasses: Record<IconButtonVariant, string> = {
 
 // TODO: Remake to call Icon component directly instead of passing children
 export const IconButton = ({
+  "aria-label": ariaLabel,
   children,
   className,
   size = "6",
-  variant = "default",
   type = "button",
-  "aria-label": ariaLabel,
+  variant = "default",
   ...rest
 }: IconButtonProps): ReactElement => {
   return (
     <button
-      type={
-        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
-      }
       aria-label={ariaLabel}
       className={cn(
         className,
@@ -69,6 +66,9 @@ export const IconButton = ({
         "text-agentprism-secondary-foreground",
         "hover:bg-agentprism-secondary",
       )}
+      type={
+        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
+      }
       {...rest}
     >
       {children}

@@ -1,6 +1,6 @@
 import type {
-  TraceSpan,
   TraceReasoning,
+  TraceSpan,
 } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
@@ -16,13 +16,13 @@ import {
 } from "@storybook/addon-docs/blocks";
 
 const baseSpan: TraceSpan = {
-  id: "span-thinking-001",
-  title: "Assistant message",
-  startTime: new Date("2024-01-15T10:30:00Z"),
   endTime: new Date("2024-01-15T10:30:03Z"),
-  type: "llm_call",
+  id: "span-thinking-001",
   raw: [],
+  startTime: new Date("2024-01-15T10:30:00Z"),
   status: "success",
+  title: "Assistant message",
+  type: "llm_call",
 };
 
 const withReasoning = (reasoning?: TraceReasoning): TraceSpan => ({
@@ -31,10 +31,8 @@ const withReasoning = (reasoning?: TraceReasoning): TraceSpan => ({
 });
 
 const meta = {
-  title: "Details View/Thinking Tab",
   component: DetailsViewThinkingTab,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -45,8 +43,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
+  title: "Details View/Thinking Tab",
 } satisfies Meta<typeof DetailsViewThinkingTab>;
 
 export default meta;
@@ -66,8 +66,8 @@ export const WithMetadata: Story = {
     data: withReasoning({
       content:
         "Considering the trade-offs between latency and accuracy before responding.",
-      tokens: 1280,
       level: "high",
+      tokens: 1280,
       triggers: ["complex reasoning", "multi-step"],
     }),
   },

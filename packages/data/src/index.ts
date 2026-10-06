@@ -1,14 +1,36 @@
-export { getDurationMs } from "./common/get-duration-ms.js";
-export { formatDuration } from "./common/format-duration.js";
-export { getTimelineData } from "./common/get-timeline-data.js";
-export { flattenSpans } from "./common/flatten-spans.js";
-export { findTimeRange } from "./common/find-time-range.js";
-export { filterSpansRecursively } from "./common/filter-spans-recursively.js";
 export {
   hasContextContent,
   hasThinkingContent,
   hasTodos,
 } from "./common/details-tabs.js";
+export {
+  collectErrorSpans,
+  collectRunErrorEntries,
+  collectSpanErrorEntry,
+  deriveTraceRunStatus,
+  errorCountLabel,
+  extractSpanError,
+  isRootTraceSpan,
+  type RunErrorEntry,
+  type SpanErrorDetails,
+  spanHasErrorSurface,
+  traceRunHasErrors,
+  type TraceRunStatus,
+} from "./common/extract-span-error.js";
+export { filterSpansRecursively } from "./common/filter-spans-recursively.js";
+export { findTimeRange } from "./common/find-time-range.js";
+export { flattenSpans } from "./common/flatten-spans.js";
+export { formatDuration } from "./common/format-duration.js";
+export {
+  formatRunErrorsForAgent,
+  formatSpanErrorForAgent,
+} from "./common/format-errors-for-agent.js";
+export { getDurationMs } from "./common/get-duration-ms.js";
+export { getTimelineData } from "./common/get-timeline-data.js";
+export {
+  isTraceSpanLike,
+  reviveTraceSpan,
+} from "./common/revive-trace-span.js";
 export {
   getTokenUsageEntries,
   getTotalCost,
@@ -16,28 +38,6 @@ export {
   hasReportedCost,
   type TokenUsageRow,
 } from "./common/token-usage.js";
-export {
-  isTraceSpanLike,
-  reviveTraceSpan,
-} from "./common/revive-trace-span.js";
-export {
-  extractSpanError,
-  collectErrorSpans,
-  traceRunHasErrors,
-  collectRunErrorEntries,
-  collectSpanErrorEntry,
-  isRootTraceSpan,
-  spanHasErrorSurface,
-  deriveTraceRunStatus,
-  errorCountLabel,
-  type SpanErrorDetails,
-  type RunErrorEntry,
-  type TraceRunStatus,
-} from "./common/extract-span-error.js";
-export {
-  formatSpanErrorForAgent,
-  formatRunErrorsForAgent,
-} from "./common/format-errors-for-agent.js";
 
-export { openTelemetrySpanAdapter } from "./open-telemetry/adapter.js";
 export { langfuseSpanAdapter } from "./langfuse/adapter.js";
+export { openTelemetrySpanAdapter } from "./open-telemetry/adapter.js";

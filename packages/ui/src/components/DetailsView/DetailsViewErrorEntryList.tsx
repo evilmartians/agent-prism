@@ -12,13 +12,13 @@ type DetailsViewErrorEntryListProps = {
  */
 export const DetailsViewErrorEntryList = ({
   entries,
-}: DetailsViewErrorEntryListProps): ReactElement | null => {
+}: DetailsViewErrorEntryListProps): null | ReactElement => {
   if (entries.length === 0) return null;
 
   return (
     <div className="space-y-2">
       {entries.map((entry) => (
-        <DetailsViewErrorRunRow key={entry.span.id} entry={entry} />
+        <DetailsViewErrorRunRow entry={entry} key={entry.span.id} />
       ))}
     </div>
   );

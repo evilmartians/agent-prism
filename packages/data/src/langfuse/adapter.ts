@@ -4,9 +4,9 @@ import type {
   LangfuseObservation,
   TokenType,
   TokenUsage,
+  TraceReasoning,
   TraceSpan,
   TraceSpanCategory,
-  TraceReasoning,
   TraceSpanStatus,
   TraceTodo,
 } from "@evilmartians/agent-prism-types";
@@ -23,9 +23,9 @@ import { getLangfuseAttributes } from "./utils/get-langfuse-attributes.js";
  * reported on `TraceSpan.reasoning` instead.
  */
 const LANGFUSE_TOKEN_TYPES: Record<string, TokenType> = {
-  input_cached_tokens: "cache_read",
-  cache_read_input_tokens: "cache_read",
   cache_creation_input_tokens: "cache_write",
+  cache_read_input_tokens: "cache_read",
+  input_cached_tokens: "cache_read",
   output_reasoning_tokens: "output",
 };
 
@@ -90,33 +90,75 @@ export const langfuseSpanAdapter: SpanAdapter<
     const ioData = this.getSpanInputOutput(span);
 
     return {
-      id: span.id,
-      title: span.name,
-      type: this.getSpanCategory(span),
-      status: this.getSpanStatus(span),
       attributes: getLangfuseAttributes(span),
-      raw: [JSON.stringify(span, null, 2)],
-      startTime: new Date(span.startTime),
+      children,
       // Langfuse leaves endTime null while an observation is still running.
       endTime: new Date(span.endTime ?? span.startTime),
-      children,
+      id: span.id,
       input: ioData.input,
       output: ioData.output,
-      tokenUsage: this.getTokenUsage(span),
+      raw: [JSON.stringify(span, null, 2)],
       reasoning: this.getTraceReasoning(span),
+      startTime: new Date(span.startTime),
+      status: this.getSpanStatus(span),
+      title: span.name,
       todos: this.getTraceTodos(span),
+      tokenUsage: this.getTokenUsage(span),
+      type: this.getSpanCategory(span),
     };
+  },
+  getSpanCategory(span: LangfuseObservation): TraceSpanCategory {
+    switch (span.type) {
+      case "AGENT":
+        return "agent_invocation";
+      case "CHAIN":
+        return "chain_operation";
+      case "EMBEDDING":
+        return "embedding";
+      case "EVENT":
+        return "event";
+      case "GENERATION":
+        return "llm_call";
+      case "GUARDRAIL":
+        return "guardrail";
+      case "RETRIEVER":
+        return "retrieval";
+      case "SPAN":
+        return "span";
+      case "TOOL":
+        return "tool_execution";
+      case "UNKNOWN":
+        return "unknown";
+      default:
+        return "unknown";
+    }
+  },
+  getSpanInputOutput(span: LangfuseObservation): InputOutputData {
+    return {
+      input: typeof span.input === "string" ? span.input : undefined,
+      output: typeof span.output === "string" ? span.output : undefined,
+    };
+  },
+  getSpanStatus(span: LangfuseObservation): TraceSpanStatus {
+    switch (span.level) {
+      case "ERROR":
+        return "error";
+      case "WARNING":
+        return "warning";
+      default:
+        return "success";
+    }
   },
   getTokenUsage(span: LangfuseObservation): TokenUsage | undefined {
     // The flat input/output/total fields are sums Langfuse derives from the
     // details, so they are read only when an observation comes without them.
-    const usageDetails: Record<string, number | null | undefined> =
+    const usageDetails: Record<string, null | number | undefined> =
       span.usageDetails ?? {
         input: span.inputUsage,
         output: span.outputUsage,
         total: span.totalUsage,
       };
-    const costDetails: Record<string, number | null | undefined> =
+    const costDetails: Record<string, null | number | undefined> =
       span.costDetails ?? {
         input: span.inputCost,
         output: span.outputCost,
@@ -153,47 +195,5 @@ export const langfuseSpanAdapter: SpanAdapter<
   },
   getTraceTodos(): TraceTodo[] | undefined {
     return undefined;
-  },
-  getSpanInputOutput(span: LangfuseObservation): InputOutputData {
-    return {
-      input: typeof span.input === "string" ? span.input : undefined,
-      output: typeof span.output === "string" ? span.output : undefined,
-    };
-  },
-  getSpanStatus(span: LangfuseObservation): TraceSpanStatus {
-    switch (span.level) {
-      case "ERROR":
-        return "error";
-      case "WARNING":
-        return "warning";
-      default:
-        return "success";
-    }
-  },
-  getSpanCategory(span: LangfuseObservation): TraceSpanCategory {
-    switch (span.type) {
-      case "SPAN":
-        return "span";
-      case "TOOL":
-        return "tool_execution";
-      case "GENERATION":
-        return "llm_call";
-      case "EVENT":
-        return "event";
-      case "AGENT":
-        return "agent_invocation";
-      case "CHAIN":
-        return "chain_operation";
-      case "RETRIEVER":
-        return "retrieval";
-      case "EMBEDDING":
-        return "embedding";
-      case "GUARDRAIL":
-        return "guardrail";
-      case "UNKNOWN":
-        return "unknown";
-      default:
-        return "unknown";
-    }
   },
 };

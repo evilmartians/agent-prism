@@ -24,23 +24,23 @@ const isReasoningLevel = (value: unknown): value is TraceReasoningLevel =>
 // Records rather than arrays, so adding a status or category to the union
 // without listing it here is a type error.
 const SPAN_STATUSES: Record<TraceSpanStatus, true> = {
-  success: true,
   error: true,
   pending: true,
+  success: true,
   warning: true,
 };
 
 const SPAN_CATEGORIES: Record<TraceSpanCategory, true> = {
-  llm_call: true,
-  tool_execution: true,
   agent_invocation: true,
   chain_operation: true,
-  retrieval: true,
-  embedding: true,
   create_agent: true,
-  span: true,
+  embedding: true,
   event: true,
   guardrail: true,
+  llm_call: true,
+  retrieval: true,
+  span: true,
+  tool_execution: true,
   unknown: true,
 };
 
@@ -50,7 +50,7 @@ const isSpanStatus = (value: unknown): value is TraceSpanStatus =>
 const isSpanCategory = (value: unknown): value is TraceSpanCategory =>
   typeof value === "string" && Object.hasOwn(SPAN_CATEGORIES, value);
 
-type TimestampInput = string | number | Date;
+type TimestampInput = Date | number | string;
 
 const isTimestamp = (value: unknown): value is TimestampInput =>
   (typeof value === "string" ||
@@ -65,13 +65,13 @@ const isTimestamp = (value: unknown): value is TimestampInput =>
 export const isTraceSpanLike = (
   value: unknown,
 ): value is Record<string, unknown> & {
+  endTime: Date | number | string;
   id: string;
+  raw: string[];
+  startTime: Date | number | string;
+  status: TraceSpanStatus;
   title: string;
   type: TraceSpanCategory;
-  status: TraceSpanStatus;
-  raw: string[];
-  startTime: string | number | Date;
-  endTime: string | number | Date;
 } =>
   isRecord(value) &&
   typeof value["id"] === "string" &&
@@ -94,7 +94,7 @@ const reviveTokenUsage = (value: unknown): TokenUsage | undefined => {
   Object.entries(value).forEach(([type, entry]) => {
     if (isRecord(entry) && isFiniteNumber(entry["tokens"])) {
       usage[type] = isFiniteNumber(entry["cost"])
-        ? { tokens: entry["tokens"], cost: entry["cost"] }
+        ? { cost: entry["cost"], tokens: entry["tokens"] }
         : { tokens: entry["tokens"] };
     }
   });
@@ -112,8 +112,8 @@ const reviveReasoning = (value: unknown): TraceReasoning | undefined => {
 
   return {
     content,
-    tokens,
     level: isReasoningLevel(value["level"]) ? value["level"] : undefined,
+    tokens,
     triggers: Array.isArray(value["triggers"])
       ? value["triggers"].filter(
           (trigger): trigger is string => typeof trigger === "string",
@@ -128,7 +128,7 @@ const reviveTodos = (value: unknown): TraceTodo[] | undefined =>
         isRecord(item) &&
         typeof item["title"] === "string" &&
         isTodoStatus(item["status"])
-          ? [{ title: item["title"], status: item["status"] }]
+          ? [{ status: item["status"], title: item["title"] }]
           : [],
       )
     : undefined;
@@ -147,13 +147,13 @@ export const reviveTraceSpan = (value: unknown): TraceSpan => {
 
   return {
     ...(value as unknown as TraceSpan),
-    startTime: new Date(value.startTime),
-    endTime: new Date(value.endTime),
     children: Array.isArray(value["children"])
       ? value["children"].map(reviveTraceSpan)
       : undefined,
-    tokenUsage: reviveTokenUsage(value["tokenUsage"]),
+    endTime: new Date(value.endTime),
     reasoning: reviveReasoning(value["reasoning"]),
+    startTime: new Date(value.startTime),
     todos: reviveTodos(value["todos"]),
+    tokenUsage: reviveTokenUsage(value["tokenUsage"]),
   };
 };

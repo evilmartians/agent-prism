@@ -7,14 +7,14 @@ import { CheckCircle2, Circle, CircleDot, ListTodo } from "lucide-react";
 import { DetailsViewTodoItemRow } from "./DetailsViewTodoItemRow";
 
 type DetailsViewTodosSectionProps = {
-  data: TraceSpan;
   className?: string | undefined;
+  data: TraceSpan;
 };
 
 export const DetailsViewTodosSection = ({
-  data,
   className,
-}: DetailsViewTodosSectionProps): ReactElement | null => {
+  data,
+}: DetailsViewTodosSectionProps): null | ReactElement => {
   const { todos } = data;
 
   if (!todos || todos.length === 0) {

@@ -1,27 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
-  ExpandAllButton,
   CollapseAllButton,
   CollapseAllButtonSource,
+  ExpandAllButton,
   ExpandAllButtonSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
+  Stories,
 } from "@storybook/addon-docs/blocks";
 
 // Create a wrapper component for the meta since we have two related components
 const ControlsWrapper = () => null;
 
 const meta = {
-  title: "Atoms/CollapseAndExpandControls",
   component: ControlsWrapper,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -34,8 +32,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
+  title: "Atoms/CollapseAndExpandControls",
 } satisfies Meta<typeof ControlsWrapper>;
 
 export default meta;

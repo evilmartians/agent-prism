@@ -7,13 +7,13 @@ import type { BadgeProps } from "./Badge";
 import { Badge } from "./Badge";
 
 export type TokensBadgeProps = ComponentPropsWithRef<"span"> & {
-  tokensCount: number;
   size?: BadgeProps["size"];
+  tokensCount: number;
 };
 
 export const TokensBadge = ({
-  tokensCount,
   size,
+  tokensCount,
   ...rest
 }: TokensBadgeProps): ReactElement => {
   return (

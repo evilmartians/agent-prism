@@ -7,14 +7,14 @@ import { BrandLogo } from "../BrandLogo";
 export const getSpanBrandAvatar = (
   span: TraceSpan,
 ): AvatarProps | undefined => {
-  const brand = span.metadata?.["brand"] as { type: string } | undefined;
+  const brand = span.metadata?.["brand"] as undefined | { type: string };
 
   if (!brand) return undefined;
 
   return {
-    children: <BrandLogo brand={brand.type} />,
-    size: "4",
-    rounded: "sm",
     category: span.type,
+    children: <BrandLogo brand={brand.type} />,
+    rounded: "sm",
+    size: "4",
   };
 };

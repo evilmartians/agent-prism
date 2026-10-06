@@ -39,11 +39,11 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should not detect HTTP calls without method attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "http request",
         attributes: {
-          "http.url": "/api/users",
           "http.status_code": 200,
+          "http.url": "/api/users",
         },
+        name: "http request",
       });
 
       expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(false);
@@ -114,11 +114,11 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should not detect database calls without system attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "database query",
         attributes: {
-          "db.sql.table": "users",
           "db.operation.name": "SELECT",
+          "db.sql.table": "users",
         },
+        name: "database query",
       });
 
       expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(false);
@@ -164,10 +164,10 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should detect function calls by function.name attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "custom operation",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "calculator.add",
         },
+        name: "custom operation",
       });
 
       expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
@@ -188,10 +188,10 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should detect function calls with both name and attribute", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "tool operation",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "my_function",
         },
+        name: "tool operation",
       });
 
       expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
@@ -199,8 +199,8 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should not detect function calls without keywords or attributes", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "generic operation",
         attributes: {},
+        name: "generic operation",
       });
 
       expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(false);
@@ -485,11 +485,11 @@ describe("openTelemetryCategoryMappers", () => {
   describe("multiple detection methods", () => {
     it("should handle spans that match multiple detection methods", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "openai tool function", // Matches LLM + function + tool keywords
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "openai_call",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "POST",
         },
+        name: "openai tool function", // Matches LLM + function + tool keywords
       });
 
       expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(true);
@@ -501,10 +501,10 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should handle spans that match no detection methods", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "generic operation",
         attributes: {
           "custom.field": "custom_value",
         },
+        name: "generic operation",
       });
 
       expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
@@ -522,12 +522,12 @@ describe("openTelemetryCategoryMappers", () => {
   describe("real-world scenarios", () => {
     it("should detect typical web service HTTP spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "GET /api/users",
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
-          "http.url": "/api/users",
           "http.status_code": 200,
+          "http.url": "/api/users",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: "GET",
         },
+        name: "GET /api/users",
       });
 
       expect(openTelemetryCategoryMappers.isHttpCall(span)).toBe(true);
@@ -535,11 +535,11 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should detect database query spans", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "SELECT users FROM database",
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "postgresql",
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION]: "SELECT",
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: "postgresql",
         },
+        name: "SELECT users FROM database",
       });
 
       expect(openTelemetryCategoryMappers.isDatabaseCall(span)).toBe(true);
@@ -565,10 +565,10 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should detect custom tool functions", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "calculator.add",
         attributes: {
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: "calculator.add",
         },
+        name: "calculator.add",
       });
 
       expect(openTelemetryCategoryMappers.isFunctionCall(span)).toBe(true);
@@ -586,8 +586,8 @@ describe("openTelemetryCategoryMappers", () => {
   describe("edge cases", () => {
     it("should handle empty span names", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "",
         attributes: {},
+        name: "",
       });
 
       expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
@@ -601,8 +601,8 @@ describe("openTelemetryCategoryMappers", () => {
 
     it("should handle spans with only whitespace in names", () => {
       const span = createMockOpenTelemetrySpan({
-        name: "   ",
         attributes: {},
+        name: "   ",
       });
 
       expect(openTelemetryCategoryMappers.isLLMCall(span)).toBe(false);
@@ -617,9 +617,9 @@ describe("openTelemetryCategoryMappers", () => {
     it("should handle attribute values of different types", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: 200, // number instead of string
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_SYSTEM]: true, // boolean instead of string
           [STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME]: [], // array instead of string
+          [STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD]: 200, // number instead of string
         },
       });
 

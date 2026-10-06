@@ -3,7 +3,7 @@ import { type OpenTelemetrySpan } from "@evilmartians/agent-prism-types";
 export function getOpenTelemetryAttributeValue(
   span: OpenTelemetrySpan,
   key: string,
-): string | number | boolean | undefined {
+): boolean | number | string | undefined {
   const attr = span.attributes.find((a) => a.key === key);
 
   if (!attr) {

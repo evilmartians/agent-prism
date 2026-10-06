@@ -7,12 +7,12 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 export const createTestSpan = (
   overrides: Partial<TraceSpan> = {},
 ): TraceSpan => ({
-  id: "test-span",
-  title: "Test Span",
-  startTime: new Date("2024-01-01T00:00:00.000Z"),
   endTime: new Date("2024-01-01T00:00:01.000Z"),
-  type: "span",
-  status: "success",
+  id: "test-span",
   raw: [],
+  startTime: new Date("2024-01-01T00:00:00.000Z"),
+  status: "success",
+  title: "Test Span",
+  type: "span",
   ...overrides,
 });

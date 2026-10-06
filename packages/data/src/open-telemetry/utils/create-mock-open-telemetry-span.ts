@@ -5,11 +5,11 @@ import type {
 } from "@evilmartians/agent-prism-types";
 
 type MockSpanOptions = {
-  name?: string;
-  duration?: [number, number];
   attributes?: Record<string, unknown>;
-  status?: { code: OpenTelemetryStatusCode; message?: string };
+  duration?: [number, number];
   kind?: OpenTelemetrySpanKind;
+  name?: string;
+  status?: { code: OpenTelemetryStatusCode; message?: string };
 };
 
 /**
@@ -19,11 +19,11 @@ export const createMockOpenTelemetrySpan = (
   options: MockSpanOptions = {},
 ): OpenTelemetrySpan => {
   const {
-    name = "test-span",
-    duration = [2, 0],
     attributes = {},
-    status = { code: "STATUS_CODE_OK" },
+    duration = [2, 0],
     kind = "SPAN_KIND_INTERNAL",
+    name = "test-span",
+    status = { code: "STATUS_CODE_OK" },
   } = options;
 
   const startTime: [number, number] = [1640995200, 0];
@@ -40,13 +40,6 @@ export const createMockOpenTelemetrySpan = (
   ).toString();
 
   return {
-    name,
-    kind,
-    traceId: "test-trace-id",
-    spanId: "test-span-id",
-    startTimeUnixNano: startTimeNano,
-    endTimeUnixNano: endTimeNano,
-    status,
     attributes: Object.entries(attributes).map(([key, value]) => ({
       key,
       value: (() => {
@@ -68,11 +61,18 @@ export const createMockOpenTelemetrySpan = (
         return { stringValue: String(value) }; // Fallback for objects, etc.
       })(),
     })),
-    flags: 1,
-    events: [],
-    links: [],
     droppedAttributesCount: 0,
     droppedEventsCount: 0,
     droppedLinksCount: 0,
+    endTimeUnixNano: endTimeNano,
+    events: [],
+    flags: 1,
+    kind,
+    links: [],
+    name,
+    spanId: "test-span-id",
+    startTimeUnixNano: startTimeNano,
+    status,
+    traceId: "test-trace-id",
   };
 };

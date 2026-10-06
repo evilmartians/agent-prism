@@ -53,7 +53,7 @@ describe("agent-prism / details-tabs — tab decisions", () => {
   it("hasTodos is true only for a non-empty task list", () => {
     expect(
       hasTodos(
-        createTestSpan({ todos: [{ title: "ship it", status: "pending" }] }),
+        createTestSpan({ todos: [{ status: "pending", title: "ship it" }] }),
       ),
     ).toBe(true);
     expect(hasTodos(createTestSpan({ todos: [] }))).toBe(false);

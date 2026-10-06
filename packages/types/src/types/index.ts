@@ -1,37 +1,6 @@
-export type TraceRecord = {
-  id: string;
-  name: string;
-  spansCount: number;
-  durationMs: number;
-  agentDescription: string;
-  totalCost?: number;
-  totalTokens?: number;
-  startTime?: number;
-};
-
-export type TraceSpanStatus = "success" | "error" | "pending" | "warning";
-
 export type InputOutputData = {
   input?: string | undefined;
   output?: string | undefined;
-};
-
-export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
-  id: string;
-  title: string;
-  startTime: Date;
-  endTime: Date;
-  type: TraceSpanCategory;
-  /** The source records this span was built from, each as JSON text. */
-  raw: string[];
-  attributes?: TraceSpanAttribute[];
-  children?: TraceSpan<TMetadata>[] | undefined;
-  status: TraceSpanStatus;
-  /** Absent when the source reported no usage at all. */
-  tokenUsage?: TokenUsage | undefined;
-  reasoning?: TraceReasoning | undefined;
-  todos?: TraceTodo[] | undefined;
-  metadata?: TMetadata;
 };
 
 /**
@@ -46,17 +15,12 @@ export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
  * - `total`: an aggregate the source did not break down by type
  */
 export type TokenType =
-  | "input"
-  | "output"
   | "cache_read"
   | "cache_write"
+  | "input"
+  | "output"
   | "total"
   | (string & {});
-
-export type TokenUsageEntry = {
-  tokens: number;
-  cost?: number;
-};
 
 /**
  * Tokens a span spent, and what they cost, per token type. Entries must not
@@ -66,12 +30,17 @@ export type TokenUsageEntry = {
  * `TraceSpan.reasoning` instead).
  */
 export type TokenUsage = {
-  input?: TokenUsageEntry;
-  output?: TokenUsageEntry;
+  [type: string]: TokenUsageEntry | undefined;
   cache_read?: TokenUsageEntry;
   cache_write?: TokenUsageEntry;
+  input?: TokenUsageEntry;
+  output?: TokenUsageEntry;
   total?: TokenUsageEntry;
-  [type: string]: TokenUsageEntry | undefined;
+};
+
+export type TokenUsageEntry = {
+  cost?: number;
+  tokens: number;
 };
 
 /**
@@ -83,38 +52,46 @@ export type TraceReasoning = {
    * withholds the text itself (e.g. OpenAI reasoning models).
    */
   content: string;
+  level?: TraceReasoningLevel | undefined;
   /**
    * Tokens spent on thinking, when the source reports them. They are already
    * part of `tokenUsage.output`, so never add them to it again.
    */
   tokens?: number | undefined;
-  level?: TraceReasoningLevel | undefined;
   /** What made the model think harder, e.g. a "think hard" keyword. */
   triggers?: string[] | undefined;
 };
 
-export type TraceReasoningLevel = "high" | "medium" | "low";
+export type TraceReasoningLevel = "high" | "low" | "medium";
 
-export type TraceTodoStatus = "pending" | "in_progress" | "completed";
-
-/** One entry of the agent's task list, as shown in the Todos section. */
-export type TraceTodo = {
-  title: string;
-  status: TraceTodoStatus;
+export type TraceRecord = {
+  agentDescription: string;
+  durationMs: number;
+  id: string;
+  name: string;
+  spansCount: number;
+  startTime?: number;
+  totalCost?: number;
+  totalTokens?: number;
 };
 
-export type TraceSpanCategory =
-  | "llm_call"
-  | "tool_execution"
-  | "agent_invocation"
-  | "chain_operation"
-  | "retrieval"
-  | "embedding"
-  | "create_agent"
-  | "span"
-  | "event"
-  | "guardrail"
-  | "unknown";
+export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
+  attributes?: TraceSpanAttribute[];
+  children?: TraceSpan<TMetadata>[] | undefined;
+  endTime: Date;
+  id: string;
+  metadata?: TMetadata;
+  /** The source records this span was built from, each as JSON text. */
+  raw: string[];
+  reasoning?: TraceReasoning | undefined;
+  startTime: Date;
+  status: TraceSpanStatus;
+  title: string;
+  todos?: TraceTodo[] | undefined;
+  /** Absent when the source reported no usage at all. */
+  tokenUsage?: TokenUsage | undefined;
+  type: TraceSpanCategory;
+};
 
 export type TraceSpanAttribute = {
   key: string;
@@ -122,7 +99,30 @@ export type TraceSpanAttribute = {
 };
 
 export type TraceSpanAttributeValue = {
-  stringValue?: string;
-  intValue?: string;
   boolValue?: boolean;
+  intValue?: string;
+  stringValue?: string;
 };
+
+export type TraceSpanCategory =
+  | "agent_invocation"
+  | "chain_operation"
+  | "create_agent"
+  | "embedding"
+  | "event"
+  | "guardrail"
+  | "llm_call"
+  | "retrieval"
+  | "span"
+  | "tool_execution"
+  | "unknown";
+
+export type TraceSpanStatus = "error" | "pending" | "success" | "warning";
+
+/** One entry of the agent's task list, as shown in the Todos section. */
+export type TraceTodo = {
+  status: TraceTodoStatus;
+  title: string;
+};
+
+export type TraceTodoStatus = "completed" | "in_progress" | "pending";

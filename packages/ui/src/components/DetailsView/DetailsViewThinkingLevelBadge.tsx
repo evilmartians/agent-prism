@@ -5,21 +5,21 @@ import cn from "classnames";
 
 const LEVEL_CONFIG: Record<
   TraceReasoningLevel,
-  { label: string; className: string }
+  { className: string; label: string }
 > = {
   high: {
-    label: "High",
     className:
       "bg-agentprism-success-muted text-agentprism-success-muted-foreground",
-  },
-  medium: {
-    label: "Medium",
-    className:
-      "bg-agentprism-warning-muted text-agentprism-warning-muted-foreground",
+    label: "High",
   },
   low: {
-    label: "Low",
     className: "bg-agentprism-muted text-agentprism-muted-foreground",
+    label: "Low",
+  },
+  medium: {
+    className:
+      "bg-agentprism-warning-muted text-agentprism-warning-muted-foreground",
+    label: "Medium",
   },
 };
 
