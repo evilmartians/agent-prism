@@ -12,8 +12,8 @@ export type TraceRecord = {
 export type TraceSpanStatus = "success" | "error" | "pending" | "warning";
 
 export type InputOutputData = {
-  input?: string;
-  output?: string;
+  input?: string | undefined;
+  output?: string | undefined;
 };
 
 export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
@@ -25,12 +25,12 @@ export type TraceSpan<TMetadata = Record<string, unknown>> = InputOutputData & {
   /** The source records this span was built from, each as JSON text. */
   raw: string[];
   attributes?: TraceSpanAttribute[];
-  children?: TraceSpan<TMetadata>[];
+  children?: TraceSpan<TMetadata>[] | undefined;
   status: TraceSpanStatus;
   /** Absent when the source reported no usage at all. */
-  tokenUsage?: TokenUsage;
-  reasoning?: TraceReasoning;
-  todos?: TraceTodo[];
+  tokenUsage?: TokenUsage | undefined;
+  reasoning?: TraceReasoning | undefined;
+  todos?: TraceTodo[] | undefined;
   metadata?: TMetadata;
 };
 
@@ -87,10 +87,10 @@ export type TraceReasoning = {
    * Tokens spent on thinking, when the source reports them. They are already
    * part of `tokenUsage.output`, so never add them to it again.
    */
-  tokens?: number;
-  level?: TraceReasoningLevel;
+  tokens?: number | undefined;
+  level?: TraceReasoningLevel | undefined;
   /** What made the model think harder, e.g. a "think hard" keyword. */
-  triggers?: string[];
+  triggers?: string[] | undefined;
 };
 
 export type TraceReasoningLevel = "high" | "medium" | "low";

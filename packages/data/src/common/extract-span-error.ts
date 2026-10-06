@@ -4,7 +4,7 @@ import { flattenSpans } from "./flatten-spans.js";
 
 export interface SpanErrorDetails {
   message: string;
-  stack?: string;
+  stack?: string | undefined;
   nodeName: string;
 }
 

@@ -70,7 +70,6 @@ describe("langfuseSpanAdapter.getTokenUsage", () => {
     const usage = langfuseSpanAdapter.getTokenUsage(
       observation({
         usageDetails: null,
-        costDetails: undefined,
         inputUsage: 100,
         outputUsage: 20,
         totalUsage: 120,

@@ -45,7 +45,9 @@ describe("langfuseSpanAdapter.getSpanStatus", () => {
     undefined,
   ])("treats level %s as success", (level) => {
     expect(
-      langfuseSpanAdapter.getSpanStatus(makeObservation({ id: "c", level })),
+      langfuseSpanAdapter.getSpanStatus(
+        makeObservation(level ? { id: "c", level } : { id: "c" }),
+      ),
     ).toBe("success");
   });
 });
