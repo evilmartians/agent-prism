@@ -117,6 +117,9 @@ jobs:
       - name: Find copy-pasted code
         run: pnpm jscpd
 
+      - name: Find types that repeat the types package
+        run: pnpm dup:types
+
   main:
     if: always()
     needs: [lint, typecheck, test, build, knip, jscpd]

@@ -50,6 +50,9 @@ importers:
       publint:
         specifier: ^0.3.25
         version: 0.3.25
+      typescript:
+        specifier: ~5.8.3
+        version: 5.8.3
 
   packages/data:
     dependencies:
