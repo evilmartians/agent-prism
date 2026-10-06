@@ -78,7 +78,7 @@ export const Badge = ({
       )}
       {...rest}
     >
-      {iconStart && <span className="shrink-0">{iconStart}</span>}
+      {iconStart ? <span className="shrink-0">{iconStart}</span> : null}
 
       <span
         className={cn(
@@ -89,7 +89,7 @@ export const Badge = ({
         {label}
       </span>
 
-      {iconEnd && <span className="shrink-0">{iconEnd}</span>}
+      {iconEnd ? <span className="shrink-0">{iconEnd}</span> : null}
     </span>
   );
 };

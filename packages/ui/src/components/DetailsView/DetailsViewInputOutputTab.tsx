@@ -2,17 +2,10 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
 import { hasTodos, spanHasErrorSurface } from "@evilmartians/agent-prism-data";
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
-import type { TabItem } from "../Tabs";
-
-import { CollapsibleSection } from "../CollapsibleSection";
-import { TabSelector } from "../TabSelector";
-import {
-  DetailsViewContentViewer,
-  type DetailsViewContentViewMode,
-} from "./DetailsViewContentViewer";
 import { DetailsViewErrorBlocks } from "./DetailsViewErrorBlocks";
+import { DetailsViewIOSection } from "./DetailsViewIOSection";
 import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
 
 type DetailsViewInputOutputTabProps = {
@@ -22,8 +15,6 @@ type DetailsViewInputOutputTabProps = {
 
 // Stable reference so memo deps don't change when allSpans is omitted.
 const EMPTY_SPANS: TraceSpan[] = [];
-
-type IOSection = "Input" | "Output";
 
 export const DetailsViewInputOutputTab = ({
   data,
@@ -88,71 +79,19 @@ export const DetailsViewInputOutputTab = ({
 
       <DetailsViewTodosSection data={data} />
       {typeof data.input === "string" && (
-        <IOSection
+        <DetailsViewIOSection
           section="Input"
           content={data.input}
           parsedContent={parsedInput}
         />
       )}
       {typeof data.output === "string" && (
-        <IOSection
+        <DetailsViewIOSection
           section="Output"
           content={data.output}
           parsedContent={parsedOutput}
         />
       )}
     </div>
-  );
-};
-
-type IOSectionProps = {
-  section: IOSection;
-  content: string;
-  parsedContent: string | null;
-};
-
-const IOSection = ({
-  section,
-  content,
-  parsedContent,
-}: IOSectionProps): ReactElement => {
-  const [tab, setTab] = useState<DetailsViewContentViewMode>(
-    parsedContent ? "json" : "plain",
-  );
-
-  useEffect(() => {
-    if (tab === "json" && !parsedContent) {
-      setTab("plain");
-    }
-  }, [tab, parsedContent]);
-
-  const tabItems: TabItem<DetailsViewContentViewMode>[] = [
-    { value: "json", label: "JSON", disabled: !parsedContent },
-    { value: "plain", label: "Plain" },
-  ];
-
-  return (
-    <CollapsibleSection
-      title={section}
-      defaultOpen
-      rightContent={
-        <TabSelector<DetailsViewContentViewMode>
-          items={tabItems}
-          defaultValue={parsedContent ? "json" : "plain"}
-          value={tab}
-          onValueChange={setTab}
-          theme="pill"
-          onClick={(event) => event.stopPropagation()}
-        />
-      }
-    >
-      <DetailsViewContentViewer
-        content={content}
-        parsedContent={parsedContent}
-        mode={tab}
-        label={section}
-        id={section}
-      />
-    </CollapsibleSection>
   );
 };

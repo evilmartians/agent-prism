@@ -126,11 +126,11 @@ export const Tabs = <T extends string = string>({
               triggerClassName,
             )}
           >
-            {item.icon && (
+            {item.icon ? (
               <span className="text-agentprism-secondary-foreground mr-2 group-data-[state=active]:text-current">
                 {item.icon}
               </span>
-            )}
+            ) : null}
             <span className="truncate text-sm font-medium">{item.label}</span>
           </RadixTabs.Trigger>
         ))}

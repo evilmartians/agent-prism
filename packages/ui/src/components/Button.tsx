@@ -102,7 +102,9 @@ export const Button = ({
 
   return (
     <button
-      type={type}
+      type={
+        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
+      }
       onClick={onClick}
       disabled={disabled}
       className={cn(
@@ -116,9 +118,9 @@ export const Button = ({
       )}
       {...rest}
     >
-      {iconStart && <span className="mr-1">{iconStart}</span>}
+      {iconStart ? <span className="mr-1">{iconStart}</span> : null}
       {children}
-      {iconEnd && <span className="ml-1">{iconEnd}</span>}
+      {iconEnd ? <span className="ml-1">{iconEnd}</span> : null}
     </button>
   );
 };

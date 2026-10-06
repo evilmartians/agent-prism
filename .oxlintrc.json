@@ -15,7 +15,11 @@
     "**/storybook-static",
     "packages/saas/next-env.d.ts"
   ],
-  "jsPlugins": ["eslint-plugin-perfectionist", "eslint-plugin-tailwindcss"],
+  "jsPlugins": [
+    "eslint-plugin-perfectionist",
+    "eslint-plugin-tailwindcss",
+    { "name": "react-js", "specifier": "eslint-plugin-react" }
+  ],
   "settings": {
     "tailwindcss": {
       "config": "packages/ui/tailwind.config.ts",
@@ -137,6 +141,12 @@
     "react/no-unescaped-entities": "error",
     "react/no-unknown-property": "error",
     "react/require-render-return": "error",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "react/only-export-components": ["error", { "allowConstantExport": true }],
+    "react/button-has-type": "error",
+    "react/no-multi-comp": "error",
+    "react-js/jsx-no-leaked-render": "error",
     "tailwindcss/classnames-order": "off",
     "tailwindcss/enforces-negative-arbitrary-values": "error",
     "tailwindcss/enforces-shorthand": "error",
@@ -167,6 +177,15 @@
       "files": ["**/*.d.ts", "packages/data/src/common/extract-span-error.ts"],
       "rules": {
         "typescript/consistent-type-definitions": "off"
+      }
+    },
+    {
+      "files": ["packages/saas/src/app/**"],
+      "rules": {
+        "react/only-export-components": [
+          "error",
+          { "allowConstantExport": true, "allowExportNames": ["metadata"] }
+        ]
       }
     }
   ]

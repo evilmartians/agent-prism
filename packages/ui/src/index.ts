@@ -7,11 +7,11 @@ export { default as BadgeSource } from "./components/Badge.tsx?raw";
 export { Button } from "./components/Button";
 export { default as ButtonSource } from "./components/Button.tsx?raw";
 
-export {
-  CollapseAllButton,
-  ExpandAllButton,
-} from "./components/CollapseAndExpandControls";
-export { default as CollapseAndExpandControlsSource } from "./components/CollapseAndExpandControls.tsx?raw";
+export { CollapseAllButton } from "./components/CollapseAllButton";
+export { default as CollapseAllButtonSource } from "./components/CollapseAllButton.tsx?raw";
+
+export { ExpandAllButton } from "./components/ExpandAllButton";
+export { default as ExpandAllButtonSource } from "./components/ExpandAllButton.tsx?raw";
 
 export { CollapsibleSection } from "./components/CollapsibleSection";
 export { default as CollapsibleSectionSource } from "./components/CollapsibleSection.tsx?raw";

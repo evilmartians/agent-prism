@@ -14,6 +14,19 @@ import {
 } from "@storybook/addon-docs/blocks";
 import { useState } from "react";
 
+const ClearableTextInput = (args: TextInputProps) => {
+  const [value, setValue] = useState(args.defaultValue);
+
+  return (
+    <TextInput
+      {...args}
+      value={value}
+      onValueChange={setValue}
+      onClear={() => setValue("")}
+    />
+  );
+};
+
 const meta = {
   title: "Atoms/TextInput",
   component: TextInput,
@@ -96,17 +109,7 @@ export const Clearable: Story = {
     placeholder: "Enter email...",
     defaultValue: "example@domain.com",
   },
-  render: (args: TextInputProps) => {
-    const [value, setValue] = useState(args.defaultValue);
-    return (
-      <TextInput
-        {...args}
-        value={value}
-        onValueChange={setValue}
-        onClear={() => setValue("")}
-      />
-    );
-  },
+  render: (args: TextInputProps) => <ClearableTextInput {...args} />,
 };
 
 export const StartIcon: Story = {

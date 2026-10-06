@@ -56,7 +56,9 @@ export const IconButton = ({
 }: IconButtonProps): ReactElement => {
   return (
     <button
-      type={type}
+      type={
+        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
+      }
       aria-label={ariaLabel}
       className={cn(
         className,

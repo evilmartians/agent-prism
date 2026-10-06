@@ -319,7 +319,7 @@ export const SpanCard: FC<SpanCardProps> = ({
               <SpanCardConnector key={`${connector}-${idx}`} type={connector} />
             ))}
 
-            {hasExpandButtonAsFirstChild && (
+            {hasExpandButtonAsFirstChild ? (
               <div className="flex w-5 flex-col items-center">
                 <SpanCardToggle
                   isExpanded={state.isExpanded}
@@ -327,9 +327,11 @@ export const SpanCard: FC<SpanCardProps> = ({
                   onToggleClick={eventHandlers.handleToggleClick}
                 />
 
-                {state.isExpanded && <SpanCardConnector type="vertical" />}
+                {state.isExpanded ? (
+                  <SpanCardConnector type="vertical" />
+                ) : null}
               </div>
-            )}
+            ) : null}
           </div>
           <div
             className={cn(
@@ -346,7 +348,7 @@ export const SpanCard: FC<SpanCardProps> = ({
                 minWidth: 140,
               }}
             >
-              {avatar && <Avatar size="4" {...avatar} />}
+              {avatar ? <Avatar size="4" {...avatar} /> : null}
 
               <h3
                 className="text-agentprism-foreground max-w-32 truncate text-sm leading-[14px]"
@@ -359,11 +361,11 @@ export const SpanCard: FC<SpanCardProps> = ({
             </div>
 
             <div className="flex grow flex-wrap items-center justify-end gap-1">
-              {expandButton === "outside" && withStatus && (
+              {expandButton === "outside" && withStatus ? (
                 <div>
                   <SpanStatus status={data.status} />
                 </div>
-              )}
+              ) : null}
 
               <SpanCardTimeline
                 minStart={minStart}
@@ -376,11 +378,11 @@ export const SpanCard: FC<SpanCardProps> = ({
                   {formatDuration(durationMs)}
                 </span>
 
-                {expandButton === "inside" && withStatus && (
+                {expandButton === "inside" && withStatus ? (
                   <div>
                     <SpanStatus status={data.status} />
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
           </div>

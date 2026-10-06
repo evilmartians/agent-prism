@@ -63,7 +63,7 @@ export const TraceList = ({
         </IconButton>
       </header>
 
-      {expanded && (
+      {expanded ? (
         <ul className="border-agentprism-border flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border">
           <div className="flex-1 overflow-y-auto">
             {traces.map((trace) => (
@@ -82,7 +82,7 @@ export const TraceList = ({
             ))}
           </div>
         </ul>
-      )}
+      ) : null}
     </div>
   );
 };

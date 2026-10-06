@@ -63,11 +63,11 @@ const FileUploader: FC = () => {
         Upload traces
       </Button>
 
-      {traceContext?.traceState.error && (
+      {traceContext?.traceState.error ? (
         <div className="mt-4">
           <UploadFileErrorMessage message={traceContext.traceState.error} />
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

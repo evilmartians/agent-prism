@@ -11,6 +11,8 @@ import {
   hasReportedCost,
 } from "@evilmartians/agent-prism-data";
 
+import { DetailsViewStatGrid, type StatRowData } from "./DetailsViewStatGrid";
+
 type DetailsViewContextTabProps = {
   data: TraceSpan;
 };
@@ -68,41 +70,6 @@ const TOKEN_TYPE_LABELS: Record<string, string> = {
   cache_read: "Cache read",
   cache_write: "Cache write",
 };
-
-type StatRowData = {
-  label: string;
-  value: string;
-  sub?: string | undefined;
-};
-
-/**
- * A three-column grid (label / value / sub). Using a shared subgrid keeps the
- * bold values right-aligned in one column and the muted `sub` annotations in the
- * next, so rows line up regardless of label or value length and the value never
- * collides with a long label.
- */
-function StatGrid({ rows }: { rows: StatRowData[] }): ReactElement {
-  return (
-    <div className="divide-agentprism-border grid grid-cols-[1fr_auto_auto] divide-y">
-      {rows.map((row) => (
-        <div
-          key={row.label}
-          className="col-span-3 grid grid-cols-subgrid items-baseline py-1.5"
-        >
-          <span className="text-agentprism-muted-foreground pr-3 text-xs">
-            {row.label}
-          </span>
-          <span className="text-agentprism-foreground text-right text-xs font-medium">
-            {row.value}
-          </span>
-          <span className="text-agentprism-muted-foreground pl-1.5 text-[10px]">
-            {row.sub ?? ""}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export function DetailsViewContextTab({
   data,
@@ -198,20 +165,20 @@ export function DetailsViewContextTab({
 
   return (
     <div className="space-y-4">
-      {model && (
+      {model ? (
         <div className="flex items-center gap-2">
           <span className="bg-agentprism-secondary text-agentprism-secondary-foreground rounded px-2 py-0.5 text-xs font-medium">
             {model}
           </span>
-          {speed && (
+          {speed ? (
             <span className="text-agentprism-muted-foreground text-[10px]">
               {speed}
             </span>
-          )}
+          ) : null}
         </div>
-      )}
+      ) : null}
 
-      {hasContextData && (
+      {hasContextData ? (
         <div className="border-agentprism-border rounded-md border p-3">
           <h4 className="text-agentprism-muted-foreground mb-2 text-xs font-medium">
             Context Window Position
@@ -248,23 +215,23 @@ export function DetailsViewContextTab({
           )}
 
           <div className="mt-2">
-            <StatGrid rows={contextRows} />
+            <DetailsViewStatGrid rows={contextRows} />
           </div>
         </div>
-      )}
+      ) : null}
 
-      {hasTokenBreakdown && (
+      {hasTokenBreakdown ? (
         <div className="border-agentprism-border rounded-md border p-3">
           <h4 className="text-agentprism-muted-foreground mb-2 text-xs font-medium">
             Token Breakdown
           </h4>
-          <StatGrid rows={breakdownRows} />
+          <DetailsViewStatGrid rows={breakdownRows} />
         </div>
-      )}
+      ) : null}
 
       {hasReportedCost(usage) && (
         <div className="border-agentprism-border rounded-md border p-3">
-          <StatGrid
+          <DetailsViewStatGrid
             rows={[{ label: "Cost", value: formatCost(getTotalCost(usage)) }]}
           />
         </div>

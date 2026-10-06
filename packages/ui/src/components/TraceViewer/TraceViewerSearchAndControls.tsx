@@ -1,9 +1,7 @@
 import type { ReactElement } from "react";
 
-import {
-  CollapseAllButton,
-  ExpandAllButton,
-} from "../CollapseAndExpandControls";
+import { CollapseAllButton } from "../CollapseAllButton";
+import { ExpandAllButton } from "../ExpandAllButton";
 import { SearchInput } from "../SearchInput";
 
 export const TraceViewerSearchAndControls = ({

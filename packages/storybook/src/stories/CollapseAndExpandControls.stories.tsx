@@ -3,7 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ExpandAllButton,
   CollapseAllButton,
-  CollapseAndExpandControlsSource,
+  CollapseAllButtonSource,
+  ExpandAllButtonSource,
 } from "@evilmartians/agent-prism-ui";
 import {
   Description,
@@ -28,7 +29,8 @@ const meta = {
           <Primary />
           <Controls />
           <Stories />
-          <Source code={CollapseAndExpandControlsSource} language="tsx" />
+          <Source code={ExpandAllButtonSource} language="tsx" />
+          <Source code={CollapseAllButtonSource} language="tsx" />
         </>
       ),
     },

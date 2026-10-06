@@ -61,11 +61,11 @@ export const TraceListItem = ({
       <TraceListItemHeader trace={trace} avatar={avatar} />
 
       <div className="flex flex-wrap items-center gap-2">
-        {showDescription && (
+        {showDescription ? (
           <span className="text-agentprism-muted-foreground mr-4 max-w-full truncate text-sm">
             {agentDescription}
           </span>
-        )}
+        ) : null}
 
         {typeof totalCost === "number" && <PriceBadge cost={totalCost} />}
 

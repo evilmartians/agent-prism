@@ -89,7 +89,7 @@ export const TextInput = ({
 
   return (
     <div className={cn("w-full", className)}>
-      {label && (
+      {label ? (
         <label
           htmlFor={id}
           className={cn(
@@ -99,7 +99,7 @@ export const TextInput = ({
         >
           {label}
         </label>
-      )}
+      ) : null}
       <div
         className={cn(
           "relative flex w-full items-center justify-center",
@@ -123,12 +123,12 @@ export const TextInput = ({
           )}
           {...rest}
         />
-        {startIcon && (
+        {startIcon ? (
           <div className={cn(iconBaseClassName, "left-2")} aria-hidden>
             {startIcon}
           </div>
-        )}
-        {onClear && rest.value && (
+        ) : null}
+        {onClear && rest.value ? (
           <button
             className={cn(iconBaseClassName, "right-2")}
             aria-label="Clear input value"
@@ -137,7 +137,7 @@ export const TextInput = ({
           >
             <X className="size-4" />
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   );

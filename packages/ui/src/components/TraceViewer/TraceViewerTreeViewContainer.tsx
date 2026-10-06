@@ -37,7 +37,7 @@ export const TraceViewerTreeViewContainer = ({
   showHeader?: boolean | undefined;
 }): ReactElement => (
   <>
-    {showHeader && selectedTrace && (
+    {showHeader && selectedTrace ? (
       <div className="flex shrink-0 gap-2 px-4">
         <TraceListItemHeader trace={selectedTrace} />
 
@@ -47,7 +47,7 @@ export const TraceViewerTreeViewContainer = ({
           ))}
         </div>
       </div>
-    )}
+    ) : null}
 
     <div className="bg-agentprism-background flex min-h-0 flex-1 flex-col overflow-hidden rounded-md">
       <TraceViewerSearchAndControls

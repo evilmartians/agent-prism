@@ -60,7 +60,7 @@ export const DetailsViewHeader = ({
 
   return (
     <div className={className || "flex flex-wrap items-center gap-2"}>
-      {avatar && <Avatar size="4" {...avatar} />}
+      {avatar ? <Avatar size="4" {...avatar} /> : null}
 
       <span className="text-agentprism-foreground tracking-wide">
         {data.title}
@@ -70,7 +70,7 @@ export const DetailsViewHeader = ({
         <SpanStatus status={data.status} />
       </div>
 
-      {copyButton && (
+      {copyButton ? (
         <IconButton
           aria-label={
             copyButton.isEnabled ? "Copy span details" : "Copy disabled"
@@ -84,18 +84,18 @@ export const DetailsViewHeader = ({
             <Copy className="text-agentprism-muted-foreground size-3" />
           )}
         </IconButton>
-      )}
+      ) : null}
 
       <SpanBadge category={data.type} />
 
-      {data.tokenUsage && (
+      {data.tokenUsage ? (
         <>
           <TokensBadge tokensCount={getTotalTokens(data.tokenUsage)} />
           {hasReportedCost(data.tokenUsage) && (
             <PriceBadge cost={getTotalCost(data.tokenUsage)} />
           )}
         </>
-      )}
+      ) : null}
 
       <span className="text-agentprism-muted-foreground text-xs">
         LATENCY: {formatDuration(durationMs)}

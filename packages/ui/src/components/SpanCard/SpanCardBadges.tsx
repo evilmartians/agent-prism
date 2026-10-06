@@ -20,14 +20,14 @@ export const SpanCardBadges = ({ data }: SpanCardBagdesProps): ReactElement => {
     <div className="flex flex-wrap items-center justify-start gap-1">
       <SpanBadge category={data.type} />
 
-      {data.tokenUsage && (
+      {data.tokenUsage ? (
         <>
           <TokensBadge tokensCount={getTotalTokens(data.tokenUsage)} />
           {hasReportedCost(data.tokenUsage) && (
             <PriceBadge cost={getTotalCost(data.tokenUsage)} />
           )}
         </>
-      )}
+      ) : null}
     </div>
   );
 };
