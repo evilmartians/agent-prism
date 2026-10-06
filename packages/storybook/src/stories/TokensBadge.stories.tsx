@@ -13,14 +13,14 @@ const meta = {
   argTypes: {
     size: {
       control: { type: "select" },
-      defaultValue: "xs",
       description: "The size of the badge",
       options: ["xs", "sm", "md"],
+      table: { defaultValue: { summary: "xs" } },
     },
     tokensCount: {
       control: { type: "number" },
-      defaultValue: 1500,
       description: "The number of tokens to display",
+      table: { defaultValue: { summary: "1500" } },
     },
   },
   component: TokensBadge,

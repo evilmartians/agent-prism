@@ -6,14 +6,14 @@ import "@evilmartians/agent-prism-ui/theme.css";
 import "./styles.css";
 
 const withTheme: Decorator = (StoryFn, context) => {
-  const theme = context.globals["theme"] || "system";
-  let mode = theme;
-
-  if (theme === "system") {
-    mode = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  }
+  const theme: unknown = context.globals["theme"];
+  const systemMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+  const mode =
+    typeof theme === "string" && theme !== "" && theme !== "system"
+      ? theme
+      : systemMode;
 
   document.documentElement.setAttribute("data-mode", mode);
   return StoryFn();

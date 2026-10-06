@@ -20,7 +20,9 @@ const ClearableTextInput = (args: TextInputProps) => {
   return (
     <TextInput
       {...args}
-      onClear={() => setValue("")}
+      onClear={() => {
+        setValue("");
+      }}
       onValueChange={setValue}
       value={value}
     />
@@ -31,14 +33,14 @@ const meta = {
   argTypes: {
     disabled: {
       control: "boolean",
-      defaultValue: false,
       description: "Disables the input",
+      table: { defaultValue: { summary: "false" } },
     },
     hideLabel: {
       control: "boolean",
-      defaultValue: false,
       description:
         "Whether to visually hide the label while keeping it for screen readers",
+      table: { defaultValue: { summary: "false" } },
     },
     id: {
       control: "text",

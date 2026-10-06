@@ -28,7 +28,7 @@ export const TraceViewerDesktopLayout = ({
   traceRecords,
 }: TraceViewerLayoutProps): ReactElement => {
   const actualSelectedTrace =
-    traceRecords.find((t) => t.id === selectedTraceId) || selectedTrace;
+    traceRecords.find((t) => t.id === selectedTraceId) ?? selectedTrace;
 
   return (
     <PanelGroup className="h-full" direction="horizontal">

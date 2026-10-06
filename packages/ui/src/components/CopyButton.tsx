@@ -12,57 +12,49 @@ type CopyButtonProps = {
 
 type CopyState = "error" | "idle" | "success";
 
+const ICONS: Record<CopyState, ReactElement> = {
+  error: <X className="size-3" />,
+  idle: <Copy className="size-3" />,
+  success: <Check className="size-3" />,
+};
+
 export const CopyButton = ({
   content,
   label,
 }: CopyButtonProps): ReactElement => {
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
-  const onClick = async () => {
+  const copy = async () => {
     try {
-      if (!navigator.clipboard) {
-        throw new Error("Clipboard API not supported");
-      }
-
       await navigator.clipboard.writeText(content);
       setCopyState("success");
-      setTimeout(() => setCopyState("idle"), 2000);
+      setTimeout(() => {
+        setCopyState("idle");
+      }, 2000);
     } catch {
       setCopyState("error");
-      setTimeout(() => setCopyState("idle"), 2000);
+      setTimeout(() => {
+        setCopyState("idle");
+      }, 2000);
     }
   };
 
-  const getIcon = () => {
-    switch (copyState) {
-      case "error":
-        return <X className="size-3" />;
-      case "success":
-        return <Check className="size-3" />;
-      default:
-        return <Copy className="size-3" />;
-    }
-  };
-
-  const getAriaLabel = () => {
-    switch (copyState) {
-      case "error":
-        return `Failed to copy ${label}`;
-      case "success":
-        return `${label} Copied`;
-      default:
-        return `Copy ${label}`;
-    }
+  const ariaLabels: Record<CopyState, string> = {
+    error: `Failed to copy ${label}`,
+    idle: `Copy ${label}`,
+    success: `${label} Copied`,
   };
 
   return (
     <IconButton
-      aria-label={getAriaLabel()}
+      aria-label={ariaLabels[copyState]}
       disabled={copyState !== "idle"}
-      onClick={onClick}
+      onClick={() => {
+        void copy();
+      }}
       variant="ghost"
     >
-      {getIcon()}
+      {ICONS[copyState]}
     </IconButton>
   );
 };

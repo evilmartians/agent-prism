@@ -13,7 +13,7 @@ import {
 
 type DetailsViewIOSectionProps = {
   content: string;
-  parsedContent: null | string;
+  parsedContent: unknown;
   section: "Input" | "Output";
 };
 
@@ -22,16 +22,17 @@ export const DetailsViewIOSection = ({
   parsedContent,
   section,
 }: DetailsViewIOSectionProps): ReactElement => {
+  const hasJson = Boolean(parsedContent);
   const [tab, setTab] = useState<DetailsViewContentViewMode>(
-    parsedContent ? "json" : "plain",
+    hasJson ? "json" : "plain",
   );
 
-  if (tab === "json" && !parsedContent) {
+  if (tab === "json" && !hasJson) {
     setTab("plain");
   }
 
   const tabItems: TabItem<DetailsViewContentViewMode>[] = [
-    { disabled: !parsedContent, label: "JSON", value: "json" },
+    { disabled: !hasJson, label: "JSON", value: "json" },
     { label: "Plain", value: "plain" },
   ];
 
@@ -40,7 +41,7 @@ export const DetailsViewIOSection = ({
       defaultOpen
       rightContent={
         <TabSelector<DetailsViewContentViewMode>
-          defaultValue={parsedContent ? "json" : "plain"}
+          defaultValue={hasJson ? "json" : "plain"}
           items={tabItems}
           onValueChange={setTab}
           theme="pill"

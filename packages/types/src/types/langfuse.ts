@@ -27,7 +27,7 @@ export type LangfuseObservation = {
   /** Milliseconds. */
   latency?: number;
   level?: LangfuseObservationLevel;
-  metadata?: null | unknown;
+  metadata?: unknown;
   model?: null | string;
   name: string;
   output?: null | string;

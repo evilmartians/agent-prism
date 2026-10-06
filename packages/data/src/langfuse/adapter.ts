@@ -100,8 +100,9 @@ export const langfuseSpanAdapter: SpanAdapter<
         return "span";
       case "TOOL":
         return "tool_execution";
+      case "EVALUATOR":
+      case undefined:
       case "UNKNOWN":
-        return "unknown";
       default:
         return "unknown";
     }
@@ -118,6 +119,9 @@ export const langfuseSpanAdapter: SpanAdapter<
         return "error";
       case "WARNING":
         return "warning";
+      case "DEBUG":
+      case "DEFAULT":
+      case undefined:
       default:
         return "success";
     }
@@ -167,7 +171,9 @@ export const langfuseSpanAdapter: SpanAdapter<
   getTraceReasoning(span: LangfuseObservation): TraceReasoning | undefined {
     const tokens = span.usageDetails?.output_reasoning_tokens;
 
-    return tokens ? { content: "", tokens } : undefined;
+    return tokens !== undefined && tokens !== 0
+      ? { content: "", tokens }
+      : undefined;
   },
   getTraceTodos(): TraceTodo[] | undefined {
     return undefined;

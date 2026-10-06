@@ -17,35 +17,34 @@ const meta = {
     },
     disabled: {
       control: "boolean",
-      defaultValue: false,
       description: "Disables the button",
+      table: { defaultValue: { summary: "false" } },
     },
     fullWidth: {
       control: "boolean",
-      defaultValue: false,
       description: "Makes the button full width",
+      table: { defaultValue: { summary: "false" } },
     },
     rounded: {
       control: { type: "select" },
-      defaultValue: "md",
       description: "The border radius of the button",
       options: ["none", "sm", "md", "lg", "full"],
+      table: { defaultValue: { summary: "md" } },
     },
     size: {
       control: { type: "select" },
-      defaultValue: "8",
       description: "The size of the button",
       options: ["6", "7", "8", "9", "10", "11", "12", "16"],
+      table: { defaultValue: { summary: "8" } },
     },
     type: {
       control: { type: "select" },
-      defaultValue: "button",
       description: "The button type attribute",
       options: ["button", "submit", "reset"],
+      table: { defaultValue: { summary: "button" } },
     },
     variant: {
       control: { type: "select" },
-      defaultValue: "primary",
       description: "The visual variant of the button",
       options: [
         "brand",
@@ -56,6 +55,7 @@ const meta = {
         "destructive",
         "success",
       ],
+      table: { defaultValue: { summary: "primary" } },
     },
   },
   component: Button,

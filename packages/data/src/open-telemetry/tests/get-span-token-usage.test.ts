@@ -9,9 +9,12 @@ import {
   hasReportedCost,
 } from "../../common/token-usage.js";
 import { openTelemetrySpanAdapter } from "../adapter.js";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
+import {
+  createMockOpenTelemetrySpan,
+  type MockAttributeValue,
+} from "../utils/create-mock-open-telemetry-span.js";
 
-const usageOf = (attributes: Record<string, unknown>) =>
+const usageOf = (attributes: Record<string, MockAttributeValue>) =>
   openTelemetrySpanAdapter.getTokenUsage(
     createMockOpenTelemetrySpan({ attributes }),
   );
@@ -230,7 +233,7 @@ describe("openTelemetrySpanAdapter.getTokenUsage", () => {
 });
 
 describe("openTelemetrySpanAdapter.getTraceReasoning", () => {
-  const reasoningOf = (attributes: Record<string, unknown>) =>
+  const reasoningOf = (attributes: Record<string, MockAttributeValue>) =>
     openTelemetrySpanAdapter.getTraceReasoning(
       createMockOpenTelemetrySpan({ attributes }),
     );

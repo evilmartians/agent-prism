@@ -9,7 +9,9 @@ const subscribeToMobileMediaQuery = (onChange: () => void): (() => void) => {
 
   mediaQuery.addEventListener("change", onChange);
 
-  return () => mediaQuery.removeEventListener("change", onChange);
+  return () => {
+    mediaQuery.removeEventListener("change", onChange);
+  };
 };
 
 export const useIsMobile = (): boolean => {

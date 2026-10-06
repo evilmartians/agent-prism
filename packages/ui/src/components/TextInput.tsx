@@ -87,9 +87,13 @@ export const TextInput = ({
     inputRef.current?.focus();
   };
 
+  const hasLabel = label !== undefined && label !== "";
+  const hasStartIcon = Boolean(startIcon);
+  const hasValue = Boolean(rest.value);
+
   return (
     <div className={cn("w-full", className)}>
-      {label ? (
+      {hasLabel ? (
         <label
           className={cn(
             "text-agentprism-foreground block text-sm font-medium",
@@ -103,7 +107,7 @@ export const TextInput = ({
       <div
         className={cn(
           "relative flex w-full items-center justify-center",
-          label && !hideLabel && "mt-1",
+          hasLabel && !hideLabel && "mt-1",
         )}
       >
         <input
@@ -111,7 +115,7 @@ export const TextInput = ({
             inputClassName,
             "flex h-7 items-center truncate",
             "w-full px-2",
-            !!startIcon && "pl-8",
+            hasStartIcon && "pl-8",
             !!onClear && "pr-8",
             "border-agentprism-border rounded border bg-transparent",
             "text-agentprism-foreground placeholder:text-agentprism-foreground/50",
@@ -120,15 +124,15 @@ export const TextInput = ({
           )}
           id={id}
           onChange={handleChange}
-          ref={ref || inputRef}
+          ref={ref ?? inputRef}
           {...rest}
         />
-        {startIcon ? (
+        {hasStartIcon ? (
           <div aria-hidden className={cn(iconBaseClassName, "left-2")}>
             {startIcon}
           </div>
         ) : null}
-        {onClear && rest.value ? (
+        {onClear && hasValue ? (
           <button
             aria-label="Clear input value"
             className={cn(iconBaseClassName, "right-2")}

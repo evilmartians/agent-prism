@@ -25,14 +25,12 @@ export const buildSpanTree = <TRawSpan>(
   spans.forEach((span) => {
     const convertedSpan = spanMap.get(getId(span));
     if (!convertedSpan) return;
-    const parentSpanId = getParentId(span);
+    const parentSpanId = getParentId(span) ?? "";
 
-    if (parentSpanId) {
+    if (parentSpanId !== "") {
       const parent = spanMap.get(parentSpanId);
       if (parent) {
-        if (!parent.children) {
-          parent.children = [];
-        }
+        parent.children ??= [];
         parent.children.push(convertedSpan);
       }
     } else {

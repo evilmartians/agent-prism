@@ -13,7 +13,6 @@ const meta = {
   argTypes: {
     category: {
       control: { type: "select" },
-      defaultValue: "llm_call",
       description: "The category of the span which avatar is associated with",
       options: [
         "llm_call",
@@ -28,12 +27,13 @@ const meta = {
         "guardrail",
         "unknown",
       ],
+      table: { defaultValue: { summary: "llm_call" } },
     },
     size: {
       control: { type: "select" },
-      defaultValue: "5",
       description: "The size of the badge",
       options: ["4", "5", "6", "7"],
+      table: { defaultValue: { summary: "5" } },
     },
   },
   component: SpanBadge,

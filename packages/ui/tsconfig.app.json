@@ -30,5 +30,6 @@
       "@evilmartians/agent-prism-data": ["../data/src"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/theming/scripts"]
 }

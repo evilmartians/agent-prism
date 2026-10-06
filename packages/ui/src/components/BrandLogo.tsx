@@ -7,31 +7,31 @@ import { MistralLogo } from "./BrandLogos/MistralLogo";
 import { OpenAILogo } from "./BrandLogos/OpenAILogo";
 import { PerplexityLogo } from "./BrandLogos/PerplexityLogo";
 
-const LOGO_REGISTRY = {
-  anthropic: AnthropicLogo,
-  google: GoogleLogo,
-  meta: MetaLogo,
-  mistral: MistralLogo,
-  openai: OpenAILogo,
-  perplexity: PerplexityLogo,
-} as const;
+const LOGO_REGISTRY = new Map(
+  Object.entries({
+    anthropic: AnthropicLogo,
+    google: GoogleLogo,
+    meta: MetaLogo,
+    mistral: MistralLogo,
+    openai: OpenAILogo,
+    perplexity: PerplexityLogo,
+  }),
+);
 
 type BrandLogoProps = {
-  brand: BrandType | string;
+  brand: string;
   className?: string | undefined;
   fallback?: React.ReactNode | undefined;
 };
-
-type BrandType = keyof typeof LOGO_REGISTRY;
 
 export const BrandLogo: FC<BrandLogoProps> = ({
   brand,
   className = "size-4",
   fallback = null,
 }) => {
-  const Logo = LOGO_REGISTRY[brand as BrandType];
+  const Logo = LOGO_REGISTRY.get(brand);
 
-  if (!Logo) return <>{fallback}</>;
+  if (Logo === undefined) return <>{fallback}</>;
 
   return <Logo className={className} />;
 };

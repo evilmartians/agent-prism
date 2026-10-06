@@ -6,7 +6,7 @@ import { agentPrismPrefix } from "../theme";
 
 export type JsonViewerProps = {
   className?: string | undefined;
-  content: string;
+  content: unknown;
   id: string;
 };
 

@@ -48,7 +48,9 @@ function getStringAttr(
   attributes: TraceSpanAttribute[] | undefined,
   key: string,
 ): string | undefined {
-  return attributes?.find((a) => a.key === key)?.value.stringValue;
+  const value = attributes?.find((a) => a.key === key)?.value.stringValue;
+
+  return value === "" ? undefined : value;
 }
 
 const smallCostFormat = new Intl.NumberFormat("en-US", {
@@ -199,12 +201,12 @@ export function DetailsViewContextTab({
 
   return (
     <div className="space-y-4">
-      {model ? (
+      {model !== undefined ? (
         <div className="flex items-center gap-2">
           <span className="bg-agentprism-secondary text-agentprism-secondary-foreground rounded px-2 py-0.5 text-xs font-medium">
             {model}
           </span>
-          {speed ? (
+          {speed !== undefined ? (
             <span className="text-agentprism-muted-foreground text-[10px]">
               {speed}
             </span>

@@ -48,9 +48,9 @@ const readAttribute = (
 ): string | undefined => {
   for (const key of keys) {
     const match = span.attributes?.find((entry) => entry.key === key);
-    const value = normalize(match?.value?.stringValue);
+    const value = normalize(match?.value.stringValue);
 
-    if (value) return value;
+    if (value !== undefined && value !== "") return value;
   }
 
   return undefined;
@@ -74,7 +74,7 @@ const findFirstInRecords = (
   for (const record of records) {
     const value = read(record);
 
-    if (value) return value;
+    if (value !== undefined && value !== "") return value;
   }
 
   return undefined;

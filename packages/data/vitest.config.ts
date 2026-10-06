@@ -1,7 +1,7 @@
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
-process.env["TZ"] = "UTC";
+process.env.TZ = "UTC";
 
 export default defineConfig({
   plugins: [tsconfigPaths()],

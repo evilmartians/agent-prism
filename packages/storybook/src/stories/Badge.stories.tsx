@@ -17,9 +17,9 @@ const meta = {
     },
     size: {
       control: { type: "select" },
-      defaultValue: "5",
       description: "The size of the badge",
       options: ["4", "5", "6", "7"],
+      table: { defaultValue: { summary: "5" } },
     },
   },
   component: Badge,

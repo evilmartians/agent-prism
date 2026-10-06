@@ -54,12 +54,20 @@ export const DetailsViewHeader = ({
     if (copyButton?.onCopy) {
       copyButton.onCopy(data);
       setHasCopied(true);
-      setTimeout(() => setHasCopied(false), 2000);
+      setTimeout(() => {
+        setHasCopied(false);
+      }, 2000);
     }
   };
 
   return (
-    <div className={className || "flex flex-wrap items-center gap-2"}>
+    <div
+      className={
+        className !== undefined && className !== ""
+          ? className
+          : "flex flex-wrap items-center gap-2"
+      }
+    >
       {avatar ? <Avatar size="4" {...avatar} /> : null}
 
       <span className="text-agentprism-foreground tracking-wide">
@@ -73,7 +81,9 @@ export const DetailsViewHeader = ({
       {copyButton ? (
         <IconButton
           aria-label={
-            copyButton.isEnabled ? "Copy span details" : "Copy disabled"
+            copyButton.isEnabled === true
+              ? "Copy span details"
+              : "Copy disabled"
           }
           onClick={handleCopy}
           variant="ghost"

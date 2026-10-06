@@ -9,7 +9,7 @@ export type DetailsViewContentViewerProps = {
   id: string;
   label: string;
   mode: DetailsViewContentViewMode;
-  parsedContent: null | string;
+  parsedContent: unknown;
 };
 
 export type DetailsViewContentViewMode = "json" | "plain";
@@ -37,7 +37,7 @@ export const DetailsViewContentViewer = ({
       <div className="absolute right-1.5 top-1.5 z-10">
         <CopyButton content={content} label={label} />
       </div>
-      {mode === "json" && parsedContent ? (
+      {mode === "json" && Boolean(parsedContent) ? (
         <DetailsViewJsonOutput content={parsedContent} id={id} />
       ) : (
         <div className="bg-agentprism-background rounded-lg p-4">

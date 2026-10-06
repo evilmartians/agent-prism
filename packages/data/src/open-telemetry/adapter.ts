@@ -139,6 +139,8 @@ export const openTelemetrySpanAdapter: SpanAdapter<
         return "error";
       case "STATUS_CODE_OK":
         return "success";
+      case "STATUS_CODE_UNSET":
+      case undefined:
       default:
         return "warning";
     }

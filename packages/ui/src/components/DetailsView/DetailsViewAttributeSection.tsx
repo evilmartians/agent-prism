@@ -20,7 +20,7 @@ type DetailsViewAttributeSectionProps = {
   attributeKey: string;
   content: string;
   id: string;
-  parsedContent: string;
+  parsedContent: unknown;
 };
 
 export const DetailsViewAttributeSection = ({

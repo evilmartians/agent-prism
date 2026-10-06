@@ -8,7 +8,7 @@ export const formatSpanErrorForAgent = (details: SpanErrorDetails): string => {
   const title = details.nodeName;
   const lines = [`# ${title}`, "", details.message];
 
-  if (details.stack) {
+  if (details.stack !== undefined && details.stack !== "") {
     lines.push("", "Stack:", details.stack);
   }
 
@@ -33,7 +33,7 @@ export const formatRunErrorsForAgent = (entries: RunErrorEntry[]): string => {
 
     lines.push(`## ${index + 1}. ${title}`, "", details.message, "");
 
-    if (details.stack) {
+    if (details.stack !== undefined && details.stack !== "") {
       lines.push("Stack:", details.stack, "");
     }
   });

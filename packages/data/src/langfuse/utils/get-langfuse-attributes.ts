@@ -11,7 +11,7 @@ const ATTRIBUTE_SECTIONS = ["attributes", "resourceAttributes"] as const;
 export function getLangfuseAttributes(
   span: LangfuseObservation,
 ): TraceSpanAttribute[] {
-  if (!span.metadata || typeof span.metadata !== "string") {
+  if (typeof span.metadata !== "string") {
     return [];
   }
 

@@ -18,7 +18,9 @@ export const TraceViewerSearchAndControls = ({
   <div className="flex shrink-0 items-center justify-between gap-3 px-4 pb-2 pt-1">
     <SearchInput
       id="trace-span-search"
-      onChange={(e) => setSearchValue(e.target.value)}
+      onChange={(e) => {
+        setSearchValue(e.target.value);
+      }}
       placeholder="Search spans"
       value={searchValue}
     />

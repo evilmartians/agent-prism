@@ -21,20 +21,20 @@ const meta = {
     },
     disabled: {
       control: "boolean",
-      defaultValue: false,
       description: "Disables the button",
+      table: { defaultValue: { summary: "false" } },
     },
     size: {
       control: { type: "select" },
-      defaultValue: "8",
       description: "The size of the icon button",
       options: ["6", "7", "8", "9", "10", "11", "12", "16"],
+      table: { defaultValue: { summary: "8" } },
     },
     variant: {
       control: { type: "select" },
-      defaultValue: "default",
       description: "The visual variant of the icon button",
       options: ["default", "ghost"],
+      table: { defaultValue: { summary: "default" } },
     },
   },
   component: IconButton,

@@ -273,7 +273,7 @@ const getAriaSelected = (
 const resolveViewOptions = (
   viewOptions: SpanCardViewOptions,
 ): { expandButton: ExpandButtonPlacement; withStatus: boolean } => ({
-  expandButton: viewOptions.expandButton || DEFAULT_VIEW_OPTIONS.expandButton,
+  expandButton: viewOptions.expandButton ?? DEFAULT_VIEW_OPTIONS.expandButton,
   withStatus: viewOptions.withStatus ?? DEFAULT_VIEW_OPTIONS.withStatus,
 });
 

@@ -14,33 +14,31 @@ import {
 const isTraceSpanList = (value: unknown): value is unknown[] =>
   Array.isArray(value) && value.every(isTraceSpanLike);
 
+const isOpenTelemetryDocument = (
+  value: unknown,
+): value is OpenTelemetryDocument =>
+  typeof value === "object" &&
+  value !== null &&
+  "resourceSpans" in value &&
+  Array.isArray(value.resourceSpans);
+
+const isOpenTelemetryDocumentList = (
+  value: unknown,
+): value is OpenTelemetryDocument[] =>
+  Array.isArray(value) &&
+  value.length > 0 &&
+  value.every(isOpenTelemetryDocument);
+
+const isLangfuseDocument = (value: object): value is LangfuseDocument =>
+  "trace" in value || "observations" in value;
+
 export const extractSpans = (data: object): TraceSpan[] => {
-  if ("resourceSpans" in data && Array.isArray(data.resourceSpans)) {
-    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-      data as OpenTelemetryDocument,
-    );
+  if (isOpenTelemetryDocument(data) || isOpenTelemetryDocumentList(data)) {
+    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(data);
   }
 
-  if (
-    Array.isArray(data) &&
-    data.length > 0 &&
-    data.every(
-      (item) =>
-        typeof item === "object" &&
-        item !== null &&
-        "resourceSpans" in item &&
-        Array.isArray(item.resourceSpans),
-    )
-  ) {
-    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-      data as OpenTelemetryDocument[],
-    );
-  }
-
-  if ("trace" in data || "observations" in data) {
-    return langfuseSpanAdapter.convertRawDocumentsToSpans([
-      data as LangfuseDocument,
-    ]);
+  if (isLangfuseDocument(data)) {
+    return langfuseSpanAdapter.convertRawDocumentsToSpans([data]);
   }
 
   if (Array.isArray(data) && data.length > 0 && isTraceSpanList(data)) {

@@ -27,26 +27,39 @@ const meta: Meta<typeof TraceViewer> = {
   title: "Demo/TraceViewer",
 };
 
-const agentData1 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-  testData1 as OpenTelemetryDocument[],
-);
-const agentData2 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-  testData2 as OpenTelemetryDocument[],
-);
+const isOpenTelemetryDocument = (
+  value: unknown,
+): value is OpenTelemetryDocument =>
+  typeof value === "object" &&
+  value !== null &&
+  "resourceSpans" in value &&
+  Array.isArray(value.resourceSpans);
 
-const agentData3 = openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-  testData3 as OpenTelemetryDocument[],
-);
+const isLangfuseDocument = (value: unknown): value is LangfuseDocument =>
+  typeof value === "object" &&
+  value !== null &&
+  "trace" in value &&
+  "observations" in value &&
+  Array.isArray(value.observations);
 
-const langfuse1 = langfuseSpanAdapter.convertRawDocumentsToSpans(
-  langfuseData1 as LangfuseDocument,
-);
-const langfuse2 = langfuseSpanAdapter.convertRawDocumentsToSpans(
-  langfuseData2 as LangfuseDocument,
-);
-const langfuse3 = langfuseSpanAdapter.convertRawDocumentsToSpans(
-  langfuseData3 as LangfuseDocument,
-);
+const openTelemetrySpans = (documents: unknown[]): TraceSpan[] =>
+  openTelemetrySpanAdapter.convertRawDocumentsToSpans(
+    documents.filter(isOpenTelemetryDocument),
+  );
+
+const langfuseSpans = (document: unknown): TraceSpan[] =>
+  langfuseSpanAdapter.convertRawDocumentsToSpans(
+    [document].filter(isLangfuseDocument),
+  );
+
+const agentData1 = openTelemetrySpans(testData1);
+const agentData2 = openTelemetrySpans(testData2);
+
+const agentData3 = openTelemetrySpans(testData3);
+
+const langfuse1 = langfuseSpans(langfuseData1);
+const langfuse2 = langfuseSpans(langfuseData2);
+const langfuse3 = langfuseSpans(langfuseData3);
 
 const errorSpan = (
   span: Partial<TraceSpan> & Pick<TraceSpan, "id">,

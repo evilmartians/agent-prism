@@ -53,8 +53,8 @@ export const DetailsViewInputOutputTab = ({
     );
   }
 
-  let parsedInput: null | string = null;
-  let parsedOutput: null | string = null;
+  let parsedInput: unknown = null;
+  let parsedOutput: unknown = null;
 
   if (typeof data.input === "string") {
     try {

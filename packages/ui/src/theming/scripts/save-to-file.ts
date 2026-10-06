@@ -1,8 +1,5 @@
-// @ts-expect-error - Node.js built-in modules
 import { writeFileSync } from "node:fs";
-// @ts-expect-error - Node.js built-in modules
 import { dirname, join } from "node:path";
-// @ts-expect-error - Node.js built-in modules
 import { fileURLToPath } from "node:url";
 
 export function saveContentToFile(content: string, fileName: string): void {

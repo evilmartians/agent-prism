@@ -25,11 +25,12 @@ const meta = {
     },
     spanCardViewOptions: {
       control: { type: "object" },
-      defaultValue: {
-        expandButton: "outside",
-        withStatus: true,
-      },
       description: "View options for the span card",
+      table: {
+        defaultValue: {
+          summary: '{ expandButton: "outside", withStatus: true }',
+        },
+      },
     },
     spans: {
       description:
@@ -128,7 +129,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     expandedSpansIds: [],
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     spanCardViewOptions: {
       expandButton: "outside",
     },
@@ -139,7 +140,7 @@ export const Default: Story = {
 export const ExpandButton: Story = {
   args: {
     expandedSpansIds: [],
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     spanCardViewOptions: {
       expandButton: "inside",
     },
@@ -150,7 +151,7 @@ export const ExpandButton: Story = {
 export const ExpandedSpans: Story = {
   args: {
     expandedSpansIds: ["span-root-001", "span-child-002"],
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     spanCardViewOptions: {
       expandButton: "outside",
     },
@@ -161,8 +162,10 @@ export const ExpandedSpans: Story = {
 export const SelectedSpan: Story = {
   args: {
     expandedSpansIds: ["span-root-001"],
-    onExpandSpansIdsChange: fn(),
-    onSpanSelect: (span) => console.log("Selected span:", span),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
+    onSpanSelect: (span) => {
+      console.log("Selected span:", span);
+    },
     selectedSpan: llmProcessingSpan,
     spanCardViewOptions: {
       expandButton: "outside",

@@ -4,8 +4,16 @@ import type {
   OpenTelemetryStatusCode,
 } from "@evilmartians/agent-prism-types";
 
+export type MockAttributeValue =
+  | boolean
+  | null
+  | number
+  | readonly unknown[]
+  | string
+  | undefined;
+
 type MockSpanOptions = {
-  attributes?: Record<string, unknown>;
+  attributes?: Record<string, MockAttributeValue>;
   duration?: [number, number];
   kind?: OpenTelemetrySpanKind;
   name?: string;
@@ -15,8 +23,8 @@ type MockSpanOptions = {
 /**
  * Creates a mock Open TelemetrySpan for testing. Attribute values map to OTLP
  * values: null and undefined carry no value, every number becomes an
- * `intValue` string (parsed back with parseFloat), arrays are joined into a
- * string, and anything else is stringified.
+ * `intValue` string (parsed back with parseFloat), and arrays are joined into a
+ * string.
  */
 export const createMockOpenTelemetrySpan = (
   options: MockSpanOptions = {},
@@ -53,10 +61,7 @@ export const createMockOpenTelemetrySpan = (
           return { intValue: String(value) };
         }
         if (typeof value === "boolean") return { boolValue: value };
-        if (Array.isArray(value)) {
-          return { stringValue: value.join(", ") };
-        }
-        return { stringValue: String(value) };
+        return { stringValue: value.join(", ") };
       })(),
     })),
     droppedAttributesCount: 0,

@@ -78,7 +78,7 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
     setSelectedSpan,
   };
 
-  if (!spans || spans.length === 0) {
+  if (spans.length === 0) {
     return (
       <div className="flex items-center justify-center rounded bg-gray-100 p-8 text-center text-gray-600 dark:bg-gray-800 dark:text-gray-300">
         No trace data available

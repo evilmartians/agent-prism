@@ -3,6 +3,7 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2023",
     "lib": ["ES2023"],
+    "types": ["node"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -28,5 +29,5 @@
     "allowUnusedLabels": false,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "src/theming/scripts"]
 }

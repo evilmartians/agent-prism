@@ -1,13 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {},
-  },
   images: {
     unoptimized: true,
   },
   output: "export",
+  turbopack: {},
 };
 
 export default nextConfig;

@@ -52,8 +52,8 @@ export function generateCssContent(): string {
  * This will allow for tailwind's opacity syntax bg-tokenName/50
  */
 function extractOklchValues(colorString: string): string {
-  const values = colorString.match(/oklch\(([^)]+)\)/)?.[1];
-  if (!values) {
+  const values = /oklch\(([^)]+)\)/.exec(colorString)?.[1];
+  if (values === undefined) {
     throw new Error(`Invalid OKLCH color format: ${colorString}`);
   }
 
@@ -81,14 +81,18 @@ function resolveColorToken(token: TailwindColorToken): string {
   }
 
   const [colorName, shade] = token.split(".");
-  const colorGroup = tailwindColors[colorName as keyof typeof tailwindColors];
+  const colorGroup = Object.entries(tailwindColors).find(
+    ([name]) => name === colorName,
+  )?.[1];
 
-  if (!colorGroup || typeof colorGroup !== "object") {
+  if (typeof colorGroup !== "object") {
     throw new Error(`Invalid color token: ${token}`);
   }
 
-  const colorValue = colorGroup[shade as keyof typeof colorGroup];
-  if (typeof colorValue !== "string") {
+  const colorValue = Object.entries(colorGroup).find(
+    ([key]) => key === shade,
+  )?.[1];
+  if (colorValue === undefined) {
     throw new Error(`Invalid color shade: ${token}`);
   }
 

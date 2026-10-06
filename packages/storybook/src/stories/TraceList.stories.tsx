@@ -77,7 +77,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     expanded: true,
-    onExpandStateChange: fn(),
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
     traces: mockTraces,
   },
 };
@@ -85,7 +85,7 @@ export const Default: Story = {
 export const Collapsed: Story = {
   args: {
     expanded: false,
-    onExpandStateChange: fn(),
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
     traces: mockTraces,
   },
 };
@@ -93,8 +93,10 @@ export const Collapsed: Story = {
 export const SelectedTrace: Story = {
   args: {
     expanded: true,
-    onExpandStateChange: fn(),
-    onTraceSelect: (trace) => console.log("Selected:", trace),
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
+    onTraceSelect: (trace) => {
+      console.log("Selected:", trace);
+    },
     selectedTrace: mockTraces[1],
     traces: mockTraces,
   },
@@ -103,7 +105,7 @@ export const SelectedTrace: Story = {
 export const EmptyList: Story = {
   args: {
     expanded: true,
-    onExpandStateChange: fn(),
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
     traces: [],
   },
 };
@@ -111,7 +113,7 @@ export const EmptyList: Story = {
 export const SingleTrace: Story = {
   args: {
     expanded: true,
-    onExpandStateChange: fn(),
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
     traces: mockTraces.slice(0, 1),
   },
 };

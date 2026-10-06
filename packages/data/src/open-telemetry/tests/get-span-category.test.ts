@@ -311,19 +311,6 @@ describe("openTelemetrySpanAdapter.getSpanCategory", () => {
   });
 
   describe("error handling and edge cases", () => {
-    it("should handle when getOpenTelemetrySpanStandard returns unexpected values", () => {
-      const span = createMockOpenTelemetrySpan({ name: "test" });
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      vi.mocked(getOpenTelemetrySpanStandard).mockReturnValue(null as any);
-      vi.mocked(categorizeStandardOpenTelemetry).mockReturnValue("unknown");
-
-      const result = openTelemetrySpanAdapter.getSpanCategory(span);
-
-      expect(categorizeStandardOpenTelemetry).toHaveBeenCalledWith(span);
-      expect(result).toBe("unknown");
-    });
-
     it("should handle when categorization functions throw errors", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {

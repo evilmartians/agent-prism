@@ -48,7 +48,7 @@ export const DetailsViewErrorRunRow = ({
             {details.message}
           </p>
 
-          {details.stack ? (
+          {details.stack !== undefined && details.stack !== "" ? (
             <pre className="text-agentprism-muted-foreground overflow-x-auto whitespace-pre-wrap break-words text-xs">
               {details.stack}
             </pre>

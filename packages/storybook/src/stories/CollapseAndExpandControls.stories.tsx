@@ -42,14 +42,20 @@ type Story = StoryObj<typeof meta>;
 
 export const ExpandAll: Story = {
   render: () => (
-    <ExpandAllButton onExpandAll={() => console.log("Expand all clicked")} />
+    <ExpandAllButton
+      onExpandAll={() => {
+        console.log("Expand all clicked");
+      }}
+    />
   ),
 };
 
 export const CollapseAll: Story = {
   render: () => (
     <CollapseAllButton
-      onCollapseAll={() => console.log("Collapse all clicked")}
+      onCollapseAll={() => {
+        console.log("Collapse all clicked");
+      }}
     />
   ),
 };
@@ -57,9 +63,15 @@ export const CollapseAll: Story = {
 export const BothControls: Story = {
   render: () => (
     <div className="flex gap-2">
-      <ExpandAllButton onExpandAll={() => console.log("Expand all clicked")} />
+      <ExpandAllButton
+        onExpandAll={() => {
+          console.log("Expand all clicked");
+        }}
+      />
       <CollapseAllButton
-        onCollapseAll={() => console.log("Collapse all clicked")}
+        onCollapseAll={() => {
+          console.log("Collapse all clicked");
+        }}
       />
     </div>
   ),

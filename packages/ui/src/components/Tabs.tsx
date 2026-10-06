@@ -98,7 +98,10 @@ export const Tabs = <T extends string = string>({
   value,
   ...rest
 }: TabsProps<T>): React.ReactElement => {
-  const defaultTab = defaultValue || items[0]?.value;
+  const defaultTab =
+    defaultValue !== undefined && defaultValue !== ""
+      ? defaultValue
+      : items[0]?.value;
 
   const currentTheme = THEMES[theme];
 
@@ -107,7 +110,11 @@ export const Tabs = <T extends string = string>({
       className={className}
       {...(defaultTab === undefined ? {} : { defaultValue: defaultTab })}
       {...(value === undefined ? {} : { value })}
-      onValueChange={onValueChange as (value: string) => void}
+      onValueChange={(next) => {
+        const selected = items.find((item) => item.value === next);
+
+        if (selected !== undefined) onValueChange?.(selected.value);
+      }}
       {...(dir === undefined ? {} : { dir })}
       {...rest}
     >
@@ -127,11 +134,11 @@ export const Tabs = <T extends string = string>({
             key={item.value}
             value={item.value}
           >
-            {item.icon ? (
+            {Boolean(item.icon) && (
               <span className="text-agentprism-secondary-foreground mr-2 group-data-[state=active]:text-current">
                 {item.icon}
               </span>
-            ) : null}
+            )}
             <span className="truncate text-sm font-medium">{item.label}</span>
           </RadixTabs.Trigger>
         ))}

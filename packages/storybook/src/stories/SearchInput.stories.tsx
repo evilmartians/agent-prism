@@ -13,8 +13,8 @@ const meta = {
   argTypes: {
     disabled: {
       control: "boolean",
-      defaultValue: false,
       description: "Disables the input",
+      table: { defaultValue: { summary: "false" } },
     },
     id: {
       control: "text",
@@ -92,7 +92,9 @@ export const Clearable: Story = {
   args: {
     defaultValue: "search term",
     id: "search-clearable",
-    onClear: () => console.log("Clear button clicked"),
+    onClear: () => {
+      console.log("Clear button clicked");
+    },
     placeholder: "Clearable input...",
   },
 };

@@ -11,7 +11,7 @@ export const flattenSpans = (spans: TraceSpan[]): TraceSpan[] => {
   const traverse = (items: TraceSpan[]) => {
     items.forEach((item) => {
       result.push(item);
-      if (item.children?.length) {
+      if (item.children) {
         traverse(item.children);
       }
     });

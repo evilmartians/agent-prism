@@ -28,12 +28,9 @@ export const TraceViewerMobileLayout = ({
   traceListExpanded,
   traceRecords,
 }: TraceViewerLayoutProps): ReactElement => {
-  if (
-    selectedTrace &&
-    selectedTraceId &&
-    filteredSpans.length > 0 &&
-    selectedSpan
-  ) {
+  const hasTraceId = selectedTraceId !== undefined && selectedTraceId !== "";
+
+  if (selectedTrace && hasTraceId && filteredSpans.length > 0 && selectedSpan) {
     return (
       <div className="flex h-full flex-col gap-4 overflow-y-auto">
         <Button
@@ -53,7 +50,7 @@ export const TraceViewerMobileLayout = ({
 
   if (
     selectedTrace &&
-    selectedTraceId &&
+    hasTraceId &&
     filteredSpans.length > 0 &&
     !selectedSpan
   ) {
@@ -64,9 +61,7 @@ export const TraceViewerMobileLayout = ({
             className="self-start"
             iconStart={<ArrowLeft className="size-3" />}
             onClick={() => {
-              if (onClearTraceSelection) {
-                onClearTraceSelection();
-              }
+              onClearTraceSelection();
             }}
             variant="ghost"
           >

@@ -49,7 +49,7 @@ export const TraceViewer = ({
       : undefined,
   );
   const [selectedTraceSpans, setSelectedTraceSpans] = useState<TraceSpan[]>(
-    data[0]?.spans || [],
+    data[0]?.spans ?? [],
   );
 
   const traceRecords: TraceRecordWithDisplayData[] = useMemo(() => {
@@ -127,7 +127,7 @@ export const TraceViewer = ({
     setSelectedSpan,
     setTraceListExpanded,
     spanCardViewOptions:
-      spanCardViewOptions || selectedTrace?.spanCardViewOptions,
+      spanCardViewOptions ?? selectedTrace?.spanCardViewOptions,
     traceListExpanded,
     traceRecords,
   };

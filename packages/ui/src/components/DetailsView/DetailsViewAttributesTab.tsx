@@ -24,13 +24,15 @@ export const DetailsViewAttributesTab = ({
     <div className="space-y-4">
       {data.attributes.map((attribute, index) => {
         const stringValue = attribute.value.stringValue;
+        const intValue = attribute.value.intValue;
         const simpleValue =
-          stringValue ||
-          attribute.value.intValue?.toString() ||
-          attribute.value.boolValue?.toString() ||
-          "N/A";
+          stringValue !== undefined && stringValue !== ""
+            ? stringValue
+            : intValue !== undefined && intValue !== ""
+              ? intValue
+              : (attribute.value.boolValue?.toString() ?? "N/A");
 
-        let parsedJson: null | string = null;
+        let parsedJson: unknown = null;
         if (typeof stringValue === "string") {
           try {
             parsedJson = JSON.parse(stringValue);
@@ -39,9 +41,7 @@ export const DetailsViewAttributesTab = ({
           }
         }
 
-        const isComplex = parsedJson !== null;
-
-        if (isComplex && parsedJson && stringValue) {
+        if (stringValue !== undefined && Boolean(parsedJson)) {
           return (
             <DetailsViewAttributeSection
               attributeKey={attribute.key}

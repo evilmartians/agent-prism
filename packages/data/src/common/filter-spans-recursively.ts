@@ -23,7 +23,7 @@ export const filterSpansRecursively = (
         : undefined;
 
       const hasMatchingChildren =
-        filteredChildren && filteredChildren.length > 0;
+        filteredChildren !== undefined && filteredChildren.length > 0;
 
       if (currentSpanMatches || hasMatchingChildren) {
         return {

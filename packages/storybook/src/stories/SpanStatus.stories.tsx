@@ -18,9 +18,9 @@ const meta = {
     },
     variant: {
       control: { type: "select" },
-      defaultValue: "dot",
       description: "Visual variant of the status indicator",
       options: ["dot", "badge"],
+      table: { defaultValue: { summary: "dot" } },
     },
   },
   component: SpanStatus,

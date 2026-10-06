@@ -161,7 +161,8 @@ export const DetailsView = ({
   const resolvedHeaderActions =
     typeof headerActions === "function" ? headerActions(data) : headerActions;
 
-  const headerContent = customHeader ? (
+  const hasCustomHeader = Boolean(customHeader);
+  const headerContent = hasCustomHeader ? (
     typeof customHeader === "function" ? (
       customHeader({ data })
     ) : (

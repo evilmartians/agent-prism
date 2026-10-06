@@ -11,18 +11,29 @@ export function getOpenTelemetrySpanStandard(
   span: OpenTelemetrySpan,
 ): OpenTelemetryStandard {
   if (
-    getOpenTelemetryAttributeValue(
-      span,
-      OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME,
+    Boolean(
+      getOpenTelemetryAttributeValue(
+        span,
+        OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME,
+      ),
     ) ||
-    getOpenTelemetryAttributeValue(span, OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM)
+    Boolean(
+      getOpenTelemetryAttributeValue(
+        span,
+        OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM,
+      ),
+    )
   ) {
     return "opentelemetry_genai";
   }
 
   if (
-    getOpenTelemetryAttributeValue(span, OPENINFERENCE_ATTRIBUTES.SPAN_KIND) ||
-    getOpenTelemetryAttributeValue(span, OPENINFERENCE_ATTRIBUTES.LLM_MODEL)
+    Boolean(
+      getOpenTelemetryAttributeValue(span, OPENINFERENCE_ATTRIBUTES.SPAN_KIND),
+    ) ||
+    Boolean(
+      getOpenTelemetryAttributeValue(span, OPENINFERENCE_ATTRIBUTES.LLM_MODEL),
+    )
   ) {
     return "openinference";
   }

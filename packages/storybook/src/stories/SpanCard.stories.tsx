@@ -21,24 +21,25 @@ const meta = {
     },
     isLastChild: {
       control: "boolean",
-      defaultValue: false,
       description: "Whether this is the last child in its parent",
+      table: { defaultValue: { summary: "false" } },
     },
     level: {
       control: "number",
-      defaultValue: 0,
       description: "The nesting level of the span",
+      table: { defaultValue: { summary: "0" } },
     },
     selectedSpan: {
       description: "Currently selected span for highlighting",
     },
     viewOptions: {
       control: { type: "object" },
-      defaultValue: {
-        expandButton: "outside",
-        withStatus: true,
-      },
       description: "View options for the span card",
+      table: {
+        defaultValue: {
+          summary: '{ expandButton: "outside", withStatus: true }',
+        },
+      },
     },
   },
   component: SpanCard,
@@ -130,7 +131,7 @@ export const Default: Story = {
     isLastChild: false,
     maxEnd: mockTraceSpan.endTime.getTime(),
     minStart: mockTraceSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -145,7 +146,7 @@ export const Level: Story = {
     level: 2,
     maxEnd: mockTraceSpan.endTime.getTime(),
     minStart: mockTraceSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -159,7 +160,7 @@ export const ExpandButton: Story = {
     isLastChild: false,
     maxEnd: mockTraceSpan.endTime.getTime(),
     minStart: mockTraceSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     viewOptions: {
       expandButton: "inside",
     },
@@ -179,7 +180,7 @@ export const Avatar: Story = {
     isLastChild: false,
     maxEnd: mockTraceSpan.endTime.getTime(),
     minStart: mockTraceSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -193,7 +194,7 @@ export const SelectedSpan: Story = {
     isLastChild: false,
     maxEnd: mockTraceSpan.endTime.getTime(),
     minStart: mockTraceSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     selectedSpan: mockTraceSpan,
     viewOptions: {
       expandButton: "outside",
@@ -208,7 +209,7 @@ export const WithChildren: Story = {
     isLastChild: false,
     maxEnd: mockTraceSpan.endTime.getTime(),
     minStart: mockTraceSpan.startTime.getTime(),
-    onExpandSpansIdsChange: fn(),
+    onExpandSpansIdsChange: fn<(ids: string[]) => void>(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -218,7 +219,7 @@ export const WithChildren: Story = {
 export const SelectsTheSpanThatWasActivated: Story = {
   args: {
     ...WithChildren.args,
-    onSpanSelect: fn(),
+    onSpanSelect: fn<(span: TraceSpan) => void>(),
   },
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

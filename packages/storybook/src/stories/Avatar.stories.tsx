@@ -17,7 +17,6 @@ const meta = {
     },
     category: {
       control: { type: "select" },
-      defaultValue: "llm_call",
       description: "The category of the span which avatar is associated with",
       options: [
         "llm_call",
@@ -32,6 +31,7 @@ const meta = {
         "guardrail",
         "unknown",
       ],
+      table: { defaultValue: { summary: "llm_call" } },
     },
     letter: {
       control: "text",
@@ -40,15 +40,15 @@ const meta = {
     },
     rounded: {
       control: { type: "select" },
-      defaultValue: "full",
       description: "The border radius of the avatar",
       options: ["none", "sm", "md", "lg", "full"],
+      table: { defaultValue: { summary: "full" } },
     },
     size: {
       control: { type: "select" },
-      defaultValue: "8",
       description: "The size of the avatar",
       options: ["4", "6", "8", "9", "10", "11", "12", "16"],
+      table: { defaultValue: { summary: "8" } },
     },
     src: {
       control: "text",

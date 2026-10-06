@@ -16,7 +16,9 @@ export function generateOpenTelemetrySpanTitle(
     OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL,
   );
 
-  if (model) {
+  const hasModel = Boolean(model);
+
+  if (hasModel) {
     return `${model} - ${name}`;
   }
 
@@ -29,7 +31,7 @@ export function generateOpenTelemetrySpanTitle(
     STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION,
   );
 
-  if (collection && operation) {
+  if (Boolean(collection) && Boolean(operation)) {
     return `${collection} - ${operation}`;
   }
 
@@ -42,7 +44,7 @@ export function generateOpenTelemetrySpanTitle(
     STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_URL,
   );
 
-  if (method && url) {
+  if (Boolean(method) && Boolean(url)) {
     return `${method} ${url}`;
   }
 

@@ -14,9 +14,10 @@ export const FileUploader: FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const traceContext = useContext(TraceContext);
+  const error = traceContext?.traceState.error ?? "";
 
   const handleButtonClick = () => {
-    if (traceContext?.traceState.error) {
+    if (error !== "") {
       traceContext?.clearError();
     }
     fileInputRef.current?.click();
@@ -31,7 +32,7 @@ export const FileUploader: FC = () => {
 
     try {
       const text = await file.text();
-      const jsonData = JSON.parse(text);
+      const jsonData: unknown = JSON.parse(text);
 
       if (typeof jsonData !== "object" || jsonData === null) {
         throw new Error("Invalid JSON: expected an object");
@@ -54,7 +55,9 @@ export const FileUploader: FC = () => {
         aria-label="Upload trace or log files"
         className="hidden"
         disabled={isProcessing}
-        onChange={handleFilesChange}
+        onChange={(e) => {
+          void handleFilesChange(e);
+        }}
         ref={fileInputRef}
         type="file"
       />
@@ -63,11 +66,11 @@ export const FileUploader: FC = () => {
         Upload traces
       </Button>
 
-      {traceContext?.traceState.error ? (
+      {error === "" ? null : (
         <div className="mt-4">
-          <UploadFileErrorMessage message={traceContext.traceState.error} />
+          <UploadFileErrorMessage message={error} />
         </div>
-      ) : null}
+      )}
     </div>
   );
 };

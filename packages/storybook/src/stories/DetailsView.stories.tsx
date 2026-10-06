@@ -119,7 +119,9 @@ export const CopyButton: Story = {
   args: {
     copyButton: {
       isEnabled: true,
-      onCopy: (data) => console.log("Copied:", data),
+      onCopy: (data) => {
+        console.log("Copied:", data);
+      },
     },
     data: mockSpanData,
   },

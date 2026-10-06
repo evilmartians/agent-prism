@@ -16,13 +16,13 @@ const meta = {
   argTypes: {
     size: {
       control: { type: "select" },
-      defaultValue: "4",
       description: "The size of the badge",
       options: ["4", "5", "6", "7"],
+      table: { defaultValue: { summary: "4" } },
     },
     timestamp: {
       control: { type: "number" },
-      defaultValue: Date.now(),
+      table: { defaultValue: { summary: "Date.now()" } },
     },
   },
   component: TimestampBadge,

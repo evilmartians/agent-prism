@@ -28,8 +28,8 @@ const meta = {
     },
     defaultOpen: {
       control: "boolean",
-      defaultValue: false,
       description: "Whether the section is open by default",
+      table: { defaultValue: { summary: "false" } },
     },
     title: {
       control: "text",

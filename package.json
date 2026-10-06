@@ -42,6 +42,7 @@
     "knip": "^6.39.0",
     "lefthook": "^2.1.16",
     "oxlint": "^1.86.0",
+    "oxlint-tsgolint": "^7.0.2003",
     "prettier": "3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "publint": "^0.3.25",

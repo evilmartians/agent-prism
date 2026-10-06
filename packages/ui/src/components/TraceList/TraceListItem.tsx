@@ -49,7 +49,7 @@ export const TraceListItem = ({
         "group w-full",
         "flex flex-col gap-2 p-4",
         "cursor-pointer",
-        isSelected
+        isSelected === true
           ? "bg-agentprism-secondary/75 dark:bg-agentprism-muted/80"
           : "bg-agentprism-background hover:bg-agentprism-secondary/45 dark:hover:bg-agentprism-muted/70",
       )}

@@ -41,7 +41,7 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     const text = await file.text();
-    const jsonData = JSON.parse(text);
+    const jsonData: unknown = JSON.parse(text);
 
     if (typeof jsonData !== "object" || jsonData === null) {
       throw new Error("Invalid JSON: expected an object");
@@ -50,9 +50,12 @@ export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setTraceState(toTraceState(jsonData));
   };
 
-  const clearTraces = () =>
+  const clearTraces = () => {
     setTraceState({ error: null, isLoading: false, spans: [] });
-  const clearError = () => setTraceState((prev) => ({ ...prev, error: null }));
+  };
+  const clearError = () => {
+    setTraceState((prev) => ({ ...prev, error: null }));
+  };
 
   return (
     <TraceContext.Provider

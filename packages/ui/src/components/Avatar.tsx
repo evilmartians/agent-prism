@@ -96,13 +96,17 @@ export const Avatar = ({
 }: AvatarProps): ReactElement => {
   const [error, setError] = useState(false);
 
-  const displayLetter = letter ? letter.charAt(0) : alt.charAt(0).toUpperCase();
+  const displayLetter =
+    letter !== undefined && letter !== ""
+      ? letter.charAt(0)
+      : alt.charAt(0).toUpperCase();
+  const hasChildren = Boolean(children);
 
   return (
     <div
       className={cn(
         "flex items-center justify-center overflow-hidden",
-        !children && "bg-agentprism-muted",
+        !hasChildren && "bg-agentprism-muted",
         error && "border-agentprism-secondary border",
         sizeClasses[size],
         ROUNDED_CLASSES[rounded],
@@ -110,7 +114,7 @@ export const Avatar = ({
       )}
       {...rest}
     >
-      {children ? (
+      {hasChildren ? (
         children
       ) : error ? (
         <User
@@ -121,11 +125,13 @@ export const Avatar = ({
         />
       ) : (
         <>
-          {src ? (
+          {src !== undefined && src !== "" ? (
             <img
               alt={alt}
               className="size-full object-cover"
-              onError={() => setError(true)}
+              onError={() => {
+                setError(true);
+              }}
               src={src}
             />
           ) : (

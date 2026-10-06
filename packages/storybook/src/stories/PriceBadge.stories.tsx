@@ -13,14 +13,14 @@ const meta = {
   argTypes: {
     cost: {
       control: { type: "number" },
-      defaultValue: 0.5,
       description: "The cost amount to display",
+      table: { defaultValue: { summary: "0.5" } },
     },
     size: {
       control: { type: "select" },
-      defaultValue: "xs",
       description: "The size of the badge",
       options: ["xs", "sm", "md"],
+      table: { defaultValue: { summary: "xs" } },
     },
   },
   component: PriceBadge,
