@@ -29,6 +29,7 @@ export const SpanStatusBadge = ({
         "h-3.5 w-4 rounded",
         STATUS_COLORS_BADGE[status],
       )}
+      role="img"
       title={title}
     >
       {status === "success" && <Check aria-hidden className="size-2.5" />}

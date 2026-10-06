@@ -117,6 +117,7 @@ export const Tabs = <T extends string = string>({
       >
         {items.map((item: TabItem) => (
           <RadixTabs.Trigger
+            aria-controls={undefined}
             className={cn(
               "group flex items-center overflow-hidden",
               currentTheme.trigger,

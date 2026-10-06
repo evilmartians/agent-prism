@@ -21,6 +21,11 @@ const withTheme: Decorator = (StoryFn, context) => {
 
 export const decorators = [withTheme];
 
+const colorContrastDecidedInIssue107 = {
+  enabled: false,
+  id: "color-contrast",
+};
+
 const preview: Preview = {
   globalTypes: {
     theme: {
@@ -38,7 +43,10 @@ const preview: Preview = {
     },
   },
   parameters: {
-    a11y: { test: "todo" },
+    a11y: {
+      config: { rules: [colorContrastDecidedInIssue107] },
+      test: "error",
+    },
     backgrounds: { disable: true },
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     docs: { codePanel: true },

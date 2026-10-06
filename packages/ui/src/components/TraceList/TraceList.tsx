@@ -39,7 +39,7 @@ export const TraceList = ({
         className,
       )}
     >
-      <header className="flex min-h-6 shrink-0 items-center justify-between gap-2">
+      <div className="flex min-h-6 shrink-0 items-center justify-between gap-2">
         <div
           className={cn(
             "flex items-center gap-2",
@@ -61,11 +61,11 @@ export const TraceList = ({
         >
           <ArrowLeft className={cn("size-3", expanded ? "" : "rotate-180")} />
         </IconButton>
-      </header>
+      </div>
 
       {expanded ? (
-        <ul className="border-agentprism-border flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border">
-          <div className="flex-1 overflow-y-auto">
+        <div className="border-agentprism-border flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border">
+          <ul className="flex-1 overflow-y-auto">
             {traces.map((trace) => (
               <li
                 className="border-agentprism-border w-full list-none border-b [&:not(:last-child)]:border-b"
@@ -80,8 +80,8 @@ export const TraceList = ({
                 />
               </li>
             ))}
-          </div>
-        </ul>
+          </ul>
+        </div>
       ) : null}
     </div>
   );

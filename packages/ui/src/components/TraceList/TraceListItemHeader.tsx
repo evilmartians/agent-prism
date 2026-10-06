@@ -16,7 +16,7 @@ export const TraceListItemHeader = ({
   trace,
 }: TraceListItemHeaderProps): ReactElement => {
   return (
-    <header className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2">
+    <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2">
       <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
         {avatar ? <Avatar size="4" {...avatar} /> : null}
 
@@ -33,6 +33,6 @@ export const TraceListItemHeader = ({
           size="4"
         />
       </div>
-    </header>
+    </div>
   );
 };

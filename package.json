@@ -21,6 +21,7 @@
     "dup:types": "node scripts/find-duplicate-types.mjs",
     "tsc": "pnpm run --parallel tsc",
     "test": "pnpm run --parallel test",
+    "test:storybook": "pnpm --filter @evilmartians/agent-prism-storybook test:storybook",
     "theme:generate": "pnpm --filter @evilmartians/agent-prism-ui generate-theme-files",
     "dist:rm": "pnpm -r exec rm -rf dist out"
   },
@@ -32,6 +33,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-you-might-not-need-an-effect": "^0.9.3",
     "eslint-plugin-sonarjs": "^3.0.7",
+    "eslint-plugin-storybook": "^9.1.20",
     "eslint-plugin-tailwindcss": "^3.18.2",
     "jscpd": "^5.4.0",
     "knip": "^6.39.0",

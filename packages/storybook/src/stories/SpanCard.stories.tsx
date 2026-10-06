@@ -9,7 +9,7 @@ import {
   Source,
   Stories,
 } from "@storybook/addon-docs/blocks";
-import { fn } from "storybook/test";
+import { expect, fn, userEvent, within } from "storybook/test";
 
 const meta = {
   argTypes: {
@@ -42,6 +42,13 @@ const meta = {
     },
   },
   component: SpanCard,
+  decorators: [
+    (Story) => (
+      <ul aria-label="Span cards" role="tree">
+        <Story />
+      </ul>
+    ),
+  ],
   parameters: {
     docs: {
       page: () => (
@@ -205,5 +212,39 @@ export const WithChildren: Story = {
     viewOptions: {
       expandButton: "outside",
     },
+  },
+};
+
+export const SelectsTheSpanThatWasActivated: Story = {
+  args: {
+    ...WithChildren.args,
+    onSpanSelect: fn(),
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const [parent, child] = canvas.getAllByRole("treeitem");
+
+    await userEvent.click(canvas.getByText("Child Span 1"));
+    await expect(args.onSpanSelect).toHaveBeenCalledTimes(1);
+    await expect(args.onSpanSelect).toHaveBeenLastCalledWith(
+      expect.objectContaining({ id: "span-child-001" }),
+    );
+
+    child?.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(args.onSpanSelect).toHaveBeenCalledTimes(2);
+
+    parent?.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(args.onSpanSelect).toHaveBeenLastCalledWith(
+      expect.objectContaining({ id: "span-parent-001" }),
+    );
+
+    await userEvent.click(
+      canvas.getByRole("button", {
+        name: /Parent Span with Children children/,
+      }),
+    );
+    await expect(args.onSpanSelect).toHaveBeenCalledTimes(3);
   },
 };

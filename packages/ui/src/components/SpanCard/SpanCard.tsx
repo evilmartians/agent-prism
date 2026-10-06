@@ -175,18 +175,28 @@ const useSpanCardEventHandlers = (
   data: TraceSpan,
   onSpanSelect?: (span: TraceSpan) => void,
 ) => {
-  const handleCardClick = useCallback((): void => {
-    onSpanSelect?.(data);
-  }, [data, onSpanSelect]);
+  const handleCardClick = useCallback(
+    (e: MouseEvent): void => {
+      if (
+        e.target instanceof Element &&
+        e.target.closest('[role="treeitem"]') === e.currentTarget
+      ) {
+        onSpanSelect?.(data);
+      }
+    },
+    [data, onSpanSelect],
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
+      if (e.target !== e.currentTarget) return;
+
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        handleCardClick();
+        onSpanSelect?.(data);
       }
     },
-    [handleCardClick],
+    [data, onSpanSelect],
   );
 
   const handleToggleClick = useCallback(
@@ -373,19 +383,19 @@ export const SpanCard: FC<SpanCardProps> = ({
   return (
     <li
       aria-expanded={ariaExpanded}
+      aria-label={`${state.isSelected ? "Selected" : "Not selected"} span card for ${data.title} at level ${level}`}
       aria-selected={getAriaSelected(state.isSelected, Boolean(selectedSpan))}
       className="list-none"
+      onClick={eventHandlers.handleCardClick}
+      onKeyDown={eventHandlers.handleKeyDown}
       role="treeitem"
+      tabIndex={0}
     >
       <Collapsible.Root
         onOpenChange={handleToggleClick}
         open={state.isExpanded}
       >
         <div
-          aria-describedby={`span-card-desc-${data.id}`}
-          aria-expanded={ariaExpanded}
-          aria-label={`${state.isSelected ? "Selected" : "Not selected"} span card for ${data.title} at level ${level}`}
-          aria-pressed={state.isSelected}
           className={cn(
             "relative grid w-full",
             state.isSelected &&
@@ -393,16 +403,12 @@ export const SpanCard: FC<SpanCardProps> = ({
             state.isSelected &&
               "from-agentprism-muted/75 to-agentprism-muted/75 bg-gradient-to-b",
           )}
-          onClick={eventHandlers.handleCardClick}
-          onKeyDown={eventHandlers.handleKeyDown}
-          role="button"
           style={{
             backgroundPosition: "top",
             backgroundRepeat: "no-repeat",
             backgroundSize: "auto calc(100% - 8px)",
             gridTemplateColumns,
           }}
-          tabIndex={0}
         >
           <div className="flex flex-nowrap">
             {connectors.map((connector, idx) => (

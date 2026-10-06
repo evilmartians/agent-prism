@@ -21,6 +21,7 @@ export const SpanStatusDot = ({
     <span
       aria-label={title}
       className={cn("block size-1.5 rounded-full", STATUS_COLORS_DOT[status])}
+      role="img"
       title={title}
     />
   );

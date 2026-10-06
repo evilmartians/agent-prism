@@ -8,6 +8,7 @@
     "build-ui-lib": "cd ../ui && pnpm build",
     "build-storybook": "storybook build",
     "build": "pnpm run build-ui-lib && pnpm run build-storybook",
+    "test:storybook": "pnpm run build-ui-lib && vitest run --project=storybook",
     "tsc": "tsc -b"
   },
   "dependencies": {

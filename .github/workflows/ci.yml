@@ -120,9 +120,28 @@ jobs:
       - name: Find types that repeat the types package
         run: pnpm dup:types
 
+  storybook-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup
+        uses: $/.github/actions/setup
+
+      - name: Install Chromium
+        run: pnpm --filter @evilmartians/agent-prism-storybook exec playwright install --with-deps chromium
+
+      - name: Run stories with interaction and accessibility checks
+        run: pnpm test:storybook
+
   main:
     if: always()
-    needs: [lint, typecheck, test, build, knip, jscpd]
+    needs: [lint, typecheck, test, build, knip, jscpd, storybook-test]
     runs-on: ubuntu-latest
     permissions: {}
     steps:
