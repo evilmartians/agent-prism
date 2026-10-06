@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
 import type { TabItem } from "../Tabs";
+import type { DetailsViewHeaderProps } from "./DetailsViewHeader";
 
 import { TabSelector } from "../TabSelector";
 import { DetailsViewAttributesTab } from "./DetailsViewAttributesTab";
@@ -47,12 +48,7 @@ export type DetailsViewProps = {
   /**
    * Configuration for the copy button functionality
    */
-  copyButton?:
-    | undefined
-    | {
-        isEnabled?: boolean | undefined;
-        onCopy?: ((data: TraceSpan) => void) | undefined;
-      };
+  copyButton?: DetailsViewHeaderProps["copyButton"];
 
   /**
    * Optional custom header component to replace the default

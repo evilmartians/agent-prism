@@ -4,6 +4,8 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 import { Check, Ellipsis, Info, TriangleAlert } from "lucide-react";
 
+import type { SpanStatusIndicatorProps } from "./SpanStatusIndicatorProps";
+
 const STATUS_COLORS_BADGE: Record<TraceSpanStatus, string> = {
   error: "bg-agentprism-error-muted text-agentprism-error-muted-foreground",
   pending:
@@ -17,10 +19,7 @@ const STATUS_COLORS_BADGE: Record<TraceSpanStatus, string> = {
 export const SpanStatusBadge = ({
   status,
   title,
-}: {
-  status: TraceSpanStatus;
-  title: string;
-}): ReactElement => {
+}: SpanStatusIndicatorProps): ReactElement => {
   return (
     <span
       aria-label={title}

@@ -223,6 +223,7 @@ console.log(
 
 if (identical.length > 0) {
   console.log("Structurally identical shapes:\n");
+  process.exitCode = 1;
 
   for (const { entries, key } of clip(identical)) {
     console.log(`  { ${key} }`);

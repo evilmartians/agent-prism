@@ -3,6 +3,8 @@ import type { ReactElement } from "react";
 
 import cn from "classnames";
 
+import type { SpanStatusIndicatorProps } from "./SpanStatusIndicatorProps";
+
 const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {
   error: "bg-agentprism-error",
   pending: "bg-agentprism-pending",
@@ -13,10 +15,7 @@ const STATUS_COLORS_DOT: Record<TraceSpanStatus, string> = {
 export const SpanStatusDot = ({
   status,
   title,
-}: {
-  status: TraceSpanStatus;
-  title: string;
-}): ReactElement => {
+}: SpanStatusIndicatorProps): ReactElement => {
   return (
     <span
       aria-label={title}
