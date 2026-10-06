@@ -1,5 +1,5 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
 import {
   formatDuration,
@@ -21,7 +21,7 @@ import { SpanStatus } from "../SpanStatus";
 import { TimestampBadge } from "../TimestampBadge";
 import { TokensBadge } from "../TokensBadge";
 
-export interface DetailsViewHeaderProps {
+export type DetailsViewHeaderProps = {
   data: TraceSpan;
   avatar?: AvatarProps | undefined;
   copyButton?:
@@ -38,7 +38,7 @@ export interface DetailsViewHeaderProps {
    * Optional className for the header container
    */
   className?: string | undefined;
-}
+};
 
 export const DetailsViewHeader = ({
   data,
@@ -46,7 +46,7 @@ export const DetailsViewHeader = ({
   copyButton,
   actions,
   className,
-}: DetailsViewHeaderProps) => {
+}: DetailsViewHeaderProps): ReactElement => {
   const [hasCopied, setHasCopied] = useState(false);
   const durationMs = getDurationMs(data);
 

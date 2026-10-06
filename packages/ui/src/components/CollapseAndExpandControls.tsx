@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import { ChevronsUpDown, ChevronsDownUp } from "lucide-react";
 
@@ -16,7 +16,7 @@ export const ExpandAllButton = ({
   onExpandAll,
   "aria-label": ariaLabel = "Expand all",
   ...rest
-}: SpanCardExpandAllButtonProps) => {
+}: SpanCardExpandAllButtonProps): ReactElement => {
   return (
     <IconButton size="6" onClick={onExpandAll} aria-label={ariaLabel} {...rest}>
       <ChevronsUpDown className="size-3.5" />
@@ -28,7 +28,7 @@ export const CollapseAllButton = ({
   onCollapseAll,
   "aria-label": ariaLabel = "Collapse all",
   ...rest
-}: SpanCardCollapseAllButtonProps) => {
+}: SpanCardCollapseAllButtonProps): ReactElement => {
   return (
     <IconButton
       size="6"

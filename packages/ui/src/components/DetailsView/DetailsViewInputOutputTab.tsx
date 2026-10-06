@@ -15,10 +15,10 @@ import {
 import { DetailsViewErrorBlocks } from "./DetailsViewErrorBlocks";
 import { DetailsViewTodosSection } from "./DetailsViewTodosSection";
 
-interface DetailsViewInputOutputTabProps {
+type DetailsViewInputOutputTabProps = {
   data: TraceSpan;
   allSpans?: TraceSpan[] | undefined;
-}
+};
 
 // Stable reference so memo deps don't change when allSpans is omitted.
 const EMPTY_SPANS: TraceSpan[] = [];
@@ -105,11 +105,11 @@ export const DetailsViewInputOutputTab = ({
   );
 };
 
-interface IOSectionProps {
+type IOSectionProps = {
   section: IOSection;
   content: string;
   parsedContent: string | null;
-}
+};
 
 const IOSection = ({
   section,

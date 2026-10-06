@@ -1,7 +1,9 @@
 "use client";
 
+import type { ChangeEvent, FC } from "react";
+
 import { Button } from "@evilmartians/agent-prism-ui";
-import { ChangeEvent, FC, useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 import { UploadFileErrorMessage } from "@/components/UploadFileErrorMessage";
 import { TraceContext } from "@/context/TraceContext";

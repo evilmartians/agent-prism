@@ -2,7 +2,7 @@ import { type ReactElement } from "react";
 
 import { type TabItem, Tabs } from "./Tabs";
 
-export interface TabSelectorProps<T extends string> {
+export type TabSelectorProps<T extends string> = {
   items: TabItem<T>[];
   value: T;
   onValueChange: (value: T) => void;
@@ -10,7 +10,7 @@ export interface TabSelectorProps<T extends string> {
   theme?: "underline" | "pill" | undefined;
   className?: string | undefined;
   onClick?: ((event: React.MouseEvent) => void) | undefined;
-}
+};
 
 export const TabSelector = <T extends string>({
   items,

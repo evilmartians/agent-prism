@@ -7,9 +7,9 @@ import { useMemo } from "react";
 import { CopyButton } from "../CopyButton";
 import { ErrorStatusCircle } from "../ErrorStatusCircle";
 
-interface DetailsViewErrorRunRowProps {
+type DetailsViewErrorRunRowProps = {
   entry: RunErrorEntry;
-}
+};
 
 /**
  * A single failed-span card: error dot + node title + message (+ stack when
@@ -61,9 +61,9 @@ export const DetailsViewErrorRunRow = ({
   );
 };
 
-interface DetailsViewErrorEntryListProps {
+type DetailsViewErrorEntryListProps = {
   entries: RunErrorEntry[];
-}
+};
 
 /**
  * Vertical stack of {@link DetailsViewErrorRunRow}; renders nothing when empty.

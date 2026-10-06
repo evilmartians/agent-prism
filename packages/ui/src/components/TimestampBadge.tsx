@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import type { BadgeProps } from "./Badge";
 
@@ -13,7 +13,7 @@ export const TimestampBadge = ({
   timestamp,
   size,
   ...rest
-}: TimestampBadgeProps) => {
+}: TimestampBadgeProps): ReactElement => {
   return <Badge size={size} {...rest} label={formatTimestamp(timestamp)} />;
 };
 

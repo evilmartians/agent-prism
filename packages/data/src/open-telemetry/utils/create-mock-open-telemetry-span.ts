@@ -4,14 +4,13 @@ import type {
   OpenTelemetryStatusCode,
 } from "@evilmartians/agent-prism-types";
 
-interface MockSpanOptions {
+type MockSpanOptions = {
   name?: string;
   duration?: [number, number];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
   status?: { code: OpenTelemetryStatusCode; message?: string };
   kind?: OpenTelemetrySpanKind;
-}
+};
 
 /**
  * Creates a mock Open TelemetrySpan for testing.

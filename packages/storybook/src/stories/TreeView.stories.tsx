@@ -9,6 +9,7 @@ import {
   Stories,
   Source,
 } from "@storybook/addon-docs/blocks";
+import { fn } from "storybook/test";
 
 const meta = {
   title: "Main Components/TreeView",
@@ -131,7 +132,7 @@ export const Default: Story = {
       expandButton: "outside",
     },
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
   },
 };
 
@@ -142,7 +143,7 @@ export const ExpandButton: Story = {
       expandButton: "inside",
     },
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
   },
 };
 
@@ -153,7 +154,7 @@ export const ExpandedSpans: Story = {
       expandButton: "outside",
     },
     expandedSpansIds: ["span-root-001", "span-child-002"],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
   },
 };
 
@@ -165,7 +166,7 @@ export const SelectedSpan: Story = {
       expandButton: "outside",
     },
     expandedSpansIds: ["span-root-001"],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     onSpanSelect: (span) => console.log("Selected span:", span),
   },
 };

@@ -8,10 +8,10 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 import { CheckCircle2, Circle, CircleDot, ListTodo } from "lucide-react";
 
-interface DetailsViewTodosSectionProps {
+type DetailsViewTodosSectionProps = {
   data: TraceSpan;
   className?: string | undefined;
-}
+};
 
 // Status is otherwise shown only by icon, color and strike-through, so each row
 // and count also carries it as text for screen readers.

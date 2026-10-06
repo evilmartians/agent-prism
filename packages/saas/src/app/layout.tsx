@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import "@evilmartians/agent-prism-ui/theme.css";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "AI Agent Logs",

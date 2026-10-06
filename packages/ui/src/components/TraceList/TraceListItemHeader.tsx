@@ -1,19 +1,20 @@
 import type { TraceRecord } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import type { AvatarProps } from "../Avatar";
 
 import { Avatar } from "../Avatar";
 import { Badge } from "../Badge";
 
-interface TraceListItemHeaderProps {
+type TraceListItemHeaderProps = {
   trace: TraceRecord;
   avatar?: AvatarProps | undefined;
-}
+};
 
 export const TraceListItemHeader = ({
   trace,
   avatar,
-}: TraceListItemHeaderProps) => {
+}: TraceListItemHeaderProps): ReactElement => {
   return (
     <header className="flex w-full min-w-0 flex-wrap items-center justify-between gap-2">
       <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">

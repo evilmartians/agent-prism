@@ -2,9 +2,9 @@ import type { ReactElement } from "react";
 
 import cn from "classnames";
 
-export interface ErrorStatusCircleProps {
+export type ErrorStatusCircleProps = {
   className?: string | undefined;
-}
+};
 
 /**
  * A small decorative dot used as the error status glyph next to failed spans.

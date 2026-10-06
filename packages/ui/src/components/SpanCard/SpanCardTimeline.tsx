@@ -2,16 +2,17 @@ import type {
   TraceSpan,
   TraceSpanCategory,
 } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import { getTimelineData } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 
-interface SpanCardTimelineProps {
+type SpanCardTimelineProps = {
   spanCard: TraceSpan;
   minStart: number;
   maxEnd: number;
   className?: string | undefined;
-}
+};
 
 const timelineBgColors: Record<TraceSpanCategory, string> = {
   llm_call: "bg-agentprism-timeline-llm",
@@ -32,7 +33,7 @@ export const SpanCardTimeline = ({
   minStart,
   maxEnd,
   className,
-}: SpanCardTimelineProps) => {
+}: SpanCardTimelineProps): ReactElement => {
   const { startPercent, widthPercent } = getTimelineData({
     spanCard,
     minStart,

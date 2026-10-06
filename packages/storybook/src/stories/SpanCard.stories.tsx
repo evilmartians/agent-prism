@@ -9,6 +9,7 @@ import {
   Stories,
   Source,
 } from "@storybook/addon-docs/blocks";
+import { fn } from "storybook/test";
 
 const meta = {
   title: "Main Components/SpanCard",
@@ -122,7 +123,7 @@ export const Default: Story = {
     maxEnd: mockTraceSpan.endTime.getTime(),
     isLastChild: false,
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -137,7 +138,7 @@ export const Level: Story = {
     maxEnd: mockTraceSpan.endTime.getTime(),
     isLastChild: false,
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -151,7 +152,7 @@ export const ExpandButton: Story = {
     maxEnd: mockTraceSpan.endTime.getTime(),
     isLastChild: false,
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "inside",
     },
@@ -171,7 +172,7 @@ export const Avatar: Story = {
     maxEnd: mockTraceSpan.endTime.getTime(),
     isLastChild: false,
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -186,7 +187,7 @@ export const SelectedSpan: Story = {
     maxEnd: mockTraceSpan.endTime.getTime(),
     isLastChild: false,
     expandedSpansIds: [],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
     },
@@ -200,7 +201,7 @@ export const WithChildren: Story = {
     maxEnd: mockTraceSpan.endTime.getTime(),
     isLastChild: false,
     expandedSpansIds: ["span-parent-001"],
-    onExpandSpansIdsChange: () => {},
+    onExpandSpansIdsChange: fn(),
     viewOptions: {
       expandButton: "outside",
     },

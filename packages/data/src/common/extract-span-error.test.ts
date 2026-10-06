@@ -3,6 +3,7 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
 import {
+  type SpanErrorDetails,
   collectErrorSpans,
   collectRunErrorEntries,
   collectSpanErrorEntry,
@@ -101,37 +102,43 @@ const noMessageErrorSpan = makeSpan({
 });
 
 // A failed run: workflow root → agent → parser, all in error state.
-const failedRunSpans: TraceSpan[] = [
-  makeSpan({
-    id: "workflow",
-    title: "Relevancy scoring workflow",
-    type: "chain_operation",
-    status: "error",
-    raw: [
-      JSON.stringify({
-        status: { message: "Run failed" },
-        name: "Relevancy scoring workflow",
-      }),
-    ],
-    children: [
-      makeSpan({
-        id: "agent",
-        title: "AI Agent",
-        type: "agent_invocation",
-        status: "error",
-        raw: [
-          JSON.stringify({
-            status: { message: "Child node failed" },
-            name: "AI Agent",
-          }),
-        ],
-        children: [rawStatusMessageSpan],
-      }),
-    ],
-  }),
-];
+const agentParentSpan = makeSpan({
+  id: "agent",
+  title: "AI Agent",
+  type: "agent_invocation",
+  status: "error",
+  raw: [
+    JSON.stringify({
+      status: { message: "Child node failed" },
+      name: "AI Agent",
+    }),
+  ],
+  children: [rawStatusMessageSpan],
+});
 
-const agentParentSpan = failedRunSpans[0]!.children![0]!;
+const workflowRootSpan = makeSpan({
+  id: "workflow",
+  title: "Relevancy scoring workflow",
+  type: "chain_operation",
+  status: "error",
+  raw: [
+    JSON.stringify({
+      status: { message: "Run failed" },
+      name: "Relevancy scoring workflow",
+    }),
+  ],
+  children: [agentParentSpan],
+});
+
+const failedRunSpans: TraceSpan[] = [workflowRootSpan];
+
+const extractDefinedSpanError = (span: TraceSpan): SpanErrorDetails => {
+  const details = extractSpanError(span);
+
+  if (!details) throw new Error(`Span ${span.id} has no error details`);
+
+  return details;
+};
 
 const singleErrorRunSpans: TraceSpan[] = [
   makeSpan({
@@ -353,9 +360,9 @@ describe("collectErrorSpans / traceRunHasErrors", () => {
 describe("isRootTraceSpan", () => {
   it("matches any top-level root span, not only the first", () => {
     const secondRoot = makeSpan({ id: "root-b", title: "Second root" });
-    const roots = [failedRunSpans[0]!, secondRoot];
+    const roots = [workflowRootSpan, secondRoot];
 
-    expect(isRootTraceSpan(failedRunSpans[0]!, roots)).toBe(true);
+    expect(isRootTraceSpan(workflowRootSpan, roots)).toBe(true);
     expect(isRootTraceSpan(secondRoot, roots)).toBe(true);
     expect(isRootTraceSpan(rawStatusMessageSpan, roots)).toBe(false);
   });
@@ -405,7 +412,7 @@ describe("errorCountLabel", () => {
 
 describe("format helpers", () => {
   it("formatSpanErrorForAgent includes title and message", () => {
-    const details = extractSpanError(rawStatusMessageSpan)!;
+    const details = extractDefinedSpanError(rawStatusMessageSpan);
 
     expect(formatSpanErrorForAgent(details)).toBe(
       "# Structured Output Parser\n\nModel output doesn't fit required format",
@@ -462,7 +469,7 @@ describe("format helpers", () => {
   });
 
   it("formatSpanErrorForAgent includes the stack when present", () => {
-    const details = extractSpanError(otlpExceptionSpan)!;
+    const details = extractDefinedSpanError(otlpExceptionSpan);
     const text = formatSpanErrorForAgent(details);
 
     expect(text).toMatch(/Connection refused: redis:6379/);
@@ -470,7 +477,7 @@ describe("format helpers", () => {
   });
 
   it("formatSpanErrorForAgent omits stack section when absent", () => {
-    const details = extractSpanError(rawStatusMessageSpan)!;
+    const details = extractDefinedSpanError(rawStatusMessageSpan);
     const text = formatSpanErrorForAgent(details);
 
     expect(text).not.toMatch(/Stack/);

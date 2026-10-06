@@ -33,7 +33,7 @@ type DetailsViewTab =
   | "attributes"
   | "raw";
 
-export interface DetailsViewProps {
+export type DetailsViewProps = {
   /**
    * The span data to display in the details view
    */
@@ -90,7 +90,7 @@ export interface DetailsViewProps {
    * isn't available for a new span and the view falls back to the first tab
    */
   onTabChange?: ((tabValue: DetailsViewTab) => void) | undefined;
-}
+};
 
 /**
  * Tabs are content-aware. Thinking is offered for any span that reports

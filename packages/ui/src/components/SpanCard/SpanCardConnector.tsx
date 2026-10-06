@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 export type SpanCardConnectorType =
   | "horizontal"
   | "vertical"
@@ -5,11 +7,13 @@ export type SpanCardConnectorType =
   | "corner-top-right"
   | "empty";
 
-interface SpanCardConnectorProps {
+type SpanCardConnectorProps = {
   type: SpanCardConnectorType;
-}
+};
 
-export const SpanCardConnector = ({ type }: SpanCardConnectorProps) => {
+export const SpanCardConnector = ({
+  type,
+}: SpanCardConnectorProps): ReactElement => {
   if (type === "empty") return <div className="w-5 shrink-0 grow" />;
 
   return (

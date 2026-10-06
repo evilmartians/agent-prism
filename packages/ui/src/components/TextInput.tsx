@@ -4,6 +4,7 @@ import {
   useRef,
   type ChangeEvent,
   type ComponentPropsWithRef,
+  type ReactElement,
   type ReactNode,
   type RefObject,
 } from "react";
@@ -67,7 +68,7 @@ export const TextInput = ({
   hideLabel = false,
   id,
   ...rest
-}: TextInputProps) => {
+}: TextInputProps): ReactElement => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

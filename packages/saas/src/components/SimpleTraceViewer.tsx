@@ -18,9 +18,9 @@ import type { SimpleTraceViewerLayoutProps } from "@/types";
 import { SimpleTraceViewerDesktopLayout } from "./SimpleTraceViewerDesktopLayout";
 import { SimpleTraceViewerMobileLayout } from "./SimpleTraceViewerMobileLayout";
 
-interface SimpleTraceViewerProps {
+type SimpleTraceViewerProps = {
   spans: TraceSpan[];
-}
+};
 
 export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   const isMobile = useIsMobile();

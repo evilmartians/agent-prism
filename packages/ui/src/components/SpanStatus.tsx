@@ -1,5 +1,5 @@
 import type { TraceSpanStatus } from "@evilmartians/agent-prism-types";
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 import { Check, Ellipsis, Info, TriangleAlert } from "lucide-react";
@@ -28,27 +28,9 @@ const STATUS_COLORS_BADGE: Record<TraceSpanStatus, string> = {
     "bg-agentprism-warning-muted text-agentprism-warning-muted-foreground",
 };
 
-export const SpanStatus = ({
-  status,
-  variant = "dot",
-  ...rest
-}: StatusProps) => {
-  const title = `Status: ${status}`;
-
-  return (
-    <div className="flex size-4 items-center justify-center" {...rest}>
-      {variant === "dot" ? (
-        <SpanStatusDot status={status} title={title} />
-      ) : (
-        <SpanStatusBadge status={status} title={title} />
-      )}
-    </div>
-  );
-};
-
-interface StatusWithTitleProps extends StatusProps {
+type StatusWithTitleProps = {
   title: string;
-}
+} & StatusProps;
 
 const SpanStatusDot = ({ status, title }: StatusWithTitleProps) => {
   return (
@@ -76,5 +58,23 @@ const SpanStatusBadge = ({ status, title }: StatusWithTitleProps) => {
       {status === "warning" && <Info className="size-2.5" aria-hidden />}
       {status === "pending" && <Ellipsis className="size-2.5" aria-hidden />}
     </span>
+  );
+};
+
+export const SpanStatus = ({
+  status,
+  variant = "dot",
+  ...rest
+}: StatusProps): ReactElement => {
+  const title = `Status: ${status}`;
+
+  return (
+    <div className="flex size-4 items-center justify-center" {...rest}>
+      {variant === "dot" ? (
+        <SpanStatusDot status={status} title={title} />
+      ) : (
+        <SpanStatusBadge status={status} title={title} />
+      )}
+    </div>
   );
 };

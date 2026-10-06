@@ -37,7 +37,7 @@ const DEFAULT_VIEW_OPTIONS = {
   expandButton: "inside",
 } satisfies Required<SpanCardViewOptions>;
 
-interface SpanCardProps {
+type SpanCardProps = {
   data: TraceSpan;
   level?: number | undefined;
   selectedSpan?: TraceSpan | undefined;
@@ -50,13 +50,13 @@ interface SpanCardProps {
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
   viewOptions?: SpanCardViewOptions | undefined;
-}
+};
 
-interface SpanCardState {
+type SpanCardState = {
   isExpanded: boolean;
   hasChildren: boolean;
   isSelected: boolean;
-}
+};
 
 const getContentWidth = ({
   level,
@@ -201,73 +201,6 @@ const useSpanCardEventHandlers = (
     handleKeyDown,
     handleToggleClick,
   };
-};
-
-const SpanCardChildren: FC<{
-  data: TraceSpan;
-  level: number;
-  selectedSpan?: TraceSpan | undefined;
-  onSpanSelect?: ((span: TraceSpan) => void) | undefined;
-  minStart: number;
-  maxEnd: number;
-  prevLevelConnectors: SpanCardConnectorType[];
-  expandedSpansIds: string[];
-  onExpandSpansIdsChange: (ids: string[]) => void;
-  viewOptions?: SpanCardViewOptions | undefined;
-}> = ({
-  data,
-  level,
-  selectedSpan,
-  onSpanSelect,
-  minStart,
-  maxEnd,
-  prevLevelConnectors,
-  expandedSpansIds,
-  onExpandSpansIdsChange,
-  viewOptions = DEFAULT_VIEW_OPTIONS,
-}) => {
-  if (!data.children?.length) return null;
-
-  return (
-    <div className="relative">
-      <Collapsible.Content>
-        <ul role="group">
-          {data.children.map((child, idx) => {
-            const brand = child.metadata?.["brand"] as
-              | { type: string }
-              | undefined;
-
-            return (
-              <SpanCard
-                viewOptions={viewOptions}
-                key={child.id}
-                data={child}
-                minStart={minStart}
-                maxEnd={maxEnd}
-                level={level + 1}
-                selectedSpan={selectedSpan}
-                onSpanSelect={onSpanSelect}
-                isLastChild={idx === (data.children || []).length - 1}
-                prevLevelConnectors={prevLevelConnectors}
-                expandedSpansIds={expandedSpansIds}
-                onExpandSpansIdsChange={onExpandSpansIdsChange}
-                avatar={
-                  brand
-                    ? {
-                        children: <BrandLogo brand={brand.type} />,
-                        size: "4",
-                        rounded: "sm",
-                        category: child.type,
-                      }
-                    : undefined
-                }
-              />
-            );
-          })}
-        </ul>
-      </Collapsible.Content>
-    </div>
-  );
 };
 
 export const SpanCard: FC<SpanCardProps> = ({
@@ -464,18 +397,46 @@ export const SpanCard: FC<SpanCardProps> = ({
             ))}
         </div>
 
-        <SpanCardChildren
-          minStart={minStart}
-          maxEnd={maxEnd}
-          viewOptions={viewOptions}
-          data={data}
-          level={level}
-          selectedSpan={selectedSpan}
-          onSpanSelect={onSpanSelect}
-          prevLevelConnectors={connectors}
-          expandedSpansIds={expandedSpansIds}
-          onExpandSpansIdsChange={onExpandSpansIdsChange}
-        />
+        {data.children?.length ? (
+          <div className="relative">
+            <Collapsible.Content>
+              <ul role="group">
+                {data.children.map((child, idx, siblings) => {
+                  const brand = child.metadata?.["brand"] as
+                    | { type: string }
+                    | undefined;
+
+                  return (
+                    <SpanCard
+                      viewOptions={viewOptions}
+                      key={child.id}
+                      data={child}
+                      minStart={minStart}
+                      maxEnd={maxEnd}
+                      level={level + 1}
+                      selectedSpan={selectedSpan}
+                      onSpanSelect={onSpanSelect}
+                      isLastChild={idx === siblings.length - 1}
+                      prevLevelConnectors={connectors}
+                      expandedSpansIds={expandedSpansIds}
+                      onExpandSpansIdsChange={onExpandSpansIdsChange}
+                      avatar={
+                        brand
+                          ? {
+                              children: <BrandLogo brand={brand.type} />,
+                              size: "4",
+                              rounded: "sm",
+                              category: child.type,
+                            }
+                          : undefined
+                      }
+                    />
+                  );
+                })}
+              </ul>
+            </Collapsible.Content>
+          </div>
+        ) : null}
       </Collapsible.Root>
     </li>
   );

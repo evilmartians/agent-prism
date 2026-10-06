@@ -94,7 +94,7 @@ export const Button = ({
   onClick,
   className = "",
   ...rest
-}: ButtonProps) => {
+}: ButtonProps): ReactElement => {
   const widthClass = fullWidth ? "w-full" : "";
   const stateClasses = disabled
     ? "cursor-not-allowed opacity-50"

@@ -1,19 +1,19 @@
-import type { KeyboardEvent, MouseEvent } from "react";
+import type { KeyboardEvent, MouseEvent, ReactElement } from "react";
 
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
-interface SpanCardToggleProps {
+type SpanCardToggleProps = {
   isExpanded: boolean;
   title: string;
   onToggleClick: (e: MouseEvent | KeyboardEvent) => void;
-}
+};
 
 export const SpanCardToggle = ({
   isExpanded,
   title,
   onToggleClick,
-}: SpanCardToggleProps) => (
+}: SpanCardToggleProps): ReactElement => (
   <Collapsible.Trigger asChild>
     <button
       className="flex h-4 w-5 shrink-0 items-center justify-center"

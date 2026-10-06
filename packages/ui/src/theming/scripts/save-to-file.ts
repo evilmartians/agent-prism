@@ -5,7 +5,7 @@ import { join, dirname } from "node:path";
 // @ts-expect-error - Node.js built-in modules
 import { fileURLToPath } from "node:url";
 
-export function saveContentToFile(content: string, fileName: string) {
+export function saveContentToFile(content: string, fileName: string): void {
   const currentDir = dirname(fileURLToPath(import.meta.url));
   const outputPath = join(currentDir, `../../components/theme/${fileName}`);
 

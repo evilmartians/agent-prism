@@ -11,9 +11,9 @@ import {
   hasReportedCost,
 } from "@evilmartians/agent-prism-data";
 
-interface DetailsViewContextTabProps {
+type DetailsViewContextTabProps = {
   data: TraceSpan;
-}
+};
 
 function getStringAttr(
   attributes: TraceSpanAttribute[] | undefined,
@@ -69,11 +69,11 @@ const TOKEN_TYPE_LABELS: Record<string, string> = {
   cache_write: "Cache write",
 };
 
-interface StatRowData {
+type StatRowData = {
   label: string;
   value: string;
   sub?: string | undefined;
-}
+};
 
 /**
  * A three-column grid (label / value / sub). Using a shared subgrid keeps the

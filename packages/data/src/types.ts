@@ -8,7 +8,7 @@ import type {
   TraceTodo,
 } from "@evilmartians/agent-prism-types";
 
-export interface SpanAdapter<TRawDocument, TRawSpan> {
+export type SpanAdapter<TRawDocument, TRawSpan> = {
   convertRawDocumentsToSpans(
     documents: TRawDocument | TRawDocument[],
   ): TraceSpan[];
@@ -28,4 +28,4 @@ export interface SpanAdapter<TRawDocument, TRawSpan> {
   getSpanStatus(document: TRawSpan): TraceSpanStatus;
 
   getSpanCategory(document: TRawSpan): TraceSpanCategory;
-}
+};

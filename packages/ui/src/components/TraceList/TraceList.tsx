@@ -1,4 +1,5 @@
 import type { TraceRecord } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import cn from "classnames";
 import { ArrowLeft } from "lucide-react";
@@ -10,7 +11,7 @@ import { IconButton } from "../IconButton";
 import { TraceListItem } from "./TraceListItem";
 
 type TraceRecordWithBadges = TraceRecord & {
-  badges?: Array<BadgeProps> | undefined;
+  badges?: BadgeProps[] | undefined;
 };
 
 type TraceListProps = {
@@ -29,7 +30,7 @@ export const TraceList = ({
   className,
   onTraceSelect,
   selectedTrace,
-}: TraceListProps) => {
+}: TraceListProps): ReactElement => {
   return (
     <div
       className={cn(

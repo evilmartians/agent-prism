@@ -5,12 +5,12 @@ import { errorCountLabel } from "@evilmartians/agent-prism-data";
 import { Badge } from "./Badge";
 import { ErrorStatusCircle } from "./ErrorStatusCircle";
 
-export interface ErrorCountBadgeProps {
+export type ErrorCountBadgeProps = {
   /**
    * The number of failed spans to display.
    */
   count: number;
-}
+};
 
 /**
  * A transparent, error-accented badge summarizing how many spans failed in a

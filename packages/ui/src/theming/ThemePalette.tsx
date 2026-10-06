@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 import cn from "classnames";
 
 import { agentPrismTheme } from "./theme";
@@ -5,7 +7,7 @@ import { AGENT_PRISM_PREFIX } from "./theme";
 
 const tokensFlat = agentPrismTheme.tokenGroups.flatMap((group) => group.tokens);
 
-export function ThemePalette() {
+export function ThemePalette(): ReactElement {
   return (
     <div className="flex flex-col gap-12">
       <Group title="Brand colors">
@@ -263,7 +265,7 @@ type TokenProps = {
 
 function Token({ name, bg }: TokenProps) {
   const tokenName = bg.replace(`bg-${AGENT_PRISM_PREFIX}-`, "");
-  const token = tokensFlat.find((token) => token.name === tokenName);
+  const token = tokensFlat.find((candidate) => candidate.name === tokenName);
 
   return (
     <div className="flex h-[250px] w-[200px] flex-col border border-black/50 dark:border-white/50">

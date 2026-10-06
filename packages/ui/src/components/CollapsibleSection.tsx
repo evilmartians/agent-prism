@@ -3,7 +3,7 @@ import cn from "classnames";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
-export interface CollapsibleSectionProps {
+export type CollapsibleSectionProps = {
   /**
    * The title text displayed in the trigger button
    */
@@ -44,7 +44,7 @@ export interface CollapsibleSectionProps {
    * Optional callback fired when the section is expanded or collapsed
    */
   onOpenChange?: ((open: boolean) => void) | undefined;
-}
+};
 
 export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   title,
@@ -59,9 +59,9 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   const [open, setOpen] = React.useState(defaultOpen);
 
   const handleOpenChange = React.useCallback(
-    (open: boolean): void => {
-      setOpen(open);
-      onOpenChange?.(open);
+    (nextOpen: boolean): void => {
+      setOpen(nextOpen);
+      onOpenChange?.(nextOpen);
     },
     [onOpenChange],
   );

@@ -73,7 +73,8 @@ export const openTelemetrySpanAdapter: SpanAdapter<
 
     // Second pass: build parent-child relationships
     spans.forEach((span) => {
-      const convertedSpan = spanMap.get(span.spanId)!;
+      const convertedSpan = spanMap.get(span.spanId);
+      if (!convertedSpan) return;
       const parentSpanId = span.parentSpanId;
 
       if (parentSpanId) {

@@ -1,8 +1,12 @@
 "use client";
 
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import type { FC, ReactNode } from "react";
 
-import { TraceContext, TraceState } from "@/context/TraceContext";
+import React, { useEffect, useState } from "react";
+
+import type { TraceState } from "@/context/TraceContext";
+
+import { TraceContext } from "@/context/TraceContext";
 import { extractSpans } from "@/services/extract-spans";
 
 import testData from "../data/test.json";

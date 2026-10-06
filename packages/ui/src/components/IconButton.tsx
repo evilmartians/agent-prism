@@ -1,4 +1,4 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
@@ -53,7 +53,7 @@ export const IconButton = ({
   type = "button",
   "aria-label": ariaLabel,
   ...rest
-}: IconButtonProps) => {
+}: IconButtonProps): ReactElement => {
   return (
     <button
       type={type}

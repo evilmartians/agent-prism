@@ -1,4 +1,5 @@
 import type { TraceRecord, TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import {
   filterSpansRecursively,
@@ -12,22 +13,22 @@ import { type SpanCardViewOptions } from "../SpanCard/SpanCard";
 import { TraceViewerDesktopLayout } from "./TraceViewerDesktopLayout";
 import { TraceViewerMobileLayout } from "./TraceViewerMobileLayout";
 
-export interface TraceViewerData {
+export type TraceViewerData = {
   traceRecord: TraceRecord;
-  badges?: Array<BadgeProps> | undefined;
+  badges?: BadgeProps[] | undefined;
   spans: TraceSpan[];
   spanCardViewOptions?: SpanCardViewOptions | undefined;
-}
+};
 
-export interface TraceViewerProps {
-  data: Array<TraceViewerData>;
+export type TraceViewerProps = {
+  data: TraceViewerData[];
   spanCardViewOptions?: SpanCardViewOptions | undefined;
-}
+};
 
 export const TraceViewer = ({
   data,
   spanCardViewOptions,
-}: TraceViewerProps) => {
+}: TraceViewerProps): ReactElement => {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
 
@@ -144,12 +145,12 @@ export const TraceViewer = ({
   );
 };
 
-export interface TraceRecordWithDisplayData extends TraceRecord {
+export type TraceRecordWithDisplayData = {
   spanCardViewOptions?: SpanCardViewOptions | undefined;
   badges?: BadgeProps[] | undefined;
-}
+} & TraceRecord;
 
-export interface TraceViewerLayoutProps {
+export type TraceViewerLayoutProps = {
   traceRecords: TraceRecordWithDisplayData[];
   traceListExpanded: boolean;
   setTraceListExpanded: (expanded: boolean) => void;
@@ -168,4 +169,4 @@ export interface TraceViewerLayoutProps {
   handleTraceSelect: (trace: TraceRecord) => void;
   spanCardViewOptions?: SpanCardViewOptions | undefined;
   onClearTraceSelection: () => void;
-}
+};

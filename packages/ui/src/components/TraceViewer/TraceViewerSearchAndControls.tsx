@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 import {
   CollapseAllButton,
   ExpandAllButton,
@@ -14,7 +16,7 @@ export const TraceViewerSearchAndControls = ({
   setSearchValue: (value: string) => void;
   handleExpandAll: () => void;
   handleCollapseAll: () => void;
-}) => (
+}): ReactElement => (
   <div className="flex shrink-0 items-center justify-between gap-3 px-4 pb-2 pt-1">
     <SearchInput
       id="trace-span-search"

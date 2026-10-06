@@ -9,6 +9,7 @@ import {
   Stories,
   Source,
 } from "@storybook/addon-docs/blocks";
+import { fn } from "storybook/test";
 
 const meta = {
   title: "Main Components/TraceList",
@@ -77,7 +78,7 @@ export const Default: Story = {
   args: {
     traces: mockTraces,
     expanded: true,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn(),
   },
 };
 
@@ -85,7 +86,7 @@ export const Collapsed: Story = {
   args: {
     traces: mockTraces,
     expanded: false,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn(),
   },
 };
 
@@ -94,7 +95,7 @@ export const SelectedTrace: Story = {
     traces: mockTraces,
     expanded: true,
     selectedTrace: mockTraces[1],
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn(),
     onTraceSelect: (trace) => console.log("Selected:", trace),
   },
 };
@@ -103,7 +104,7 @@ export const EmptyList: Story = {
   args: {
     traces: [],
     expanded: true,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn(),
   },
 };
 
@@ -111,6 +112,6 @@ export const SingleTrace: Story = {
   args: {
     traces: mockTraces.slice(0, 1),
     expanded: true,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn(),
   },
 };

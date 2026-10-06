@@ -1,4 +1,5 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import {
   getTotalCost,
@@ -10,11 +11,11 @@ import { PriceBadge } from "../PriceBadge";
 import { SpanBadge } from "../SpanBadge";
 import { TokensBadge } from "../TokensBadge";
 
-interface SpanCardBagdesProps {
+type SpanCardBagdesProps = {
   data: TraceSpan;
-}
+};
 
-export const SpanCardBadges = ({ data }: SpanCardBagdesProps) => {
+export const SpanCardBadges = ({ data }: SpanCardBagdesProps): ReactElement => {
   return (
     <div className="flex flex-wrap items-center justify-start gap-1">
       <SpanBadge category={data.type} />

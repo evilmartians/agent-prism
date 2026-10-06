@@ -64,7 +64,8 @@ export const langfuseSpanAdapter: SpanAdapter<
 
     // Second pass: build parent-child relationships
     spans.forEach((span) => {
-      const convertedSpan = spanMap.get(span.id)!;
+      const convertedSpan = spanMap.get(span.id);
+      if (!convertedSpan) return;
       const parentSpanId = span.parentObservationId;
 
       if (parentSpanId) {

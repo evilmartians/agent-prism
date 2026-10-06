@@ -1,5 +1,5 @@
 import type { TraceRecord } from "@evilmartians/agent-prism-types";
-import type { KeyboardEvent } from "react";
+import type { KeyboardEvent, ReactElement } from "react";
 
 import cn from "classnames";
 import { useCallback } from "react";
@@ -13,14 +13,14 @@ import { TimestampBadge } from "../TimestampBadge";
 import { TokensBadge } from "../TokensBadge";
 import { TraceListItemHeader } from "./TraceListItemHeader";
 
-interface TraceListItemProps {
+type TraceListItemProps = {
   trace: TraceRecord;
-  badges?: Array<BadgeProps> | undefined;
+  badges?: BadgeProps[] | undefined;
   avatar?: AvatarProps | undefined;
   onClick?: (() => void) | undefined;
   isSelected?: boolean | undefined;
   showDescription?: boolean | undefined;
-}
+};
 
 export const TraceListItem = ({
   trace,
@@ -29,7 +29,7 @@ export const TraceListItem = ({
   badges,
   isSelected,
   showDescription = true,
-}: TraceListItemProps) => {
+}: TraceListItemProps): ReactElement => {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent): void => {
       if (e.key === "Enter" || e.key === " ") {

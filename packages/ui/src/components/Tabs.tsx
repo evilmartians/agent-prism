@@ -4,12 +4,12 @@ import * as RadixTabs from "@radix-ui/react-tabs";
 import cn from "classnames";
 import * as React from "react";
 
-export interface TabItem<T extends string = string> {
+export type TabItem<T extends string = string> = {
   value: T;
   label: string;
   icon?: React.ReactNode | undefined;
   disabled?: boolean | undefined;
-}
+};
 
 export type TabTheme = "underline" | "pill";
 
@@ -97,7 +97,7 @@ export const Tabs = <T extends string = string>({
   triggerClassName = "",
   dir,
   ...rest
-}: TabsProps<T>) => {
+}: TabsProps<T>): React.ReactElement => {
   const defaultTab = defaultValue || items[0]?.value;
 
   const currentTheme = THEMES[theme];

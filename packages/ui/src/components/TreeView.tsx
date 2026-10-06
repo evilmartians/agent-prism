@@ -9,7 +9,7 @@ import type { SpanCardViewOptions } from "./SpanCard/SpanCard";
 import { BrandLogo } from "./BrandLogo";
 import { SpanCard } from "./SpanCard/SpanCard";
 
-interface TreeViewProps {
+type TreeViewProps = {
   spans: TraceSpan[];
   className?: string | undefined;
   selectedSpan?: TraceSpan | undefined;
@@ -17,7 +17,7 @@ interface TreeViewProps {
   expandedSpansIds: string[];
   onExpandSpansIdsChange: (ids: string[]) => void;
   spanCardViewOptions?: SpanCardViewOptions | undefined;
-}
+};
 
 export const TreeView: FC<TreeViewProps> = ({
   spans,

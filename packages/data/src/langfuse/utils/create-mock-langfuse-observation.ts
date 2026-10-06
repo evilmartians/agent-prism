@@ -1,9 +1,9 @@
 import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
 
-interface MockObservationOptions {
+type MockObservationOptions = {
   name?: string;
   metadata?: unknown;
-}
+};
 
 /**
  * Creates a mock LangfuseObservation for testing.

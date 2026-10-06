@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 import { Check, Copy, X } from "lucide-react";
 import { useState } from "react";
 
@@ -10,7 +12,10 @@ type CopyButtonProps = {
 
 type CopyState = "idle" | "success" | "error";
 
-export const CopyButton = ({ label, content }: CopyButtonProps) => {
+export const CopyButton = ({
+  label,
+  content,
+}: CopyButtonProps): ReactElement => {
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
   const onClick = async () => {

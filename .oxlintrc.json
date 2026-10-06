@@ -97,6 +97,30 @@
     "typescript/prefer-as-const": "error",
     "typescript/prefer-namespace-keyword": "error",
     "typescript/triple-slash-reference": "error",
+    "typescript/no-dynamic-delete": "error",
+    "typescript/no-extraneous-class": "error",
+    "typescript/no-invalid-void-type": "error",
+    "typescript/no-non-null-asserted-nullish-coalescing": "error",
+    "typescript/no-non-null-assertion": "error",
+    "no-useless-constructor": "error",
+    "typescript/prefer-literal-enum-member": "error",
+    "typescript/unified-signatures": "error",
+    "typescript/adjacent-overload-signatures": "error",
+    "typescript/array-type": "error",
+    "typescript/ban-tslint-comment": "error",
+    "typescript/class-literal-property-style": "error",
+    "typescript/consistent-generic-constructors": "error",
+    "typescript/consistent-indexed-object-style": "error",
+    "typescript/consistent-type-assertions": "error",
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-confusing-non-null-assertion": "error",
+    "no-empty-function": "error",
+    "typescript/no-inferrable-types": "error",
+    "typescript/prefer-for-of": "error",
+    "typescript/prefer-function-type": "error",
+    "no-shadow": "error",
+    "no-use-before-define": ["error", { "functions": false }],
     "react/display-name": "error",
     "react/jsx-key": "error",
     "react/jsx-no-comment-textnodes": "error",
@@ -127,5 +151,23 @@
         "order": "asc"
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "packages/types/src/**",
+        "packages/data/src/**",
+        "packages/ui/src/**"
+      ],
+      "rules": {
+        "typescript/explicit-module-boundary-types": "error"
+      }
+    },
+    {
+      "files": ["**/*.d.ts", "packages/data/src/common/extract-span-error.ts"],
+      "rules": {
+        "typescript/consistent-type-definitions": "off"
+      }
+    }
+  ]
 }

@@ -5,9 +5,9 @@ import { Brain } from "lucide-react";
 
 import { Badge } from "./Badge";
 
-export interface ThinkingBadgeProps {
+export type ThinkingBadgeProps = {
   className?: string | undefined;
-}
+};
 
 export const ThinkingBadge = ({
   className,

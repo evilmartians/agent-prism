@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 import { ArrowLeft } from "lucide-react";
 
 import { Button } from "../Button";
@@ -25,7 +27,7 @@ export const TraceViewerMobileLayout = ({
   handleTraceSelect,
   spanCardViewOptions,
   onClearTraceSelection,
-}: TraceViewerLayoutProps) => {
+}: TraceViewerLayoutProps): ReactElement => {
   if (
     selectedTrace &&
     selectedTraceId &&

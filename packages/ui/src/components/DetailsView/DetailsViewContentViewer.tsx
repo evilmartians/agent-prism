@@ -5,14 +5,14 @@ import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
 export type DetailsViewContentViewMode = "json" | "plain";
 
-export interface DetailsViewContentViewerProps {
+export type DetailsViewContentViewerProps = {
   content: string;
   parsedContent: string | null;
   mode: DetailsViewContentViewMode;
   label: string;
   id: string;
   className?: string | undefined;
-}
+};
 
 export const DetailsViewContentViewer = ({
   content,

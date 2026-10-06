@@ -15,10 +15,10 @@ import { Layout } from "./Layout";
 
 export const App = () => {
   const [data, setData] = useState<
-    Array<{
+    {
       traceRecord: TraceRecord;
       spans: TraceSpan[];
-    }>
+    }[]
   >([]);
 
   useEffect(() => {

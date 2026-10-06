@@ -4,11 +4,11 @@ import colors from "tailwindcss/colors";
 
 import { agentPrismPrefix } from "../theme";
 
-export interface JsonViewerProps {
+export type JsonViewerProps = {
   content: string;
   id: string;
   className?: string | undefined;
-}
+};
 
 export const DetailsViewJsonOutput: FC<JsonViewerProps> = ({
   content,

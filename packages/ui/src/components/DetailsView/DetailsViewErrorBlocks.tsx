@@ -15,9 +15,9 @@ import { CopyButton } from "../CopyButton";
 import { ErrorCountBadge } from "../ErrorCountBadge";
 import { DetailsViewErrorEntryList } from "./DetailsViewErrorRunRow";
 
-interface SpanErrorCalloutProps {
+type SpanErrorCalloutProps = {
   span: TraceSpan;
-}
+};
 
 /**
  * Renders the error for a single selected span (children excluded).
@@ -32,9 +32,9 @@ const SpanErrorCallout = ({
   return <DetailsViewErrorEntryList entries={[entry]} />;
 };
 
-interface RunErrorsSummaryProps {
+type RunErrorsSummaryProps = {
   entries: RunErrorEntry[];
-}
+};
 
 /**
  * Collapsible "Run errors" section listing every failed span in the run, with
@@ -76,7 +76,7 @@ const RunErrorsSummary = ({
   );
 };
 
-export interface DetailsViewErrorBlocksProps {
+export type DetailsViewErrorBlocksProps = {
   /**
    * The currently selected span.
    */
@@ -88,7 +88,7 @@ export interface DetailsViewErrorBlocksProps {
    * span's own error.
    */
   allSpans: TraceSpan[];
-}
+};
 
 /**
  * Error surface for the DetailsView Input/Output tab.

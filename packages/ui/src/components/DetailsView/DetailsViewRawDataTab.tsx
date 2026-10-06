@@ -5,9 +5,9 @@ import { type ReactElement } from "react";
 import { CopyButton } from "../CopyButton";
 import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
-interface RawDataTabProps {
+type RawDataTabProps = {
   data: TraceSpan;
-}
+};
 
 /**
  * One block per source record: a span assembled from several records (say, a

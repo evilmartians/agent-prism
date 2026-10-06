@@ -1,4 +1,5 @@
 import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import type { SpanCardViewOptions } from "../SpanCard/SpanCard";
 
@@ -34,7 +35,7 @@ export const TraceViewerTreeViewContainer = ({
   spanCardViewOptions?: SpanCardViewOptions | undefined;
   selectedTrace?: TraceRecordWithDisplayData | undefined;
   showHeader?: boolean | undefined;
-}) => (
+}): ReactElement => (
   <>
     {showHeader && selectedTrace && (
       <div className="flex shrink-0 gap-2 px-4">

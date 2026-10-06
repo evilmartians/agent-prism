@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 
-export interface DetailsViewHeaderActionsProps {
+export type DetailsViewHeaderActionsProps = {
   /**
    * Custom actions to render in the header
    */
@@ -9,12 +9,12 @@ export interface DetailsViewHeaderActionsProps {
    * Optional className for the actions container
    */
   className?: string | undefined;
-}
+};
 
 export const DetailsViewHeaderActions = ({
   children,
   className = "flex flex-wrap items-center gap-2",
-}: DetailsViewHeaderActionsProps) => {
+}: DetailsViewHeaderActionsProps): ReactElement | null => {
   if (!children) return null;
 
   return <div className={className}>{children}</div>;

@@ -1,14 +1,14 @@
 import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
 import cn from "classnames";
 
 import { Badge, type BadgeProps } from "./Badge";
 import { getSpanCategoryIcon, getSpanCategoryLabel } from "./shared";
 
-export interface SpanBadgeProps
-  extends Omit<BadgeProps, "label" | "iconStart" | "iconEnd"> {
+export type SpanBadgeProps = {
   category: TraceSpanCategory;
-}
+} & Omit<BadgeProps, "label" | "iconStart" | "iconEnd">;
 
 const badgeClasses: Record<TraceSpanCategory, string> = {
   llm_call: "bg-agentprism-badge-llm text-agentprism-badge-llm-foreground",
@@ -36,7 +36,7 @@ export const SpanBadge = ({
   category,
   className,
   ...props
-}: SpanBadgeProps) => {
+}: SpanBadgeProps): ReactElement => {
   const Icon = getSpanCategoryIcon(category);
   const label = getSpanCategoryLabel(category);
 

@@ -7,9 +7,9 @@ import type { ReactElement } from "react";
 import cn from "classnames";
 import { Brain } from "lucide-react";
 
-interface DetailsViewThinkingTabProps {
+type DetailsViewThinkingTabProps = {
   data: TraceSpan;
-}
+};
 
 const LEVEL_CONFIG: Record<
   TraceReasoningLevel,

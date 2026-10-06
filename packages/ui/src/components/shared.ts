@@ -136,7 +136,17 @@ export function getSpanCategoryIcon(category: TraceSpanCategory): LucideIcon {
   return SPAN_CATEGORY_CONFIG[category].icon;
 }
 
-export const useIsMobile = () => {
+export const useIsMounted = (): boolean => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  return isMounted;
+};
+
+export const useIsMobile = (): boolean => {
   const isMounted = useIsMounted();
 
   const [isMobile, setIsMobile] = useState(false);
@@ -157,14 +167,4 @@ export const useIsMobile = () => {
   }, []);
 
   return isMounted ? isMobile : false;
-};
-
-export const useIsMounted = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  return isMounted;
 };

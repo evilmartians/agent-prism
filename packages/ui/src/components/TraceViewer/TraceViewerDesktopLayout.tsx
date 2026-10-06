@@ -1,3 +1,5 @@
+import type { ReactElement } from "react";
+
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
 import { DetailsView } from "../DetailsView/DetailsView";
@@ -24,7 +26,7 @@ export const TraceViewerDesktopLayout = ({
   handleCollapseAll,
   handleTraceSelect,
   spanCardViewOptions,
-}: TraceViewerLayoutProps) => {
+}: TraceViewerLayoutProps): ReactElement => {
   const actualSelectedTrace =
     traceRecords.find((t) => t.id === selectedTraceId) || selectedTrace;
 
