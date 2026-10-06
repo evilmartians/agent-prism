@@ -214,7 +214,7 @@ jobs:
 
   deploy-storybook:
     if: github.ref == 'refs/heads/main'
-    needs: [lint, typecheck, test, build]
+    needs: [main]
     runs-on: ubuntu-latest
     permissions:
       contents: read
