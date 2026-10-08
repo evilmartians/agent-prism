@@ -2,34 +2,34 @@ import { type ReactElement } from "react";
 
 import { type TabItem, Tabs } from "./Tabs";
 
-export interface TabSelectorProps<T extends string> {
-  items: TabItem<T>[];
-  value: T;
+export type TabSelectorProps<T extends string> = {
+  className?: string | undefined;
+  defaultValue?: T | undefined;
+  items: readonly TabItem<T>[];
+  onClick?: ((event: React.MouseEvent) => void) | undefined;
   onValueChange: (value: T) => void;
-  defaultValue?: T;
-  theme?: "underline" | "pill";
-  className?: string;
-  onClick?: (event: React.MouseEvent) => void;
-}
+  theme?: "pill" | "underline" | undefined;
+  value: T;
+};
 
 export const TabSelector = <T extends string>({
-  items,
-  value,
-  onValueChange,
-  defaultValue,
-  theme = "underline",
   className,
+  defaultValue,
+  items,
   onClick,
-}: TabSelectorProps<T>): ReactElement => {
+  onValueChange,
+  theme = "underline",
+  value,
+}: Readonly<TabSelectorProps<T>>): ReactElement => {
   return (
     <Tabs<T>
-      items={items}
-      value={value}
-      onValueChange={onValueChange}
-      defaultValue={defaultValue}
-      theme={theme}
       className={className}
+      defaultValue={defaultValue}
+      items={items}
       onClick={onClick}
+      onValueChange={onValueChange}
+      theme={theme}
+      value={value}
     />
   );
 };

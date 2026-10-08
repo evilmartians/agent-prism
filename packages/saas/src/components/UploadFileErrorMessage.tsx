@@ -4,7 +4,7 @@ type Props = {
   message: string;
 };
 
-export const UploadFileErrorMessage: FC<Props> = ({ message }) => {
+export const UploadFileErrorMessage: FC<Readonly<Props>> = ({ message }) => {
   return (
     <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
       <div className="flex items-start space-x-2">

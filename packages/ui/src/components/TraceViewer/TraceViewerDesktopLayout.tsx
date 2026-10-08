@@ -1,4 +1,8 @@
+import type { ReactElement } from "react";
+
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { DetailsView } from "../DetailsView/DetailsView";
 import { TraceList } from "../TraceList/TraceList";
@@ -7,43 +11,43 @@ import { TraceViewerPlaceholder } from "./TraceViewerPlaceholder";
 import { TraceViewerTreeViewContainer } from "./TraceViewerTreeViewContainer";
 
 export const TraceViewerDesktopLayout = ({
-  traceRecords,
-  traceListExpanded,
-  setTraceListExpanded,
+  expandedSpansIds,
+  filteredSpans,
+  handleCollapseAll,
+  handleExpandAll,
+  handleTraceSelect,
+  searchValue,
+  selectedSpan,
   selectedTrace,
   selectedTraceId,
-  selectedSpan,
-  setSelectedSpan,
   selectedTraceSpans,
-  searchValue,
-  setSearchValue,
-  filteredSpans,
-  expandedSpansIds,
   setExpandedSpansIds,
-  handleExpandAll,
-  handleCollapseAll,
-  handleTraceSelect,
+  setSearchValue,
+  setSelectedSpan,
+  setTraceListExpanded,
   spanCardViewOptions,
-}: TraceViewerLayoutProps) => {
+  traceListExpanded,
+  traceRecords,
+}: ReadonlyProps<TraceViewerLayoutProps>): ReactElement => {
   const actualSelectedTrace =
-    traceRecords.find((t) => t.id === selectedTraceId) || selectedTrace;
+    traceRecords.find((t) => t.id === selectedTraceId) ?? selectedTrace;
 
   return (
-    <PanelGroup direction="horizontal" className="h-full">
+    <PanelGroup className="h-full" direction="horizontal">
       <Panel
-        id="trace-list"
-        defaultSize={traceListExpanded ? 20 : 2}
-        minSize={traceListExpanded ? 15 : 2}
-        maxSize={traceListExpanded ? 40 : 2}
-        collapsible={false}
         className="flex h-full min-h-0 flex-col overflow-hidden"
+        collapsible={false}
+        defaultSize={traceListExpanded ? 20 : 2}
+        id="trace-list"
+        maxSize={traceListExpanded ? 40 : 2}
+        minSize={traceListExpanded ? 15 : 2}
       >
         <TraceList
-          traces={traceRecords}
           expanded={traceListExpanded}
           onExpandStateChange={setTraceListExpanded}
           onTraceSelect={handleTraceSelect}
           selectedTrace={actualSelectedTrace}
+          traces={traceRecords}
         />
       </Panel>
 
@@ -51,29 +55,29 @@ export const TraceViewerDesktopLayout = ({
 
       {selectedTrace ? (
         <Panel
+          className="flex h-full flex-col gap-y-2 overflow-hidden"
           id="tree-view"
           minSize={30}
-          className="flex h-full flex-col gap-y-2 overflow-hidden"
         >
           <TraceViewerTreeViewContainer
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            handleExpandAll={handleExpandAll}
-            handleCollapseAll={handleCollapseAll}
-            filteredSpans={filteredSpans}
-            selectedSpan={selectedSpan}
-            setSelectedSpan={setSelectedSpan}
             expandedSpansIds={expandedSpansIds}
-            setExpandedSpansIds={setExpandedSpansIds}
-            spanCardViewOptions={spanCardViewOptions}
+            filteredSpans={filteredSpans}
+            handleCollapseAll={handleCollapseAll}
+            handleExpandAll={handleExpandAll}
+            searchValue={searchValue}
+            selectedSpan={selectedSpan}
             selectedTrace={selectedTrace}
+            setExpandedSpansIds={setExpandedSpansIds}
+            setSearchValue={setSearchValue}
+            setSelectedSpan={setSelectedSpan}
+            spanCardViewOptions={spanCardViewOptions}
           />
         </Panel>
       ) : (
         <Panel
+          className="flex h-full items-center justify-center"
           id="tree-view"
           minSize={30}
-          className="flex h-full items-center justify-center"
         >
           <TraceViewerPlaceholder title="Select a trace to see the details" />
         </Panel>
@@ -82,14 +86,14 @@ export const TraceViewerDesktopLayout = ({
       <PanelResizeHandle />
 
       <Panel
-        id="details-view"
-        defaultSize={30}
-        minSize={20}
-        maxSize={50}
         className="h-full overflow-hidden"
+        defaultSize={30}
+        id="details-view"
+        maxSize={50}
+        minSize={20}
       >
         {selectedSpan ? (
-          <DetailsView data={selectedSpan} allSpans={selectedTraceSpans} />
+          <DetailsView allSpans={selectedTraceSpans} data={selectedSpan} />
         ) : (
           <TraceViewerPlaceholder title="Select a span to see the details" />
         )}

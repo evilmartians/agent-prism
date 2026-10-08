@@ -2,34 +2,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { SpanBadge, SpanBadgeSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/SpanBadge",
-  component: SpanBadge,
-  parameters: {
-    layout: "centered",
-    docs: {
-      page: () => (
-        <>
-          <Description />
-          <Primary />
-          <Controls />
-          <Stories />
-          <Source code={SpanBadgeSource} language="tsx" />
-        </>
-      ),
-    },
-  },
-  tags: ["autodocs"],
   argTypes: {
     category: {
       control: { type: "select" },
+      description: "The category of the span which avatar is associated with",
       options: [
         "llm_call",
         "tool_execution",
@@ -43,16 +27,32 @@ const meta = {
         "guardrail",
         "unknown",
       ],
-      description: "The category of the span which avatar is associated with",
-      defaultValue: "llm_call",
+      table: { defaultValue: { summary: "llm_call" } },
     },
     size: {
       control: { type: "select" },
-      options: ["4", "5", "6", "7"],
       description: "The size of the badge",
-      defaultValue: "5",
+      options: ["4", "5", "6", "7"],
+      table: { defaultValue: { summary: "5" } },
     },
   },
+  component: SpanBadge,
+  parameters: {
+    docs: {
+      page: () => (
+        <>
+          <Description />
+          <Primary />
+          <Controls />
+          <Stories />
+          <Source code={SpanBadgeSource} language="tsx" />
+        </>
+      ),
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  title: "Atoms/SpanBadge",
 } satisfies Meta<typeof SpanBadge>;
 
 export default meta;

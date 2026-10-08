@@ -4,24 +4,26 @@ import type { ReactElement } from "react";
 import { formatSpanErrorForAgent } from "@evilmartians/agent-prism-data";
 import { useMemo } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { CopyButton } from "../CopyButton";
 import { ErrorStatusCircle } from "../ErrorStatusCircle";
 
-interface DetailsViewErrorRunRowProps {
+type DetailsViewErrorRunRowProps = {
   entry: RunErrorEntry;
-}
+};
 
 /**
  * A single failed-span card: error dot + node title + message (+ stack when
- * present), with a button to copy the error formatted for an AI agent.
+ * present), with a button to copy the error formatted for an AI agent. The
+ * title carries a visually hidden "Error:" prefix, since the red color and the
+ * decorative dot are the only other error signals.
  */
 export const DetailsViewErrorRunRow = ({
   entry,
-}: DetailsViewErrorRunRowProps): ReactElement => {
+}: ReadonlyProps<DetailsViewErrorRunRowProps>): ReactElement => {
   const { details } = entry;
   const title = details.nodeName;
-  // Built lazily-ish: only read on copy click, so avoid rebuilding the Markdown
-  // on unrelated re-renders.
   const agentContent = useMemo(
     () => formatSpanErrorForAgent(details),
     [details],
@@ -37,47 +39,24 @@ export const DetailsViewErrorRunRow = ({
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-start justify-between gap-2">
             <h4 className="text-agentprism-error line-clamp-3 min-w-0 flex-1 text-sm font-medium leading-5">
-              {/* Convey "error" to assistive tech / colorblind users; the red
-                  title and decorative dot are the only other error signals. */}
               <span className="sr-only">Error: </span>
               {title}
             </h4>
 
-            <CopyButton label="error for agent" content={agentContent} />
+            <CopyButton content={agentContent} label="error for agent" />
           </div>
 
           <p className="text-agentprism-foreground whitespace-pre-wrap break-words text-sm">
             {details.message}
           </p>
 
-          {details.stack && (
+          {details.stack !== undefined && details.stack !== "" ? (
             <pre className="text-agentprism-muted-foreground overflow-x-auto whitespace-pre-wrap break-words text-xs">
               {details.stack}
             </pre>
-          )}
+          ) : null}
         </div>
       </div>
     </article>
-  );
-};
-
-interface DetailsViewErrorEntryListProps {
-  entries: RunErrorEntry[];
-}
-
-/**
- * Vertical stack of {@link DetailsViewErrorRunRow}; renders nothing when empty.
- */
-export const DetailsViewErrorEntryList = ({
-  entries,
-}: DetailsViewErrorEntryListProps): ReactElement | null => {
-  if (entries.length === 0) return null;
-
-  return (
-    <div className="space-y-2">
-      {entries.map((entry) => (
-        <DetailsViewErrorRunRow key={entry.span.id} entry={entry} />
-      ))}
-    </div>
   );
 };

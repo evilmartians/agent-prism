@@ -1,72 +1,60 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
-import { flattenSpans, findTimeRange } from "@evilmartians/agent-prism-data";
+import { findTimeRange, flattenSpans } from "@evilmartians/agent-prism-data";
 import cn from "classnames";
 import { type FC } from "react";
 
+import type { ReadonlyProps } from "./ReadonlyProps";
 import type { SpanCardViewOptions } from "./SpanCard/SpanCard";
 
-import { BrandLogo } from "./BrandLogo";
+import { getSpanBrandAvatar } from "./SpanCard/getSpanBrandAvatar";
 import { SpanCard } from "./SpanCard/SpanCard";
 
-interface TreeViewProps {
-  spans: TraceSpan[];
-  className?: string;
-  selectedSpan?: TraceSpan;
-  onSpanSelect?: (span: TraceSpan) => void;
+type TreeViewProps = {
+  className?: string | undefined;
   expandedSpansIds: string[];
-  onExpandSpansIdsChange: (ids: string[]) => void;
-  spanCardViewOptions?: SpanCardViewOptions;
-}
+  onExpandSpansIdsChange: (ids: readonly string[]) => void;
+  onSpanSelect?: ((span: DeepReadonly<TraceSpan>) => void) | undefined;
+  selectedSpan?: TraceSpan | undefined;
+  spanCardViewOptions?: SpanCardViewOptions | undefined;
+  spans: TraceSpan[];
+};
 
-export const TreeView: FC<TreeViewProps> = ({
-  spans,
-  onSpanSelect,
+export const TreeView: FC<ReadonlyProps<TreeViewProps>> = ({
   className = "",
-  selectedSpan,
   expandedSpansIds,
   onExpandSpansIdsChange,
+  onSpanSelect,
+  selectedSpan,
   spanCardViewOptions,
+  spans,
 }) => {
   const allCards = flattenSpans(spans);
-  const { minStart, maxEnd } = findTimeRange(allCards);
+  const { maxEnd, minStart } = findTimeRange(allCards);
 
   return (
     <div className="w-full min-w-0 px-4">
       <ul
+        aria-label="Hierarchical card list"
         className={cn(className, "overflow-x-auto pt-2")}
         role="tree"
-        aria-label="Hierarchical card list"
       >
-        {spans.map((span, idx) => {
-          const brand = span.metadata?.brand as { type: string } | undefined;
-
-          return (
-            <SpanCard
-              key={span.id}
-              data={span}
-              level={0}
-              selectedSpan={selectedSpan}
-              onSpanSelect={onSpanSelect}
-              minStart={minStart}
-              maxEnd={maxEnd}
-              isLastChild={idx === spans.length - 1}
-              expandedSpansIds={expandedSpansIds}
-              onExpandSpansIdsChange={onExpandSpansIdsChange}
-              viewOptions={spanCardViewOptions}
-              avatar={
-                brand
-                  ? {
-                      children: <BrandLogo brand={brand.type} />,
-                      size: "4",
-                      rounded: "sm",
-                      category: span.type,
-                    }
-                  : undefined
-              }
-            />
-          );
-        })}
+        {spans.map((span, idx) => (
+          <SpanCard
+            avatar={getSpanBrandAvatar(span)}
+            data={span}
+            expandedSpansIds={expandedSpansIds}
+            isLastChild={idx === spans.length - 1}
+            key={span.id}
+            level={0}
+            maxEnd={maxEnd}
+            minStart={minStart}
+            onExpandSpansIdsChange={onExpandSpansIdsChange}
+            onSpanSelect={onSpanSelect}
+            selectedSpan={selectedSpan}
+            viewOptions={spanCardViewOptions}
+          />
+        ))}
       </ul>
     </div>
   );

@@ -1,23 +1,30 @@
 import type {
+  DeepReadonly,
   TokenType,
   TokenUsage,
   TokenUsageEntry,
 } from "@evilmartians/agent-prism-types";
 
-export type TokenUsageRow = Required<TokenUsageEntry> & { type: TokenType };
+import { isFiniteNumber } from "./guards.js";
+
+export type TokenUsageRow = Readonly<Required<TokenUsageEntry>> & {
+  readonly type: TokenType;
+};
+
+type ReadonlyTokenUsage = DeepReadonly<TokenUsage>;
 
 /**
  * Render order. Types outside this list keep the order they were added in and
  * go before `total`, which always comes last.
  */
-const TYPE_ORDER: TokenType[] = [
+const TYPE_ORDER: readonly string[] = [
   "input",
   "output",
   "cache_read",
   "cache_write",
 ];
 
-const orderOf = (type: TokenType): number => {
+const orderOf = (type: string): number => {
   if (type === "total") {
     return Number.POSITIVE_INFINITY;
   }
@@ -26,9 +33,6 @@ const orderOf = (type: TokenType): number => {
 
   return index === -1 ? TYPE_ORDER.length : index;
 };
-
-const isFiniteNumber = (value: unknown): value is number =>
-  typeof value === "number" && Number.isFinite(value);
 
 const toFiniteNumber = (value: unknown): number =>
   isFiniteNumber(value) ? value : 0;
@@ -41,34 +45,47 @@ const roundCost = (cost: number): number => Number(cost.toPrecision(12));
 
 /** Every recorded token type, in render order, with the cost defaulted to 0. */
 export const getTokenUsageEntries = (
-  usage: TokenUsage | undefined,
+  usage: ReadonlyTokenUsage | undefined,
 ): TokenUsageRow[] =>
   Object.entries(usage ?? {})
-    .flatMap(([type, entry]) =>
-      entry
-        ? [
-            {
-              type,
-              tokens: toFiniteNumber(entry.tokens),
-              cost: toFiniteNumber(entry.cost),
-            },
-          ]
-        : [],
+    .flatMap<TokenUsageRow>(
+      ([type, entry]: readonly [
+        string,
+        DeepReadonly<TokenUsageEntry> | undefined,
+      ]) =>
+        entry
+          ? [
+              {
+                cost: toFiniteNumber(entry.cost),
+                tokens: toFiniteNumber(entry.tokens),
+                type,
+              },
+            ]
+          : [],
     )
     .sort((a, b) => orderOf(a.type) - orderOf(b.type));
 
-export const getTotalTokens = (usage: TokenUsage | undefined): number =>
-  getTokenUsageEntries(usage).reduce((total, row) => total + row.tokens, 0);
+const sumRows = (
+  usage: ReadonlyTokenUsage | undefined,
+  pick: (row: TokenUsageRow) => number,
+): number =>
+  getTokenUsageEntries(usage).reduce((total, row) => total + pick(row), 0);
+
+export const getTotalTokens = (usage: ReadonlyTokenUsage | undefined): number =>
+  sumRows(usage, (row) => row.tokens);
 
 /** 0 when no cost was reported; use hasReportedCost to tell that from free. */
-export const getTotalCost = (usage: TokenUsage | undefined): number =>
-  roundCost(
-    getTokenUsageEntries(usage).reduce((total, row) => total + row.cost, 0),
-  );
+export const getTotalCost = (usage: ReadonlyTokenUsage | undefined): number =>
+  roundCost(sumRows(usage, (row) => row.cost));
 
 /** Whether the source reported a cost for any token type (0 included). */
-export const hasReportedCost = (usage: TokenUsage | undefined): boolean =>
-  Object.values(usage ?? {}).some((entry) => isFiniteNumber(entry?.cost));
+export const hasReportedCost = (
+  usage: ReadonlyTokenUsage | undefined,
+): boolean =>
+  Object.values(usage ?? {}).some(
+    (entry: DeepReadonly<TokenUsageEntry> | undefined) =>
+      isFiniteNumber(entry?.cost),
+  );
 
 /**
  * Returns `usage` with tokens (and optionally their cost) added under a type,
@@ -77,8 +94,8 @@ export const hasReportedCost = (usage: TokenUsage | undefined): boolean =>
  * unknown cost never reads as a free call.
  */
 export const addTokenUsage = (
-  usage: TokenUsage,
-  type: TokenType,
+  usage: ReadonlyTokenUsage,
+  type: string,
   tokens: number,
   cost?: number,
 ): TokenUsage => {
@@ -103,11 +120,11 @@ export const addTokenUsage = (
  * sources leave cache tokens out of it.
  */
 export const addReportedTotal = (
-  usage: TokenUsage,
+  usage: ReadonlyTokenUsage,
   tokens?: number,
   cost?: number,
 ): TokenUsage => {
-  let result = usage;
+  let result: TokenUsage = { ...usage };
 
   if (isFiniteNumber(tokens)) {
     const covered = getTotalTokens(result);

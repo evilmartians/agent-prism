@@ -1,6 +1,8 @@
 # Ignore artifacts:
 build
 coverage
+packages/*/dist
+pnpm-lock.yaml
 packages/storybook/storybook-static
 packages/saas/.next
 packages/saas/out

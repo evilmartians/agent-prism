@@ -5,18 +5,22 @@ import {
   ErrorCountBadgeSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/ErrorCountBadge",
+  argTypes: {
+    count: {
+      control: { type: "number" },
+      description: "The number of failed spans to display",
+    },
+  },
   component: ErrorCountBadge,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,33 +32,38 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    count: {
-      control: { type: "number" },
-      description: "The number of failed spans to display",
-    },
-  },
+  title: "Atoms/ErrorCountBadge",
 } satisfies Meta<typeof ErrorCountBadge>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * A single failed span — the label is singular ("1 error").
- */
 export const SingleError: Story = {
   args: {
     count: 1,
   },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A single failed span — the label is singular ("1 error").',
+      },
+    },
+  },
 };
 
-/**
- * Multiple failed spans in a run — the label is pluralized ("3 errors").
- */
 export const MultipleErrors: Story = {
   args: {
     count: 3,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Multiple failed spans in a run — the label is pluralized ("3 errors").',
+      },
+    },
   },
 };

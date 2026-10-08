@@ -1,26 +1,24 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
-  ExpandAllButton,
   CollapseAllButton,
-  CollapseAndExpandControlsSource,
+  CollapseAllButtonSource,
+  ExpandAllButton,
+  ExpandAllButtonSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
-// Create a wrapper component for the meta since we have two related components
 const ControlsWrapper = () => null;
 
 const meta = {
-  title: "Atoms/CollapseAndExpandControls",
   component: ControlsWrapper,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,12 +26,15 @@ const meta = {
           <Primary />
           <Controls />
           <Stories />
-          <Source code={CollapseAndExpandControlsSource} language="tsx" />
+          <Source code={ExpandAllButtonSource} language="tsx" />
+          <Source code={CollapseAllButtonSource} language="tsx" />
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
+  title: "Atoms/CollapseAndExpandControls",
 } satisfies Meta<typeof ControlsWrapper>;
 
 export default meta;
@@ -41,14 +42,20 @@ type Story = StoryObj<typeof meta>;
 
 export const ExpandAll: Story = {
   render: () => (
-    <ExpandAllButton onExpandAll={() => console.log("Expand all clicked")} />
+    <ExpandAllButton
+      onExpandAll={() => {
+        console.log("Expand all clicked");
+      }}
+    />
   ),
 };
 
 export const CollapseAll: Story = {
   render: () => (
     <CollapseAllButton
-      onCollapseAll={() => console.log("Collapse all clicked")}
+      onCollapseAll={() => {
+        console.log("Collapse all clicked");
+      }}
     />
   ),
 };
@@ -56,9 +63,15 @@ export const CollapseAll: Story = {
 export const BothControls: Story = {
   render: () => (
     <div className="flex gap-2">
-      <ExpandAllButton onExpandAll={() => console.log("Expand all clicked")} />
+      <ExpandAllButton
+        onExpandAll={() => {
+          console.log("Expand all clicked");
+        }}
+      />
       <CollapseAllButton
-        onCollapseAll={() => console.log("Collapse all clicked")}
+        onCollapseAll={() => {
+          console.log("Collapse all clicked");
+        }}
       />
     </div>
   ),

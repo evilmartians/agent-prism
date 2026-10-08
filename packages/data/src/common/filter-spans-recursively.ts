@@ -1,40 +1,31 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReadonlySpanNode } from "./readonly-span-node.js";
 
-// Recursive filtering function that preserves a nested structure
-export const filterSpansRecursively = (
-  spans: TraceSpan[],
+/**
+ * Keeps the spans whose title contains `searchValue`, case-insensitively, and
+ * the ancestors of such spans, preserving the nested structure.
+ */
+export const filterSpansRecursively = <Span extends ReadonlySpanNode<Span>>(
+  spans: readonly Span[],
   searchValue: string,
-): TraceSpan[] => {
+): Span[] => {
   if (!searchValue.trim()) {
-    return spans;
+    return [...spans];
   }
 
-  return spans
-    .map((span) => {
-      // Check if the current span matches
-      const currentSpanMatches = span.title
-        .toLowerCase()
-        .includes(searchValue.toLowerCase());
+  return spans.flatMap((span) => {
+    const currentSpanMatches = span.title
+      .toLowerCase()
+      .includes(searchValue.toLowerCase());
 
-      // Recursively filter children
-      const filteredChildren = span.children
-        ? filterSpansRecursively(span.children, searchValue)
-        : undefined;
+    const filteredChildren = span.children
+      ? filterSpansRecursively(span.children, searchValue)
+      : undefined;
 
-      // Check if any children match
-      const hasMatchingChildren =
-        filteredChildren && filteredChildren.length > 0;
+    const hasMatchingChildren =
+      filteredChildren !== undefined && filteredChildren.length > 0;
 
-      // Keep span if it matches or has matching children
-      if (currentSpanMatches || hasMatchingChildren) {
-        return {
-          ...span,
-          children: filteredChildren,
-        };
-      }
-
-      // Filter out this span if neither it nor its children match
-      return null;
-    })
-    .filter((span): span is NonNullable<typeof span> => span !== null);
+    return currentSpanMatches || hasMatchingChildren
+      ? [{ ...span, children: filteredChildren }]
+      : [];
+  });
 };

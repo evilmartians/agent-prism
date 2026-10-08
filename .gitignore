@@ -4,7 +4,9 @@
 .pnp.js
 
 # Testing
-/coverage
+coverage
+reports
+.stryker-tmp
 
 # Production
 /build

@@ -3,18 +3,33 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { TraceList, TraceListSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
+import { fn } from "storybook/test";
 
 const meta = {
-  title: "Main Components/TraceList",
+  argTypes: {
+    className: {
+      control: "text",
+      description: "Optional className for the root container",
+    },
+    expanded: {
+      control: "boolean",
+      description: "Whether the trace list is expanded",
+    },
+    selectedTrace: {
+      description: "Currently selected trace for highlighting",
+    },
+    traces: {
+      description: "Array of trace records to display",
+    },
+  },
   component: TraceList,
   parameters: {
-    layout: "padded",
     docs: {
       page: () => (
         <>
@@ -26,47 +41,33 @@ const meta = {
         </>
       ),
     },
+    layout: "padded",
   },
   tags: ["autodocs"],
-  argTypes: {
-    traces: {
-      description: "Array of trace records to display",
-    },
-    expanded: {
-      control: "boolean",
-      description: "Whether the trace list is expanded",
-    },
-    selectedTrace: {
-      description: "Currently selected trace for highlighting",
-    },
-    className: {
-      control: "text",
-      description: "Optional className for the root container",
-    },
-  },
+  title: "Main Components/TraceList",
 } satisfies Meta<typeof TraceList>;
 
 const mockTraces: TraceRecord[] = [
   {
+    agentDescription: "Authentication service handling user login",
+    durationMs: 1250,
     id: "trace-001",
     name: "User Authentication Flow",
     spansCount: 8,
-    durationMs: 1250,
-    agentDescription: "Authentication service handling user login",
   },
   {
+    agentDescription: "ETL pipeline processing user data",
+    durationMs: 3400,
     id: "trace-002",
     name: "Data Processing Pipeline",
     spansCount: 15,
-    durationMs: 3400,
-    agentDescription: "ETL pipeline processing user data",
   },
   {
+    agentDescription: "Gateway routing and validation",
+    durationMs: 890,
     id: "trace-003",
     name: "API Gateway Request",
     spansCount: 5,
-    durationMs: 890,
-    agentDescription: "Gateway routing and validation",
   },
 ];
 
@@ -75,42 +76,44 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    traces: mockTraces,
     expanded: true,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
+    traces: mockTraces,
   },
 };
 
 export const Collapsed: Story = {
   args: {
-    traces: mockTraces,
     expanded: false,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
+    traces: mockTraces,
   },
 };
 
 export const SelectedTrace: Story = {
   args: {
-    traces: mockTraces,
     expanded: true,
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
+    onTraceSelect: (trace) => {
+      console.log("Selected:", trace);
+    },
     selectedTrace: mockTraces[1],
-    onExpandStateChange: () => {},
-    onTraceSelect: (trace) => console.log("Selected:", trace),
+    traces: mockTraces,
   },
 };
 
 export const EmptyList: Story = {
   args: {
-    traces: [],
     expanded: true,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
+    traces: [],
   },
 };
 
 export const SingleTrace: Story = {
   args: {
-    traces: [mockTraces[0]],
     expanded: true,
-    onExpandStateChange: () => {},
+    onExpandStateChange: fn<(expanded: boolean) => void>(),
+    traces: mockTraces.slice(0, 1),
   },
 };

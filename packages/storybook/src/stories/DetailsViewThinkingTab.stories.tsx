@@ -1,5 +1,5 @@
 import type {
-  TraceSpan,
+  DeepReadonly,
   TraceReasoning,
 } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
@@ -8,28 +8,27 @@ import {
   DetailsViewThinkingTab,
   DetailsViewThinkingTabSource,
 } from "@evilmartians/agent-prism-ui";
-import { Description, Primary, Source, Stories } from "@storybook/blocks";
+import {
+  Description,
+  Primary,
+  Source,
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
-const baseSpan: TraceSpan = {
-  id: "span-thinking-001",
-  title: "Assistant message",
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  type: "llm_call",
-  raw: [],
-  status: "success",
-};
+import { mockSpan } from "../mocks/span";
 
-const withReasoning = (reasoning?: TraceReasoning): TraceSpan => ({
-  ...baseSpan,
-  reasoning,
-});
+const withReasoning = (reasoning?: DeepReadonly<TraceReasoning>) =>
+  mockSpan({
+    id: "span-thinking-001",
+    raw: [],
+    reasoning,
+    title: "Assistant message",
+    type: "llm_call",
+  });
 
 const meta = {
-  title: "Details View/Thinking Tab",
   component: DetailsViewThinkingTab,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -40,8 +39,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
+  title: "Details View/Thinking Tab",
 } satisfies Meta<typeof DetailsViewThinkingTab>;
 
 export default meta;
@@ -61,17 +62,23 @@ export const WithMetadata: Story = {
     data: withReasoning({
       content:
         "Considering the trade-offs between latency and accuracy before responding.",
-      tokens: 1280,
       level: "high",
+      tokens: 1280,
       triggers: ["complex reasoning", "multi-step"],
     }),
   },
 };
 
-/** The provider reported reasoning tokens but withheld the text. */
 export const TokensOnly: Story = {
   args: {
     data: withReasoning({ content: "", tokens: 512 }),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: "The provider reported reasoning tokens but withheld the text.",
+      },
+    },
   },
 };
 

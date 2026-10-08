@@ -1,48 +1,34 @@
 import type {
-  LangfuseDocument,
   OpenTelemetryDocument,
   TraceSpan,
 } from "@evilmartians/agent-prism-types";
 
 import {
+  isLangfuseDocument,
+  isOpenTelemetryDocument,
   isTraceSpanLike,
   langfuseSpanAdapter,
   openTelemetrySpanAdapter,
   reviveTraceSpan,
 } from "@evilmartians/agent-prism-data";
 
-// Parsed JSON carries timestamps as strings; reviving turns them back into
-// Dates.
 const isTraceSpanList = (value: unknown): value is unknown[] =>
   Array.isArray(value) && value.every(isTraceSpanLike);
 
+const isOpenTelemetryDocumentList = (
+  value: unknown,
+): value is OpenTelemetryDocument[] =>
+  Array.isArray(value) &&
+  value.length > 0 &&
+  value.every(isOpenTelemetryDocument);
+
 export const extractSpans = (data: object): TraceSpan[] => {
-  if ("resourceSpans" in data && Array.isArray(data.resourceSpans)) {
-    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-      data as OpenTelemetryDocument,
-    );
+  if (isOpenTelemetryDocument(data) || isOpenTelemetryDocumentList(data)) {
+    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(data);
   }
 
-  if (
-    Array.isArray(data) &&
-    data.length > 0 &&
-    data.every(
-      (item) =>
-        typeof item === "object" &&
-        item !== null &&
-        "resourceSpans" in item &&
-        Array.isArray(item.resourceSpans),
-    )
-  ) {
-    return openTelemetrySpanAdapter.convertRawDocumentsToSpans(
-      data as OpenTelemetryDocument[],
-    );
-  }
-
-  if ("trace" in data || "observations" in data) {
-    return langfuseSpanAdapter.convertRawDocumentsToSpans([
-      data as LangfuseDocument,
-    ]);
+  if (isLangfuseDocument(data)) {
+    return langfuseSpanAdapter.convertRawDocumentsToSpans([data]);
   }
 
   if (Array.isArray(data) && data.length > 0 && isTraceSpanList(data)) {

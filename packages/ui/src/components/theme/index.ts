@@ -88,15 +88,103 @@ export const AGENT_PRISM_TOKENS = [
 
 export type AgentPrismToken = (typeof AGENT_PRISM_TOKENS)[number];
 
-export type AgentPrismColors = Record<AgentPrismToken, string>;
+export type AgentPrismColors = Record<
+  `${typeof agentPrismPrefix}-${AgentPrismToken}`,
+  string
+>;
 
-export const agentPrismTailwindColors = Object.fromEntries(
-  AGENT_PRISM_TOKENS.map((tokenName) => [
-    `agentprism-${tokenName}`,
-    token(tokenName),
-  ]),
-) as AgentPrismColors;
+export const agentPrismTailwindColors: AgentPrismColors = {
+  "agentprism-background": token("background"),
+  "agentprism-foreground": token("foreground"),
+  "agentprism-primary": token("primary"),
+  "agentprism-primary-foreground": token("primary-foreground"),
+  "agentprism-secondary": token("secondary"),
+  "agentprism-secondary-foreground": token("secondary-foreground"),
+  "agentprism-muted": token("muted"),
+  "agentprism-muted-foreground": token("muted-foreground"),
+  "agentprism-accent": token("accent"),
+  "agentprism-accent-foreground": token("accent-foreground"),
+  "agentprism-brand": token("brand"),
+  "agentprism-brand-foreground": token("brand-foreground"),
+  "agentprism-brand-secondary": token("brand-secondary"),
+  "agentprism-brand-secondary-foreground": token("brand-secondary-foreground"),
+  "agentprism-border": token("border"),
+  "agentprism-border-subtle": token("border-subtle"),
+  "agentprism-border-strong": token("border-strong"),
+  "agentprism-border-inverse": token("border-inverse"),
+  "agentprism-success": token("success"),
+  "agentprism-success-muted": token("success-muted"),
+  "agentprism-success-muted-foreground": token("success-muted-foreground"),
+  "agentprism-error": token("error"),
+  "agentprism-error-muted": token("error-muted"),
+  "agentprism-error-muted-foreground": token("error-muted-foreground"),
+  "agentprism-warning": token("warning"),
+  "agentprism-warning-muted": token("warning-muted"),
+  "agentprism-warning-muted-foreground": token("warning-muted-foreground"),
+  "agentprism-pending": token("pending"),
+  "agentprism-pending-muted": token("pending-muted"),
+  "agentprism-pending-muted-foreground": token("pending-muted-foreground"),
+  "agentprism-code-string": token("code-string"),
+  "agentprism-code-number": token("code-number"),
+  "agentprism-code-key": token("code-key"),
+  "agentprism-code-base": token("code-base"),
+  "agentprism-badge-default": token("badge-default"),
+  "agentprism-badge-default-foreground": token("badge-default-foreground"),
+  "agentprism-badge-claude-thinking": token("badge-claude-thinking"),
+  "agentprism-badge-claude-thinking-foreground": token(
+    "badge-claude-thinking-foreground",
+  ),
+  "agentprism-context-source-conversation": token(
+    "context-source-conversation",
+  ),
+  "agentprism-avatar-llm": token("avatar-llm"),
+  "agentprism-badge-llm": token("badge-llm"),
+  "agentprism-badge-llm-foreground": token("badge-llm-foreground"),
+  "agentprism-timeline-llm": token("timeline-llm"),
+  "agentprism-avatar-agent": token("avatar-agent"),
+  "agentprism-badge-agent": token("badge-agent"),
+  "agentprism-badge-agent-foreground": token("badge-agent-foreground"),
+  "agentprism-timeline-agent": token("timeline-agent"),
+  "agentprism-avatar-tool": token("avatar-tool"),
+  "agentprism-badge-tool": token("badge-tool"),
+  "agentprism-badge-tool-foreground": token("badge-tool-foreground"),
+  "agentprism-timeline-tool": token("timeline-tool"),
+  "agentprism-avatar-chain": token("avatar-chain"),
+  "agentprism-badge-chain": token("badge-chain"),
+  "agentprism-badge-chain-foreground": token("badge-chain-foreground"),
+  "agentprism-timeline-chain": token("timeline-chain"),
+  "agentprism-avatar-retrieval": token("avatar-retrieval"),
+  "agentprism-badge-retrieval": token("badge-retrieval"),
+  "agentprism-badge-retrieval-foreground": token("badge-retrieval-foreground"),
+  "agentprism-timeline-retrieval": token("timeline-retrieval"),
+  "agentprism-avatar-embedding": token("avatar-embedding"),
+  "agentprism-badge-embedding": token("badge-embedding"),
+  "agentprism-badge-embedding-foreground": token("badge-embedding-foreground"),
+  "agentprism-timeline-embedding": token("timeline-embedding"),
+  "agentprism-avatar-guardrail": token("avatar-guardrail"),
+  "agentprism-badge-guardrail": token("badge-guardrail"),
+  "agentprism-badge-guardrail-foreground": token("badge-guardrail-foreground"),
+  "agentprism-timeline-guardrail": token("timeline-guardrail"),
+  "agentprism-avatar-create-agent": token("avatar-create-agent"),
+  "agentprism-badge-create-agent": token("badge-create-agent"),
+  "agentprism-badge-create-agent-foreground": token(
+    "badge-create-agent-foreground",
+  ),
+  "agentprism-timeline-create-agent": token("timeline-create-agent"),
+  "agentprism-avatar-span": token("avatar-span"),
+  "agentprism-badge-span": token("badge-span"),
+  "agentprism-badge-span-foreground": token("badge-span-foreground"),
+  "agentprism-timeline-span": token("timeline-span"),
+  "agentprism-avatar-event": token("avatar-event"),
+  "agentprism-badge-event": token("badge-event"),
+  "agentprism-badge-event-foreground": token("badge-event-foreground"),
+  "agentprism-timeline-event": token("timeline-event"),
+  "agentprism-avatar-unknown": token("avatar-unknown"),
+  "agentprism-badge-unknown": token("badge-unknown"),
+  "agentprism-badge-unknown-foreground": token("badge-unknown-foreground"),
+  "agentprism-timeline-unknown": token("timeline-unknown"),
+};
 
-function token(name: string) {
+function token(name: AgentPrismToken) {
   return `oklch(var(--${agentPrismPrefix}-${name}) / <alpha-value>)`;
 }

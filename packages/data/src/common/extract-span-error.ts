@@ -1,22 +1,26 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
+
+import type { ReadonlySpanNode } from "./readonly-span-node.js";
 
 import { flattenSpans } from "./flatten-spans.js";
+import { isRecord } from "./guards.js";
+
+export interface RunErrorEntry<Span = TraceSpan> {
+  readonly details: SpanErrorDetails;
+  readonly span: Span;
+}
 
 export interface SpanErrorDetails {
-  message: string;
-  stack?: string;
-  nodeName: string;
+  readonly message: string;
+  readonly nodeName: string;
+  readonly stack?: string | undefined;
 }
 
-export interface RunErrorEntry {
-  span: TraceSpan;
-  details: SpanErrorDetails;
-}
+export type TraceRunStatus = "error" | "success";
 
-export type TraceRunStatus = "success" | "error";
+type RawRecord = Readonly<Record<string, unknown>>;
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null;
+type ReadonlySpan = DeepReadonly<TraceSpan>;
 
 const nonEmptyString = (value: unknown): string | undefined => {
   if (typeof value !== "string") return undefined;
@@ -26,9 +30,7 @@ const nonEmptyString = (value: unknown): string | undefined => {
   return trimmed.length > 0 ? trimmed : undefined;
 };
 
-// Like nonEmptyString but returns the original value unchanged when it has
-// content — used for stack traces, where leading/trailing whitespace matters.
-const nonBlankString = (value: unknown): string | undefined =>
+const nonBlankUntrimmedString = (value: unknown): string | undefined =>
   typeof value === "string" && value.trim().length > 0 ? value : undefined;
 
 const ERROR_MESSAGE_KEYS = [
@@ -44,21 +46,21 @@ const ERROR_STACK_KEYS = [
 ] as const;
 
 const readAttribute = (
-  span: TraceSpan,
+  span: ReadonlySpan,
   keys: readonly string[],
   normalize: (value: unknown) => string | undefined = nonEmptyString,
 ): string | undefined => {
   for (const key of keys) {
     const match = span.attributes?.find((entry) => entry.key === key);
-    const value = normalize(match?.value?.stringValue);
+    const value = normalize(match?.value.stringValue);
 
-    if (value) return value;
+    if (value !== undefined && value !== "") return value;
   }
 
   return undefined;
 };
 
-const parseRawRecords = (raw: string[]): Record<string, unknown>[] =>
+const parseRawRecords = (raw: readonly string[]): RawRecord[] =>
   raw.flatMap((entry) => {
     try {
       const parsed: unknown = JSON.parse(entry);
@@ -69,15 +71,14 @@ const parseRawRecords = (raw: string[]): Record<string, unknown>[] =>
     }
   });
 
-// First value found across the span's source records, in their order.
-const findInRecords = (
-  records: Record<string, unknown>[],
-  read: (record: Record<string, unknown>) => string | undefined,
+const findFirstInRecords = (
+  records: readonly RawRecord[],
+  read: (record: RawRecord) => string | undefined,
 ): string | undefined => {
   for (const record of records) {
     const value = read(record);
 
-    if (value) return value;
+    if (value !== undefined && value !== "") return value;
   }
 
   return undefined;
@@ -88,75 +89,82 @@ const findInRecords = (
  * source records and falling back to well-known attribute keys.
  * Returns `null` for spans that are not in the `error` state.
  */
-export const extractSpanError = (span: TraceSpan): SpanErrorDetails | null => {
+export const extractSpanError = (
+  span: ReadonlySpan,
+): null | SpanErrorDetails => {
   if (span.status !== "error") return null;
 
   const records = parseRawRecords(span.raw);
 
-  const rawMessage = findInRecords(records, (record) =>
-    isRecord(record.status) ? nonEmptyString(record.status.message) : undefined,
+  const rawMessage = findFirstInRecords(records, (record) =>
+    isRecord(record["status"])
+      ? nonEmptyString(record["status"]["message"])
+      : undefined,
   );
-  // Langfuse observations carry the error text on a top-level `statusMessage`
-  // rather than a nested `status.message`.
-  const rawStatusMessage = findInRecords(records, (record) =>
-    nonEmptyString(record.statusMessage),
+  const langfuseStatusMessage = findFirstInRecords(records, (record) =>
+    nonEmptyString(record["statusMessage"]),
   );
-  const rawName = findInRecords(records, (record) =>
-    nonEmptyString(record.name),
+  const rawName = findFirstInRecords(records, (record) =>
+    nonEmptyString(record["name"]),
   );
 
   const message =
     rawMessage ??
-    rawStatusMessage ??
+    langfuseStatusMessage ??
     readAttribute(span, ERROR_MESSAGE_KEYS) ??
     "Error (no message in span payload)";
 
   return {
     message,
-    stack: readAttribute(span, ERROR_STACK_KEYS, nonBlankString),
     nodeName: rawName ?? span.title,
+    stack: readAttribute(span, ERROR_STACK_KEYS, nonBlankUntrimmedString),
   };
 };
 
 /**
  * Walks the span tree and returns every span in the `error` state.
  */
-export const collectErrorSpans = (spans: TraceSpan[]): TraceSpan[] =>
-  flattenSpans(spans).filter((span) => span.status === "error");
+export const collectErrorSpans = <Span extends ReadonlySpanNode<Span>>(
+  spans: readonly Span[],
+): Span[] => flattenSpans(spans).filter((span) => span.status === "error");
 
 /**
  * Whether the run (span tree) contains at least one failed span.
  */
-export const traceRunHasErrors = (spans: TraceSpan[]): boolean =>
+export const traceRunHasErrors = (spans: readonly ReadonlySpan[]): boolean =>
   collectErrorSpans(spans).length > 0;
 
 /**
  * Collects one entry per failed span in the run, each paired with its
  * extracted error details.
  */
-export const collectRunErrorEntries = (spans: TraceSpan[]): RunErrorEntry[] =>
+export const collectRunErrorEntries = <Span extends ReadonlySpanNode<Span>>(
+  spans: readonly Span[],
+): RunErrorEntry<Span>[] =>
   collectErrorSpans(spans).flatMap((span) => {
     const details = extractSpanError(span);
 
-    return details ? [{ span, details }] : [];
+    return details ? [{ details, span }] : [];
   });
 
 /**
  * Collects the error entry for a single span (children excluded), or `null`
  * when the span has no error.
  */
-export const collectSpanErrorEntry = (span: TraceSpan): RunErrorEntry | null => {
+export const collectSpanErrorEntry = <Span extends ReadonlySpan>(
+  span: Span,
+): null | RunErrorEntry<Span> => {
   const details = extractSpanError(span);
 
-  return details ? { span, details } : null;
+  return details ? { details, span } : null;
 };
 
 /**
  * Whether the given span is the root (run parent) of the provided span tree.
  */
 export const isRootTraceSpan = (
-  span: TraceSpan,
-  rootSpans: TraceSpan[],
+  span: ReadonlySpan,
+  rootSpans: readonly ReadonlySpan[],
 ): boolean => rootSpans.some((rootSpan) => rootSpan.id === span.id);
 
 /**
@@ -165,8 +173,8 @@ export const isRootTraceSpan = (
  * error. Status-only (no payload parsing), so it is safe to call on render.
  */
 export const spanHasErrorSurface = (
-  span: TraceSpan,
-  allSpans: TraceSpan[],
+  span: ReadonlySpan,
+  allSpans: readonly ReadonlySpan[],
 ): boolean =>
   isRootTraceSpan(span, allSpans)
     ? traceRunHasErrors([span])
@@ -175,8 +183,9 @@ export const spanHasErrorSurface = (
 /**
  * Derives the overall run status from its span tree.
  */
-export const deriveTraceRunStatus = (spans: TraceSpan[]): TraceRunStatus =>
-  traceRunHasErrors(spans) ? "error" : "success";
+export const deriveTraceRunStatus = (
+  spans: readonly ReadonlySpan[],
+): TraceRunStatus => (traceRunHasErrors(spans) ? "error" : "success");
 
 /**
  * Singular/plural label for a run error count, e.g. `"1 error"` / `"3 errors"`.

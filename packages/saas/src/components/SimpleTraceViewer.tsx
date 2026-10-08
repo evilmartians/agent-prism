@@ -1,30 +1,33 @@
 "use client";
 
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 import {
   filterSpansRecursively,
   flattenSpans,
 } from "@evilmartians/agent-prism-data";
 import {
+  type TraceRecordWithDisplayData,
   useIsMobile,
   useIsMounted,
-  type TraceRecordWithDisplayData,
-  type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+
+import type { SimpleTraceViewerLayoutProps } from "@/types";
 
 import { SimpleTraceViewerDesktopLayout } from "./SimpleTraceViewerDesktopLayout";
 import { SimpleTraceViewerMobileLayout } from "./SimpleTraceViewerMobileLayout";
 
-interface SimpleTraceViewerProps {
-  spans: TraceSpan[];
-}
+type ReadonlySpan = DeepReadonly<TraceSpan>;
+
+type SimpleTraceViewerProps = {
+  readonly spans: readonly ReadonlySpan[];
+};
 
 export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   const isMobile = useIsMobile();
   const isMounted = useIsMounted();
-  const [selectedSpan, setSelectedSpan] = useState<TraceSpan | undefined>();
+  const [selectedSpan, setSelectedSpan] = useState<ReadonlySpan | undefined>();
   const [searchValue, setSearchValue] = useState("");
 
   const filteredSpans = useMemo(() => {
@@ -35,19 +38,18 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
     return flattenSpans(spans).map((span) => span.id);
   }, [spans]);
 
-  const [expandedSpansIds, setExpandedSpansIds] = useState<string[]>([]);
+  const [expandedSpansIds, setExpandedSpansIds] =
+    useState<readonly string[]>(allIds);
+  const [expandedSourceIds, setExpandedSourceIds] = useState(allIds);
 
-  useEffect(() => {
+  if (expandedSourceIds !== allIds) {
+    setExpandedSourceIds(allIds);
     setExpandedSpansIds(allIds);
-  }, [allIds]);
+  }
 
-  useEffect(() => {
-    if (!isMounted || isMobile) return;
-
-    if (spans.length > 0 && !selectedSpan) {
-      setSelectedSpan(spans[0]);
-    }
-  }, [spans, selectedSpan, isMobile, isMounted]);
+  if (isMounted && !isMobile && !selectedSpan && spans[0]) {
+    setSelectedSpan(spans[0]);
+  }
 
   const handleExpandAll = useCallback(() => {
     setExpandedSpansIds(allIds);
@@ -58,30 +60,28 @@ export const SimpleTraceViewer = ({ spans }: SimpleTraceViewerProps) => {
   }, []);
 
   const fakeTrace: TraceRecordWithDisplayData = {
+    agentDescription: "",
+    durationMs: 0,
     id: "single-trace",
     name: "Trace",
     spansCount: spans.length,
-    durationMs: 0,
-    agentDescription: "",
   };
 
-  const layoutProps: Partial<TraceViewerLayoutProps> = {
-    selectedTrace: fakeTrace,
-    selectedSpan,
-    setSelectedSpan,
-    searchValue,
-    setSearchValue,
-    filteredSpans,
-    // Full (unfiltered) tree so DetailsView can surface run-level errors when
-    // the root span is selected.
-    selectedTraceSpans: spans,
+  const layoutProps: SimpleTraceViewerLayoutProps = {
     expandedSpansIds,
-    setExpandedSpansIds,
-    handleExpandAll,
+    filteredSpans,
     handleCollapseAll,
+    handleExpandAll,
+    searchValue,
+    selectedSpan,
+    selectedTrace: fakeTrace,
+    selectedTraceSpans: spans,
+    setExpandedSpansIds,
+    setSearchValue,
+    setSelectedSpan,
   };
 
-  if (!spans || spans.length === 0) {
+  if (spans.length === 0) {
     return (
       <div className="flex items-center justify-center rounded bg-gray-100 p-8 text-center text-gray-600 dark:bg-gray-800 dark:text-gray-300">
         No trace data available

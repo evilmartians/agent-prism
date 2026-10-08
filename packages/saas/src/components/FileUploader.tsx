@@ -1,41 +1,43 @@
 "use client";
 
+import type { ChangeEvent, FC } from "react";
+
 import { Button } from "@evilmartians/agent-prism-ui";
-import { ChangeEvent, FC, useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 import { UploadFileErrorMessage } from "@/components/UploadFileErrorMessage";
 import { TraceContext } from "@/context/TraceContext";
 
-const FileUploader: FC = () => {
+export const FileUploader: FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isProcessing, setIsProcessing] = useState(false);
 
   const traceContext = useContext(TraceContext);
+  const error = traceContext?.traceState.error ?? "";
 
   const handleButtonClick = () => {
-    if (traceContext?.traceState.error) {
+    if (error !== "") {
       traceContext?.clearError();
     }
     fileInputRef.current?.click();
   };
 
   const handleFilesChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const file = files[0];
     setIsProcessing(true);
 
     try {
       const text = await file.text();
-      const jsonData = JSON.parse(text);
+      const jsonData: unknown = JSON.parse(text);
 
       if (typeof jsonData !== "object" || jsonData === null) {
         throw new Error("Invalid JSON: expected an object");
       }
 
-      await traceContext?.uploadTraces(files);
+      await traceContext?.uploadTraces(file);
     } catch (err) {
       console.error("Upload error:", err);
     } finally {
@@ -48,26 +50,26 @@ const FileUploader: FC = () => {
   return (
     <div className="flex flex-col items-center">
       <input
+        accept=".json"
+        aria-label="Upload trace or log files"
+        className="hidden"
+        disabled={isProcessing}
+        onChange={(e) => {
+          void handleFilesChange(e);
+        }}
         ref={fileInputRef}
         type="file"
-        className="hidden"
-        accept=".json"
-        onChange={handleFilesChange}
-        aria-label="Upload trace or log files"
-        disabled={isProcessing}
       />
 
-      <Button size="12" variant="secondary" onClick={handleButtonClick}>
+      <Button onClick={handleButtonClick} size="12" variant="secondary">
         Upload traces
       </Button>
 
-      {traceContext?.traceState.error && (
+      {error === "" ? null : (
         <div className="mt-4">
-          <UploadFileErrorMessage message={traceContext.traceState.error} />
+          <UploadFileErrorMessage message={error} />
         </div>
       )}
     </div>
   );
 };
-
-export default FileUploader;

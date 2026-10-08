@@ -2,20 +2,23 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { type ReactElement } from "react";
 
+import type { ReadonlyProps } from "../ReadonlyProps";
+
 import { CopyButton } from "../CopyButton";
 import { DetailsViewJsonOutput } from "./DetailsViewJsonOutput";
 
-interface RawDataTabProps {
+type RawDataTabProps = {
   data: TraceSpan;
-}
+};
 
 /**
  * One block per source record: a span assembled from several records (say, a
- * start and an end event) shows each of them, with its own copy button.
+ * start and an end event) shows each of them, with its own copy button. Blocks
+ * are numbered when there are several, so screen readers can tell them apart.
  */
 export const DetailsViewRawDataTab = ({
   data,
-}: RawDataTabProps): ReactElement => {
+}: ReadonlyProps<RawDataTabProps>): ReactElement => {
   if (data.raw.length === 0) {
     return (
       <div className="border-agentprism-border rounded-md border p-4">
@@ -31,7 +34,6 @@ export const DetailsViewRawDataTab = ({
   return (
     <div className="space-y-4">
       {data.raw.map((content, index) => {
-        // Numbered when there are several, so screen readers can tell them apart.
         const label =
           data.raw.length > 1
             ? `Raw ${index + 1} of ${data.raw.length}`
@@ -39,15 +41,15 @@ export const DetailsViewRawDataTab = ({
 
         return (
           <div
-            key={index}
-            role="group"
             aria-label={label}
             className="border-agentprism-border rounded-md border bg-transparent"
+            key={index}
+            role="group"
           >
             <div className="relative">
               <div className="pointer-events-none sticky top-0 z-10 flex justify-end p-1.5">
                 <div className="pointer-events-auto">
-                  <CopyButton label={label} content={content} />
+                  <CopyButton content={content} label={label} />
                 </div>
               </div>
 

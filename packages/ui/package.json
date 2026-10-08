@@ -23,7 +23,7 @@
     "dist/styles.css"
   ],
   "scripts": {
-    "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck",
+    "tsc": "tsc -b",
     "build": "tailwind -i ./src/index.css -o ./dist/styles.css --minify",
     "dev": "tailwind -i ./src/index.css -o ./dist/styles.css --watch",
     "generate-theme-files": "tsx ./src/theming/scripts/generate-theme-files.ts && prettier --write ./src/components/theme"
@@ -44,17 +44,12 @@
     "tailwindcss": "3.4.17"
   },
   "devDependencies": {
-    "@eslint/js": "^9.30.1",
+    "@types/node": "^20",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^9.30.1",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
     "tsx": "4.20.6",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.35.1",
     "vite": "^7.0.4"
   }
 }

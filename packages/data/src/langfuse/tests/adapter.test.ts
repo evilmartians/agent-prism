@@ -1,24 +1,25 @@
 import type {
+  DeepReadonly,
   LangfuseObservation,
   LangfuseObservationLevel,
 } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { langfuseSpanAdapter } from "../adapter";
+import {
+  ROOT_WITH_CHILD,
+  toIdTree,
+} from "../../common/test-utils/to-id-tree.js";
+import { langfuseSpanAdapter } from "../adapter.js";
+import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
+import { createMockLangfuseTrace } from "../utils/create-mock-langfuse-trace.js";
 
 const makeObservation = (
-  observation: Partial<LangfuseObservation> & Pick<LangfuseObservation, "id">,
-): LangfuseObservation => ({
-  traceId: "trace-1",
-  projectId: "project-1",
-  environment: "default",
-  parentObservationId: null,
-  startTime: "2026-06-05T10:00:00.000Z",
-  endTime: "2026-06-05T10:00:01.000Z",
-  name: observation.id,
-  createdAt: "2026-06-05T10:00:00.000Z",
-  updatedAt: "2026-06-05T10:00:01.000Z",
+  observation: DeepReadonly<
+    Partial<LangfuseObservation> & Pick<LangfuseObservation, "id">
+  >,
+): DeepReadonly<LangfuseObservation> => ({
+  ...createMockLangfuseObservation({ name: observation.id }),
   ...observation,
 });
 
@@ -39,12 +40,41 @@ describe("langfuseSpanAdapter.getSpanStatus", () => {
     ).toBe("warning");
   });
 
-  it.each<LangfuseObservationLevel | undefined>(["DEFAULT", "DEBUG", undefined])(
-    "treats level %s as success",
-    (level) => {
-      expect(
-        langfuseSpanAdapter.getSpanStatus(makeObservation({ id: "c", level })),
-      ).toBe("success");
-    },
-  );
+  it.each<LangfuseObservationLevel | undefined>([
+    "DEFAULT",
+    "DEBUG",
+    undefined,
+  ])("treats level %s as success", (level) => {
+    expect(
+      langfuseSpanAdapter.getSpanStatus(
+        makeObservation(level ? { id: "c", level } : { id: "c" }),
+      ),
+    ).toBe("success");
+  });
+});
+
+const observations = [
+  makeObservation({ id: "child", parentObservationId: "root" }),
+  makeObservation({ id: "root" }),
+  makeObservation({ id: "orphan", parentObservationId: "missing" }),
+];
+
+const document = { observations, trace: createMockLangfuseTrace() };
+
+describe("langfuseSpanAdapter.convertRawSpansToSpanTree", () => {
+  it("nests children under their parent and drops orphans", () => {
+    expect(
+      toIdTree(langfuseSpanAdapter.convertRawSpansToSpanTree(observations)),
+    ).toStrictEqual(ROOT_WITH_CHILD);
+  });
+});
+
+describe("langfuseSpanAdapter.convertRawDocumentsToSpans", () => {
+  it("builds the span tree from one document or a list of them", () => {
+    const fromOne = langfuseSpanAdapter.convertRawDocumentsToSpans(document);
+    const fromList = langfuseSpanAdapter.convertRawDocumentsToSpans([document]);
+
+    expect(toIdTree(fromOne)).toStrictEqual(ROOT_WITH_CHILD);
+    expect(fromList).toStrictEqual(fromOne);
+  });
 });

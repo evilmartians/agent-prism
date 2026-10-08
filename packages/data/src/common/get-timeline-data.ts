@@ -3,14 +3,14 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import { getDurationMs } from "./get-duration-ms.js";
 
 export const getTimelineData = ({
-  spanCard,
-  minStart,
   maxEnd,
+  minStart,
+  spanCard,
 }: {
-  spanCard: TraceSpan;
-  minStart: number;
-  maxEnd: number;
-}) => {
+  readonly maxEnd: number;
+  readonly minStart: number;
+  readonly spanCard: Readonly<Pick<TraceSpan, "endTime" | "startTime">>;
+}): { durationMs: number; startPercent: number; widthPercent: number } => {
   const startMs = +spanCard.startTime;
   const totalRange = maxEnd - minStart;
   const durationMs = getDurationMs(spanCard);

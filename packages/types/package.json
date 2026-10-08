@@ -12,8 +12,8 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   },
   "files": [
@@ -22,6 +22,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build",
-    "tsc": "tsc -p tsconfig.app.json --noEmit --skipLibCheck"
+    "tsc": "tsc -b"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3"
   }
 }

@@ -1,30 +1,30 @@
 import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
 
-interface MockObservationOptions {
-  name?: string;
+type MockObservationOptions = {
   metadata?: unknown;
-}
+  name?: string;
+};
 
 /**
  * Creates a mock LangfuseObservation for testing.
  */
 export function createMockLangfuseObservation(
-  options: MockObservationOptions = {},
+  options: Readonly<MockObservationOptions> = {},
 ): LangfuseObservation {
-  const { name = "test-observation", metadata } = options;
+  const { metadata, name = "test-observation" } = options;
   const nowIso = new Date().toISOString();
 
   return {
-    id: "obs_1",
-    traceId: "trace_1",
-    projectId: "proj_1",
-    environment: "prod",
-    parentObservationId: null,
-    startTime: nowIso,
-    endTime: nowIso,
-    name,
-    metadata,
     createdAt: nowIso,
+    endTime: nowIso,
+    environment: "prod",
+    id: "obs_1",
+    metadata,
+    name,
+    parentObservationId: null,
+    projectId: "proj_1",
+    startTime: nowIso,
+    traceId: "trace_1",
     updatedAt: nowIso,
   };
 }

@@ -1,17 +1,19 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReadonlySpanNode } from "./readonly-span-node.js";
 
 /**
  * Flattens a tree of TraceSpan objects into a single array
  * @param spans - Array of root spans that may contain children
  * @returns Flattened array of all spans
  */
-export const flattenSpans = (spans: TraceSpan[]): TraceSpan[] => {
-  const result: TraceSpan[] = [];
+export const flattenSpans = <Span extends ReadonlySpanNode<Span>>(
+  spans: readonly Span[],
+): Span[] => {
+  const result: Span[] = [];
 
-  const traverse = (items: TraceSpan[]) => {
+  const traverse = (items: readonly Span[]) => {
     items.forEach((item) => {
       result.push(item);
-      if (item.children?.length) {
+      if (item.children) {
         traverse(item.children);
       }
     });

@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   InputOutputData,
   TokenUsage,
   TraceReasoning,
@@ -15,8 +16,11 @@ import {
   type TraceSpanStatus,
 } from "@evilmartians/agent-prism-types";
 
-import type { SpanAdapter } from "../types";
+import type { SpanAdapter } from "../types.js";
 
+import { reviveAttribute } from "../common/attribute-value.js";
+import { buildSpanTree } from "../common/build-span-tree.js";
+import { toList } from "../common/to-list.js";
 import { addReportedTotal, addTokenUsage } from "../common/token-usage.js";
 import { categorizeOpenInference } from "./utils/categorize-open-inference.js";
 import { categorizeOpenTelemetryGenAI } from "./utils/categorize-open-telemetry-gen-ai.js";
@@ -26,8 +30,10 @@ import { generateOpenTelemetrySpanTitle } from "./utils/generate-open-telemetry-
 import { getOpenTelemetryAttributeValue } from "./utils/get-open-telemetry-attribute-value.js";
 import { getOpenTelemetrySpanStandard } from "./utils/get-open-telemetry-span-standard.js";
 
+type ReadonlyOpenTelemetrySpan = DeepReadonly<OpenTelemetrySpan>;
+
 const getNumberAttribute = (
-  span: OpenTelemetrySpan,
+  span: ReadonlyOpenTelemetrySpan,
   key: string,
 ): number | undefined => {
   const value = getOpenTelemetryAttributeValue(span, key);
@@ -42,81 +48,113 @@ export const openTelemetrySpanAdapter: SpanAdapter<
   OpenTelemetrySpan
 > = {
   convertRawDocumentsToSpans(
-    documents: OpenTelemetryDocument | OpenTelemetryDocument[],
+    documents:
+      | DeepReadonly<OpenTelemetryDocument>
+      | readonly DeepReadonly<OpenTelemetryDocument>[],
   ): TraceSpan[] {
-    const docArray = Array.isArray(documents) ? documents : [documents];
+    const allSpans: ReadonlyOpenTelemetrySpan[] = [];
 
-    // Extract all spans from all documents, resource spans and scope spans
-    const allSpans: OpenTelemetrySpan[] = [];
-
-    docArray.forEach((document) => {
+    toList(documents).forEach((document) => {
       document.resourceSpans.forEach((resourceSpan) => {
-        resourceSpan.scopeSpans.forEach((scopeSpan) => {
-          allSpans.push(...scopeSpan.spans);
+        (resourceSpan.scopeSpans ?? []).forEach((scopeSpan) => {
+          allSpans.push(...(scopeSpan.spans ?? []));
         });
       });
     });
 
-    // Convert the flat array of spans to a tree structure
     return this.convertRawSpansToSpanTree(allSpans);
   },
 
-  convertRawSpansToSpanTree(spans: OpenTelemetrySpan[]): TraceSpan[] {
-    const spanMap = new Map<string, TraceSpan>();
-    const rootSpans: TraceSpan[] = [];
-
-    // First pass: create all span objects
-    spans.forEach((span) => {
-      const convertedSpan = this.convertRawSpanToTraceSpan(span);
-      spanMap.set(convertedSpan.id, convertedSpan);
+  convertRawSpansToSpanTree(
+    spans: readonly ReadonlyOpenTelemetrySpan[],
+  ): TraceSpan[] {
+    return buildSpanTree(spans, {
+      convert: (span) => this.convertRawSpanToTraceSpan(span),
+      getId: (span) => span.spanId,
+      getParentId: (span) => span.parentSpanId,
     });
-
-    // Second pass: build parent-child relationships
-    spans.forEach((span) => {
-      const convertedSpan = spanMap.get(span.spanId)!;
-      const parentSpanId = span.parentSpanId;
-
-      if (parentSpanId) {
-        const parent = spanMap.get(parentSpanId);
-        if (parent) {
-          if (!parent.children) {
-            parent.children = [];
-          }
-          parent.children.push(convertedSpan);
-        }
-      } else {
-        rootSpans.push(convertedSpan);
-      }
-    });
-
-    return rootSpans;
   },
 
-  convertRawSpanToTraceSpan(
-    span: OpenTelemetrySpan,
-    children: TraceSpan[] = [],
-  ): TraceSpan {
+  convertRawSpanToTraceSpan(span: ReadonlyOpenTelemetrySpan): TraceSpan {
     const ioData = this.getSpanInputOutput(span);
 
     return {
+      attributes: (span.attributes ?? []).flatMap(reviveAttribute),
+      children: [],
+      endTime: convertNanoTimestampToDate(span.endTimeUnixNano ?? 0),
       id: span.spanId,
-      title: generateOpenTelemetrySpanTitle(span),
-      type: this.getSpanCategory(span),
-      status: this.getSpanStatus(span),
-      attributes: span.attributes,
-      raw: [JSON.stringify(span, null, 2)],
-      startTime: convertNanoTimestampToDate(span.startTimeUnixNano),
-      endTime: convertNanoTimestampToDate(span.endTimeUnixNano),
-      children,
       input: ioData.input,
       output: ioData.output,
-      tokenUsage: this.getTokenUsage(span),
+      raw: [JSON.stringify(span, null, 2)],
       reasoning: this.getTraceReasoning(span),
+      startTime: convertNanoTimestampToDate(span.startTimeUnixNano ?? 0),
+      status: this.getSpanStatus(span),
+      title: generateOpenTelemetrySpanTitle(span),
       todos: this.getTraceTodos(span),
+      tokenUsage: this.getTokenUsage(span),
+      type: this.getSpanCategory(span),
     };
   },
 
-  getTokenUsage(span: OpenTelemetrySpan): TokenUsage | undefined {
+  getSpanCategory(span: ReadonlyOpenTelemetrySpan): TraceSpanCategory {
+    const standard = getOpenTelemetrySpanStandard(span);
+
+    if (standard === "openinference") {
+      const category = categorizeOpenInference(span);
+      return category !== "unknown"
+        ? category
+        : categorizeStandardOpenTelemetry(span);
+    }
+
+    if (standard === "opentelemetry_genai") {
+      const category = categorizeOpenTelemetryGenAI(span);
+      return category !== "unknown"
+        ? category
+        : categorizeStandardOpenTelemetry(span);
+    }
+
+    return categorizeStandardOpenTelemetry(span);
+  },
+
+  getSpanInputOutput(span: ReadonlyOpenTelemetrySpan): InputOutputData {
+    const input = getOpenTelemetryAttributeValue(
+      span,
+      INPUT_OUTPUT_ATTRIBUTES.INPUT_VALUE,
+    );
+    const output = getOpenTelemetryAttributeValue(
+      span,
+      INPUT_OUTPUT_ATTRIBUTES.OUTPUT_VALUE,
+    );
+
+    return {
+      input: typeof input === "string" ? input : undefined,
+      output: typeof output === "string" ? output : undefined,
+    };
+  },
+
+  getSpanStatus(span: ReadonlyOpenTelemetrySpan): TraceSpanStatus {
+    switch (span.status?.code) {
+      case 1:
+      case "STATUS_CODE_OK":
+        return "success";
+      case 2:
+      case "STATUS_CODE_ERROR":
+        return "error";
+      case 0:
+      case null:
+      case "STATUS_CODE_UNSET":
+      case undefined:
+      default:
+        return "warning";
+    }
+  },
+
+  /**
+   * Per the GenAI semantic conventions, cache counts are part of input_tokens;
+   * they are taken out of it so no token is counted twice. Reasoning tokens
+   * stay inside output; getTraceReasoning reports them.
+   */
+  getTokenUsage(span: ReadonlyOpenTelemetrySpan): TokenUsage | undefined {
     const input = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_INPUT_TOKENS,
@@ -134,8 +172,6 @@ export const openTelemetrySpanAdapter: SpanAdapter<
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_OUTPUT_COST,
     );
 
-    // Per the GenAI semantic conventions, cache counts are part of
-    // input_tokens; they are taken out of it so no token is counted twice.
     const cacheRead = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_CACHE_READ_INPUT_TOKENS,
@@ -158,7 +194,6 @@ export const openTelemetrySpanAdapter: SpanAdapter<
       );
     }
 
-    // Reasoning tokens stay inside output; getTraceReasoning reports them.
     if (output !== undefined || outputCost !== undefined) {
       usage = addTokenUsage(usage, "output", output ?? 0, outputCost);
     }
@@ -183,14 +218,18 @@ export const openTelemetrySpanAdapter: SpanAdapter<
     return Object.keys(usage).length > 0 ? usage : undefined;
   },
 
-  getTraceReasoning(span: OpenTelemetrySpan): TraceReasoning | undefined {
+  /**
+   * The semantic conventions carry the reasoning token count, not the text.
+   * Non-reasoning calls often report 0, which is no reasoning to show.
+   */
+  getTraceReasoning(
+    span: ReadonlyOpenTelemetrySpan,
+  ): TraceReasoning | undefined {
     const tokens = getNumberAttribute(
       span,
       OPENTELEMETRY_GENAI_ATTRIBUTES.USAGE_REASONING_OUTPUT_TOKENS,
     );
 
-    // The semantic conventions carry the reasoning token count, not the text.
-    // Non-reasoning calls often report 0, which is no reasoning to show.
     return tokens !== undefined && tokens > 0
       ? { content: "", tokens }
       : undefined;
@@ -198,57 +237,5 @@ export const openTelemetrySpanAdapter: SpanAdapter<
 
   getTraceTodos(): TraceTodo[] | undefined {
     return undefined;
-  },
-
-  getSpanInputOutput(span: OpenTelemetrySpan): InputOutputData {
-    const input = getOpenTelemetryAttributeValue(
-      span,
-      INPUT_OUTPUT_ATTRIBUTES.INPUT_VALUE,
-    );
-    const output = getOpenTelemetryAttributeValue(
-      span,
-      INPUT_OUTPUT_ATTRIBUTES.OUTPUT_VALUE,
-    );
-
-    return {
-      input: typeof input === "string" ? input : undefined,
-      output: typeof output === "string" ? output : undefined,
-    };
-  },
-
-  getSpanStatus(span: OpenTelemetrySpan): TraceSpanStatus {
-    switch (span.status.code) {
-      case "STATUS_CODE_OK":
-        return "success";
-      case "STATUS_CODE_ERROR":
-        return "error";
-      default:
-        return "warning";
-    }
-  },
-
-  getSpanCategory(span: OpenTelemetrySpan): TraceSpanCategory {
-    const standard = getOpenTelemetrySpanStandard(span);
-
-    switch (standard) {
-      case "opentelemetry_genai": {
-        const category = categorizeOpenTelemetryGenAI(span);
-        return category !== "unknown"
-          ? category
-          : categorizeStandardOpenTelemetry(span);
-      }
-
-      case "openinference": {
-        const category = categorizeOpenInference(span);
-        return category !== "unknown"
-          ? category
-          : categorizeStandardOpenTelemetry(span);
-      }
-
-      case "standard":
-      default: {
-        return categorizeStandardOpenTelemetry(span);
-      }
-    }
   },
 };

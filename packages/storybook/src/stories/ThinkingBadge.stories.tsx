@@ -5,18 +5,22 @@ import {
   ThinkingBadgeSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/ThinkingBadge",
+  argTypes: {
+    className: {
+      control: { type: "text" },
+      description: "Optional className for additional styling",
+    },
+  },
   component: ThinkingBadge,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,14 +32,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    className: {
-      control: { type: "text" },
-      description: "Optional className for additional styling",
-    },
-  },
+  title: "Atoms/ThinkingBadge",
 } satisfies Meta<typeof ThinkingBadge>;
 
 export default meta;

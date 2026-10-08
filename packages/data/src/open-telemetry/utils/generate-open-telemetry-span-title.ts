@@ -1,27 +1,28 @@
 import {
+  type DeepReadonly,
   OPENTELEMETRY_GENAI_ATTRIBUTES,
-  STANDARD_OPENTELEMETRY_ATTRIBUTES,
   type OpenTelemetrySpan,
+  STANDARD_OPENTELEMETRY_ATTRIBUTES,
 } from "@evilmartians/agent-prism-types";
 
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
 export function generateOpenTelemetrySpanTitle(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<OpenTelemetrySpan>,
 ): string {
-  const { name } = span;
+  const name = span.name ?? "";
 
-  // For LLM operations, use model name
   const model = getOpenTelemetryAttributeValue(
     span,
     OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL,
   );
 
-  if (model) {
+  const hasModel = Boolean(model);
+
+  if (hasModel) {
     return `${model} - ${name}`;
   }
 
-  // For vector DB operations, use collection name
   const collection = getOpenTelemetryAttributeValue(
     span,
     STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_COLLECTION,
@@ -31,11 +32,10 @@ export function generateOpenTelemetrySpanTitle(
     STANDARD_OPENTELEMETRY_ATTRIBUTES.DB_OPERATION,
   );
 
-  if (collection && operation) {
+  if (Boolean(collection) && Boolean(operation)) {
     return `${collection} - ${operation}`;
   }
 
-  // For HTTP operations, use method and URL
   const method = getOpenTelemetryAttributeValue(
     span,
     STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD,
@@ -45,7 +45,7 @@ export function generateOpenTelemetrySpanTitle(
     STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_URL,
   );
 
-  if (method && url) {
+  if (Boolean(method) && Boolean(url)) {
     return `${method} ${url}`;
   }
 

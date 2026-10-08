@@ -2,56 +2,56 @@ import {
   DetailsView,
   TraceViewerPlaceholder,
   TraceViewerTreeViewContainer,
-  type TraceViewerLayoutProps,
 } from "@evilmartians/agent-prism-ui";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 
+import type { SimpleTraceViewerLayoutProps } from "@/types";
+
 export const SimpleTraceViewerDesktopLayout = ({
-  selectedTrace,
-  selectedSpan,
-  setSelectedSpan,
-  searchValue,
-  setSearchValue,
-  filteredSpans,
-  selectedTraceSpans,
   expandedSpansIds,
-  setExpandedSpansIds,
-  handleExpandAll,
+  filteredSpans,
   handleCollapseAll,
-}: Partial<TraceViewerLayoutProps>) => {
+  handleExpandAll,
+  searchValue,
+  selectedSpan,
+  selectedTrace,
+  selectedTraceSpans,
+  setExpandedSpansIds,
+  setSearchValue,
+  setSelectedSpan,
+}: SimpleTraceViewerLayoutProps) => {
   return (
-    <PanelGroup direction="horizontal" className="h-full">
+    <PanelGroup className="h-full" direction="horizontal">
       <Panel
-        id="tree-view"
+        className="flex h-full flex-col overflow-hidden pr-2"
         defaultSize={60}
+        id="tree-view"
         minSize={40}
-        className="flex h-full flex-col overflow-hidden pr-2" // Added pr-2 for spacing
       >
         <TraceViewerTreeViewContainer
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          handleExpandAll={handleExpandAll}
-          handleCollapseAll={handleCollapseAll}
-          filteredSpans={filteredSpans}
-          selectedSpan={selectedSpan}
-          setSelectedSpan={setSelectedSpan}
           expandedSpansIds={expandedSpansIds}
-          setExpandedSpansIds={setExpandedSpansIds}
+          filteredSpans={filteredSpans}
+          handleCollapseAll={handleCollapseAll}
+          handleExpandAll={handleExpandAll}
+          searchValue={searchValue}
+          selectedSpan={selectedSpan}
           selectedTrace={selectedTrace}
+          setExpandedSpansIds={setExpandedSpansIds}
+          setSearchValue={setSearchValue}
+          setSelectedSpan={setSelectedSpan}
           showHeader={false}
         />
       </Panel>
       <PanelResizeHandle className="mx-2" />{" "}
-      {/* Added mx-2 for handle spacing */}
       <Panel
-        id="details-view"
-        defaultSize={40}
-        minSize={20}
-        maxSize={60}
         className="h-full overflow-hidden"
+        defaultSize={40}
+        id="details-view"
+        maxSize={60}
+        minSize={20}
       >
         {selectedSpan ? (
-          <DetailsView data={selectedSpan} allSpans={selectedTraceSpans} />
+          <DetailsView allSpans={selectedTraceSpans} data={selectedSpan} />
         ) : (
           <TraceViewerPlaceholder title="Select a span to see the details" />
         )}

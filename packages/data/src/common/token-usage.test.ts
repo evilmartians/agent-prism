@@ -7,15 +7,15 @@ import {
   getTotalCost,
   getTotalTokens,
   hasReportedCost,
-} from "./token-usage";
+} from "./token-usage.js";
 
 describe("token usage", () => {
   describe("totals", () => {
     it("sum every type", () => {
       const usage = {
-        input: { tokens: 100, cost: 0.003 },
-        output: { tokens: 50, cost: 0.0015 },
-        cache_read: { tokens: 1000, cost: 0.0003 },
+        cache_read: { cost: 0.0003, tokens: 1000 },
+        input: { cost: 0.003, tokens: 100 },
+        output: { cost: 0.0015, tokens: 50 },
       };
 
       expect(getTotalTokens(usage)).toBe(1150);
@@ -29,8 +29,8 @@ describe("token usage", () => {
     it("drop floating-point noise from the cost", () => {
       expect(
         getTotalCost({
-          input: { tokens: 0, cost: 0.1 },
-          output: { tokens: 0, cost: 0.2 },
+          input: { cost: 0.1, tokens: 0 },
+          output: { cost: 0.2, tokens: 0 },
         }),
       ).toBe(0.3);
     });
@@ -44,19 +44,19 @@ describe("token usage", () => {
   describe("getTokenUsageEntries", () => {
     it("lists known types in order, custom ones after, total last", () => {
       const usage = {
-        total: { tokens: 5 },
-        input_audio: { tokens: 7 },
         cache_write: { tokens: 1 },
+        input: { cost: 0.01, tokens: 3 },
+        input_audio: { tokens: 7 },
         output: { tokens: 2 },
-        input: { tokens: 3, cost: 0.01 },
+        total: { tokens: 5 },
       };
 
-      expect(getTokenUsageEntries(usage)).toEqual([
-        { type: "input", tokens: 3, cost: 0.01 },
-        { type: "output", tokens: 2, cost: 0 },
-        { type: "cache_write", tokens: 1, cost: 0 },
-        { type: "input_audio", tokens: 7, cost: 0 },
-        { type: "total", tokens: 5, cost: 0 },
+      expect(getTokenUsageEntries(usage)).toStrictEqual([
+        { cost: 0.01, tokens: 3, type: "input" },
+        { cost: 0, tokens: 2, type: "output" },
+        { cost: 0, tokens: 1, type: "cache_write" },
+        { cost: 0, tokens: 7, type: "input_audio" },
+        { cost: 0, tokens: 5, type: "total" },
       ]);
     });
   });
@@ -70,35 +70,35 @@ describe("token usage", () => {
         0.002,
       );
 
-      expect(usage).toEqual({ input: { tokens: 150, cost: 0.003 } });
+      expect(usage).toStrictEqual({ input: { cost: 0.003, tokens: 150 } });
     });
 
     it("does not modify the usage it was given", () => {
-      const usage = { input: { tokens: 100, cost: 0 } };
+      const usage = { input: { cost: 0, tokens: 100 } };
 
       addTokenUsage(usage, "input", 1);
 
-      expect(usage).toEqual({ input: { tokens: 100, cost: 0 } });
+      expect(usage).toStrictEqual({ input: { cost: 0, tokens: 100 } });
     });
 
     it.each([Number.NaN, Number.POSITIVE_INFINITY])(
       "counts %s tokens as zero and ignores it as a cost",
       (value) => {
-        expect(addTokenUsage({}, "input", value, value)).toEqual({
+        expect(addTokenUsage({}, "input", value, value)).toStrictEqual({
           input: { tokens: 0 },
         });
       },
     );
 
     it("leaves the cost out when none was reported", () => {
-      expect(addTokenUsage({}, "input", 100)).toEqual({
+      expect(addTokenUsage({}, "input", 100)).toStrictEqual({
         input: { tokens: 100 },
       });
     });
 
     it("keeps an explicitly reported zero cost", () => {
-      expect(addTokenUsage({}, "input", 100, 0)).toEqual({
-        input: { tokens: 100, cost: 0 },
+      expect(addTokenUsage({}, "input", 100, 0)).toStrictEqual({
+        input: { cost: 0, tokens: 100 },
       });
     });
 
@@ -109,7 +109,7 @@ describe("token usage", () => {
         50,
       );
 
-      expect(usage).toEqual({ input: { tokens: 150, cost: 0.001 } });
+      expect(usage).toStrictEqual({ input: { cost: 0.001, tokens: 150 } });
     });
   });
 
@@ -123,7 +123,7 @@ describe("token usage", () => {
       expect(
         hasReportedCost({
           input: { tokens: 100 },
-          output: { tokens: 5, cost: 0 },
+          output: { cost: 0, tokens: 5 },
         }),
       ).toBe(true);
     });
@@ -131,26 +131,26 @@ describe("token usage", () => {
 
   describe("addReportedTotal", () => {
     it("records the whole total when nothing is typed", () => {
-      expect(addReportedTotal({}, 500, 0.01)).toEqual({
-        total: { tokens: 500, cost: 0.01 },
+      expect(addReportedTotal({}, 500, 0.01)).toStrictEqual({
+        total: { cost: 0.01, tokens: 500 },
       });
     });
 
     it("records only the part the typed entries don't cover", () => {
       const usage = addReportedTotal(
-        { input: { tokens: 100, cost: 0.001 } },
+        { input: { cost: 0.001, tokens: 100 } },
         160,
         0.004,
       );
 
-      expect(usage.total).toEqual({ tokens: 60, cost: 0.003 });
+      expect(usage.total).toStrictEqual({ cost: 0.003, tokens: 60 });
       expect(getTotalTokens(usage)).toBe(160);
       expect(getTotalCost(usage)).toBe(0.004);
     });
 
     it("ignores a total below what the entries add up to", () => {
       const usage = addReportedTotal(
-        { input: { tokens: 100, cost: 0.005 } },
+        { input: { cost: 0.005, tokens: 100 } },
         80,
         0.001,
       );
@@ -159,17 +159,17 @@ describe("token usage", () => {
     });
 
     it("records a reported zero", () => {
-      expect(addReportedTotal({}, 0)).toEqual({ total: { tokens: 0 } });
-      expect(addReportedTotal({}, undefined, 0)).toEqual({
-        total: { tokens: 0, cost: 0 },
+      expect(addReportedTotal({}, 0)).toStrictEqual({ total: { tokens: 0 } });
+      expect(addReportedTotal({}, undefined, 0)).toStrictEqual({
+        total: { cost: 0, tokens: 0 },
       });
     });
 
     it("ignores missing or non-finite totals", () => {
-      expect(addReportedTotal({}, undefined, undefined)).toEqual({});
+      expect(addReportedTotal({}, undefined, undefined)).toStrictEqual({});
       expect(
         addReportedTotal({}, Number.NaN, Number.POSITIVE_INFINITY),
-      ).toEqual({});
+      ).toStrictEqual({});
     });
   });
 });

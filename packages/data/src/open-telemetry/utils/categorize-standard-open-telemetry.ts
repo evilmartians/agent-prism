@@ -1,4 +1,5 @@
 import type {
+  DeepReadonly,
   OpenTelemetrySpan,
   TraceSpanCategory,
 } from "@evilmartians/agent-prism-types";
@@ -6,9 +7,8 @@ import type {
 import { openTelemetryCategoryMappers } from "./open-telemetry-category-mappers.js";
 
 export function categorizeStandardOpenTelemetry(
-  span: OpenTelemetrySpan,
+  span: DeepReadonly<OpenTelemetrySpan>,
 ): TraceSpanCategory {
-  // Priority order for detection
   if (openTelemetryCategoryMappers.isLLMCall(span)) return "llm_call";
   if (openTelemetryCategoryMappers.isAgentOperation(span))
     return "agent_invocation";

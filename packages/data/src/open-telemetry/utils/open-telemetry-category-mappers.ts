@@ -1,22 +1,29 @@
 import {
+  type DeepReadonly,
+  type OpenTelemetrySpan,
   STANDARD_OPENTELEMETRY_ATTRIBUTES,
   STANDARD_OPENTELEMETRY_PATTERNS,
-  type OpenTelemetrySpan,
 } from "@evilmartians/agent-prism-types";
 
 import { getOpenTelemetryAttributeValue } from "./get-open-telemetry-attribute-value.js";
 
-export const openTelemetryCategoryMappers = {
-  isHttpCall: (span: OpenTelemetrySpan): boolean => {
-    return (
-      getOpenTelemetryAttributeValue(
-        span,
-        STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD,
-      ) !== undefined
-    );
-  },
+const nameHasKeyword = (
+  span: DeepReadonly<OpenTelemetrySpan>,
+  keywords: readonly string[],
+): boolean => {
+  const name = (span.name ?? "").toLowerCase();
 
-  isDatabaseCall: (span: OpenTelemetrySpan): boolean => {
+  return keywords.some((keyword) => name.includes(keyword));
+};
+
+export const openTelemetryCategoryMappers = {
+  isAgentOperation: (span: DeepReadonly<OpenTelemetrySpan>): boolean =>
+    nameHasKeyword(span, STANDARD_OPENTELEMETRY_PATTERNS.AGENT_KEYWORDS),
+
+  isChainOperation: (span: DeepReadonly<OpenTelemetrySpan>): boolean =>
+    nameHasKeyword(span, STANDARD_OPENTELEMETRY_PATTERNS.CHAIN_KEYWORDS),
+
+  isDatabaseCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     return (
       getOpenTelemetryAttributeValue(
         span,
@@ -25,49 +32,25 @@ export const openTelemetryCategoryMappers = {
     );
   },
 
-  isFunctionCall: (span: OpenTelemetrySpan): boolean => {
-    const name = span.name.toLowerCase();
+  isFunctionCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean =>
+    nameHasKeyword(span, STANDARD_OPENTELEMETRY_PATTERNS.FUNCTION_KEYWORDS) ||
+    getOpenTelemetryAttributeValue(
+      span,
+      STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME,
+    ) !== undefined,
 
+  isHttpCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean => {
     return (
-      STANDARD_OPENTELEMETRY_PATTERNS.FUNCTION_KEYWORDS.some((keyword) =>
-        name.includes(keyword),
-      ) ||
       getOpenTelemetryAttributeValue(
         span,
-        STANDARD_OPENTELEMETRY_ATTRIBUTES.FUNCTION_NAME,
+        STANDARD_OPENTELEMETRY_ATTRIBUTES.HTTP_METHOD,
       ) !== undefined
     );
   },
 
-  isLLMCall: (span: OpenTelemetrySpan): boolean => {
-    const name = span.name.toLowerCase();
+  isLLMCall: (span: DeepReadonly<OpenTelemetrySpan>): boolean =>
+    nameHasKeyword(span, STANDARD_OPENTELEMETRY_PATTERNS.LLM_KEYWORDS),
 
-    return STANDARD_OPENTELEMETRY_PATTERNS.LLM_KEYWORDS.some((keyword) =>
-      name.includes(keyword),
-    );
-  },
-
-  isChainOperation: (span: OpenTelemetrySpan): boolean => {
-    const name = span.name.toLowerCase();
-
-    return STANDARD_OPENTELEMETRY_PATTERNS.CHAIN_KEYWORDS.some((keyword) =>
-      name.includes(keyword),
-    );
-  },
-
-  isAgentOperation: (span: OpenTelemetrySpan): boolean => {
-    const name = span.name.toLowerCase();
-
-    return STANDARD_OPENTELEMETRY_PATTERNS.AGENT_KEYWORDS.some((keyword) =>
-      name.includes(keyword),
-    );
-  },
-
-  isRetrievalOperation: (span: OpenTelemetrySpan): boolean => {
-    const name = span.name.toLowerCase();
-
-    return STANDARD_OPENTELEMETRY_PATTERNS.RETRIEVAL_KEYWORDS.some((keyword) =>
-      name.includes(keyword),
-    );
-  },
+  isRetrievalOperation: (span: DeepReadonly<OpenTelemetrySpan>): boolean =>
+    nameHasKeyword(span, STANDARD_OPENTELEMETRY_PATTERNS.RETRIEVAL_KEYWORDS),
 };

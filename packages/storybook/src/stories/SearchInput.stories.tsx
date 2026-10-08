@@ -2,32 +2,20 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { SearchInput, SearchInputSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/SearchInput",
-  component: SearchInput,
-  parameters: {
-    layout: "centered",
-    docs: {
-      page: () => (
-        <>
-          <Description />
-          <Primary />
-          <Controls />
-          <Stories />
-          <Source code={SearchInputSource} language="tsx" />
-        </>
-      ),
-    },
-  },
-  tags: ["autodocs"],
   argTypes: {
+    disabled: {
+      control: "boolean",
+      description: "Disables the input",
+      table: { defaultValue: { summary: "false" } },
+    },
     id: {
       control: "text",
       description: "Unique identifier for the input (required)",
@@ -40,12 +28,24 @@ const meta = {
       control: "text",
       description: "Placeholder text",
     },
-    disabled: {
-      control: "boolean",
-      description: "Disables the input",
-      defaultValue: false,
-    },
   },
+  component: SearchInput,
+  parameters: {
+    docs: {
+      page: () => (
+        <>
+          <Description />
+          <Primary />
+          <Controls />
+          <Stories />
+          <Source code={SearchInputSource} language="tsx" />
+        </>
+      ),
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  title: "Atoms/SearchInput",
 } satisfies Meta<typeof SearchInput>;
 
 export default meta;
@@ -74,25 +74,27 @@ export const Label: Story = {
 
 export const Disabled: Story = {
   args: {
+    disabled: true,
     id: "search-disabled",
     placeholder: "Search disabled...",
-    disabled: true,
   },
 };
 
 export const NonClearable: Story = {
   args: {
+    defaultValue: "search term",
     id: "search-non-clearable",
     placeholder: "No clear button...",
-    defaultValue: "search term",
   },
 };
 
 export const Clearable: Story = {
   args: {
-    id: "search-clearable",
-    placeholder: "Clearable input...",
-    onClear: () => console.log("Clear button clicked"),
     defaultValue: "search term",
+    id: "search-clearable",
+    onClear: () => {
+      console.log("Clear button clicked");
+    },
+    placeholder: "Clearable input...",
   },
 };

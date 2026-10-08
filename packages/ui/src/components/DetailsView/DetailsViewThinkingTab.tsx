@@ -1,58 +1,19 @@
-import type {
-  TraceSpan,
-  TraceReasoningLevel,
-} from "@evilmartians/agent-prism-types";
+import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { ReactElement } from "react";
 
-import cn from "classnames";
 import { Brain } from "lucide-react";
 
-interface DetailsViewThinkingTabProps {
+import type { ReadonlyProps } from "../ReadonlyProps";
+
+import { DetailsViewThinkingLevelBadge } from "./DetailsViewThinkingLevelBadge";
+
+type DetailsViewThinkingTabProps = {
   data: TraceSpan;
-}
-
-const LEVEL_CONFIG: Record<
-  TraceReasoningLevel,
-  { label: string; className: string }
-> = {
-  high: {
-    label: "High",
-    className:
-      "bg-agentprism-success-muted text-agentprism-success-muted-foreground",
-  },
-  medium: {
-    label: "Medium",
-    className:
-      "bg-agentprism-warning-muted text-agentprism-warning-muted-foreground",
-  },
-  low: {
-    label: "Low",
-    className: "bg-agentprism-muted text-agentprism-muted-foreground",
-  },
 };
-
-function ThinkingLevelBadge({
-  level,
-}: {
-  level: TraceReasoningLevel;
-}): ReactElement {
-  const config = LEVEL_CONFIG[level];
-
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
-        config.className,
-      )}
-    >
-      {config.label} Thinking
-    </span>
-  );
-}
 
 export const DetailsViewThinkingTab = ({
   data,
-}: DetailsViewThinkingTabProps): ReactElement => {
+}: ReadonlyProps<DetailsViewThinkingTabProps>): ReactElement => {
   const { reasoning } = data;
 
   if (!reasoning) {
@@ -77,9 +38,11 @@ export const DetailsViewThinkingTab = ({
 
   return (
     <div className="space-y-4">
-      {hasSummary && (
+      {hasSummary ? (
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {reasoning.level && <ThinkingLevelBadge level={reasoning.level} />}
+          {reasoning.level ? (
+            <DetailsViewThinkingLevelBadge level={reasoning.level} />
+          ) : null}
           {reasoning.tokens !== undefined && (
             <span className="text-agentprism-muted-foreground text-xs">
               {reasoning.tokens.toLocaleString()} thinking tokens
@@ -91,7 +54,7 @@ export const DetailsViewThinkingTab = ({
             </span>
           )}
         </div>
-      )}
+      ) : null}
 
       <div className="border-agentprism-border bg-agentprism-muted/30 rounded-md border p-4">
         <div className="text-agentprism-muted-foreground mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wide">

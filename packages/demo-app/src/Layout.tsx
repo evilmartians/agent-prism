@@ -1,12 +1,11 @@
 import { Activity, Info, Layers, Search, Settings } from "lucide-react";
 import { type FC, type PropsWithChildren } from "react";
 
-export const Layout: FC<PropsWithChildren> = ({ children }) => {
+export const Layout: FC<Readonly<PropsWithChildren>> = ({ children }) => {
   return (
     <div className="flex h-screen flex-col bg-white text-gray-900">
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <div className="flex w-64 flex-col bg-gray-100">
+        <aside className="flex w-64 flex-col bg-gray-100">
           <div className="p-4">
             <div className="mb-6 flex items-center space-x-2">
               <div className="size-8 rounded bg-gradient-to-br from-orange-500 to-red-500"></div>
@@ -55,7 +54,7 @@ export const Layout: FC<PropsWithChildren> = ({ children }) => {
               <span className="text-sm">Feedback</span>
             </div>
           </div>
-        </div>
+        </aside>
 
         <div className="flex-1 bg-white p-6">{children}</div>
       </div>

@@ -4,8 +4,8 @@ import {
   hasContextContent,
   hasThinkingContent,
   hasTodos,
-} from "./details-tabs";
-import { createTestSpan } from "./test-utils/create-test-span";
+} from "./details-tabs.js";
+import { createTestSpan } from "./test-utils/create-test-span.js";
 
 describe("agent-prism / details-tabs — tab decisions", () => {
   it("hasThinkingContent is true only when the span carries reasoning", () => {
@@ -53,7 +53,7 @@ describe("agent-prism / details-tabs — tab decisions", () => {
   it("hasTodos is true only for a non-empty task list", () => {
     expect(
       hasTodos(
-        createTestSpan({ todos: [{ title: "ship it", status: "pending" }] }),
+        createTestSpan({ todos: [{ status: "pending", title: "ship it" }] }),
       ),
     ).toBe(true);
     expect(hasTodos(createTestSpan({ todos: [] }))).toBe(false);
@@ -70,8 +70,6 @@ describe("agent-prism / details-tabs — tab decisions", () => {
     });
 
     expect(hasThinkingContent(langfuseSpan)).toBe(false);
-    // The upstream guard keyed on gen_ai.usage.input_tokens — we keep the Context
-    // tab claude_code-only so a plain OTLP/Langfuse LLM span never grows one.
     expect(hasContextContent(langfuseSpan)).toBe(false);
     expect(hasTodos(langfuseSpan)).toBe(false);
   });

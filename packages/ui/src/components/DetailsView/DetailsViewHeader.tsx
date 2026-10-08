@@ -1,5 +1,5 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
-import type { ReactNode } from "react";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReactElement, ReactNode } from "react";
 
 import {
   formatDuration,
@@ -12,6 +12,7 @@ import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
 import type { AvatarProps } from "../Avatar";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Avatar } from "../Avatar";
 import { IconButton } from "../IconButton";
@@ -21,30 +22,32 @@ import { SpanStatus } from "../SpanStatus";
 import { TimestampBadge } from "../TimestampBadge";
 import { TokensBadge } from "../TokensBadge";
 
-export interface DetailsViewHeaderProps {
-  data: TraceSpan;
-  avatar?: AvatarProps;
-  copyButton?: {
-    isEnabled?: boolean;
-    onCopy?: (data: TraceSpan) => void;
-  };
+export type DetailsViewHeaderProps = {
   /**
    * Custom actions to render in the header
    */
-  actions?: ReactNode;
+  actions?: ReactNode | undefined;
+  avatar?: Omit<AvatarProps, "ref"> | undefined;
   /**
    * Optional className for the header container
    */
-  className?: string;
-}
+  className?: string | undefined;
+  copyButton?:
+    | undefined
+    | {
+        isEnabled?: boolean | undefined;
+        onCopy?: ((data: DeepReadonly<TraceSpan>) => void) | undefined;
+      };
+  data: TraceSpan;
+};
 
 export const DetailsViewHeader = ({
-  data,
-  avatar,
-  copyButton,
   actions,
+  avatar,
   className,
-}: DetailsViewHeaderProps) => {
+  copyButton,
+  data,
+}: ReadonlyProps<DetailsViewHeaderProps>): ReactElement => {
   const [hasCopied, setHasCopied] = useState(false);
   const durationMs = getDurationMs(data);
 
@@ -52,13 +55,21 @@ export const DetailsViewHeader = ({
     if (copyButton?.onCopy) {
       copyButton.onCopy(data);
       setHasCopied(true);
-      setTimeout(() => setHasCopied(false), 2000);
+      setTimeout(() => {
+        setHasCopied(false);
+      }, 2000);
     }
   };
 
   return (
-    <div className={className || "flex flex-wrap items-center gap-2"}>
-      {avatar && <Avatar size="4" {...avatar} />}
+    <div
+      className={
+        className !== undefined && className !== ""
+          ? className
+          : "flex flex-wrap items-center gap-2"
+      }
+    >
+      {avatar ? <Avatar size="4" {...avatar} /> : null}
 
       <span className="text-agentprism-foreground tracking-wide">
         {data.title}
@@ -68,13 +79,15 @@ export const DetailsViewHeader = ({
         <SpanStatus status={data.status} />
       </div>
 
-      {copyButton && (
+      {copyButton ? (
         <IconButton
           aria-label={
-            copyButton.isEnabled ? "Copy span details" : "Copy disabled"
+            copyButton.isEnabled === true
+              ? "Copy span details"
+              : "Copy disabled"
           }
-          variant="ghost"
           onClick={handleCopy}
+          variant="ghost"
         >
           {hasCopied ? (
             <Check className="text-agentprism-muted-foreground size-3" />
@@ -82,18 +95,18 @@ export const DetailsViewHeader = ({
             <Copy className="text-agentprism-muted-foreground size-3" />
           )}
         </IconButton>
-      )}
+      ) : null}
 
       <SpanBadge category={data.type} />
 
-      {data.tokenUsage && (
+      {data.tokenUsage ? (
         <>
           <TokensBadge tokensCount={getTotalTokens(data.tokenUsage)} />
           {hasReportedCost(data.tokenUsage) && (
             <PriceBadge cost={getTotalCost(data.tokenUsage)} />
           )}
         </>
-      )}
+      ) : null}
 
       <span className="text-agentprism-muted-foreground text-xs">
         LATENCY: {formatDuration(durationMs)}

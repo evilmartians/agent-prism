@@ -1,4 +1,4 @@
-export * from "./types/index.js";
-export * from "./types/open-telemetry.js";
-export * from "./types/langfuse.js";
 export * from "./constants/span-mappings.js";
+export type * from "./types/index.js";
+export type * from "./types/langfuse.js";
+export type * from "./types/open-telemetry.js";

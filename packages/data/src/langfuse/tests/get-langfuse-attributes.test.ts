@@ -1,9 +1,9 @@
 import type { LangfuseObservation } from "@evilmartians/agent-prism-types";
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation";
-import { getLangfuseAttributes } from "../utils/get-langfuse-attributes";
+import { createMockLangfuseObservation } from "../utils/create-mock-langfuse-observation.js";
+import { getLangfuseAttributes } from "../utils/get-langfuse-attributes.js";
 
 function createObservation(metadata?: unknown): LangfuseObservation {
   return createMockLangfuseObservation({ metadata });
@@ -13,22 +13,22 @@ describe("getLangfuseAttributes", () => {
   describe("metadata guards", () => {
     it("returns empty array when metadata is missing", () => {
       const span = createObservation();
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
 
     it("returns empty array when metadata is null", () => {
       const span = createObservation(null);
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
 
     it("returns empty array when metadata is not a string", () => {
       const span = createObservation({ some: "object" });
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
 
     it("returns empty array when metadata is invalid JSON", () => {
       const span = createObservation("{ invalid json");
-      expect(getLangfuseAttributes(span)).toEqual([]);
+      expect(getLangfuseAttributes(span)).toStrictEqual([]);
     });
   });
 
@@ -63,9 +63,9 @@ describe("getLangfuseAttributes", () => {
     it("extracts primitive attributes from resourceAttributes field", () => {
       const metadata = JSON.stringify({
         resourceAttributes: {
-          "service.name": "api",
-          "service.instance.id": 42,
           "service.debug": false,
+          "service.instance.id": 42,
+          "service.name": "api",
         },
       });
 
@@ -105,38 +105,42 @@ describe("getLangfuseAttributes", () => {
       expect(result).toHaveLength(2);
     });
 
-    it("ignores non-primitive attribute values", () => {
+    it("converts every JSON value except null to an attribute value", () => {
       const metadata = JSON.stringify({
         attributes: {
-          obj: { nested: true },
-          arr: [1, 2, 3],
-          nil: null,
-          undef: undefined,
-          ok: "yes",
-          num: 10,
+          arr: [1, null, "a"],
           bool: true,
+          nil: null,
+          num: 10,
+          obj: { nested: true },
+          ok: "yes",
+          temperature: 0.7,
+          undef: undefined,
         },
       });
 
       const span = createObservation(metadata);
-      const result = getLangfuseAttributes(span);
 
-      expect(result).toContainEqual({
-        key: "ok",
-        value: { stringValue: "yes" },
-      });
-      expect(result).toContainEqual({ key: "num", value: { intValue: "10" } });
-      expect(result).toContainEqual({
-        key: "bool",
-        value: { boolValue: true },
-      });
-
-      // Ensure complex/unsupported values are not included
-      expect(result.find((r) => r.key === "obj")).toBeUndefined();
-      expect(result.find((r) => r.key === "arr")).toBeUndefined();
-      expect(result.find((r) => r.key === "nil")).toBeUndefined();
-      expect(result.find((r) => r.key === "undef")).toBeUndefined();
-      expect(result).toHaveLength(3);
+      expect(getLangfuseAttributes(span)).toStrictEqual([
+        {
+          key: "arr",
+          value: {
+            arrayValue: { values: [{ intValue: "1" }, { stringValue: "a" }] },
+          },
+        },
+        { key: "bool", value: { boolValue: true } },
+        { key: "num", value: { intValue: "10" } },
+        {
+          key: "obj",
+          value: {
+            kvlistValue: {
+              values: [{ key: "nested", value: { boolValue: true } }],
+            },
+          },
+        },
+        { key: "ok", value: { stringValue: "yes" } },
+        { key: "temperature", value: { doubleValue: 0.7 } },
+      ]);
     });
   });
 });

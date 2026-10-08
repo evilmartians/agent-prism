@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path // empty'); case \"$f\" in \"$CLAUDE_PROJECT_DIR\"/*) cd \"$CLAUDE_PROJECT_DIR\" && pnpm exec prettier --write --ignore-unknown --log-level warn \"$f\" 1>&2 && pnpm exec oxlint --type-aware --deny-warnings --ignore-pattern '**/lint-fixtures' \"$f\" 1>&2 || exit 2 ;; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

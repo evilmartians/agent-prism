@@ -1,38 +1,48 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
+  type ReadonlyProps,
   TextInput,
-  TextInputSource,
   type TextInputProps,
+  TextInputSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 import { useState } from "react";
 
+const ClearableTextInput = (args: ReadonlyProps<TextInputProps>) => {
+  const [value, setValue] = useState(args.defaultValue);
+
+  return (
+    <TextInput
+      {...args}
+      onClear={() => {
+        setValue("");
+      }}
+      onValueChange={setValue}
+      value={value}
+    />
+  );
+};
+
 const meta = {
-  title: "Atoms/TextInput",
-  component: TextInput,
-  parameters: {
-    layout: "centered",
-    docs: {
-      page: () => (
-        <>
-          <Description />
-          <Primary />
-          <Controls />
-          <Stories />
-          <Source code={TextInputSource} language="tsx" />
-        </>
-      ),
-    },
-  },
-  tags: ["autodocs"],
   argTypes: {
+    disabled: {
+      control: "boolean",
+      description: "Disables the input",
+      table: { defaultValue: { summary: "false" } },
+    },
+    hideLabel: {
+      control: "boolean",
+      description:
+        "Whether to visually hide the label while keeping it for screen readers",
+      table: { defaultValue: { summary: "false" } },
+    },
     id: {
       control: "text",
       description: "Unique identifier for the input (required)",
@@ -45,21 +55,27 @@ const meta = {
       control: "text",
       description: "Placeholder text",
     },
-    hideLabel: {
-      control: "boolean",
-      description:
-        "Whether to visually hide the label while keeping it for screen readers",
-      defaultValue: false,
-    },
-    disabled: {
-      control: "boolean",
-      description: "Disables the input",
-      defaultValue: false,
-    },
     startIcon: {
       description: "Icon to display at the start of the input",
     },
   },
+  component: TextInput,
+  parameters: {
+    docs: {
+      page: () => (
+        <>
+          <Description />
+          <Primary />
+          <Controls />
+          <Stories />
+          <Source code={TextInputSource} language="tsx" />
+        </>
+      ),
+    },
+    layout: "centered",
+  },
+  tags: ["autodocs"],
+  title: "Atoms/TextInput",
 } satisfies Meta<typeof TextInput>;
 
 export default meta;
@@ -82,31 +98,23 @@ export const Label: Story = {
 
 export const HideLabel: Story = {
   args: {
+    hideLabel: true,
     id: "hidden-label-input",
     label: "Search",
-    hideLabel: true,
     placeholder: "Search...",
   },
 };
 
 export const Clearable: Story = {
   args: {
+    defaultValue: "example@domain.com",
     id: "clearable-input",
     label: "Email",
     placeholder: "Enter email...",
-    defaultValue: "example@domain.com",
   },
-  render: (args: TextInputProps) => {
-    const [value, setValue] = useState(args.defaultValue);
-    return (
-      <TextInput
-        {...args}
-        value={value}
-        onValueChange={setValue}
-        onClear={() => setValue("")}
-      />
-    );
-  },
+  render: (args: ReadonlyProps<TextInputProps>) => (
+    <ClearableTextInput {...args} />
+  ),
 };
 
 export const StartIcon: Story = {
@@ -120,10 +128,10 @@ export const StartIcon: Story = {
 
 export const Disabled: Story = {
   args: {
+    defaultValue: "Disabled value",
+    disabled: true,
     id: "disabled-input",
     label: "Disabled Field",
     placeholder: "Cannot type here...",
-    disabled: true,
-    defaultValue: "Disabled value",
   },
 };

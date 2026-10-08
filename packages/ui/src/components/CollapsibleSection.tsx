@@ -3,65 +3,69 @@ import cn from "classnames";
 import { ChevronDown } from "lucide-react";
 import * as React from "react";
 
-export interface CollapsibleSectionProps {
-  /**
-   * The title text displayed in the trigger button
-   */
-  title: string;
+import type { ReadonlyProps } from "./ReadonlyProps";
 
-  /**
-   * The content to display on the right side of the title
-   */
-  rightContent?: React.ReactNode;
-
+export type CollapsibleSectionProps = {
   /**
    * The content to display when the section is expanded
    */
   children: React.ReactNode;
 
   /**
-   * Whether the section starts in an open state
-   * @default false
-   */
-  defaultOpen?: boolean;
-
-  /**
    * Optional className for the root container
    */
-  className?: string;
-
-  /**
-   * Optional className for the trigger button
-   */
-  triggerClassName?: string;
+  className?: string | undefined;
 
   /**
    * Optional className for the content area
    */
-  contentClassName?: string;
+  contentClassName?: string | undefined;
+
+  /**
+   * Whether the section starts in an open state
+   * @default false
+   */
+  defaultOpen?: boolean | undefined;
 
   /**
    * Optional callback fired when the section is expanded or collapsed
    */
-  onOpenChange?: (open: boolean) => void;
-}
+  onOpenChange?: ((open: boolean) => void) | undefined;
 
-export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
-  title,
-  rightContent,
+  /**
+   * The content to display on the right side of the title
+   */
+  rightContent?: React.ReactNode | undefined;
+
+  /**
+   * The title text displayed in the trigger button
+   */
+  title: string;
+
+  /**
+   * Optional className for the trigger button
+   */
+  triggerClassName?: string | undefined;
+};
+
+export const CollapsibleSection: React.FC<
+  ReadonlyProps<CollapsibleSectionProps>
+> = ({
   children,
-  defaultOpen = false,
   className = "",
-  triggerClassName = "",
   contentClassName = "",
+  defaultOpen = false,
   onOpenChange,
+  rightContent,
+  title,
+  triggerClassName = "",
 }) => {
   const [open, setOpen] = React.useState(defaultOpen);
 
   const handleOpenChange = React.useCallback(
-    (open: boolean): void => {
-      setOpen(open);
-      onOpenChange?.(open);
+    (nextOpen: boolean): void => {
+      setOpen(nextOpen);
+      onOpenChange?.(nextOpen);
     },
     [onOpenChange],
   );
@@ -78,25 +82,27 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
 
   return (
     <Collapsible.Root
-      open={open}
-      onOpenChange={handleOpenChange}
       className={cn("rounded-lg", className)}
+      onOpenChange={handleOpenChange}
+      open={open}
     >
-      <Collapsible.Trigger asChild>
-        <div
-          tabIndex={0}
-          role="button"
-          className={cn(
-            "text-agentprism-muted-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
-            triggerClassName,
-          )}
-          onKeyDown={handleKeyDown}
-          aria-expanded={open}
-          aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
-        >
-          <div className="text-agentprism-muted-foreground flex min-w-0 flex-1 items-center gap-2">
+      <div
+        className={cn(
+          "text-agentprism-muted-foreground mb-2.5 flex w-full items-center justify-between gap-2 rounded-lg px-1 text-left text-sm font-medium",
+          triggerClassName,
+        )}
+      >
+        <Collapsible.Trigger asChild>
+          <div
+            aria-expanded={open}
+            aria-label={`${open ? "Collapse" : "Expand"} content of "${title}" section`}
+            className="text-agentprism-muted-foreground flex min-w-0 flex-1 items-center gap-2"
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+          >
             <ChevronDown
-              className={cn("h-3 w-3 shrink-0 -rotate-90", open && "rotate-0")}
+              className={cn("size-3 shrink-0 -rotate-90", open && "rotate-0")}
             />
             <span
               className="min-w-0 truncate text-sm font-medium"
@@ -105,17 +111,13 @@ export const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
               {title}
             </span>
           </div>
+        </Collapsible.Trigger>
 
-          <div className="shrink-0">{rightContent}</div>
-        </div>
-      </Collapsible.Trigger>
+        <div className="shrink-0">{rightContent}</div>
+      </div>
 
       <Collapsible.Content
-        className={cn(
-          "data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown",
-          "text-agentprism-muted-foreground",
-          contentClassName,
-        )}
+        className={cn("text-agentprism-muted-foreground", contentClassName)}
       >
         {children}
       </Collapsible.Content>

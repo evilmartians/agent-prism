@@ -1,43 +1,43 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { getDurationMs } from "../../common/get-duration-ms";
-import { openTelemetrySpanAdapter } from "../adapter";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { getDurationMs } from "../../common/get-duration-ms.js";
+import { openTelemetrySpanAdapter } from "../adapter.js";
+import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span.js";
 
 describe("openTelemetrySpanAdapter — span duration", () => {
   describe("basic duration calculations", () => {
     it("should convert seconds to milliseconds", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [2, 0] }); // 2 seconds, 0 nanoseconds
+      const span = createMockOpenTelemetrySpan({ duration: [2, 0] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
       );
 
-      expect(result).toBe(2000); // 2000 milliseconds
+      expect(result).toBe(2000);
     });
 
     it("should convert nanoseconds to milliseconds", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [0, 500_000_000] }); // 0 seconds, 500 million nanoseconds (0.5 seconds)
+      const span = createMockOpenTelemetrySpan({ duration: [0, 500_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
       );
 
-      expect(result).toBe(500); // 500 milliseconds
+      expect(result).toBe(500);
     });
 
     it("should combine seconds and nanoseconds", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [2, 500_000_000] }); // 2.5 seconds total
+      const span = createMockOpenTelemetrySpan({ duration: [2, 500_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
       );
 
-      expect(result).toBe(2500); // 2500 milliseconds
+      expect(result).toBe(2500);
     });
 
     it("should handle zero duration", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [0, 0] }); // No duration
+      const span = createMockOpenTelemetrySpan({ duration: [0, 0] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -49,27 +49,27 @@ describe("openTelemetrySpanAdapter — span duration", () => {
 
   describe("large duration values", () => {
     it("should handle minutes", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [60, 0] }); // 1 minute
+      const span = createMockOpenTelemetrySpan({ duration: [60, 0] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
       );
 
-      expect(result).toBe(60_000); // 60,000 milliseconds
+      expect(result).toBe(60_000);
     });
 
     it("should handle hours", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [3600, 0] }); // 1 hour
+      const span = createMockOpenTelemetrySpan({ duration: [3600, 0] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
       );
 
-      expect(result).toBe(3_600_000); // 3.6 million milliseconds
+      expect(result).toBe(3_600_000);
     });
 
     it("should handle very large durations", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [86400, 0] }); // 24 hours (1 day)
+      const span = createMockOpenTelemetrySpan({ duration: [86400, 0] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -81,19 +81,19 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     it("should handle mixed large values", () => {
       const span = createMockOpenTelemetrySpan({
         duration: [3661, 500_000_000],
-      }); // 1 hour, 1 minute, 1.5 seconds
+      });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
       );
 
-      expect(result).toBe(3_661_500); // Total in milliseconds
+      expect(result).toBe(3_661_500);
     });
   });
 
   describe("real-world LLM scenarios", () => {
     it("should handle typical OpenAI API call duration", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [2, 150_000_000] }); // 2.15 seconds
+      const span = createMockOpenTelemetrySpan({ duration: [2, 150_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -103,7 +103,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle fast local model inference", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [0, 50_000_000] }); // 50 milliseconds
+      const span = createMockOpenTelemetrySpan({ duration: [0, 50_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -113,7 +113,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle slow complex reasoning", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [15, 750_000_000] }); // 15.75 seconds
+      const span = createMockOpenTelemetrySpan({ duration: [15, 750_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -123,7 +123,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle vector database query", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [0, 125_000_000] }); // 125 milliseconds
+      const span = createMockOpenTelemetrySpan({ duration: [0, 125_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -133,7 +133,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle agent workflow with multiple steps", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [8, 250_000_000] }); // 8.25 seconds
+      const span = createMockOpenTelemetrySpan({ duration: [8, 250_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -143,7 +143,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle very fast tool calls", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [0, 1_000_000] }); // 1 millisecond
+      const span = createMockOpenTelemetrySpan({ duration: [0, 1_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -153,7 +153,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle timeout scenarios", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [30, 0] }); // 30 second timeout
+      const span = createMockOpenTelemetrySpan({ duration: [30, 0] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -163,7 +163,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle streaming response duration", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [12, 500_000_000] }); // 12.5 seconds streaming
+      const span = createMockOpenTelemetrySpan({ duration: [12, 500_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -175,7 +175,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
 
   describe("batch processing scenarios", () => {
     it("should handle batch LLM processing", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [45, 250_000_000] }); // 45.25 seconds for batch
+      const span = createMockOpenTelemetrySpan({ duration: [45, 250_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -185,7 +185,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle parallel processing completion", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [3, 800_000_000] }); // 3.8 seconds parallel execution
+      const span = createMockOpenTelemetrySpan({ duration: [3, 800_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -195,7 +195,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
     });
 
     it("should handle retry with backoff total duration", () => {
-      const span = createMockOpenTelemetrySpan({ duration: [7, 125_000_000] }); // 7.125 seconds with retries
+      const span = createMockOpenTelemetrySpan({ duration: [7, 125_000_000] });
 
       const result = getDurationMs(
         openTelemetrySpanAdapter.convertRawSpanToTraceSpan(span),
@@ -228,10 +228,9 @@ describe("openTelemetrySpanAdapter — span duration", () => {
       expect(result).toBe(1000);
     });
 
-    it("should handle the conversion formula correctly", () => {
-      // Test the formula: seconds * 1000 + nanoseconds / 1_000_000
+    it("should add seconds * 1000 and nanoseconds / 1_000_000", () => {
       const seconds = 5;
-      const nanoseconds = 250_000_000; // 250 million nanoseconds = 250 milliseconds
+      const nanoseconds = 250_000_000;
       const span = createMockOpenTelemetrySpan({
         duration: [seconds, nanoseconds],
       });
@@ -242,7 +241,7 @@ describe("openTelemetrySpanAdapter — span duration", () => {
       const expected = seconds * 1000 + nanoseconds / 1_000_000;
 
       expect(result).toBe(expected);
-      expect(result).toBe(5250); // 5000 + 250
+      expect(result).toBe(5250);
     });
   });
 });

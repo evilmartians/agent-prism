@@ -2,7 +2,8 @@ import type { ComponentPropsWithRef, ReactElement, ReactNode } from "react";
 
 import cn from "classnames";
 
-import type { ComponentSize } from "./shared";
+import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 type BadgeSize = Extract<ComponentSize, "4" | "5" | "6" | "7">;
 
@@ -22,6 +23,21 @@ const textSizes: Record<BadgeSize, string> = {
 
 export type BadgeProps = ComponentPropsWithRef<"span"> & {
   /**
+   * Optional className for additional styling
+   */
+  className?: string | undefined;
+
+  /**
+   * Optional icon to display at the end of the badge
+   */
+  iconEnd?: ReactElement | undefined;
+
+  /**
+   * Optional icon to display at the start of the badge
+   */
+  iconStart?: ReactElement | undefined;
+
+  /**
    * The content of the badge
    */
   label: ReactNode;
@@ -30,42 +46,27 @@ export type BadgeProps = ComponentPropsWithRef<"span"> & {
    * The size of the badge
    * @default "md"
    */
-  size?: BadgeSize;
-
-  /**
-   * Optional icon to display at the start of the badge
-   */
-  iconStart?: ReactElement;
-
-  /**
-   * Optional icon to display at the end of the badge
-   */
-  iconEnd?: ReactElement;
-
-  /**
-   * Optional className for additional styling
-   */
-  className?: string;
+  size?: BadgeSize | undefined;
 
   /**
    * Whether to render the badge without any default styles
    * @default false
    */
-  unstyled?: boolean;
+  unstyled?: boolean | undefined;
 };
 
 /**
  * An unstyled badge component that displays a label with an optional icon
  */
 export const Badge = ({
+  className = "",
+  iconEnd,
+  iconStart,
   label,
   size = "4",
-  iconStart,
-  iconEnd,
-  className = "",
   unstyled = false,
   ...rest
-}: BadgeProps): ReactElement => {
+}: ReadonlyProps<BadgeProps>): ReactElement => {
   return (
     <span
       className={cn(
@@ -78,18 +79,18 @@ export const Badge = ({
       )}
       {...rest}
     >
-      {iconStart && <span className="shrink-0">{iconStart}</span>}
+      {iconStart ? <span className="shrink-0">{iconStart}</span> : null}
 
       <span
         className={cn(
           textSizes[size],
-          "min-w-0 max-w-full flex-shrink-0 truncate font-medium tracking-normal",
+          "min-w-0 max-w-full shrink-0 truncate font-medium tracking-normal",
         )}
       >
         {label}
       </span>
 
-      {iconEnd && <span className="shrink-0">{iconEnd}</span>}
+      {iconEnd ? <span className="shrink-0">{iconEnd}</span> : null}
     </span>
   );
 };

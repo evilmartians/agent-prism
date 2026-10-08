@@ -5,18 +5,22 @@ import {
   ErrorStatusCircleSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/ErrorStatusCircle",
+  argTypes: {
+    className: {
+      control: "text",
+      description: "Optional className to override the default size or color",
+    },
+  },
   component: ErrorStatusCircle,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -28,30 +32,36 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    className: {
-      control: "text",
-      description: "Optional className to override the default size or color",
-    },
-  },
+  title: "Atoms/ErrorStatusCircle",
 } satisfies Meta<typeof ErrorStatusCircle>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * The default error glyph — a small error-accented dot placed next to failed
- * spans.
- */
-export const Default: Story = {};
+export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The default error glyph — a small error-accented dot placed next to failed spans.",
+      },
+    },
+  },
+};
 
-/**
- * The same glyph scaled up via `className`, e.g. for a standalone status marker.
- */
 export const Enlarged: Story = {
   args: {
     className: "size-3",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The same glyph scaled up via `className`, e.g. for a standalone status marker.",
+      },
+    },
   },
 };

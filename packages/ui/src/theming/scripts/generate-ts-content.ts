@@ -1,37 +1,26 @@
 import { AGENT_PRISM_PREFIX, agentPrismTheme } from "../theme";
 
-const tokenNames = agentPrismTheme.tokenGroups.flatMap((group) =>
-  group.tokens.map((token) => `"${token.name}"`),
+const names = agentPrismTheme.tokenGroups.flatMap((group) =>
+  group.tokens.map((token) => token.name),
 );
 
 export function generateTsContent(): string {
-  const lines: string[] = [];
-
-  lines.push("");
-  for (const tokenName of tokenNames) {
-    lines.push(`  "${tokenName}",`);
-  }
-  lines.push("] as const;");
-
   return `
     export const agentPrismPrefix = "${AGENT_PRISM_PREFIX}";
 
     export const AGENT_PRISM_TOKENS = [
-        ${tokenNames.join(",\n")}
+        ${names.map((name) => `"${name}"`).join(",\n")}
     ] as const ;
 
     export type AgentPrismToken = typeof AGENT_PRISM_TOKENS[number];
 
-    export type AgentPrismColors = Record<AgentPrismToken, string>;
-    
-    export const agentPrismTailwindColors = Object.fromEntries(
-      AGENT_PRISM_TOKENS.map((tokenName) => [
-        \`${AGENT_PRISM_PREFIX}-\${tokenName}\`,
-        token(tokenName),
-      ]),
-    ) as AgentPrismColors;
+    export type AgentPrismColors = Record<\`\${typeof agentPrismPrefix}-\${AgentPrismToken}\`, string>;
 
-    function token(name: string) {
+    export const agentPrismTailwindColors: AgentPrismColors = {
+        ${names.map((name) => `"${AGENT_PRISM_PREFIX}-${name}": token("${name}")`).join(",\n")}
+    };
+
+    function token(name: AgentPrismToken) {
       return \`oklch(var(--\${agentPrismPrefix}-\${name}) / <alpha-value>)\`;
     }
   `;

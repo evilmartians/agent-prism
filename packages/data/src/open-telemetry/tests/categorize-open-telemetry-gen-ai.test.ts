@@ -1,165 +1,52 @@
+import type { TraceSpanCategory } from "@evilmartians/agent-prism-types";
+
 import { OPENTELEMETRY_GENAI_ATTRIBUTES } from "@evilmartians/agent-prism-types";
 import { describe, expect, it } from "vitest";
 
-import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai";
-import { createMockOpenTelemetrySpan } from "../utils/create-mock-open-telemetry-span";
+import { categorizeOpenTelemetryGenAI } from "../utils/categorize-open-telemetry-gen-ai.js";
+import {
+  createMockOpenTelemetrySpan,
+  type MockAttributeValue,
+} from "../utils/create-mock-open-telemetry-span.js";
 
 describe("categorizeOpenTelemetryGenAI", () => {
-  describe("OpenTelemetry GenAI operation name mappings", () => {
-    it("should return 'llm_call' for chat operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat" },
-        name: "chat.completions.create",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
+  it.each<[MockAttributeValue, TraceSpanCategory]>([
+    ["chat", "llm_call"],
+    ["generate_content", "llm_call"],
+    ["text_completion", "llm_call"],
+    ["execute_tool", "tool_execution"],
+    ["invoke_agent", "agent_invocation"],
+    ["create_agent", "create_agent"],
+    ["embeddings", "embedding"],
+    [123, "unknown"],
+    [true, "unknown"],
+    ["custom_operation", "unknown"],
+    ["", "unknown"],
+    [null, "unknown"],
+    ["CHAT", "unknown"],
+    ["Chat", "unknown"],
+  ])("maps operation name %j to %s", (operationName, category) => {
+    const span = createMockOpenTelemetrySpan({
+      attributes: {
+        [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: operationName,
+      },
     });
-
-    it("should return 'llm_call' for generate_content operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "generate_content",
-        },
-        name: "generate.content",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
-    });
-
-    it("should return 'llm_call' for text_completion operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "text_completion",
-        },
-        name: "text.completion",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
-    });
-
-    it("should return 'tool_execution' for execute_tool operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "execute_tool",
-        },
-        name: "execute.tool",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("tool_execution");
-    });
-
-    it("should return 'agent_invocation' for invoke_agent operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
-        },
-        name: "invoke.agent",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("agent_invocation");
-    });
-
-    it("should return 'create_agent' for create_agent operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "create_agent",
-        },
-        name: "create.agent",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("create_agent");
-    });
-
-    it("should return 'embedding' for embeddings operation", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "embeddings",
-        },
-        name: "embeddings.create",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("embedding");
-    });
+    expect(categorizeOpenTelemetryGenAI(span)).toBe(category);
   });
 
-  describe("edge cases", () => {
-    it("should return 'unknown' when operation name is not a string", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: 123 },
-        name: "numeric operation name",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' when operation name is a boolean", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: true },
-        name: "boolean operation name",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' when operation name attribute is missing", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {},
-        name: "missing operation name",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' for unrecognized operation name values", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "custom_operation",
-        },
-        name: "custom operation",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' for empty string operation name", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "" },
-        name: "empty operation name",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-
-    it("should return 'unknown' for null operation name", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: null },
-        name: "null operation name",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-  });
-
-  describe("case sensitivity", () => {
-    it("should handle exact case matches", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat" },
-        name: "lowercase chat",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("llm_call");
-    });
-
-    it("should not match uppercase operation names (case sensitive)", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "CHAT" },
-        name: "uppercase chat",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
-
-    it("should not match mixed case operation names", () => {
-      const span = createMockOpenTelemetrySpan({
-        attributes: { [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "Chat" },
-        name: "mixed case chat",
-      });
-      expect(categorizeOpenTelemetryGenAI(span)).toBe("unknown");
-    });
+  it("should return 'unknown' when operation name attribute is missing", () => {
+    expect(categorizeOpenTelemetryGenAI(createMockOpenTelemetrySpan())).toBe(
+      "unknown",
+    );
   });
 
   describe("real-world OpenTelemetry GenAI scenarios", () => {
     it("should categorize OpenAI chat completion spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
         },
         name: "openai.chat.completions.create",
       });
@@ -169,9 +56,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize Anthropic text generation spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "claude-3-sonnet",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "generate_content",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "anthropic",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "claude-3-sonnet",
         },
         name: "anthropic.messages.create",
       });
@@ -192,8 +79,8 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize agent invocation spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "customer-support-agent",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "invoke_agent",
         },
         name: "agent.invoke",
       });
@@ -203,8 +90,8 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize agent creation spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "create_agent",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "new-agent",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "create_agent",
         },
         name: "agent.create",
       });
@@ -214,9 +101,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize embedding spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "text-embedding-ada-002",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "embeddings",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "text-embedding-ada-002",
         },
         name: "embeddings.create",
       });
@@ -226,9 +113,9 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should categorize legacy text completion spans", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-3.5-turbo-instruct",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "text_completion",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-3.5-turbo-instruct",
         },
         name: "completions.create",
       });
@@ -240,12 +127,12 @@ describe("categorizeOpenTelemetryGenAI", () => {
     it("should prioritize operation name over other attributes", () => {
       const span = createMockOpenTelemetrySpan({
         attributes: {
+          "another.attribute": 123,
+          "custom.attribute": "some_value",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "some-agent",
+          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.OPERATION_NAME]: "chat",
           [OPENTELEMETRY_GENAI_ATTRIBUTES.SYSTEM]: "openai",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.MODEL]: "gpt-4",
-          [OPENTELEMETRY_GENAI_ATTRIBUTES.AGENT_NAME]: "some-agent",
-          "custom.attribute": "some_value",
-          "another.attribute": 123,
         },
         name: "complex span",
       });
@@ -265,7 +152,6 @@ describe("categorizeOpenTelemetryGenAI", () => {
 
   describe("spans from real trace examples", () => {
     it("should categorize spans from the provided trace examples", () => {
-      // Based on the real trace data you showed earlier
       const llmSpan = createMockOpenTelemetrySpan({
         attributes: {
           "gen_ai.operation.name": "chat",

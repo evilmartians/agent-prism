@@ -1,152 +1,43 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
-
 import { describe, expect, it } from "vitest";
 
-import { flattenSpans } from "./flatten-spans";
+import { flattenSpans } from "./flatten-spans.js";
+import { createTestSpan } from "./test-utils/create-test-span.js";
 
 describe("flattenSpans", () => {
   it("should return an empty array when input is an empty array", () => {
-    const input: TraceSpan[] = [];
-    const result = flattenSpans(input);
-    expect(result).toEqual([]);
+    expect(flattenSpans([])).toStrictEqual([]);
   });
 
   it("should return the same array if there are no children", () => {
-    const input: TraceSpan[] = [
-      {
-        id: "1",
-        title: "Span 1",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "guardrail",
-        raw: ["raw-data"],
-        status: "success",
-      },
-    ];
-    const result = flattenSpans(input);
-    expect(result).toEqual(input);
+    const input = [createTestSpan({ id: "1" })];
+    expect(flattenSpans(input)).toStrictEqual(input);
   });
 
   it("should flatten spans with one level of children", () => {
-    const childSpan: TraceSpan = {
-      id: "2",
-      title: "Child Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "chain_operation",
-      raw: ["raw-data"],
-      status: "success",
-    };
-    const input: TraceSpan[] = [
-      {
-        id: "1",
-        title: "Parent Span",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "create_agent",
-        raw: ["raw-data"],
-        status: "success",
-        children: [childSpan],
-      },
-    ];
-    const result = flattenSpans(input);
-    expect(result).toEqual([input[0], childSpan]);
+    const child = createTestSpan({ id: "2" });
+    const parent = createTestSpan({ children: [child], id: "1" });
+    expect(flattenSpans([parent])).toStrictEqual([parent, child]);
   });
 
   it("should flatten spans with multiple levels of children", () => {
-    const grandChildSpan: TraceSpan = {
-      id: "3",
-      title: "Grandchild Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "chain_operation",
-      raw: ["raw-data"],
-      status: "success",
-    };
-    const childSpan: TraceSpan = {
-      id: "2",
-      title: "Child Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "llm_call",
-      raw: ["raw-data"],
-      status: "success",
-      children: [grandChildSpan],
-    };
-    const input: TraceSpan[] = [
-      {
-        id: "1",
-        title: "Parent Span",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "chain_operation",
-        raw: ["raw-data"],
-        status: "success",
-        children: [childSpan],
-      },
-    ];
-    const result = flattenSpans(input);
-    expect(result).toEqual([input[0], childSpan, grandChildSpan]);
+    const grandchild = createTestSpan({ id: "3" });
+    const child = createTestSpan({ children: [grandchild], id: "2" });
+    const parent = createTestSpan({ children: [child], id: "1" });
+    expect(flattenSpans([parent])).toStrictEqual([parent, child, grandchild]);
   });
 
   it("should handle spans where some children arrays are empty or undefined", () => {
-    const input: TraceSpan[] = [
-      {
-        id: "1",
-        title: "Span 1",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "create_agent",
-        raw: ["raw-data"],
-        status: "success",
-        children: [],
-      },
-      {
-        id: "2",
-        title: "Span 2",
-        startTime: new Date(),
-        endTime: new Date(),
-        type: "create_agent",
-        raw: ["raw-data"],
-        status: "success",
-        children: undefined,
-      },
+    const input = [
+      createTestSpan({ children: [], id: "1" }),
+      createTestSpan({ children: undefined, id: "2" }),
     ];
-    const result = flattenSpans(input);
-    expect(result).toEqual(input);
+    expect(flattenSpans(input)).toStrictEqual(input);
   });
 
   it("should handle nested spans with mixed empty and non-empty children", () => {
-    const grandChildSpan: TraceSpan = {
-      id: "3",
-      title: "Grandchild Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "guardrail",
-      raw: ["raw-data"],
-      status: "success",
-    };
-    const childSpan: TraceSpan = {
-      id: "2",
-      title: "Child Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "create_agent",
-      raw: ["raw-data"],
-      status: "success",
-      children: [],
-    };
-    const parentSpan: TraceSpan = {
-      id: "1",
-      title: "Parent Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "retrieval",
-      raw: ["raw-data"],
-      status: "success",
-      children: [childSpan, grandChildSpan],
-    };
-    const result = flattenSpans([parentSpan]);
-    expect(result).toEqual([parentSpan, childSpan, grandChildSpan]);
+    const grandchild = createTestSpan({ id: "3" });
+    const child = createTestSpan({ children: [], id: "2" });
+    const parent = createTestSpan({ children: [child, grandchild], id: "1" });
+    expect(flattenSpans([parent])).toStrictEqual([parent, child, grandchild]);
   });
 });

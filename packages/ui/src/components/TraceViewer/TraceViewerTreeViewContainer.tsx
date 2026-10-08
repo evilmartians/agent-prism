@@ -1,59 +1,66 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { ReactElement } from "react";
 
-import type { SpanCardViewOptions } from "../SpanCard/SpanCard";
+import type { ReadonlyProps } from "../ReadonlyProps";
 
 import { Badge } from "../Badge";
 import { TraceListItemHeader } from "../TraceList/TraceListItemHeader";
 import { TreeView } from "../TreeView";
-import { type TraceRecordWithDisplayData } from "./TraceViewer";
+import {
+  type TraceRecordWithDisplayData,
+  type TraceViewerLayoutProps,
+} from "./TraceViewer";
 import { TraceViewerSearchAndControls } from "./TraceViewerSearchAndControls";
 
 export const TraceViewerTreeViewContainer = ({
-  searchValue,
-  setSearchValue,
-  handleExpandAll,
-  handleCollapseAll,
-  filteredSpans,
-  selectedSpan,
-  setSelectedSpan,
   expandedSpansIds,
-  setExpandedSpansIds,
-  spanCardViewOptions,
+  filteredSpans,
+  handleCollapseAll,
+  handleExpandAll,
+  searchValue,
+  selectedSpan,
   selectedTrace,
+  setExpandedSpansIds,
+  setSearchValue,
+  setSelectedSpan,
   showHeader = true,
-}: {
-  searchValue: string;
-  setSearchValue: (value: string) => void;
-  handleExpandAll: () => void;
-  handleCollapseAll: () => void;
-  filteredSpans: TraceSpan[];
-  selectedSpan: TraceSpan | undefined;
-  setSelectedSpan: (span: TraceSpan | undefined) => void;
-  expandedSpansIds: string[];
-  setExpandedSpansIds: (ids: string[]) => void;
-  spanCardViewOptions?: SpanCardViewOptions;
-  selectedTrace?: TraceRecordWithDisplayData;
-  showHeader?: boolean;
-}) => (
+  spanCardViewOptions,
+}: ReadonlyProps<
+  Pick<
+    TraceViewerLayoutProps,
+    | "expandedSpansIds"
+    | "filteredSpans"
+    | "handleCollapseAll"
+    | "handleExpandAll"
+    | "searchValue"
+    | "selectedSpan"
+    | "setExpandedSpansIds"
+    | "setSearchValue"
+    | "setSelectedSpan"
+    | "spanCardViewOptions"
+  > & {
+    selectedTrace?: TraceRecordWithDisplayData | undefined;
+    showHeader?: boolean | undefined;
+  }
+>): ReactElement => (
   <>
-    {showHeader && selectedTrace && (
+    {showHeader && selectedTrace ? (
       <div className="flex shrink-0 gap-2 px-4">
         <TraceListItemHeader trace={selectedTrace} />
 
         <div className="flex flex-wrap items-center gap-2">
           {selectedTrace.badges?.map((badge, index) => (
-            <Badge key={index} size="4" label={badge.label} />
+            <Badge key={index} label={badge.label} size="4" />
           ))}
         </div>
       </div>
-    )}
+    ) : null}
 
     <div className="bg-agentprism-background flex min-h-0 flex-1 flex-col overflow-hidden rounded-md">
       <TraceViewerSearchAndControls
+        handleCollapseAll={handleCollapseAll}
+        handleExpandAll={handleExpandAll}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
-        handleExpandAll={handleExpandAll}
-        handleCollapseAll={handleCollapseAll}
       />
       <div className="min-h-0 flex-1 overflow-y-auto">
         {filteredSpans.length === 0 ? (
@@ -62,12 +69,12 @@ export const TraceViewerTreeViewContainer = ({
           </div>
         ) : (
           <TreeView
-            spans={filteredSpans}
-            onSpanSelect={setSelectedSpan}
-            selectedSpan={selectedSpan}
             expandedSpansIds={expandedSpansIds}
             onExpandSpansIdsChange={setExpandedSpansIds}
+            onSpanSelect={setSelectedSpan}
+            selectedSpan={selectedSpan}
             spanCardViewOptions={spanCardViewOptions}
+            spans={filteredSpans}
           />
         )}
       </div>

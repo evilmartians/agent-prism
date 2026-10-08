@@ -1,63 +1,62 @@
+import type { ReactElement } from "react";
+
 import { Check, Copy, X } from "lucide-react";
 import { useState } from "react";
+
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 import { IconButton } from "./IconButton";
 
 type CopyButtonProps = {
-  label: string;
   content: string;
+  label: string;
 };
 
-type CopyState = "idle" | "success" | "error";
+type CopyState = "error" | "idle" | "success";
 
-export const CopyButton = ({ label, content }: CopyButtonProps) => {
+const ICONS: Record<CopyState, ReactElement> = {
+  error: <X className="size-3" />,
+  idle: <Copy className="size-3" />,
+  success: <Check className="size-3" />,
+};
+
+export const CopyButton = ({
+  content,
+  label,
+}: ReadonlyProps<CopyButtonProps>): ReactElement => {
   const [copyState, setCopyState] = useState<CopyState>("idle");
 
-  const onClick = async () => {
+  const copy = async () => {
     try {
-      if (!navigator.clipboard) {
-        throw new Error("Clipboard API not supported");
-      }
-
       await navigator.clipboard.writeText(content);
       setCopyState("success");
-      setTimeout(() => setCopyState("idle"), 2000);
+      setTimeout(() => {
+        setCopyState("idle");
+      }, 2000);
     } catch {
       setCopyState("error");
-      setTimeout(() => setCopyState("idle"), 2000);
+      setTimeout(() => {
+        setCopyState("idle");
+      }, 2000);
     }
   };
 
-  const getIcon = () => {
-    switch (copyState) {
-      case "success":
-        return <Check className="size-3" />;
-      case "error":
-        return <X className="size-3" />;
-      default:
-        return <Copy className="size-3" />;
-    }
-  };
-
-  const getAriaLabel = () => {
-    switch (copyState) {
-      case "success":
-        return `${label} Copied`;
-      case "error":
-        return `Failed to copy ${label}`;
-      default:
-        return `Copy ${label}`;
-    }
+  const ariaLabels: Record<CopyState, string> = {
+    error: `Failed to copy ${label}`,
+    idle: `Copy ${label}`,
+    success: `${label} Copied`,
   };
 
   return (
     <IconButton
-      onClick={onClick}
-      aria-label={getAriaLabel()}
-      variant="ghost"
+      aria-label={ariaLabels[copyState]}
       disabled={copyState !== "idle"}
+      onClick={() => {
+        void copy();
+      }}
+      variant="ghost"
     >
-      {getIcon()}
+      {ICONS[copyState]}
     </IconButton>
   );
 };

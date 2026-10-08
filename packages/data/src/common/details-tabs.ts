@@ -1,17 +1,13 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
+import type { DeepReadonly, TraceSpan } from "@evilmartians/agent-prism-types";
 
 /**
  * Tab-decision helpers for DetailsView, extracted so they can be unit-tested.
  * Narrowed to the fields they read; DetailsView passes a full TraceSpan. Each is
  * a presence guard, so a span without that content shows no tab for it.
  */
-type SpanTabData = Pick<TraceSpan, "attributes" | "reasoning" | "todos">;
-
-export function hasThinkingContent(
-  data: Pick<SpanTabData, "reasoning">,
-): boolean {
-  return data.reasoning !== undefined;
-}
+type SpanTabData = DeepReadonly<
+  Pick<TraceSpan, "attributes" | "reasoning" | "todos">
+>;
 
 /**
  * Context tab presence. Kept claude_code-only on purpose: an upstream guard also
@@ -29,6 +25,12 @@ export function hasContextContent(
         attr.key === "claude_code.context_fill_percent",
     ) ?? false
   );
+}
+
+export function hasThinkingContent(
+  data: Pick<SpanTabData, "reasoning">,
+): boolean {
+  return data.reasoning !== undefined;
 }
 
 export function hasTodos(data: Pick<SpanTabData, "todos">): boolean {

@@ -1,298 +1,367 @@
-import cn from "classnames";
+import type { ReactElement } from "react";
 
-import { agentPrismTheme } from "./theme";
-import { AGENT_PRISM_PREFIX } from "./theme";
+import { ThemePaletteGroup } from "./ThemePaletteGroup";
+import { ThemePaletteRow } from "./ThemePaletteRow";
+import { ThemePaletteToken } from "./ThemePaletteToken";
 
-const tokensFlat = agentPrismTheme.tokenGroups.flatMap((group) => group.tokens);
-
-export function ThemePalette() {
+export function ThemePalette(): ReactElement {
   return (
     <div className="flex flex-col gap-12">
-      <Group title="Brand colors">
-        <Row>
-          <Token name="brand" bg="bg-agentprism-brand" />
-          <Token name="brand-foreground" bg="bg-agentprism-brand-foreground" />
-          <Token name="brand-secondary" bg="bg-agentprism-brand-secondary" />
-          <Token
-            name="brand-secondary-foreground"
+      <ThemePaletteGroup title="Brand colors">
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-brand" name="brand" />
+          <ThemePaletteToken
+            bg="bg-agentprism-brand-foreground"
+            name="brand-foreground"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-brand-secondary"
+            name="brand-secondary"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-brand-secondary-foreground"
+            name="brand-secondary-foreground"
           />
-        </Row>
-      </Group>
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
 
-      <Group title="General purpose colors">
-        <Row>
-          <Token name="background" bg="bg-agentprism-background" />
-          <Token name="foreground" bg="bg-agentprism-foreground" />
-        </Row>
+      <ThemePaletteGroup title="General purpose colors">
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-background" name="background" />
+          <ThemePaletteToken bg="bg-agentprism-foreground" name="foreground" />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="primary" bg="bg-agentprism-primary" />
-          <Token
-            name="primary-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-primary" name="primary" />
+          <ThemePaletteToken
             bg="bg-agentprism-primary-foreground"
+            name="primary-foreground"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="secondary" bg="bg-agentprism-secondary" />
-          <Token
-            name="secondary-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-secondary" name="secondary" />
+          <ThemePaletteToken
             bg="bg-agentprism-secondary-foreground"
+            name="secondary-foreground"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="muted" bg="bg-agentprism-muted" />
-          <Token name="muted-foreground" bg="bg-agentprism-muted-foreground" />
-        </Row>
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-muted" name="muted" />
+          <ThemePaletteToken
+            bg="bg-agentprism-muted-foreground"
+            name="muted-foreground"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="accent" bg="bg-agentprism-accent" />
-          <Token
-            name="accent-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-accent" name="accent" />
+          <ThemePaletteToken
             bg="bg-agentprism-accent-foreground"
+            name="accent-foreground"
           />
-        </Row>
-      </Group>
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
 
-      <Group title="Borders">
-        <Row>
-          <Token name="border" bg="bg-agentprism-border" />
-          <Token name="border-subtle" bg="bg-agentprism-border-subtle" />
-          <Token name="border-strong" bg="bg-agentprism-border-strong" />
-          <Token name="border-inverse" bg="bg-agentprism-border-inverse" />
-        </Row>
-      </Group>
+      <ThemePaletteGroup title="Borders">
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-border" name="border" />
+          <ThemePaletteToken
+            bg="bg-agentprism-border-subtle"
+            name="border-subtle"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-border-strong"
+            name="border-strong"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-border-inverse"
+            name="border-inverse"
+          />
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
 
-      <Group title="Status colors">
-        <Row>
-          <Token name="success" bg="bg-agentprism-success" />
-          <Token name="success-muted" bg="bg-agentprism-success-muted" />
-          <Token
-            name="success-muted-foreground"
+      <ThemePaletteGroup title="Status colors">
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-success" name="success" />
+          <ThemePaletteToken
+            bg="bg-agentprism-success-muted"
+            name="success-muted"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-success-muted-foreground"
+            name="success-muted-foreground"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="error" bg="bg-agentprism-error" />
-          <Token name="error-muted" bg="bg-agentprism-error-muted" />
-          <Token
-            name="error-muted-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-error" name="error" />
+          <ThemePaletteToken
+            bg="bg-agentprism-error-muted"
+            name="error-muted"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-error-muted-foreground"
+            name="error-muted-foreground"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="warning" bg="bg-agentprism-warning" />
-          <Token name="warning-muted" bg="bg-agentprism-warning-muted" />
-          <Token
-            name="warning-muted-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-warning" name="warning" />
+          <ThemePaletteToken
+            bg="bg-agentprism-warning-muted"
+            name="warning-muted"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-warning-muted-foreground"
+            name="warning-muted-foreground"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="pending" bg="bg-agentprism-pending" />
-          <Token name="pending-muted" bg="bg-agentprism-pending-muted" />
-          <Token
-            name="pending-muted-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-pending" name="pending" />
+          <ThemePaletteToken
+            bg="bg-agentprism-pending-muted"
+            name="pending-muted"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-pending-muted-foreground"
+            name="pending-muted-foreground"
           />
-        </Row>
-      </Group>
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
 
-      <Group title="Code syntax highlighting">
-        <Row>
-          <Token name="code-string" bg="bg-agentprism-code-string" />
-          <Token name="code-number" bg="bg-agentprism-code-number" />
-          <Token name="code-boolean" bg="bg-agentprism-code-boolean" />
-          <Token name="code-key" bg="bg-agentprism-code-key" />
-          <Token name="code-base" bg="bg-agentprism-code-base" />
-        </Row>
-      </Group>
+      <ThemePaletteGroup title="Code syntax highlighting">
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-code-string"
+            name="code-string"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-code-number"
+            name="code-number"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-code-boolean"
+            name="code-boolean"
+          />
+          <ThemePaletteToken bg="bg-agentprism-code-key" name="code-key" />
+          <ThemePaletteToken bg="bg-agentprism-code-base" name="code-base" />
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
 
-      <Group title="Generic badge colors">
-        <Row>
-          <Token name="badge-default" bg="bg-agentprism-badge-default" />
-          <Token
-            name="badge-default-foreground"
+      <ThemePaletteGroup title="Generic badge colors">
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-default"
+            name="badge-default"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-default-foreground"
+            name="badge-default-foreground"
           />
-        </Row>
-      </Group>
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
 
-      <Group title="Trace colors">
-        <Row>
-          <Token name="avatar-llm" bg="bg-agentprism-avatar-llm" />
-          <Token name="badge-llm" bg="bg-agentprism-badge-llm" />
-          <Token
-            name="badge-llm-foreground"
+      <ThemePaletteGroup title="Trace colors">
+        <ThemePaletteRow>
+          <ThemePaletteToken bg="bg-agentprism-avatar-llm" name="avatar-llm" />
+          <ThemePaletteToken bg="bg-agentprism-badge-llm" name="badge-llm" />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-llm-foreground"
+            name="badge-llm-foreground"
           />
-          <Token name="timeline-llm" bg="bg-agentprism-timeline-llm" />
-        </Row>
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-llm"
+            name="timeline-llm"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-agent" bg="bg-agentprism-avatar-agent" />
-          <Token name="badge-agent" bg="bg-agentprism-badge-agent" />
-          <Token
-            name="badge-agent-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-agent"
+            name="avatar-agent"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-agent"
+            name="badge-agent"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-agent-foreground"
+            name="badge-agent-foreground"
           />
-          <Token name="timeline-agent" bg="bg-agentprism-timeline-agent" />
-        </Row>
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-agent"
+            name="timeline-agent"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-tool" bg="bg-agentprism-avatar-tool" />
-          <Token name="badge-tool" bg="bg-agentprism-badge-tool" />
-          <Token
-            name="badge-tool-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-tool"
+            name="avatar-tool"
+          />
+          <ThemePaletteToken bg="bg-agentprism-badge-tool" name="badge-tool" />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-tool-foreground"
+            name="badge-tool-foreground"
           />
-          <Token name="timeline-tool" bg="bg-agentprism-timeline-tool" />
-        </Row>
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-tool"
+            name="timeline-tool"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-chain" bg="bg-agentprism-avatar-chain" />
-          <Token name="badge-chain" bg="bg-agentprism-badge-chain" />
-          <Token
-            name="badge-chain-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-chain"
+            name="avatar-chain"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-chain"
+            name="badge-chain"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-chain-foreground"
+            name="badge-chain-foreground"
           />
-          <Token name="timeline-chain" bg="bg-agentprism-timeline-chain" />
-        </Row>
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-chain"
+            name="timeline-chain"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-retrieval" bg="bg-agentprism-avatar-retrieval" />
-          <Token name="badge-retrieval" bg="bg-agentprism-badge-retrieval" />
-          <Token
-            name="badge-retrieval-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-retrieval"
+            name="avatar-retrieval"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-retrieval"
+            name="badge-retrieval"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-retrieval-foreground"
+            name="badge-retrieval-foreground"
           />
-          <Token
-            name="timeline-retrieval"
+          <ThemePaletteToken
             bg="bg-agentprism-timeline-retrieval"
+            name="timeline-retrieval"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-embedding" bg="bg-agentprism-avatar-embedding" />
-          <Token name="badge-embedding" bg="bg-agentprism-badge-embedding" />
-          <Token
-            name="badge-embedding-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-embedding"
+            name="avatar-embedding"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-embedding"
+            name="badge-embedding"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-embedding-foreground"
+            name="badge-embedding-foreground"
           />
-          <Token
-            name="timeline-embedding"
+          <ThemePaletteToken
             bg="bg-agentprism-timeline-embedding"
+            name="timeline-embedding"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-guardrail" bg="bg-agentprism-avatar-guardrail" />
-          <Token name="badge-guardrail" bg="bg-agentprism-badge-guardrail" />
-          <Token
-            name="badge-guardrail-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-guardrail"
+            name="avatar-guardrail"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-guardrail"
+            name="badge-guardrail"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-guardrail-foreground"
+            name="badge-guardrail-foreground"
           />
-          <Token
-            name="timeline-guardrail"
+          <ThemePaletteToken
             bg="bg-agentprism-timeline-guardrail"
+            name="timeline-guardrail"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token
-            name="avatar-create-agent"
+        <ThemePaletteRow>
+          <ThemePaletteToken
             bg="bg-agentprism-avatar-create-agent"
+            name="avatar-create-agent"
           />
-          <Token
-            name="badge-create-agent"
+          <ThemePaletteToken
             bg="bg-agentprism-badge-create-agent"
+            name="badge-create-agent"
           />
-          <Token
-            name="badge-create-agent-foreground"
+          <ThemePaletteToken
             bg="bg-agentprism-badge-create-agent-foreground"
+            name="badge-create-agent-foreground"
           />
-          <Token
-            name="timeline-create-agent"
+          <ThemePaletteToken
             bg="bg-agentprism-timeline-create-agent"
+            name="timeline-create-agent"
           />
-        </Row>
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-span" bg="bg-agentprism-avatar-span" />
-          <Token name="badge-span" bg="bg-agentprism-badge-span" />
-          <Token
-            name="badge-span-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-span"
+            name="avatar-span"
+          />
+          <ThemePaletteToken bg="bg-agentprism-badge-span" name="badge-span" />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-span-foreground"
+            name="badge-span-foreground"
           />
-          <Token name="timeline-span" bg="bg-agentprism-timeline-span" />
-        </Row>
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-span"
+            name="timeline-span"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-event" bg="bg-agentprism-avatar-event" />
-          <Token name="badge-event" bg="bg-agentprism-badge-event" />
-          <Token
-            name="badge-event-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-event"
+            name="avatar-event"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-event"
+            name="badge-event"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-event-foreground"
+            name="badge-event-foreground"
           />
-          <Token name="timeline-event" bg="bg-agentprism-timeline-event" />
-        </Row>
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-event"
+            name="timeline-event"
+          />
+        </ThemePaletteRow>
 
-        <Row>
-          <Token name="avatar-unknown" bg="bg-agentprism-avatar-unknown" />
-          <Token name="badge-unknown" bg="bg-agentprism-badge-unknown" />
-          <Token
-            name="badge-unknown-foreground"
+        <ThemePaletteRow>
+          <ThemePaletteToken
+            bg="bg-agentprism-avatar-unknown"
+            name="avatar-unknown"
+          />
+          <ThemePaletteToken
+            bg="bg-agentprism-badge-unknown"
+            name="badge-unknown"
+          />
+          <ThemePaletteToken
             bg="bg-agentprism-badge-unknown-foreground"
+            name="badge-unknown-foreground"
           />
-          <Token name="timeline-unknown" bg="bg-agentprism-timeline-unknown" />
-        </Row>
-      </Group>
-    </div>
-  );
-}
-
-type TokenProps = {
-  name: string;
-  bg: string;
-};
-
-function Token({ name, bg }: TokenProps) {
-  const tokenName = bg.replace(`bg-${AGENT_PRISM_PREFIX}-`, "");
-  const token = tokensFlat.find((token) => token.name === tokenName);
-
-  return (
-    <div className="flex h-[250px] w-[200px] flex-col border border-black/50 dark:border-white/50">
-      <div className="truncate border-b border-black/50 p-4 text-black dark:border-white/50 dark:text-white">
-        {name}
-        <hr className="my-2 bg-black/50 dark:bg-white/50" />
-        <span className="hidden dark:block">{token?.dark}</span>
-        <span className="dark:hidden">{token?.light}</span>
-      </div>
-      <div className={cn("grow", bg)} />
-    </div>
-  );
-}
-
-function Row({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-wrap justify-center gap-4">{children}</div>;
-}
-
-function Group({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="mb-2 text-center text-lg font-bold">{title}</h2>
-      {children}
+          <ThemePaletteToken
+            bg="bg-agentprism-timeline-unknown"
+            name="timeline-unknown"
+          />
+        </ThemePaletteRow>
+      </ThemePaletteGroup>
     </div>
   );
 }

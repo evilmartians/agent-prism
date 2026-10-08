@@ -2,77 +2,82 @@ import type { TraceSpan } from "@evilmartians/agent-prism-types";
 
 import { describe, expect, it } from "vitest";
 
-import { filterSpansRecursively } from "./filter-spans-recursively";
+import { filterSpansRecursively } from "./filter-spans-recursively.js";
 
 describe("filterSpansRecursively", () => {
+  const childSpanA: TraceSpan = {
+    children: [],
+    endTime: new Date(),
+    id: "1.1",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Child Span A",
+    type: "embedding",
+  };
+
+  const nestedSpan: TraceSpan = {
+    children: [],
+    endTime: new Date(),
+    id: "1.2.1",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Nested Span",
+    type: "guardrail",
+  };
+
+  const childSpanB: TraceSpan = {
+    children: [nestedSpan],
+    endTime: new Date(),
+    id: "1.2",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Child Span B",
+    type: "embedding",
+  };
+
+  const parentSpan: TraceSpan = {
+    children: [childSpanA, childSpanB],
+    endTime: new Date(),
+    id: "1",
+    raw: [],
+    startTime: new Date(),
+    status: "success",
+    title: "Parent Span",
+    type: "guardrail",
+  };
+
   const sampleSpans: TraceSpan[] = [
+    parentSpan,
     {
-      id: "1",
-      title: "Parent Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "guardrail",
-      raw: [],
-      status: "success",
-      children: [
-        {
-          id: "1.1",
-          title: "Child Span A",
-          startTime: new Date(),
-          endTime: new Date(),
-          type: "embedding",
-          raw: [],
-          status: "success",
-          children: [],
-        },
-        {
-          id: "1.2",
-          title: "Child Span B",
-          startTime: new Date(),
-          endTime: new Date(),
-          type: "embedding",
-          raw: [],
-          status: "success",
-          children: [
-            {
-              id: "1.2.1",
-              title: "Nested Span",
-              startTime: new Date(),
-              endTime: new Date(),
-              type: "guardrail",
-              raw: [],
-              status: "success",
-              children: [],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: "2",
-      title: "Another Parent Span",
-      startTime: new Date(),
-      endTime: new Date(),
-      type: "embedding",
-      raw: [],
-      status: "success",
       children: [],
+      endTime: new Date(),
+      id: "2",
+      raw: [],
+      startTime: new Date(),
+      status: "success",
+      title: "Another Parent Span",
+      type: "embedding",
     },
   ];
 
   it("should return all spans when searchValue is an empty string or whitespace", () => {
-    expect(filterSpansRecursively(sampleSpans, "")).toEqual(sampleSpans);
-    expect(filterSpansRecursively(sampleSpans, "   ")).toEqual(sampleSpans);
+    expect(filterSpansRecursively(sampleSpans, "")).toStrictEqual(sampleSpans);
+    expect(filterSpansRecursively(sampleSpans, "   ")).toStrictEqual(
+      sampleSpans,
+    );
   });
 
   it("should return spans that match the searchValue in their title", () => {
     const result = filterSpansRecursively(sampleSpans, "Child Span A");
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        ...sampleSpans[0],
+        ...parentSpan,
         children: [
           {
-            ...sampleSpans[0].children![0],
+            ...childSpanA,
             children: [],
           },
         ],
@@ -82,15 +87,15 @@ describe("filterSpansRecursively", () => {
 
   it("should return spans that have matching children recursively", () => {
     const result = filterSpansRecursively(sampleSpans, "Nested Span");
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        ...sampleSpans[0],
+        ...parentSpan,
         children: [
           {
-            ...sampleSpans[0].children![1],
+            ...childSpanB,
             children: [
               {
-                ...sampleSpans[0].children![1].children![0],
+                ...nestedSpan,
                 children: [],
               },
             ],
@@ -102,17 +107,17 @@ describe("filterSpansRecursively", () => {
 
   it("should return an empty array if no spans match the searchValue", () => {
     const result = filterSpansRecursively(sampleSpans, "Nonexistent Span");
-    expect(result).toEqual([]);
+    expect(result).toStrictEqual([]);
   });
 
   it("should be case insensitive when filtering spans", () => {
     const result = filterSpansRecursively(sampleSpans, "child span b");
-    expect(result).toEqual([
+    expect(result).toStrictEqual([
       {
-        ...sampleSpans[0],
+        ...parentSpan,
         children: [
           {
-            ...sampleSpans[0].children![1],
+            ...childSpanB,
             children: [],
           },
         ],

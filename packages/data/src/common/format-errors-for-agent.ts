@@ -1,16 +1,18 @@
-import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error";
+import type { DeepReadonly } from "@evilmartians/agent-prism-types";
+
+import type { RunErrorEntry, SpanErrorDetails } from "./extract-span-error.js";
 
 /**
  * Formats a single span error as Markdown suitable for pasting into an AI
  * agent — a title heading followed by the error message.
  */
 export const formatSpanErrorForAgent = (
-  details: SpanErrorDetails,
+  details: Readonly<SpanErrorDetails>,
 ): string => {
   const title = details.nodeName;
   const lines = [`# ${title}`, "", details.message];
 
-  if (details.stack) {
+  if (details.stack !== undefined && details.stack !== "") {
     lines.push("", "Stack:", details.stack);
   }
 
@@ -21,7 +23,9 @@ export const formatSpanErrorForAgent = (
  * Formats every failed span in a run as a single Markdown document, one
  * numbered section per error.
  */
-export const formatRunErrorsForAgent = (entries: RunErrorEntry[]): string => {
+export const formatRunErrorsForAgent = (
+  entries: readonly DeepReadonly<Pick<RunErrorEntry, "details">>[],
+): string => {
   const lines = [
     "# Trace run errors",
     "",
@@ -35,7 +39,7 @@ export const formatRunErrorsForAgent = (entries: RunErrorEntry[]): string => {
 
     lines.push(`## ${index + 1}. ${title}`, "", details.message, "");
 
-    if (details.stack) {
+    if (details.stack !== undefined && details.stack !== "") {
       lines.push("Stack:", details.stack, "");
     }
   });

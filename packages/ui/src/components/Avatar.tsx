@@ -5,9 +5,10 @@ import cn from "classnames";
 import { User } from "lucide-react";
 import { useState } from "react";
 
-import type { ComponentSize } from "./shared";
+import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
-import { ROUNDED_CLASSES } from "./shared";
+import { ROUNDED_CLASSES } from "./roundedClasses";
 
 export type AvatarSize = Extract<
   ComponentSize,
@@ -37,72 +38,76 @@ const iconSizeClasses: Record<AvatarSize, string> = {
 };
 
 const bgColorClasses: Record<TraceSpanCategory, string> = {
-  llm_call: "bg-agentprism-avatar-llm",
-  tool_execution: "bg-agentprism-avatar-tool",
   agent_invocation: "bg-agentprism-avatar-agent",
   chain_operation: "bg-agentprism-avatar-chain",
-  retrieval: "bg-agentprism-avatar-retrieval",
-  embedding: "bg-agentprism-avatar-embedding",
   create_agent: "bg-agentprism-avatar-create-agent",
-  span: "bg-agentprism-avatar-span",
+  embedding: "bg-agentprism-avatar-embedding",
   event: "bg-agentprism-avatar-event",
   guardrail: "bg-agentprism-avatar-guardrail",
+  llm_call: "bg-agentprism-avatar-llm",
+  retrieval: "bg-agentprism-avatar-retrieval",
+  span: "bg-agentprism-avatar-span",
+  tool_execution: "bg-agentprism-avatar-tool",
   unknown: "bg-agentprism-avatar-unknown",
 };
 
 export type AvatarProps = ComponentPropsWithRef<"div"> & {
   /**
+   * The alt text for the avatar
+   */
+  alt?: string | undefined;
+  /**
    * The category of the span which avatar is associated with
    */
   category: TraceSpanCategory;
   /**
-   * The image source for the avatar
+   * Optional className for additional styling
    */
-  src?: string;
+  className?: string | undefined;
   /**
-   * The alt text for the avatar
+   * Custom letter to display (will use first letter of alt if not provided)
    */
-  alt?: string;
-  /**
-   * The size of the avatar
-   * @default "md"
-   */
-  size?: AvatarSize;
+  letter?: string | undefined;
   /**
    * The border radius of the avatar
    * @default "full"
    */
-  rounded?: "none" | "sm" | "md" | "lg" | "full";
+  rounded?: "full" | "lg" | "md" | "none" | "sm" | undefined;
   /**
-   * Custom letter to display (will use first letter of alt if not provided)
+   * The size of the avatar
+   * @default "md"
    */
-  letter?: string;
+  size?: AvatarSize | undefined;
   /**
-   * Optional className for additional styling
+   * The image source for the avatar
    */
-  className?: string;
+  src?: string | undefined;
 };
 
 export const Avatar = ({
-  category,
-  src,
   alt = "Avatar",
-  size = "10",
-  rounded = "full",
-  letter,
+  category,
   children,
   className = "",
+  letter,
+  rounded = "full",
+  size = "10",
+  src,
   ...rest
-}: AvatarProps): ReactElement => {
+}: ReadonlyProps<AvatarProps>): ReactElement => {
   const [error, setError] = useState(false);
 
-  const displayLetter = letter ? letter.charAt(0) : alt.charAt(0).toUpperCase();
+  const displayLetter =
+    letter !== undefined && letter !== ""
+      ? letter.charAt(0)
+      : alt.charAt(0).toUpperCase();
+  const hasChildren = Boolean(children);
 
   return (
     <div
       className={cn(
         "flex items-center justify-center overflow-hidden",
-        !children && "bg-agentprism-muted",
+        !hasChildren && "bg-agentprism-muted",
         error && "border-agentprism-secondary border",
         sizeClasses[size],
         ROUNDED_CLASSES[rounded],
@@ -110,7 +115,7 @@ export const Avatar = ({
       )}
       {...rest}
     >
-      {children ? (
+      {hasChildren ? (
         children
       ) : error ? (
         <User
@@ -121,17 +126,19 @@ export const Avatar = ({
         />
       ) : (
         <>
-          {src ? (
+          {src !== undefined && src !== "" ? (
             <img
-              src={src}
               alt={alt}
               className="size-full object-cover"
-              onError={() => setError(true)}
+              onError={() => {
+                setError(true);
+              }}
+              src={src}
             />
           ) : (
             <div
               className={cn(
-                "flex h-full w-full items-center justify-center",
+                "flex size-full items-center justify-center",
                 "text-agentprism-accent font-medium",
                 bgColorClasses[category],
               )}

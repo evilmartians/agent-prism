@@ -3,56 +3,33 @@ import type {
   TraceSpanAttribute,
 } from "@evilmartians/agent-prism-types";
 
+import { toAttributes } from "../../common/attribute-value.js";
+import { isPlainRecord, isRecord } from "../../common/guards.js";
+
+const ATTRIBUTE_SECTIONS = ["attributes", "resourceAttributes"] as const;
+
 export function getLangfuseAttributes(
-  span: LangfuseObservation,
+  span: Readonly<Pick<LangfuseObservation, "metadata">>,
 ): TraceSpanAttribute[] {
-  if (!span.metadata || typeof span.metadata !== "string") {
+  if (typeof span.metadata !== "string") {
     return [];
   }
 
-  const result: TraceSpanAttribute[] = [];
+  let record: unknown;
 
   try {
-    const record = JSON.parse(span.metadata) as unknown;
-
-    if (
-      typeof record === "object" &&
-      record !== null &&
-      "attributes" in record &&
-      typeof record.attributes === "object" &&
-      record.attributes !== null
-    ) {
-      result.push(...getAttributeValues(record.attributes));
-    }
-
-    if (
-      typeof record === "object" &&
-      record !== null &&
-      "resourceAttributes" in record &&
-      typeof record.resourceAttributes === "object" &&
-      record.resourceAttributes !== null
-    ) {
-      result.push(...getAttributeValues(record.resourceAttributes));
-    }
+    record = JSON.parse(span.metadata);
   } catch {
-    return result;
+    return [];
   }
 
-  return result;
-}
+  if (!isRecord(record)) {
+    return [];
+  }
 
-function getAttributeValues(attributes: object): TraceSpanAttribute[] {
-  const result: TraceSpanAttribute[] = [];
+  return ATTRIBUTE_SECTIONS.flatMap((section) => {
+    const attributes = record[section];
 
-  Object.entries(attributes).forEach(([key, value]) => {
-    if (typeof value === "string") {
-      result.push({ key, value: { stringValue: value } });
-    } else if (typeof value === "number") {
-      result.push({ key, value: { intValue: String(value) } });
-    } else if (typeof value === "boolean") {
-      result.push({ key, value: { boolValue: value } });
-    }
+    return isPlainRecord(attributes) ? toAttributes(attributes) : [];
   });
-
-  return result;
 }

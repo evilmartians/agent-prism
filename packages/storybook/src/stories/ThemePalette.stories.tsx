@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ThemePalette } from "@evilmartians/agent-prism-ui";
 
 const meta = {
-  title: "Theme Palette",
+  component: ThemePalette,
   parameters: {
     layout: "centered",
   },
-  component: ThemePalette,
+  title: "Theme Palette",
 } satisfies Meta<typeof ThemePalette>;
 
 export default meta;

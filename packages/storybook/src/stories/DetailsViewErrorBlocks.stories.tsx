@@ -1,4 +1,3 @@
-import type { TraceSpan } from "@evilmartians/agent-prism-types";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import {
@@ -6,72 +5,26 @@ import {
   DetailsViewErrorBlocksSource,
 } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
-const baseSpan = (
-  span: Partial<TraceSpan> & Pick<TraceSpan, "id">,
-): TraceSpan => ({
-  title: span.id,
-  startTime: new Date("2024-01-15T10:30:00Z"),
-  endTime: new Date("2024-01-15T10:30:03Z"),
-  type: "span",
-  raw: ["{}"],
-  status: "success",
-  ...span,
-});
+import { failedParserSpan, failedRunRootSpan } from "../mocks/failed-run";
+import { mockSpan } from "../mocks/span";
 
-const parserSpan = baseSpan({
-  id: "span-parser",
-  title: "Structured Output Parser",
-  type: "tool_execution",
-  status: "error",
-  raw: [JSON.stringify({
-    status: { code: "ERROR", message: "Model output doesn't fit required format" },
-    name: "Structured Output Parser",
-  })],
-});
+const failedRunSpans = [failedRunRootSpan];
 
-const agentSpan = baseSpan({
-  id: "span-agent",
-  title: "AI Agent",
-  type: "agent_invocation",
-  status: "error",
-  raw: [JSON.stringify({ status: { message: "Child node failed" }, name: "AI Agent" })],
-  children: [parserSpan],
-});
-
-const rootSpan = baseSpan({
-  id: "span-root",
-  title: "Relevancy scoring workflow",
-  type: "chain_operation",
-  status: "error",
-  raw: [JSON.stringify({
-    status: { message: "Run failed" },
-    name: "Relevancy scoring workflow",
-  })],
-  children: [agentSpan],
-});
-
-const failedRunSpans: TraceSpan[] = [rootSpan];
-
-const successRootSpan = baseSpan({
+const successRootSpan = mockSpan({
+  children: [mockSpan({ id: "span-ok-child", title: "Fetch data" })],
   id: "span-ok-root",
   title: "Healthy workflow",
   type: "chain_operation",
-  children: [baseSpan({ id: "span-ok-child", title: "Fetch data" })],
 });
 
-const exceptionSpan = baseSpan({
-  id: "span-exception",
-  title: "Redis connection",
-  type: "tool_execution",
-  status: "error",
-  raw: ["{}"],
+const exceptionSpan = mockSpan({
   attributes: [
     {
       key: "exception.message",
@@ -89,13 +42,16 @@ const exceptionSpan = baseSpan({
       },
     },
   ],
+  id: "span-exception",
+  raw: ["{}"],
+  status: "error",
+  title: "Redis connection",
+  type: "tool_execution",
 });
 
 const meta = {
-  title: "Main Components/DetailsViewErrorBlocks",
   component: DetailsViewErrorBlocks,
   parameters: {
-    layout: "padded",
     docs: {
       page: () => (
         <>
@@ -107,51 +63,68 @@ const meta = {
         </>
       ),
     },
+    layout: "padded",
   },
   tags: ["autodocs"],
+  title: "Main Components/DetailsViewErrorBlocks",
 } satisfies Meta<typeof DetailsViewErrorBlocks>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * Root span selected in a failed run → a collapsible summary listing every
- * failed span in the run.
- */
 export const RunErrors: Story = {
   args: {
-    span: rootSpan,
     allSpans: failedRunSpans,
+    span: failedRunRootSpan,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Root span selected in a failed run → a collapsible summary listing every failed span in the run.",
+      },
+    },
   },
 };
 
-/**
- * A non-root failed span selected → only that span's own error is shown.
- */
 export const SingleSpanError: Story = {
   args: {
-    span: parserSpan,
     allSpans: failedRunSpans,
+    span: failedParserSpan,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A non-root failed span selected → only that span's own error is shown.",
+      },
+    },
   },
 };
 
-/**
- * A successful run renders nothing.
- */
 export const NoErrors: Story = {
   args: {
-    span: successRootSpan,
     allSpans: [successRootSpan],
+    span: successRootSpan,
+  },
+  parameters: {
+    docs: {
+      description: { story: "A successful run renders nothing." },
+    },
   },
 };
 
-/**
- * A failed span carrying an exception stack trace — the stack is rendered
- * verbatim in a scrollable block below the message.
- */
 export const SpanErrorWithStack: Story = {
   args: {
-    span: exceptionSpan,
     allSpans: [],
+    span: exceptionSpan,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "A failed span carrying an exception stack trace — the stack is rendered verbatim in a scrollable block below the message.",
+      },
+    },
   },
 };

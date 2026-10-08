@@ -2,18 +2,29 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { SpanStatus, SpanStatusSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/SpanStatus",
+  argTypes: {
+    status: {
+      control: { type: "select" },
+      description: "The status type to display",
+      options: ["success", "error", "pending", "warning"],
+    },
+    variant: {
+      control: { type: "select" },
+      description: "Visual variant of the status indicator",
+      options: ["dot", "badge"],
+      table: { defaultValue: { summary: "dot" } },
+    },
+  },
   component: SpanStatus,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -25,21 +36,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    status: {
-      control: { type: "select" },
-      options: ["success", "error", "pending", "warning"],
-      description: "The status type to display",
-    },
-    variant: {
-      control: { type: "select" },
-      options: ["dot", "badge"],
-      description: "Visual variant of the status indicator",
-      defaultValue: "dot",
-    },
-  },
+  title: "Atoms/SpanStatus",
 } satisfies Meta<typeof SpanStatus>;
 
 export default meta;
@@ -58,10 +58,11 @@ export const Variant: Story = {
   },
 };
 
-export const Error: Story = {
+export const ErrorStatus: Story = {
   args: {
     status: "error",
   },
+  name: "Error",
 };
 
 export const Warning: Story = {

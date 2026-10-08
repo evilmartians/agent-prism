@@ -2,18 +2,28 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { Badge, BadgeSource } from "@evilmartians/agent-prism-ui";
 import {
+  Controls,
   Description,
   Primary,
-  Controls,
-  Stories,
   Source,
-} from "@storybook/blocks";
+  Stories,
+} from "@storybook/addon-docs/blocks";
 
 const meta = {
-  title: "Atoms/Badge",
+  argTypes: {
+    label: {
+      control: "text",
+      description: "The content of the badge",
+    },
+    size: {
+      control: { type: "select" },
+      description: "The size of the badge",
+      options: ["4", "5", "6", "7"],
+      table: { defaultValue: { summary: "5" } },
+    },
+  },
   component: Badge,
   parameters: {
-    layout: "centered",
     docs: {
       page: () => (
         <>
@@ -25,20 +35,10 @@ const meta = {
         </>
       ),
     },
+    layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    size: {
-      control: { type: "select" },
-      options: ["4", "5", "6", "7"],
-      description: "The size of the badge",
-      defaultValue: "5",
-    },
-    label: {
-      control: "text",
-      description: "The content of the badge",
-    },
-  },
+  title: "Atoms/Badge",
 } satisfies Meta<typeof Badge>;
 
 export default meta;
@@ -59,14 +59,14 @@ export const Size: Story = {
 
 export const IconStart: Story = {
   args: {
-    label: "Start",
     iconStart: <span>✓</span>,
+    label: "Start",
   },
 };
 
 export const IconEnd: Story = {
   args: {
-    label: "End",
     iconEnd: <span>→</span>,
+    label: "End",
   },
 };

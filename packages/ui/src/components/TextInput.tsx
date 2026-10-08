@@ -1,39 +1,22 @@
 import cn from "classnames";
 import { X } from "lucide-react";
 import {
-  useRef,
   type ChangeEvent,
   type ComponentPropsWithRef,
+  type ReactElement,
   type ReactNode,
   type RefObject,
+  useRef,
 } from "react";
+
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 export type TextInputProps = ComponentPropsWithRef<"input"> & {
   /**
-   * Callback fired when the input value changes
+   * Whether to visually hide the label while keeping it for screen readers
+   * @default false
    */
-  onValueChange?: (value: string) => void;
-
-  /**
-   * Icon to display at the start of the input
-   */
-  startIcon?: ReactNode;
-
-  /**
-   * Callback fired when the clear button is clicked. If this callback is provided,
-   * the clear button will be shown.
-   */
-  onClear?: () => void;
-
-  /**
-   * Ref to the input element
-   */
-  ref?: RefObject<HTMLInputElement | null>;
-
-  /**
-   * Optional className for the input element
-   */
-  inputClassName?: string;
+  hideLabel?: boolean | undefined;
 
   /**
    * Unique identifier for the input (required)
@@ -41,15 +24,35 @@ export type TextInputProps = ComponentPropsWithRef<"input"> & {
   id: string;
 
   /**
-   * Label text for the input
+   * Optional className for the input element
    */
-  label?: string;
+  inputClassName?: string | undefined;
 
   /**
-   * Whether to visually hide the label while keeping it for screen readers
-   * @default false
+   * Label text for the input
    */
-  hideLabel?: boolean;
+  label?: string | undefined;
+
+  /**
+   * Callback fired when the clear button is clicked. If this callback is provided,
+   * the clear button will be shown.
+   */
+  onClear?: (() => void) | undefined;
+
+  /**
+   * Callback fired when the input value changes
+   */
+  onValueChange?: ((value: string) => void) | undefined;
+
+  /**
+   * Ref to the input element
+   */
+  ref?: RefObject<HTMLInputElement | null> | undefined;
+
+  /**
+   * Icon to display at the start of the input
+   */
+  startIcon?: ReactNode | undefined;
 };
 
 const iconBaseClassName =
@@ -57,17 +60,17 @@ const iconBaseClassName =
 
 export const TextInput = ({
   className,
-  onChange,
-  onValueChange,
-  startIcon,
-  onClear,
-  ref,
-  inputClassName,
-  label,
   hideLabel = false,
   id,
+  inputClassName,
+  label,
+  onChange,
+  onClear,
+  onValueChange,
+  ref,
+  startIcon,
   ...rest
-}: TextInputProps) => {
+}: ReadonlyProps<TextInputProps>): ReactElement => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -86,57 +89,61 @@ export const TextInput = ({
     inputRef.current?.focus();
   };
 
+  const hasLabel = label !== undefined && label !== "";
+  const hasStartIcon = Boolean(startIcon);
+  const hasValue = Boolean(rest.value);
+
   return (
     <div className={cn("w-full", className)}>
-      {label && (
+      {hasLabel ? (
         <label
-          htmlFor={id}
           className={cn(
             "text-agentprism-foreground block text-sm font-medium",
             hideLabel && "sr-only",
           )}
+          htmlFor={id}
         >
           {label}
         </label>
-      )}
+      ) : null}
       <div
         className={cn(
           "relative flex w-full items-center justify-center",
-          label && !hideLabel && "mt-1",
+          hasLabel && !hideLabel && "mt-1",
         )}
       >
         <input
-          id={id}
-          ref={ref || inputRef}
-          onChange={handleChange}
           className={cn(
             inputClassName,
             "flex h-7 items-center truncate",
             "w-full px-2",
-            !!startIcon && "pl-8",
+            hasStartIcon && "pl-8",
             !!onClear && "pr-8",
             "border-agentprism-border rounded border bg-transparent",
             "text-agentprism-foreground placeholder:text-agentprism-foreground/50",
             "hover:border-agentprism-border-strong",
             "disabled:cursor-not-allowed disabled:opacity-50",
           )}
+          id={id}
+          onChange={handleChange}
+          ref={ref ?? inputRef}
           {...rest}
         />
-        {startIcon && (
-          <div className={cn(iconBaseClassName, "left-2")} aria-hidden>
+        {hasStartIcon ? (
+          <div aria-hidden className={cn(iconBaseClassName, "left-2")}>
             {startIcon}
           </div>
-        )}
-        {onClear && rest.value && (
+        ) : null}
+        {onClear && hasValue ? (
           <button
-            className={cn(iconBaseClassName, "right-2")}
             aria-label="Clear input value"
+            className={cn(iconBaseClassName, "right-2")}
             onClick={handleClear}
             type="button"
           >
             <X className="size-4" />
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   );

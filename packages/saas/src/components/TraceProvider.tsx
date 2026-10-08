@@ -1,63 +1,62 @@
 "use client";
 
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import type { FC, ReactNode } from "react";
 
-import { TraceContext, TraceState } from "@/context/TraceContext";
+import React, { useState } from "react";
+
+import type { TraceState } from "@/context/TraceContext";
+
+import { TraceContext } from "@/context/TraceContext";
 import { extractSpans } from "@/services/extract-spans";
 
 import testData from "../data/test.json";
 
-export const TraceProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [traceState, setTraceState] = useState<TraceState>({
-    spans: [],
-    isLoading: false,
-    error: null,
-  });
+const toTraceState = (data: object): TraceState => {
+  try {
+    const spans = extractSpans(data);
 
-  const loadSpans = async (data: object) => {
-    setTraceState((prev) => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      const spans = extractSpans(data);
-
-      if (spans.length === 0) {
-        throw new Error("No spans found");
-      }
-
-      setTraceState({ spans, isLoading: false, error: null });
-    } catch (error) {
-      setTraceState({
-        spans: [],
-        isLoading: false,
-        error: error instanceof Error ? error.message : "Failed to load",
-      });
+    if (spans.length === 0) {
+      throw new Error("No spans found");
     }
-  };
 
-  useEffect(() => {
-    if (typeof testData === "object" && testData !== null) {
-      loadSpans(testData);
-    }
-  }, []);
+    return { error: null, isLoading: false, spans };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Failed to load",
+      isLoading: false,
+      spans: [],
+    };
+  }
+};
 
-  const uploadTraces = async (files: FileList) => {
-    const text = await files[0].text();
-    const jsonData = JSON.parse(text);
+export const TraceProvider: FC<Readonly<{ children: ReactNode }>> = ({
+  children,
+}) => {
+  const [traceState, setTraceState] = useState<TraceState>(() =>
+    toTraceState(testData),
+  );
+
+  const uploadTraces = async (file: File) => {
+    const text = await file.text();
+    const jsonData: unknown = JSON.parse(text);
 
     if (typeof jsonData !== "object" || jsonData === null) {
       throw new Error("Invalid JSON: expected an object");
     }
 
-    await loadSpans(jsonData);
+    setTraceState(toTraceState(jsonData));
   };
 
-  const clearTraces = () =>
-    setTraceState({ spans: [], isLoading: false, error: null });
-  const clearError = () => setTraceState((prev) => ({ ...prev, error: null }));
+  const clearTraces = () => {
+    setTraceState({ error: null, isLoading: false, spans: [] });
+  };
+  const clearError = () => {
+    setTraceState((prev) => ({ ...prev, error: null }));
+  };
 
   return (
     <TraceContext.Provider
-      value={{ traceState, uploadTraces, clearTraces, clearError }}
+      value={{ clearError, clearTraces, traceState, uploadTraces }}
     >
       {children}
     </TraceContext.Provider>

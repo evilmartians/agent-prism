@@ -1,32 +1,33 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, ReactElement } from "react";
 
 import cn from "classnames";
 
-import type { ComponentSize } from "./shared";
-
-type IconButtonSize = Extract<
-  ComponentSize,
-  "6" | "7" | "8" | "9" | "10" | "11" | "12" | "16"
->;
-type IconButtonVariant = "default" | "ghost";
+import type { ComponentSize } from "./ComponentSize";
+import type { ReadonlyProps } from "./ReadonlyProps";
 
 export type IconButtonProps = ComponentPropsWithRef<"button"> & {
-  /**
-   * The size of the icon button
-   */
-  size?: IconButtonSize;
-
-  /**
-   * The visual variant of the icon button
-   */
-  variant?: IconButtonVariant;
-
   /**
    * Accessible label for screen readers
    * Required for accessibility compliance
    */
   "aria-label": string;
+
+  /**
+   * The size of the icon button
+   */
+  size?: IconButtonSize | undefined;
+
+  /**
+   * The visual variant of the icon button
+   */
+  variant?: IconButtonVariant | undefined;
 };
+type IconButtonSize = Extract<
+  ComponentSize,
+  "6" | "7" | "8" | "9" | "10" | "11" | "12" | "16"
+>;
+
+type IconButtonVariant = "default" | "ghost";
 
 const sizeClasses: Record<IconButtonSize, string> = {
   "6": "h-6 min-h-6",
@@ -44,19 +45,17 @@ const variantClasses: Record<IconButtonVariant, string> = {
   ghost: "bg-transparent",
 };
 
-// TODO: Remake to call Icon component directly instead of passing children
 export const IconButton = ({
+  "aria-label": ariaLabel,
   children,
   className,
   size = "6",
-  variant = "default",
   type = "button",
-  "aria-label": ariaLabel,
+  variant = "default",
   ...rest
-}: IconButtonProps) => {
+}: ReadonlyProps<IconButtonProps>): ReactElement => {
   return (
     <button
-      type={type}
       aria-label={ariaLabel}
       className={cn(
         className,
@@ -67,6 +66,9 @@ export const IconButton = ({
         "text-agentprism-secondary-foreground",
         "hover:bg-agentprism-secondary",
       )}
+      type={
+        type === "submit" ? "submit" : type === "reset" ? "reset" : "button"
+      }
       {...rest}
     >
       {children}

@@ -1,31 +1,38 @@
 import type {
+  DeepReadonly,
   InputOutputData,
   TokenUsage,
+  TraceReasoning,
   TraceSpan,
   TraceSpanCategory,
-  TraceReasoning,
   TraceSpanStatus,
   TraceTodo,
 } from "@evilmartians/agent-prism-types";
 
-export interface SpanAdapter<TRawDocument, TRawSpan> {
+export type SpanAdapter<TRawDocument, TRawSpan> = {
   convertRawDocumentsToSpans(
-    documents: TRawDocument | TRawDocument[],
+    documents:
+      | DeepReadonly<TRawDocument>
+      | readonly DeepReadonly<TRawDocument>[],
   ): TraceSpan[];
 
-  convertRawSpansToSpanTree(spans: TRawSpan[]): TraceSpan[];
+  convertRawSpansToSpanTree(
+    spans: readonly DeepReadonly<TRawSpan>[],
+  ): TraceSpan[];
 
-  convertRawSpanToTraceSpan(span: TRawSpan): TraceSpan;
+  convertRawSpanToTraceSpan(span: DeepReadonly<TRawSpan>): TraceSpan;
 
-  getTokenUsage(document: TRawSpan): TokenUsage | undefined;
+  getSpanCategory(document: DeepReadonly<TRawSpan>): TraceSpanCategory;
 
-  getTraceReasoning(document: TRawSpan): TraceReasoning | undefined;
+  getSpanInputOutput(document: DeepReadonly<TRawSpan>): InputOutputData;
 
-  getTraceTodos(document: TRawSpan): TraceTodo[] | undefined;
+  getSpanStatus(document: DeepReadonly<TRawSpan>): TraceSpanStatus;
 
-  getSpanInputOutput(document: TRawSpan): InputOutputData;
+  getTokenUsage(document: DeepReadonly<TRawSpan>): TokenUsage | undefined;
 
-  getSpanStatus(document: TRawSpan): TraceSpanStatus;
+  getTraceReasoning(
+    document: DeepReadonly<TRawSpan>,
+  ): TraceReasoning | undefined;
 
-  getSpanCategory(document: TRawSpan): TraceSpanCategory;
-}
+  getTraceTodos(document: DeepReadonly<TRawSpan>): TraceTodo[] | undefined;
+};
