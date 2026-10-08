@@ -240,7 +240,7 @@ jobs:
         run: exit 1
 
   deploy-storybook:
-    if: github.ref == 'refs/heads/main'
+    if: ${{ !cancelled() && needs.main.result == 'success' && github.ref == 'refs/heads/main' }}
     needs: [main]
     runs-on: ubuntu-latest
     permissions:
